@@ -1,0 +1,117 @@
+@require '../../wings.import.styl'
+
+.dual-layout#home .section
+  clearfix()
+  margin 10px; overflow hidden
+  background-color #ffffff
+  border-top 1px solid #e5e6e9
+  border-bottom 1px solid #e5e6e9
+
+  &.avatar
+    background transparent; border none
+    position relative
+    .avatar-image
+      top 0; left 5px
+      width 80px; height @width
+      &.missing
+        font-size 40px
+        line-height 80px
+      &.editable
+        cursor pointer
+
+    .headers
+      margin 0 0 0 90px
+      min-height 80px
+
+  .region
+    margin 15px 5px 5px 5px
+    padding-bottom 5px
+    &:not(:last-child) { border-bottom: 1px solid #d3dbe2 }
+    .title
+      font-size 17px
+      margin-bottom 20px
+      .sub-title
+        font-size 14px; line-height 17px
+        color #B0B0B0
+
+    .commands-wrapper
+      clearfix()
+      border-top 1px solid #ddd
+      user-select none
+      .commands
+        float right
+        margin-right 5px
+        font-size 0
+        .command
+          cursor pointer
+          display inline-block
+          padding 8.5px 15px
+          border 1px solid #d3dbe2
+          border-top none; color #9d9d9d
+          font-size 14px
+          &:hover
+            color #fff; background-color theme-color
+          &:before
+            margin-left -2px
+            margin-right 5px
+            font-size 13px
+          &:first-child
+            border-radius bottom left 3px
+          &:last-child
+            border-radius bottom right 3px
+            &:not(:first-child) {border-left: none}
+
+    .dual-field
+      clearfix()
+      margin-bottom 5px
+      .field-wrapper
+        &:nth-child(odd)
+          border-radius left 3px
+          &.active
+            border-right-color lighten(theme-color, 15)
+        &:nth-child(even)
+          border-radius right 3px
+          border-left-color transparent
+          &.active
+            border-left-color lighten(theme-color, 15)
+    .region-row
+      clearfix(); margin 20px 5px 5px 5px
+      .field-wrapper
+        &:not(:first-child) { border-left-color: transparent }
+        &.active { border-left-color: theme-color }
+        &:first-child
+          border-radius left 3px
+        &:last-child
+          border-radius right 3px
+
+    .field-wrapper
+      border 1px solid #d3dbe2
+      padding 5px 10px
+      position relative
+      &.prefix
+        padding-right 38px
+      .prefix-text
+        absolute right 5px top 7px
+        color #c2c2c2
+      .ilabel
+        border-radius top 3px
+        absolute top -13px left 10px
+        font-size 12px; line-height 12px
+        background-color theme-color; color #fff
+        padding 0 5px;
+      &.rlb, &.number
+        .ilabel {right: 10px; left auto}
+      &.llb .ilabel {left: 10px; right auto}
+      &.active
+        border-color theme-color
+        .prefix-text
+          color theme-color
+
+      &.number input { text-align: right }
+
+      input
+        width 100%; border none
+        font-size 15px
+
+    .single-field
+      border-radius 3px

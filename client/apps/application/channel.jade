@@ -1,0 +1,47 @@
+template(name="channel")
+  .nano: .nano-content
+    .channel-wrapper
+      ul.starred
+        li.header.icon-star-1
+          span QUAN TRỌNG
+
+      ul.channels
+        li.header
+          span KÊNH TRÒ CHUYỆN
+          .create-channel.icon-plus(wings-tip="tạo kênh" direction="right")
+        each channels
+          li.channel-item.public.icon-hash(class="{{isActiveChannel}}") {{name}}
+        a.create-link Tạo kênh mới
+
+      ul.direct-message
+        li.header
+          span TRỰC TIẾP
+          .create-channel.icon-plus(wings-tip="tìm danh bạ" direction="right")
+        each friends
+          li.channel-item.direct(class="{{isActiveChannel}}")
+            span.online-status(class="{{onlineClass}}")
+            span {{username}}
+
+      ul.private-group
+        li.header
+          span NHÓM TRÒ CHUYỆN
+          .create-channel.icon-plus(wings-tip="tạo nhóm" direction="right")
+        each groups
+          li.channel-item.private.icon-hash(class="{{isActiveChannel}}") {{name}}
+        a.create-link Tạo nhóm mới
+
+  .user-configs
+    +userConfigMenu
+    input.hide.avatar-image-input(type="file")
+    .menu-icon.icon-exapnd2
+    .avatar.change-avatar(style="background-image:url('{{avatarImgSrc}}')")
+    .info
+      .name {{me.profile.name}}
+      .online-status(class="{{myOnlineClass}}") {{myOnlineStatus}}
+
+template(name="userConfigMenu")
+  #userConfigMenu.hide(name='userConfigMenu'): .config-menu
+    #config.menu-item.icon-tools Tùy chỉnh
+    #profile.menu-item.icon-id Hồ sơ
+    #display.menu-item.icon-paint-bucket Trình bày
+    #logout.menu-item.icon-power.separator Đăng xuất

@@ -1,0 +1,108 @@
+@require '../../styles/wings.import.styl'
+
+body
+  background-color #25A5CB
+  transition background-color 10s
+
+.welcome-wrapper
+  color #fff; min-height 100%
+
+  .content-wrapper
+    clearfix()
+    max-width 1024px; margin 0 auto
+    position relative
+
+  .header
+    clearfix()
+    background-color rgba(255,255,255,0.1)
+    height 82px
+
+  .heading
+    font-size 40px
+    font-weight 400
+  .welcome-field
+    border none
+    padding 8px 12px
+    font-size 14px
+    font-weight 600
+    vertical-align middle
+
+  .welcome-button
+    border none
+    border-radius 3px
+    padding 8px 14px
+
+  .slogan
+    font-size 45px
+    float left
+    position relative
+    .logo-img
+      absolute left 0 top 33px
+      width 40px; height @width
+      background-size cover
+      border 3px solid #ffffff
+      border-radius 50%
+      display inline-block
+    .description
+      position relative
+      display inline-block
+      margin-left 50px
+      margin-top 11px
+      .sub
+        font-size 30px
+        font-weight 300
+      .slogan-text
+        absolute left 15px bottom -5px
+        font-size 12px
+
+  .links
+    absolute right 35px top 5px
+    .group
+      margin-left 30px
+      float right
+      &.social a {cursor: pointer; padding: 5px 2px}
+
+  .login-wrapper
+    float right
+    font-size 0
+    margin-top 42px
+    margin-right 15px
+    position relative
+
+    #login-alert
+      absolute top 4px right 460px
+      border-radius 4px
+      background-color #3f3f3f
+      border 1px solid #3f3f3f
+      font-size 14px; font-weight 600
+      white-space nowrap
+      padding 4px 10px
+      &:before
+        content " "
+        width 0; height @width
+        border 8px solid #3f3f3f
+        border-right none
+        border-top-color transparent
+        border-bottom-color transparent
+        absolute right -8px top 6px
+
+    .fields
+      display inline-block
+    input
+      color #a7a7a7
+      margin-left 1px
+      /*box-shadow inset 1px 1px 1px rgba(0, 0, 0, .1)*/
+      &:first-child
+        border-radius left 3px
+      &.last-child
+        border-radius right 3px
+
+    .button
+      background-color #3F3F3F
+      font-size 14px
+      color #A0A0A0
+      border-radius left 0
+      padding 8px
+      font-weight 600
+      &.active {color: #ffffff}
+      .icon    {color: #ffffff}

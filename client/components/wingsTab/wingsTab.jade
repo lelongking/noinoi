@@ -1,0 +1,7 @@
+template(name="wingsTab")
+  ul.wings-tab
+    li.insert-command.icon-plus-1
+    each sources
+      li.tab-item(class="{{activeClass}}")
+        span.title {{dynamicCaption}}
+        span.remove-command.icon-cancel-circled

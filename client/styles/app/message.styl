@@ -1,0 +1,33 @@
+@require '../wings.import.styl'
+
+.dual-layout#home
+  .channel-messages .message
+    position relative
+    padding 0 40px 0 50px
+    font-weight 600
+    .avatar
+      absolute left 0 top 0
+      width 40px; height 40px
+      background-size cover
+      border-radius 4px
+    .message-meta
+      .owner-alias
+        font-weight 700
+      .time-stamp
+        color #999; font-size 12px
+    .content
+      line-height 22px
+      padding-top 2px
+    &.attached
+      position relative
+      .time-stamp
+        display none
+        absolute left -2px top 5px
+        font-size 12px; color #999
+        width 44px; text-align right
+      &:hover .time-stamp
+        display block
+    &.separator
+      margin-top 10px
+      .content
+        padding-top 0

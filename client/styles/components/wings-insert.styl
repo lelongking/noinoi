@@ -1,0 +1,28 @@
+@require '../wings.import.styl'
+
+wings-insert-size = 30px
+
+.wings-insert
+  height wings-insert-size
+  overflow hidden; user-select none
+
+  .dashed-bar
+    position relative
+    height (wings-insert-size / 2)
+    border-bottom dashed 1px red
+    visibility hidden
+    &:before
+      content: " "
+      height 11px; width @height
+      background-color red
+      transform rotate(45deg)
+      absolute left -6px bottom -6px
+    &:after
+      content: " "
+      height 11px; width @height
+      background-color red
+      transform rotate(45deg)
+      absolute right -6px bottom -6px
+
+  &:hover .dashed-bar
+    visibility visible

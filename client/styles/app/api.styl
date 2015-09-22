@@ -1,0 +1,136 @@
+@require '../wings.import.styl'
+
+.dual-layout#api
+  .dual-addon
+    background-color #4D394B
+    color #fff
+    .filter
+      margin 10px 15px
+      input
+        border-radius 2px; border none
+        width 100%; font-size 18px
+        padding 5px 10px
+
+    .api-addon-inner
+      height 100%; padding-bottom 52px
+
+    .nano-slider
+      background rgba(255, 255, 255,.3)
+
+.api-docs
+  padding-left 18px; margin 0
+  ul
+    padding-left 10px
+  li.api-node
+    position relative
+    cursor pointer
+    list-style none
+    padding-bottom 7px
+    user-select none
+    &.active > span
+      border-color rgba(255,255,255,0.3)
+    &:hover
+      span
+        border-color rgba(255,255,255,0.3)
+      .remove-node
+        display inherit
+
+    .remove-node
+      display none
+      color #999999 !important
+      absolute top 0 right 12px
+      border-radius 50%
+
+  .leaves-detail
+    padding 0 0 5px 15px
+    font-size 16px; font-weight 300
+    > ul
+      padding-left 0
+      .api-tree-leaf-title
+        user-select none; list-style none
+        cursor default; color #999
+      .api-leaf
+        user-select none; list-style none
+        cursor pointer
+        padding-left 8px
+        font-weight 500
+        &.member
+          color nephritis
+        &.method
+          color carrot
+
+.api-docs > ul { padding-left: 15px; }
+.api-docs > li { font-weight: 700; font-size: 18px }
+.api-docs > ul > li { font-weight: 500 }
+
+.api-machine
+  padding 0 10px
+
+  .subsection-title
+    font-size 30px; font-weight 500
+    color #779c34; padding 10px 0 5px 0
+  .wings-insert
+    margin 39px -10px 0px -10px
+
+  .insert-input
+    width 100%; padding 7px 9px 2px 13px
+    border none; margin-bottom 14px
+    border-bottom 2px solid rgba(0,39,59,.2)
+    font-size 25px; font-weight 700
+
+    /*background #f9f9f5*/
+    /*border-left solid 5px #efefeb*/
+
+  .leaf-detail
+    position relative
+    background-color #f9f9f5
+    border-left solid 5px #efefeb
+    padding 10px 8px
+    margin-bottom 10px
+
+    .leaf-name
+      font-size 25px; font-weight 700
+      .signature
+        font-weight 400
+      .return-icon
+        font-size 18px
+        color #adada8
+        &:before { margin: 0; }
+      .return-signature
+        font-size 22px; color #adada8
+        background-color #edede8
+        border-radius 20px
+        padding 2px 8px 4px 8px
+      .remove-command
+        display none; cursor pointer
+        color #D5D5D5
+    &:hover .leaf-name > .remove-command { display: inline-block }
+
+    .leaf-doc
+      padding 20px 0 5px 0
+
+    .leaf-params
+      width 100%
+      .param-header
+        text-align left
+        &.name  { width: 200px }
+        &.types { width: 150px }
+      .param-type-header
+        text-align left
+      .param-name
+        position relative
+        padding-right 25px
+        .remove-command
+          display none; cursor pointer
+          absolute top 0 right 5px
+          color #D5D5D5
+      .param-row:hover .remove-command
+          display inherit
+
+    input.insert-param
+      background-color #f9f9f5
+      border none; border-bottom 1px solid rgba(0,39,59,.2)
+      width 100%; font-size 18px; font-weight 700
+      margin 13px 0 15px 0
+    .wings-insert
+      margin-top 25px

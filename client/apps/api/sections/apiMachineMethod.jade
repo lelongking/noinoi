@@ -1,0 +1,31 @@
+template(name="apiMachineMethod")
+  .leaf-detail.method
+    .leaf-name {{name}}
+      span.signature ({{paramCommas}})
+      span.return-icon.icon-right-circle
+      span.return-signature {void}
+      span.remove-command.icon-cancel-circled
+    .leaf-doc
+      +wingsEditor(model=this collection=currentCollection field="content" placeholder="Ghi chú.." class="doc-editor")
+    if params
+      table.leaf-params
+        tr
+          th.param-header.name Param
+          th.param-header.types Types
+          th.param-header Descriptions
+        each params
+          tr.param-row
+            td.param-name
+              span {{name}}
+              .remove-command.icon-cancel-circled
+            td
+              if type
+                each type
+                  span {{name}}
+              else
+                span Any*
+            td {{description}}
+
+    .hide(name="insertParamWrapper")
+      input.insert-param(name="insertParamInput" placeholder="params, phân cách bởi dấu phẩy")
+    .wings-insert.click-command(name="insertParamCommand"): .dashed-bar

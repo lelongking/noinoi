@@ -1,0 +1,25 @@
+@require '../wings.import.styl'
+nav-space = 5px
+
+nav.fixed-top
+  position fixed; top 0; left 0; right 0
+  /*border-bottom solid 1px lime*/
+  z-index 1000
+  height nav-height
+  .branding
+    float left
+    line-height nav-height
+  .navigation
+    float left
+    line-height nav-height
+    &.right
+      float right
+      ul li
+        padding-right 0
+        padding-left nav-space
+    ul
+      margin 0; padding 0
+      li
+        cursor pointer
+        padding-right nav-space
+        display inline-block

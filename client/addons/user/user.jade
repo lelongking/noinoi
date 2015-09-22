@@ -1,0 +1,27 @@
+template(name="user")
+  .insert-wrapper: input.wings-field.insert(name="insertInput" placeholder="tên nhân viên..")
+  .nano.animated.fadeIn: .nano-content
+    unless getPublishedCount 'user'
+      +userEmpty
+    else
+      +userList
+
+template(name="userEmpty")
+  .zero-state
+    .insert-arrow-icon.icon-back
+    .cog-icon.icon-appbar-cog.animate-spin
+    .header Tạo mới để bắt đầu
+    .sub-header Quản lý tài khoản nội bộ
+    img.cover-icon(src="/images/svg/stock.svg")
+    a.peter-river.button.create-command Tải danh sách nhân viên
+
+template(name="userList")
+  .list
+    each documents
+      .doc-item
+        .avatar-wrapper: .avatar-image(class="{{missingImageClass profile.image}}"
+        style="background-image:url('{{userImageSrc profile.image}}')") {{avatarLetter profile.name}}
+        .doc-info
+          .title {{profile.name}} <br/>
+          .sub-title {{description}}
+        .time-stamp.icon-clock {{standardDate version.createdAt}}

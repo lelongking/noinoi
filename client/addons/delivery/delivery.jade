@@ -1,0 +1,30 @@
+template(name="delivery")
+  .insert-wrapper: input.wings-field.insert(name="insertInput" placeholder="ghi chú nhập kho..")
+  .nano.animated.fadeIn: .nano-content
+    unless getPublishedCount 'delivery'
+      +deliveryEmpty
+    else
+      +deliveryList
+
+template(name="deliveryEmpty")
+  .zero-state
+    .cog-icon.icon-appbar-cog.animate-spin
+    .header.insert
+      span tạo nhập kho mới tại đây
+      .insert-arrow-icon.icon-back
+    .sub-header chưa có lịch sử nhập kho
+    img.cover-icon(src="/images/svg/stock.svg")
+    a.peter-river.button.create-command Tải nhập kho từ file
+
+template(name="deliveryList")
+  .list
+    each documents
+      .doc-item
+        .description {{description}}
+        //.avatar-wrapper: .avatar-image(class="{{missingImageClass image}}"
+        //style="background-image:url('{{productImageSrc image}}')") {{avatarLetter name}}
+        //.doc-info
+        //  .title {{description}} <br/>
+        //  .sub-title {{description}}
+        //.time-stamp.icon-clock {{standardDate version.createdAt}}
+        //.price-stamp.icon-ticket {{formatNumber price}} VNĐ

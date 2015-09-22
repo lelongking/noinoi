@@ -1,0 +1,2 @@
+Wings.defineHyper 'plan',
+  {}

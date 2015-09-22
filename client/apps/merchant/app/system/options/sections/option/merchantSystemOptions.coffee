@@ -1,1 +1,0 @@
-lemon.defineHyper Template.merchantSystemOptions, {}

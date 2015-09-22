@@ -1,0 +1,13 @@
+template(name="modalUserOptions")
+  #modalOptions.modal-backdrop.animated.fadeIn
+    .modal-wrapper.animated.bounceInDown
+      .modal-header
+        span Tùy chỉnh cá nhân
+        .button.close-modal Đóng
+      .modal-body
+        .options-nav
+          each optionMenus
+            .option-menu(class="{{activeMenuClass}}") {{display}}
+        .options-detail
+          +UI.dynamic(template=detailTemplate)
+      .modal-footer

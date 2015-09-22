@@ -1,8 +1,0 @@
-template(name="orderThumbnail")
-  .col
-    .thumbnails.click-enabled(class="{{styles}}")
-      +avatarImageComponent(avatar=avatarUrl alias=buyerName)
-      .right-caption {{buyerName}} <br /> {{sellerName}}
-      .full-desc.price {{formatNumber finalPrice}} VNĐ
-      if isntDelete
-        .full-desc.trash: a(href="#"): i.icon-bag

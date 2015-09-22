@@ -1,0 +1,38 @@
+@require '../styles/wings.import.styl'
+options-width = 175px
+
+#modalOptions
+  .modal-body
+    clearfix()
+    .options-nav
+      width options-width; padding-top 12px
+      border-right 1px solid #e5e5e5
+      background-color #fbfaf8
+      float left; height 500px
+      user-select none
+      border-radius bottom left 4px
+      .option-menu
+        padding 10px 15px; font-size 16px
+        cursor pointer
+        &:hover
+          background-color #f5f5f5
+          color #2a80b9
+        &.active
+          background-color #439fe0
+          color #ffffff
+
+    .options-detail
+      width (800 - options-width)
+      float left; padding 24px 20px
+      #test-notification
+        margin-left 10px
+      p
+        font-size 15px; font-weight 600
+        margin 0 0 10px 0
+      .link
+        font-size 14px; color #439fe0
+        border-bottom 1px dotted #439fe0
+        cursor pointer
+      .explains
+        font-size 12px; color #8C8C8C; font-weight 400
+

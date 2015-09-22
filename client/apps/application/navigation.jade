@@ -1,0 +1,18 @@
+template(name="navigation")
+  nav.fixed-top
+    .branding
+      .logo-img(style="background-image:url('/images/gear.png')")
+      .logo-text
+        span pin
+        span.sub-text exclusive
+    .navigation
+      //+wingsEditorPane
+    #kernel-addon-nav.navigation.right
+      if currentDescription
+        .app-descriptions(class="{{currentColor}}") {{currentDescription}}
+      //.history-navigators
+      //  .navigator.home.icon-home(description="Trang tổng quan hiện tại")
+      //  .navigator.backward.icon-left-arrow(description="Trở lại")
+      //  .navigator.forward.icon-right-arrow(description="Trang trước")
+      each addonMenus
+        a.addon-launcher(class="{{color}} {{icon}} {{activeClass}}" description="{{description}}")

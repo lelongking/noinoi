@@ -1,0 +1,43 @@
+@require '../../styles/wings.import.styl'
+
+tip-bg = rgba(0,0,0, 0.9)
+tip-size = 6px
+
+.wings-tip-wrapper
+  user-select none; z-index 1999
+  position absolute
+  pointer-events none
+  #wings-tip
+    position relative
+    background-color tip-bg
+    color #fff; font-weight 600
+    padding 3px 10px
+    border-radius 4px
+    &:before
+      content " "
+      width 0; height @width
+      position absolute
+      border tip-size solid tip-bg
+    &.left-arrow:before
+      border-left none
+      border-top-color transparent
+      border-bottom-color transparent
+      left -(tip-size); right auto; top 6px; bottom auto;
+    &.right-arrow:before
+      border-right none
+      border-top-color transparent
+      border-bottom-color transparent
+      left auto; right -(tip-size); top 6px; bottom auto;
+    &.top-arrow:before
+      border-top none
+      border-left-color transparent
+      border-right-color transparent
+      left 50%; right auto; top -(tip-size); bottom auto;
+      margin-left -4px
+    &.bottom-arrow:before
+      border-bottom none
+      border-left-color transparent
+      border-right-color transparent
+      left 50%; right auto; top auto; bottom -(tip-size);
+      margin-left -4px
+

@@ -1,1 +1,0 @@
-Schema.userOptions = new Mongo.Collection('userOptions')

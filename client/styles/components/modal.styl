@@ -1,0 +1,29 @@
+@require '../wings.import.styl'
+modal-radius = 4px
+
+.modal-backdrop
+  background-color rgba(0,0,0,0.4)
+  fixed left 0 right 0 top 0 bottom 0
+  z-index 1002
+  .modal-wrapper
+    width 800px; min-height 300px
+    fixed left 50% top 10%
+    margin-left -400px
+    background-color #ffffff
+    border-radius modal-radius
+    box-shadow 0 1px 10px rgba(0,0,0,.6)
+    .modal-header
+      border-radius top modal-radius
+      font-size 22px; font-weight 600; letter-spacing -1px
+      padding 10px 15px
+      background-color #f2f2f5
+      border-bottom 1px solid #e5e5e5
+      .button.close-modal
+        float right
+        background-color #2ab27b
+        font-size 14px; font-weight 800
+        padding 5px 10px
+    .modal-footer
+      border-radius bottom modal-radius
+    .modal-body:last-child
+      border-radius bottom modal-radius

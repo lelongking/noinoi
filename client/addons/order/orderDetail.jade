@@ -1,0 +1,48 @@
+template(name="orderDetail")
+  .kernel-content.animated.fadeIn
+    .nano: .nano-content
+      #order-app.section.printable-area
+        .region
+          .region-row.grid
+            table
+              tr.grid-header
+                th.string.small-name(style="width:auto") SẢN PHẨM
+                th.number(style="width:100px") GIÁ BÁN
+                th.number(style="width:50px") SL
+                th.number(style="width:80px") ĐƠN VỊ
+                th.number(style="width:140px") THÀNH TIỀN
+
+              each instance.details
+                if isRowEditing
+                  +orderRowEdit
+                else
+                  +orderRowDisplay
+
+              tr.top-dashed
+                td(colspan="5")
+                  input.description(type="text" placeholder="ghi chú đơn hàng...")
+
+              tr
+                td.center-align.signatures NGƯỜI NHẬN
+                td.number(colspan="2") TỔNG CỘNG
+                td.number.strong(colspan="2") {{formatNumber instance.finalPrice}}
+              tr
+                td.signatures
+                td.number(colspan="2") CHIẾT KHẤU
+                td.number.strong.editable(colspan="2") {{formatNumber instance.discountCash}}
+              tr
+                td.signatures
+                td.number(colspan="2") TIỀN CŨ
+                td.number.strong(colspan="2") 0
+              tr
+                td.signatures
+                td.number(colspan="2") THANH TOÁN
+                td.number.strong.editable(colspan="2") {{formatNumber instance.depositCash}}
+              tr.top-dashed
+                td.center-align.signatures.signature (Chữ ký và Họ Tên)
+                td.number(colspan="2") CÒN LẠI
+                td.number.strong(colspan="2") {{formatNumber instance.finalPrice}}
+          h1 {{instance.buyerInstance.name}}
+
+  .kernel-footer.full
+    +wingsTab(sources=documents caption="orderName" active="activeDocumentSlug")

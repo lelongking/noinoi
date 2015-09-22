@@ -1,8 +1,0 @@
-template(name="requestDetails")
-  .dropdown-menu(role="menu")
-    .header-caption PHÊ DUYỆT
-    ul.details
-      each requests
-        li
-          +avatarImageComponent(avatar=notificationSenderAvatar alias=notificationSenderAvatar)
-          .content {{message}}

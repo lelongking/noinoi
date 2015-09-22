@@ -1,0 +1,29 @@
+@require '../wings.import.styl'
+
+.button
+  display inline-block
+  padding 8.5px 15px
+  text-align center
+  white-space nowrap
+  vertical-align middle
+  cursor pointer
+  user-select none
+  color #fff
+  border-radius 4px
+  &.large
+    padding 10px 20px
+    font-size 16px
+
+.button-group
+  float left
+  position relative
+  display inline-block
+  vertical-align middle
+
+
+.button
+  for color in colors
+    &.{color[0]}
+      background-color color[1]
+      &:hover
+        background-color darken(color[1], 5)

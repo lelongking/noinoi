@@ -1,0 +1,29 @@
+template(name="product")
+  .insert-wrapper: input.wings-field.insert(name="insertInput" placeholder="tên sản phẩm..")
+  .nano.animated.fadeIn: .nano-content
+    unless getPublishedCount 'product'
+      +productEmpty
+    else
+      +productList
+
+template(name="productEmpty")
+  .zero-state
+    .cog-icon.icon-appbar-cog.animate-spin
+    .header.insert
+      span tạo sản phẩm đầu tiên
+      .insert-arrow-icon.icon-back
+    .sub-header chưa có sản phẩm nào để trình bày
+    img.cover-icon(src="/images/svg/products-empty-state.svg")
+    a.peter-river.button.create-command Tải danh sách sản phẩm
+
+template(name="productList")
+  .list
+    each documents
+      .doc-item
+        .avatar-wrapper: .avatar-image(class="{{missingImageClass image}}"
+          style="background-image:url('{{productImageSrc image}}')") {{avatarLetter name}}
+        .doc-info
+          .title {{name}} <br/>
+          .sub-title {{description}}
+        .time-stamp.icon-clock {{standardDate version.createdAt}}
+        .price-stamp.icon-ticket {{formatNumber price}} VNĐ

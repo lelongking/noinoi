@@ -1,0 +1,45 @@
+@require '../wings.import.styl'
+
+#iron-router-progress
+  height 2px
+
+#iron-router-progress.spinner
+  background-color #7AC5F9
+  box-shadow 0 0 5px rgba(0, 150, 242, 0.5)
+  &:before
+    border-color #fff//#7AC5F9
+    width 15px; height 15px
+    left 185px; top 39px
+    /*background-color #ffffff*/
+    border-radius 50%
+
+.application-spinner
+  width 21px; height @width
+  background-color #565555
+  border-radius 50%
+  absolute left 185px top 39px
+  font-size 10px
+  border 3px solid #797875
+  z-index 1001
+
+.nano-content
+  outline none !important
+
+#root-addon .nano-pane > .nano-slider
+  background-color rgba(255,255,255,0.3)
+
+#Mongol
+  max-width 250px
+  border-radius top right 5px
+
+#Mongol.Mongol_expand
+  max-width 500px !important
+
+#JetSetter
+  border-radius top left 5px
+
+#velocity-status-widget
+  background-color transparent
+  left 9px; right auto
+  .velocity-icon-status
+    width 40px; height @width

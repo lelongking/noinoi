@@ -1,0 +1,6 @@
+template(name="wingsEditor")
+  .wings-editor-wrapper(class="{{saveRemainingClass}} {{activeClass}}")
+    .wings-editor(class="{{class}}" placeholder="{{placeholder}}" contenteditable="true" name="editor")
+    .commands.clearfix
+      +wingsEditorPane
+      .button.command.save.icon-ok-circled2 lưu

@@ -1,0 +1,7 @@
+template(name="regionInput")
+  .field-wrapper(name="wrapper" class="{{activeClass}} {{wrapperClass}} {{prefixClass}} {{type}}")
+    if label
+      .ilabel {{label}}
+    if prefix
+      span.prefix-text {{prefix}}
+    input(name="source" placeholder="{{placeholder}}")

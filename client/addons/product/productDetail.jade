@@ -1,0 +1,92 @@
+template(name="productDetail")
+  .nano.animated.fadeIn: .nano-content
+    input.hide.product-image-input(type="file")
+    .section.avatar
+      .avatar-wrapper: .avatar-image.editable.product-image(class="{{missingImageClass instance.image}}" style="background-image:url('{{productImageSrc instance.image}}')"
+      wings-tip="cập nhật ảnh sản phẩm") {{avatarLetter instance.name}}
+        .clear.icon-close-circle
+      .headers
+        +wingsEditable(model=instance field="name" style="heading" label="tên sản phẩm" placeholder="Nhập tên sản phẩm")
+
+    .section
+      +wingsEditor(model=instance field="description" style="s5" placeholder="Mô tả sản phẩm...")
+
+    +productPriceBasic
+
+template(name="productPriceBasic")
+  .section
+    .region
+      .title
+        if instance.useAdvancePrice
+          span Đơn vị tính cơ bản,
+          span.sub-title đơn vị tính nhỏ nhất của sản phẩm (không thể chia nhỏ nữa)
+        else
+          span Mua bán,
+          span.sub-title giá bán và chính sách giá.
+
+      .region-row
+        +regionInput(wrapperClass="baseUnitName col-3" value=instance.baseUnitName label="đơn vị")
+        +regionInput(wrapperClass="importPrice col-4" prefix="VNĐ" type="number" label="giá nhập" value=instance.importPrice)
+        +regionInput(wrapperClass="salePrice col-5" prefix="VNĐ" type="number" label="giá bán" value=instance.salePrice)
+
+      .commands-wrapper
+        .commands
+          .command.extract-unit thêm đơn vị tính
+          .command.save-price.icon-ok-circled2 lưu
+
+  if Session 'showProductUnitCreatePane'
+    .section
+      .region
+        .title
+          span Thêm đơn vị tính
+
+        .region-row
+          +regionInput(wrapperClass="insertUnitName col-3" label="đơn vị")
+          +regionInput(wrapperClass="insertConversion col-4" label="quy đổi" type="number"
+          explain="Giá trị quy đổi so với <b>đơn vị tính cơ bản</b>.")
+          +regionInput(wrapperClass="insertSalePrice col-5" label="giá bán" type="number" prefix="VNĐ")
+
+        .commands-wrapper
+          .commands
+            .command.cancel-add-unit hủy
+            .command.add-unit.icon-ok-circled2 thêm mới
+
+  each unitLists
+    .section
+      .region
+        .title
+          span Đơn vị tính,
+          span.sub-title không thể thay đổi đơn vị quy đổi.
+
+        .region-row
+          +regionInput(wrapperClass="unitName col-3" label="đơn vị" value=name)
+          //+regionInput(wrapperClass="conversion col-4" type="number" label="quy đổi" value=conversion)
+          .field-wrapper.col-4.number(name="wrapper" style="height: 34px; text-align: right")
+            .ilabel quy đổi
+            span.number {{conversion}} {{baseUnitName}}
+          +regionInput(wrapperClass="salePrice col-5" prefix="VNĐ" type="number" label="giá bán" value=salePrice)
+
+
+        .commands-wrapper
+          .commands
+            if allowDelete
+              .command.remove-unit.icon-ok-circled2 xóa
+            .command.update-unit.icon-ok-circled2 lưu
+
+
+
+template(name="productPriceAdvanced")
+  .section
+    .region
+      .title
+        .main
+          span Đơn vị tính,
+          span.sub-title cách tính khác nhau cho cùng một sản phẩm, ví dụ như thùng và chai.
+      .dual-field
+        +regionInput(wrapperClass="salePrice" prefix="VNĐ" type="number" label="đơn vị tính" value=instance.price)
+        +regionInput(wrapperClass="importPrice" prefix="VNĐ" type="number" label="giá trị quy đổi" value=instance.importPrice)
+
+    .region
+      .title
+        span Chủng loại,
+        span.sub-title sản phẩm này có nhiều dạng khác nhau, như là kích cỡ hay màu sắc?

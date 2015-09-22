@@ -1,0 +1,37 @@
+template(name="welcome")
+  .header
+    .content-wrapper
+      .links
+        .group.social
+          a.icon-facebook-rect
+          a.icon-googleplus-rect
+          a.icon-twitter-bird
+        .group.phone.icon-help1(wings-tip="hot line hỗ trợ") +84 838-<b>111</b>-766
+      .slogan
+        .logo-img.animate-spin(style="background-image:url('/images/gear.png')")
+        .description
+          span pin
+          span.sub exclusive
+          .slogan-text mạng xã hội của doanh nghiệp
+      .login-wrapper
+        input.welcome-field.user(name="user" size="18" placeholder="tài khoản")
+        input.welcome-field.secret(name="secret" type="password" size="10" placeholder="mật khẩu")
+        #login-alert.hide(name="alert") This is error!
+        .button.login
+          span đăng nhập
+          span.icon.icon-angle-right-circle
+  .content
+    .content-wrapper
+      br
+      h1 "tài khoản test: hongky/quocloc/ngocson pass:12345"
+
+  .footer
+//  .welcome-dual.col-8
+//    .heading ĐĂNG KÝ
+//  .welcome-dual.col-4
+//    .heading ĐĂNG NHẬP
+//    input.welcome-field
+//    br
+//    br
+//    input.welcome-field
+//    .heading ĐĂNG KÝ
