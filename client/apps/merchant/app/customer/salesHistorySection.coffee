@@ -1,12 +1,21 @@
 scope = logics.customerManagement
 numericOption = {autoGroup: true, groupSeparator:",", radixPoint: ".", suffix: " VNĐ", integerDigits:11}
 
-lemon.defineHyper Template.customerManagementSalesHistorySection,
+Wings.defineHyper 'customerManagementSalesHistorySection',
+  rendered: ->
+    Session.get("customerManagementOldDebt")
+    @ui.$paySaleAmount.inputmask("numeric", numericOption) if @ui.$paySaleAmount
+
+
   helpers:
     isDelete: -> moment().diff(@version.createdAt ? new Date(), 'days') < 1
-    allSales: -> logics.customerManagement.findAllOrders()
-    oldDebts: -> logics.customerManagement.findOldDebtCustomer()
-    hasOldDebts: -> logics.customerManagement.findOldDebtCustomer().length > 0
+    allSales: -> logics.customerManagement.findAllOrders(Template.currentData())
+    findOldDebts: ->
+      found = logics.customerManagement.findOldDebtCustomer(Template.currentData())
+      return {
+        hasOldDebts: found.length > 0
+        oldDebts: found
+      }
 
     totalDebtCash: ->
       if customer = Session.get('customerManagementCurrentCustomer')
@@ -22,11 +31,6 @@ lemon.defineHyper Template.customerManagementSalesHistorySection,
     transactionStatus: -> if Session.get("customerManagementOldDebt") then 'Nợ Tiền' else 'Trả Tiền'
     showTransaction: -> if Session.get("customerManagementOldDebt") is undefined then 'display: none'
 
-
-
-  rendered: ->
-    Session.get("customerManagementOldDebt")
-    @ui.$paySaleAmount.inputmask("numeric", numericOption) if @ui.$paySaleAmount
 
   events:
     "keyup input.transaction-field":  (event, template) ->

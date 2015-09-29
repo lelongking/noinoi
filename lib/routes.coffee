@@ -3,15 +3,6 @@ BlazeLayout.setRoot('body') if Meteor.isClient
 FlowRouter.notFound =
   subscriptions: ->
   action: ->
-#
-#merchantRoutes = FlowRouter.group(
-#  name: 'merchant'
-#  prefix: '/'
-#  triggersEnter: [ (context, redirect) ->
-#    console.log 'running group triggers'
-#    return
-#  ])
-
 
 FlowRouter.route '/',
   name: 'home'
@@ -34,7 +25,7 @@ FlowRouter.route '/merchant',
 
     return
   triggersEnter: [ (context, redirect) ->
-    console.log 'running /admin trigger'
+    console.log 'running /metro trigger'
     return
   ]
 
@@ -53,7 +44,7 @@ FlowRouter.route '/customer',
     return
 
   triggersEnter: [ (context, redirect) ->
-    console.log 'running /admin trigger'
+    console.log 'running /customer trigger'
     return
   ]
 

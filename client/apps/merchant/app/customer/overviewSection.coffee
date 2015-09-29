@@ -3,7 +3,7 @@
 
 scope = logics.customerManagement
 
-lemon.defineHyper Template.customerManagementOverviewSection,
+Wings.defineHyper 'customerManagementOverviewSection',
   rendered: ->
     Session.set('customerManagementIsShowCustomerDetail', false)
     scope.overviewTemplateInstance = @

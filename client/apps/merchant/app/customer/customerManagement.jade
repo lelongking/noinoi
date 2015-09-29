@@ -1,38 +1,15 @@
 template(name="customerManagement")
   #content.modern.customer-management
     .dual-content
-      .dual-detail-wrapper
-        .dual-detail
-          .nano: .nano-content
-            //+customerManagementOverViewPrint
-            +customerManagementOverviewSection currentCustomer
-            +customerManagementSalesHistorySection currentCustomer
+      .dual-detail-wrapper: .dual-detail: .nano: .nano-content
+        +Template.dynamic(template='customerManagementOverviewSection' data=currentCustomer)
+        +Template.dynamic(template='customerManagementSalesHistorySection' data=currentCustomer)
+        //+customerManagementOverviewSection currentCustomer
+        //+customerManagementSalesHistorySection currentCustomer
 
 
       .dual-addon
-        .search-filter.icon-search-8
-          input(name='searchFilter' type="text" placeholder="tìm khách hàng...")
-          if creationMode
-            .lemon.btn.rounded.tiny.lime.icon-plus-6.create-command.createCustomerBtn
-
-        .nano
-          .nano-content(style="margin-bottom: 35px;")
-            .list
-
-              each customerLists
-                .doc-item(class="{{activeClass 'customerManagementCurrentCustomer'}}")
-                  .avatar-wrapper
-                    .avatar-image(class="{{hasAvatar}}" style="background-image:url('{{avatarUrl}}')") {{aliasLetter firstName}}
-
-                  .doc-info
-                    .title {{name}}
-                    //.sub-title {{description}}
-
-                    if totalCash
-                      .price-stamp
-                        <b>{{formatNumber totalCash}}</b>
-                        span(style="font-size: 11px;") <b>VND</b>
-
+        +Template.dynamic(template='customerManagementCustomerSearch' data=currentCustomer)
 
   //#footer.modern
   //  .editor-row

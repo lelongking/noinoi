@@ -31,24 +31,25 @@ template(name="customerManagementSalesHistorySection")
           th(style="width:120px")
           th(style="width:150px")
 
-        if hasOldDebts
-          tr.header-row
-            td.has-commands(colspan="5")
-              | &nbsp;
-              .bill-header <b>Nợ tồn đầu kỳ</b>
-          tr
+        with findOldDebts
+          if hasOldDebts
+            tr.header-row
+              td.has-commands(colspan="5")
+                | &nbsp;
+                .bill-header <b>Nợ tồn đầu kỳ</b>
+            tr
 
-          each oldDebts
-            tr.paid-row.top(class="{{transactionClass}}" style="border-bottom: none;")
-              td.has-commands(colspan="3" style="border-left: solid 2px #d35400;")
-                .bill-header {{description}}
-                if isManager
-                  if isDelete
-                    .commands: .lemon.rounded.tiny.btn.red.deleteTransaction: span.icon-minus-4
-              td.number(style="color: #666;")
-                if showBeforeDebtBalance
-                  span.icon-feather-1.s5 <b>{{formatNumberBeforeDebtBalance}}</b>
-              td.number(align="right"): span.s5 <b>{{formatNumber owedCash}}</b>
+            each oldDebts
+              tr.paid-row.top(class="{{transactionClass}}" style="border-bottom: none;")
+                td.has-commands(colspan="3" style="border-left: solid 2px #d35400;")
+                  .bill-header {{description}}
+                  if isManager
+                    if isDelete
+                      .commands: .lemon.rounded.tiny.btn.red.deleteTransaction: span.icon-minus-4
+                td.number(style="color: #666;")
+                  if showBeforeDebtBalance
+                    span.icon-feather-1.s5 <b>{{formatNumberBeforeDebtBalance}}</b>
+                td.number(align="right"): span.s5 <b>{{formatNumber owedCash}}</b>
 
         each allSales
           +customerManagementSaleDetails this
