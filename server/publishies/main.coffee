@@ -1,35 +1,27 @@
-#Meteor.publish 'fake', ->
-#  self = @
-#  setTimeout ->
-#    self.ready()
-#  , 20000
+Enums = Apps.Merchant.Enums
+Meteor.publish null, ->
+  collections = []
+  return collections if !@userId
+  myProfile  = Meteor.users.findOne(@userId)?.profile
+  merchantId = myProfile.merchant if myProfile
+  return collections if !merchantId
 
-Meteor.publish null, -> Storage.ProductImage.find({})
-Meteor.publish null, -> Storage.UserImage.find({})
-Meteor.publish null, -> Storage.CustomerImage.find({})
+  collections.push Schema.notifications.find()
+  collections.push Schema.messages.find({receiver: @userId}, {sort: {'version.createdAt': -1}, limit: 10})
+  collections.push Schema.merchants.find({_id: merchantId})
+  collections.push AvatarImages.find({})
+  collections.push Schema.products.find()
+  collections.push Schema.productGroups.find()
+  collections.push Schema.customers.find()
+  collections.push Schema.customerGroups.find()
+  collections.push Schema.providers.find()
+  collections.push Schema.returns.find()
+  collections.push Schema.orders.find()
+  collections.push Schema.imports.find()
+  collections.push Schema.priceBooks.find()
+  collections.push Schema.transactions.find()
+  collections.push Meteor.users.find({'profile.merchant': merchantId}, {fields: {
+    emails:1, profile: 1, sessions: 1, creator: 1, status: 1, allowDelete : 1
+  } })
 
-Meteor.publish null, -> Document.Product.find({})
-
-Meteor.publish "channels", -> Document.Channel.find({})
-Meteor.publish "friends",  -> Meteor.users.find({})
-Meteor.publish "messages", -> Document.Message.find({})
-
-Meteor.publish "branches", -> Document.Branch.find({})
-Meteor.publish "products", -> Document.Product.find({})
-Meteor.publish "staffs", -> Document.Message.find({})
-Meteor.publish "customers", -> Document.Customer.find({})
-Meteor.publish "orders", -> Document.Order.find({})
-Meteor.publish "imports", -> Document.Import.find({})
-
-Meteor.publish "topDocuments", (collectionName) ->
-  Document[collectionName].find({}, {limit: 20})
-
-Meteor.publish "sluggedDocument", (collectionName, slug) ->
-  Document[collectionName].find({slug: slug}, {limit: 1})
-
-Meteor.publish "channelMessages", (channelId, currentCount = 0, isDirect = false) ->
-  predicate = if isDirect
-    {$or: [{ parent: channelId, creator: @userId }, { parent: @userId, creator: channelId }]}
-  else { parent: channelId }
-
-  Document.Message.find predicate, {sort: {'version.createdAt': -1}, skip: currentCount,  limit: 100}
+  return collections

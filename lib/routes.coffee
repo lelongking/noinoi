@@ -1,66 +1,116 @@
-Router.configure
-  layoutTemplate: 'ApplicationLayout'
-  onBeforeAction: ->
-    Router.go 'welcome' unless Meteor.userId()
-    @next()
+Wings.SubsManager = new SubsManager()
+BlazeLayout.setRoot('body') if Meteor.isClient
+FlowRouter.notFound =
+  subscriptions: ->
+  action: ->
+#
+#merchantRoutes = FlowRouter.group(
+#  name: 'merchant'
+#  prefix: '/'
+#  triggersEnter: [ (context, redirect) ->
+#    console.log 'running group triggers'
+#    return
+#  ])
 
-currentDocInstance = {}
 
-Router.route '/welcome',
-  name: 'welcome'
-  layoutTemplate: 'WelcomeLayout'
-  onBeforeAction: ->
-    Router.go 'home', {slug: 'important', sub: 'product'} if Meteor.userId()
-    @next()
-
-globalSub = new SubsManager()
-Router.route '/:slug?/:sub?/:subslug?/:action?',
+FlowRouter.route '/',
   name: 'home'
-  template: 'home'
-#  waitOn: ->
-#    if Wings.Router.isValid(@)
-#      if @params.subslug
-#        Meteor.subscribe("sluggedDocument", @params.sub.toCapitalize(), @params.subslug)
-#      else
-#        Meteor.subscribe("topDocuments", @params.sub.toCapitalize())
-  onBeforeAction: ->
-    if Wings.Router.isValid(@)
-      Meteor.subscribe("topDocuments", @params.sub.toCapitalize())
-      Meteor.subscribe(@params.sub, @params.subslug) if @params.subslug
-      Meteor.subscribe("sluggedDocument", @params.sub.toCapitalize(), @params.subslug) if @params.subslug
-    Wings.Router.renderApplication(@)
-    @next()
+  action: ->
+    BlazeLayout.render 'about'
+    return
+  triggersEnter: [ (context, redirect) ->
+    console.log 'running /admin trigger'
+    return
+  ]
 
-  data: ->
-    channel = Wings.Router.findChannel(@params.slug)
-    globalSub.subscribe("channelMessages", channel.instance._id, 0, channel.isDirect) if channel.instance
-    Session.set "currentChannel", channel.instance
-    Session.set "kernelAddonVisible", !!@params.sub
-    Session.set "currentAddon", @params.sub
-    Session.set "currentAppColor", _(navigationMenus).findWhere({app: @params.sub})?.color
+FlowRouter.route '/merchant',
+  name: 'metro'
+  action: ->
+    Session.set "currentAppInfo", name: "trung tâm"
 
-    predicate = if channel.isDirect
-      {$or: [{ parent: channel.instance?._id, creator: Meteor.userId() }, { parent: Meteor.userId(), creator: channel.instance?._id }]}
-    else {parent: channel.instance?._id}
+    BlazeLayout.render 'merchantLayout',
+      content: 'merchantHome'
+      contentData: setups.metroHome.metroData
 
-    result =
-      messages: Document.Message.find(predicate, {sort: {'version.createdAt': 1}})
-      slug    : @params.slug
-      sub     : @params.sub
-      subslug : @params.subslug
-
-    filter = {}
-    filter = {creator: {$exists: true}} if @params.sub is 'user'
-
-    if Wings.Router.isValid(@)
-      result.documents = Document[@params.sub.toCapitalize()].find(filter)
-      result.instance = Document[@params.sub.toCapitalize()].findOne({slug: @params.subslug}) if @params.subslug
+    return
+  triggersEnter: [ (context, redirect) ->
+    console.log 'running /admin trigger'
+    return
+  ]
 
 
+FlowRouter.route '/customer',
+  name: 'customer'
+  action: ->
+    Session.set "currentAppInfo",
+      name: "khách hàng"
+      navigationPartial:
+        template: "customerManagementNavigationPartial"
+        data: {}
 
-    result
+    BlazeLayout.render 'merchantLayout',
+      content: 'customerManagement'
+    return
 
-Module "Wings",
-  go: (sub, subslug, action) ->
-    return if !slug = Router.current().params.slug ? null
-    Router.go 'home', {slug: slug, sub: sub, subslug: subslug, action: action}
+  triggersEnter: [ (context, redirect) ->
+    console.log 'running /admin trigger'
+    return
+  ]
+
+
+
+
+
+
+
+
+
+
+setups.metroHome.metroData = [
+  classGroup: 'tile-group-2'
+  dataGroup: [
+      setups.metroHome.customerApp
+    ,
+      setups.metroHome.providerApp
+    ,
+      setups.metroHome.productApp
+  ]
+,
+  classGroup: 'tile-group-2'
+  dataGroup: [
+      setups.metroHome.customerGroupApp
+    ,
+      setups.metroHome.transactionApp
+    ,
+      setups.metroHome.saleApp
+    ,
+      setups.metroHome.billManagerApp
+    ,
+      setups.metroHome.importApp
+    ,
+      setups.metroHome.warehouseApp
+    ,
+      setups.metroHome.productGroupApp
+    ,
+      setups.metroHome.priceBookApp
+  ]
+,
+  classGroup: 'tile-group-2'
+  dataGroup: [
+      setups.metroHome.staffManagementApp
+    ,
+      setups.metroHome.merchantOptionsApp
+    ,
+      setups.metroHome.customerReturnApp
+    ,
+      setups.metroHome.orderManagerApp
+    ,
+      setups.metroHome.providerReturnApp
+    ,
+      setups.metroHome.basicHistoryApp
+    ,
+      setups.metroHome.programManagerApp
+    ,
+      setups.metroHome.basicReportApp
+  ]
+]

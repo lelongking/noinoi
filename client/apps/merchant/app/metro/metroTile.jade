@@ -1,0 +1,23 @@
+template(name="metroTile")
+  .tile(class="{{appClass}} {{appColor}} {{appSize}}" data-app="{{appName}}")
+    if isCanvas
+      .canvas-wrapper(class="{{canvasClass}}")
+        .canvas
+          if appIcon
+            .app-icon(class="{{appIcon}}")
+
+          if getCount
+            .app-count {{getCount}}
+
+          .app-count-description {{description}}
+          span.caption.app-name(class="{{captionClass}}") {{caption}}
+
+    else
+      if appIcon
+        .app-icon(class="{{appIcon}}")
+
+      if getCount
+        .app-count {{getCount}}
+
+      .app-count-description {{description}}
+      span.caption.app-name(class="{{captionClass}}") {{caption}}

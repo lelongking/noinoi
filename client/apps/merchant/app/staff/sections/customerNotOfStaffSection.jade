@@ -1,0 +1,34 @@
+template(name="customerNotOfStaffSection")
+  .section.panel.panel-default.printable-area
+    .panel-heading
+      .show-on-print
+        +merchantPrintingHeader
+        .printing-info
+          .document-name {{name}}
+
+      table.lemon-grid: tr
+        th(style="width:20px")
+        th(style="width:auto") DANH SÁCH KHÁCH HÀNG MỚI
+        th.date(style="width:110px")
+        th.number(style="width:110px")
+        th.number(style="width:140px")
+
+    .panel-body.debt-details
+      table.lemon-grid(style="cursor: pointer;")
+        +customerOfNotStaffGroupHeader
+        each customerLists
+          tr.detail-row(class="{{selected}}")
+            td.command.icon-ok-6.hide-on-print
+            td {{name}}
+            td.date {{latestTradingDay}}
+            td.number {{latestTradingTotalCash}}
+            td.number {{debtTotalCash}}
+
+
+template(name="customerOfNotStaffGroupHeader")
+  tr
+    th.hide-on-print(style="width:30px")
+    th(style="width:auto")
+    th(style="width:90px")
+    th(style="width:120px")
+    th(style="width:150px")
