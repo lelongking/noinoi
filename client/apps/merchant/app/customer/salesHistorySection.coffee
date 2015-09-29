@@ -18,12 +18,12 @@ Wings.defineHyper 'customerManagementSalesHistorySection',
       }
 
     totalDebtCash: ->
-      if customer = Session.get('customerManagementCurrentCustomer')
+      if customer = Template.currentData()
         customer.debtCash + customer.loanCash
       else 0
 
     totalPaidCash: ->
-      if customer = Session.get('customerManagementCurrentCustomer')
+      if customer = Template.currentData()
         (unless customer.paidCash is undefined then customer.paidCash else 0) + (unless customer.returnCash is undefined then customer.returnCash else 0)
       else 0
 

@@ -15,21 +15,3 @@ Wings.defineApp 'customerManagement',
 
   helpers:
     currentCustomer: -> Template.instance().currentCustomer.get()
-    creationMode: -> Session.get("customerManagementCreationMode")
-
-
-#  events:
-#    "click .excel-customer": (event, template) -> $(".excelFileSource").click()
-#    "change .excelFileSource": (event, template) ->
-#      if event.target.files.length > 0
-#        console.log 'importing'
-#        $excelSource = $(".excelFileSource")
-#        $excelSource.parse
-#          config:
-#            complete: (results, file) ->
-#              console.log file, results
-#              Apps.Merchant.importFileCustomerCSV(results.data)
-#        $excelSource.val("")
-
-
-

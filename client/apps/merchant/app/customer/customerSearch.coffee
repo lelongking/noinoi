@@ -96,7 +96,6 @@ Wings.defineHyper 'customerManagementCustomerSearch',
     self.searchFilter = new ReactiveVar('')
     Wings.SubsManager.subscribe('getCustomerLists')
 
-
   rendered: ->
 
 

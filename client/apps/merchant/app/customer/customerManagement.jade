@@ -4,10 +4,6 @@ template(name="customerManagement")
       .dual-detail-wrapper: .dual-detail: .nano: .nano-content
         +Template.dynamic(template='customerManagementOverviewSection' data=currentCustomer)
         +Template.dynamic(template='customerManagementSalesHistorySection' data=currentCustomer)
-        //+customerManagementOverviewSection currentCustomer
-        //+customerManagementSalesHistorySection currentCustomer
-
-
       .dual-addon
         +Template.dynamic(template='customerManagementCustomerSearch' data=currentCustomer)
 

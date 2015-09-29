@@ -1,4 +1,4 @@
-Wings.SubsManager = new SubsManager()
+Wings.SubsManager = new SubsManager({cacheLimit: 9999, expireIn: 9999})
 BlazeLayout.setRoot('body') if Meteor.isClient
 FlowRouter.notFound =
   subscriptions: ->
