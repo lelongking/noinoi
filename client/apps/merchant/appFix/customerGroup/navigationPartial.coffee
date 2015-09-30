@@ -1,4 +1,4 @@
-lemon.defineApp Template.customerGroupNavigationPartial,
+Wings.defineApp 'customerGroupNavigationPartial',
   events:
     "click .customerToSales": (event, template) ->
       if customer = Session.get("customerGroupCurrentCustomer")

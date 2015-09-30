@@ -1,15 +1,17 @@
 scope = logics.productManagement
 
-lemon.defineApp Template.productManagement,
+Wings.defineApp 'productManagement',
   created: ->
-    ProductSearch.search ''
+    self = this
+    self.autorun ()->
+      if currentProductId = Session.get('mySession')?.currentProduct
+        scope.currentProduct = Schema.products.findOne(currentProductId)
+        Session.set "productManagementCurrentProduct", scope.currentProduct
+
     Session.set("productManagementSearchFilter", "")
 
-#    if currentProduct = Session.get("mySession").currentProductManagementSelection
-#      Meteor.subscribe('productManagementData', currentProduct)
-
-# loal danh sach san pham con lai
-#    lemon.dependencies.resolve('productManagements')
+  rendered: ->
+    ProductSearch.search ''
 
   helpers:
     creationMode: -> Session.get("productManagementCreationMode")

@@ -89,8 +89,8 @@ Helpers.shortName2 = (fullName, word = 2) ->
   else
     fullName
 
-Helpers.respectName = (fullName, gender) -> "#{if gender then 'Anh' else 'Chị'} #{fullName.split(' ').pop()}"
-Helpers.firstName = (fullName) -> fullName?.split(' ').pop()
+Helpers.respectName = (fullName = ' ', gender) -> "#{if gender then 'Anh' else 'Chị'} #{fullName.split(' ').pop()}"
+Helpers.firstName = (fullName = ' ') -> fullName?.split(' ').pop()
 
 
 colors = ['green', 'light-green', 'yellow', 'orange', 'blue', 'dark-blue', 'lime', 'pink', 'red', 'purple', 'dark',

@@ -1,6 +1,6 @@
 scope = logics.customerGroup
 
-lemon.defineApp Template.customerGroupOverviewSection,
+Wings.defineApp 'customerGroupOverviewSection',
   helpers:
     customerGroupSelects: -> scope.customerGroupSelects
     customerSelectedCount: -> Session.get("customerSelectLists")?.length > 0

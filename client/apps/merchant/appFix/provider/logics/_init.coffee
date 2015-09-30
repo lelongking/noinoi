@@ -1,5 +1,70 @@
 Enums = Apps.Merchant.Enums
+logics.providerManagement = {} unless logics.providerManagement
 scope = logics.providerManagement
+
+
+scope.resetShowEditCommand = ->
+  Session.set "providerManagementShowEditCommand"
+
+scope.transactionFind = (parentId)->
+  Schema.transactions.find({parent: parentId}, {sort: {'version.createdAt': 1}})
+
+scope.findOldDebt = ->
+  if providerId = Session.get("providerManagementProviderId")
+    transaction = Schema.transactions.find({owner: providerId, parent:{$exists: false}}, {sort: {'version.createdAt': 1}})
+    transactionCount = transaction.count(); count = 0
+    transaction.map(
+      (transaction) ->
+        count += 1
+        transaction.isLastTransaction = true if count is transactionCount
+        transaction
+    )
+  else []
+
+scope.findAllImport = ->
+  if providerId = Session.get("providerManagementProviderId")
+    imports = Schema.imports.find({
+      provider  : providerId
+      importType: Enums.getValue('ImportTypes', 'success')
+    }).map(
+      (item) ->
+        item.transactions = scope.transactionFind(item._id).fetch()
+        item.transactions[item.transactions.length-1].isLastTransaction = true if item.transactions.length > 0
+        item
+    )
+
+    returns = Schema.returns.find({
+      owner       : providerId
+      returnType  : Enums.getValue('ReturnTypes', 'provider')
+      returnStatus: Enums.getValue('ReturnStatus', 'success')
+    }).map(
+      (item) ->
+        item.transactions = scope.transactionFind(item._id).fetch()
+        item.transactions[item.transactions.length-1].isLastTransaction = true if item.transactions.length > 0
+        item
+    )
+
+    dataSource = _.sortBy(imports.concat(returns), (item) -> item.successDate)
+    classColor = false
+    for item in dataSource
+      item.classColor = classColor
+      classColor = !classColor
+    dataSource
+
+  else []
+
+scope.providerManagementCreationMode = () ->
+  if Session.get("providerManagementSearchFilter").length > 0
+    if scope.providerLists.length is 0 then nameIsExisted = true
+    else if scope.providerLists.length is 1
+      nameIsExisted = scope.providerLists[0].name isnt Session.get("providerManagementSearchFilter")
+  Session.set("providerManagementCreationMode", nameIsExisted)
+
+
+scope.ProviderSearchFindPreviousProvider = () ->
+scope.ProviderSearchFindNextProvider = () ->
+
+
 
 #-----------------Edit Provider-----------------------------------
 scope.searchOrCreateProviderByInput = (event, template)->
@@ -9,8 +74,8 @@ scope.searchOrCreateProviderByInput = (event, template)->
     Session.set("providerManagementSearchFilter", searchFilter)
 
     if event.which is 17 then console.log 'up'
-  #        else if event.which is 38 then scope.ProviderSearchFindPreviousProvider(providerSearch)
-  #        else if event.which is 40 then scope.ProviderSearchFindNextProvider(providerSearch)
+#        else if event.which is 38 then scope.ProviderSearchFindPreviousProvider(providerSearch)
+#        else if event.which is 40 then scope.ProviderSearchFindNextProvider(providerSearch)
     else
       if User.hasManagerRoles()
         scope.createNewProvider(template, providerSearch) if event.which is 13

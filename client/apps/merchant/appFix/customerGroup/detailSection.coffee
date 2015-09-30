@@ -1,11 +1,13 @@
 scope = logics.customerGroup
 Enums = Apps.Merchant.Enums
-lemon.defineHyper Template.customerGroupDetailSection,
+
+Wings.defineHyper 'customerGroupDetailSection',
   helpers:
     selected: -> if _.contains(Session.get("customerSelectLists"), @_id) then 'selected' else ''
     totalCashByStaff: ->
       totalCash = 0
-      (totalCash += customer.debtCash + customer.loanCash) for customer in scope.customerList
+      if scope.customerList
+        (totalCash += customer.debtCash + customer.loanCash) for customer in scope.customerList
       totalCash
 
     customerLists: ->

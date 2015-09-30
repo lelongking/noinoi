@@ -1,9 +1,23 @@
 scope = logics.customerGroup
 
-lemon.defineApp Template.customerGroup,
+Wings.defineApp 'customerGroup',
   created: ->
+    self = this
+    self.autorun ()->
+
     Session.set("customerGroupSearchFilter", "")
     Session.set("customerGroupCreationMode", false)
+#    self = this
+#    self.autorun() ->
+#      if currentCustomerGroupId = Session.get('mySession').currentCustomerGroup
+#        customerGroup = Schema.customerGroups.findOne({_id: currentCustomerGroupId})
+#        customerGroup = Schema.customerGroups.findOne({isBase: true, merchant: Merchant.getId()}) unless customerGroup
+#        if customerGroup
+#          customerGroup.customerCount = if customerGroup.customers then customerGroup.customers.length else 0
+#          scope.currentCustomerGroup = customerGroup
+#          Session.set "currentCustomerGroup", scope.currentCustomerGroup
+#          Session.set "customerSelectLists", Session.get('mySession').customerSelected?[Session.get('currentCustomerGroup')._id] ? []
+#          $(".changeCustomer").select2("readonly", Session.get("customerSelectLists").length is 0)
 
   helpers:
     customerGroupLists: ->

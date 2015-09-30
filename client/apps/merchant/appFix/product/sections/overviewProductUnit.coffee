@@ -1,7 +1,7 @@
 scope = logics.productManagement
 Enums = Apps.Merchant.Enums
 
-lemon.defineHyper Template.overviewProductUnit,
+Wings.defineHyper 'overviewProductUnit',
   rendered: ->
     if scope.currentProduct.status is Enums.getValue('ProductStatuses', 'initialize')
       Session.set('productManagementAllowAddUnit', scope.currentProduct.units?.length < 3)
@@ -43,7 +43,7 @@ lemon.defineHyper Template.overviewProductUnit,
         Session.set('productManagementAllowAddUnit', !Session.get('productManagementAllowAddUnit'))
 
 
-lemon.defineHyper Template.productUnitTableDetail,
+Wings.defineHyper 'productUnitTableDetail',
   helpers:
     isEditImportPrice: -> scope.currentProduct.status isnt Enums.getValue('ProductStatuses', 'confirmed')
 
@@ -56,7 +56,7 @@ lemon.defineHyper Template.productUnitTableDetail,
           updateOption = {importPrice: accounting.parse($importPrice.val())}
           scope.currentProduct.unitUpdate @_id, updateOption
 
-lemon.defineHyper Template.productUnitDetail,
+Wings.defineHyper 'productUnitDetail',
   helpers:
     currentProduct: -> scope.currentProduct
 
@@ -74,7 +74,7 @@ lemon.defineHyper Template.productUnitDetail,
 
     "click .deleteProductUnit": (event, template) -> scope.deleteNewProductUnit(@, event, template) if User.hasManagerRoles()
 
-lemon.defineHyper Template.productUnitCreateUnit,
+Wings.defineHyper 'productUnitCreateUnit',
   helpers:
     currentProduct: -> scope.currentProduct
 

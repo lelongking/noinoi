@@ -67,6 +67,39 @@ FlowRouter.route '/provider',
   ]
 
 
+FlowRouter.route '/product',
+  name: 'product'
+  action: ->
+    Session.set "currentAppInfo",
+      name: "sản phầm"
+      navigationPartial:
+        template: "productManagementNavigationPartial"
+        data: {}
+
+    BlazeLayout.render 'merchantLayout',
+      content: 'productManagement'
+    return
+
+  triggersEnter: [ (context, redirect) ->
+    console.log 'running /provider trigger'
+    return
+  ]
+
+
+FlowRouter.route '/customerGroup',
+  name: 'customerGroup'
+  action: ->
+    Session.set "currentAppInfo",
+      name: "nhóm khách hàng"
+
+    BlazeLayout.render 'merchantLayout',
+      content: 'customerGroup'
+    return
+
+  triggersEnter: [ (context, redirect) ->
+    console.log 'running /provider trigger'
+    return
+  ]
 
 
 

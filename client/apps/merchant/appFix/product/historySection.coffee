@@ -1,7 +1,7 @@
 Enums = Apps.Merchant.Enums
 scope = logics.productManagement
 
-lemon.defineHyper Template.productManagementSalesHistorySection,
+Wings.defineHyper 'productManagementSalesHistorySection',
   helpers:
     isProduct: -> @product is Session.get("productManagementCurrentProduct")?._id
     getOwnerName: ->

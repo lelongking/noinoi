@@ -1,7 +1,7 @@
 scope = logics.productManagement
 Enums = Apps.Merchant.Enums
 
-lemon.defineHyper Template.overviewProductInventory,
+Wings.defineHyper 'overviewProductInventory',
   rendered: -> Session.set('productManagementAllowInventory', scope.currentProduct.inventoryInitial)
 
   helpers:
@@ -53,7 +53,7 @@ lemon.defineHyper Template.overviewProductInventory,
         )
       event.stopPropagation()
 
-lemon.defineHyper Template.overviewProductInventoryDetail,
+Wings.defineHyper 'overviewProductInventoryDetail',
   rendered: -> $("[name=deliveryDate]").datepicker()
 
   helpers:

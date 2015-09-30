@@ -1,7 +1,7 @@
 scope = logics.productManagement
 Enums = Apps.Merchant.Enums
 
-lemon.defineHyper Template.productManagementOverviewSection,
+Wings.defineHyper 'productManagementOverviewSection',
   rendered: ->
     Session.set('productManagementIsShowProductUnit', false)
     Session.set('productManagementIsShowProductInventory', false)

@@ -1,15 +1,13 @@
-scope = logics.productGroup
-lemon.addRoute
-  template: 'productGroup'
-  onBeforeAction: ->
-    if @ready()
-      Apps.setup(scope, Apps.Merchant.productGroupInit, 'productGroup')
-      Session.set "currentAppInfo",
-        name: "nhóm sản phẩm"
-#        navigationPartial:
-#          template: "productGroupNavigationPartial"
-#          data: {}
-      @next()
-  data: ->
-    Apps.setup(scope, Apps.Merchant.productGroupReactive)
-, Apps.Merchant.RouterBase
+#FlowRouter.route '/productGroup',
+#  name: 'productGroup'
+#  action: ->
+#    Session.set "currentAppInfo",
+#      name: "nhóm sản phẩm"
+#
+#    BlazeLayout.render 'merchantLayout',
+#      content: 'productManagement'
+#    return
+#  triggersEnter: [ (context, redirect) ->
+#    console.log 'running /provider trigger'
+#    return
+#  ]

@@ -1,6 +1,6 @@
 scope = logics.productManagement
 
-lemon.defineWidget Template.productManagementImportDetails,
+Wings.defineWidget 'productManagementImportDetails',
   helpers:
     isProduct: -> @product is Session.get("productManagementCurrentProduct")._id
     providerName: -> Template.parentData().importName
