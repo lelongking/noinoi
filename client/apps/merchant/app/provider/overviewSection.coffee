@@ -1,6 +1,11 @@
 scope = logics.providerManagement
 
-lemon.defineHyper Template.providerManagementOverviewSection,
+Wings.defineHyper 'providerManagementOverviewSection',
+  rendered: ->
+    Session.set('providerManagementIsShowProviderDetail', false)
+    scope.overviewTemplateInstance = @
+    @ui.$providerName.autosizeInput({space: 10})
+
   helpers:
     showEditCommand: -> Session.get "providerManagementShowEditCommand"
     showDeleteCommand: -> Session.get("providerManagementCurrentProvider")?.allowDelete
@@ -10,11 +15,6 @@ lemon.defineHyper Template.providerManagementOverviewSection,
         scope.overviewTemplateInstance.ui.$providerName.change()
       , 50 if scope.overviewTemplateInstance
       @name
-
-  rendered: ->
-    Session.set('providerManagementIsShowProviderDetail', false)
-    scope.overviewTemplateInstance = @
-    @ui.$providerName.autosizeInput({space: 10})
 
   events:
     "click .avatar": (event, template) -> template.find('.avatarFile').click() if User.hasManagerRoles()

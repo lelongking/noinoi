@@ -1,4 +1,4 @@
-lemon.defineApp Template.providerManagementNavigationPartial,
+Wings.defineApp 'providerManagementNavigationPartial',
   events:
     "click .providerOldDebt": (event, template) ->
       oldDebt = Session.get("providerManagementOldDebt")
@@ -18,8 +18,3 @@ lemon.defineApp Template.providerManagementNavigationPartial,
       if provider = Session.get("providerManagementCurrentProvider")
         Meteor.call 'providerToImport', provider._id, (error, result) ->
           if error then console.log error else FlowRouter.go('/import')
-
-#    "click .providerToReturns": (event, template) ->
-#      if provider = Session.get("providerManagementCurrentProvider")
-#        Meteor.call 'providerToReturns', provider, Session.get('myProfile'), (error, result) ->
-#          if error then console.log error else FlowRouter.go('/providerReturn')

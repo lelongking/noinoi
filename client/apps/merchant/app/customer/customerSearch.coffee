@@ -63,7 +63,7 @@ createNewCustomer = (event, template, instance)->
 
 selectCustomer = (event, template, customer)->
   if userId = Meteor.userId()
-    Wings.SubsManager.subscribe('getCustomerId', customer._id)
+#    Wings.SubsManager.subscribe('getCustomerId', customer._id)
     Meteor.users.update(userId, {$set: {'sessions.currentCustomer': customer._id}})
     Session.set('customerManagementIsShowCustomerDetail', false)
 
@@ -94,7 +94,7 @@ Wings.defineHyper 'customerManagementCustomerSearch',
   created: ->
     self = this
     self.searchFilter = new ReactiveVar('')
-    Wings.SubsManager.subscribe('getCustomerLists')
+#    Wings.SubsManager.subscribe('getCustomerLists')
 
   rendered: ->
 

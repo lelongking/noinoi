@@ -7,7 +7,7 @@ Wings.defineApp 'customerManagement',
     self.currentCustomer = new ReactiveVar()
     self.autorun ()->
       if customerId = Session.get('mySession')?.currentCustomer
-        Wings.SubsManager.subscribe('getCustomerId', customerId)
+#        Wings.SubsManager.subscribe('getCustomerId', customerId)
         self.currentCustomer.set(Schema.customers.findOne(customerId))
 
   rendered: ->

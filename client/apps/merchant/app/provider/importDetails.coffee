@@ -1,4 +1,4 @@
-lemon.defineWidget Template.providerManagementImportDetails,
+Wings.defineWidget 'providerManagementImportDetails',
   helpers:
     isDelete: -> moment().diff(@version.createdAt ? new Date(), 'days') < 1
     isColor: -> '#fff'

@@ -1,7 +1,7 @@
 scope = logics.providerManagement
 numericOption = {autoGroup: true, groupSeparator:",", radixPoint: ".", suffix: " VNĐ", integerDigits:11}
 
-lemon.defineHyper Template.providerManagementImportsHistorySection,
+Wings.defineHyper 'providerManagementImportsHistorySection',
   rendered: ->
     @ui.$payImportAmount.inputmask("numeric", numericOption)
 

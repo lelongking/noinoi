@@ -16,7 +16,7 @@ metroHome.customerApp =
   canvasClass  : 'double'
 
 metroHome.providerApp =
-  appName      : 'providerManagement'
+  appName      : 'provider'
   appColor     : 'pumpkin'
   appCount     : 'providers'
   appSize      : 'double'
@@ -31,7 +31,7 @@ metroHome.providerApp =
   canvasClass  : ''
 
 metroHome.productApp =
-  appName      : 'productManagement'
+  appName      : 'product'
   appColor     : 'belize-hole'
   appCount     : 'products'
   appSize      : 'double'

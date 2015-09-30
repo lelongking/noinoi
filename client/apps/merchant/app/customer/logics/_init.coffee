@@ -24,7 +24,7 @@ scope.findAllOrders = (customer)->
       orderStatus: Enums.getValue('OrderStatus', 'finish')
     }).map(
       (item) ->
-        Wings.SubsManager.subscribe('getProductId', detail.product) for detail in item.details
+#        Wings.SubsManager.subscribe('getProductId', detail.product) for detail in item.details
         item.transactions = scope.transactionFind(item._id).fetch()
         item.transactions[item.transactions.length-1].isLastTransaction = true if item.transactions.length > 0
         item
@@ -36,7 +36,7 @@ scope.findAllOrders = (customer)->
       returnStatus: Enums.getValue('ReturnStatus', 'success')
     }).map(
       (item) ->
-        Wings.SubsManager.subscribe('getProductId', detail.product) for detail in item.details
+#        Wings.SubsManager.subscribe('getProductId', detail.product) for detail in item.details
         item.transactions = scope.transactionFind(item._id).fetch()
         item.transactions[item.transactions.length-1].isLastTransaction = true if item.transactions.length > 0
         item

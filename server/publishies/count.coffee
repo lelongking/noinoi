@@ -1,5 +1,5 @@
 Enums = Apps.Merchant.Enums
-Meteor.publish 'publishCounts', ->
+Meteor.publish null, ->
   return if !@userId
   myProfile  = Meteor.users.findOne(@userId)?.profile
   merchantId = myProfile.merchant if myProfile

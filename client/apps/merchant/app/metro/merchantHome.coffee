@@ -1,16 +1,16 @@
 totalDecoratorTiles = 6 * 4
 Wings.defineApp 'merchantHome',
   created: ->
-    self = this
-    self.ready = new ReactiveVar()
-    self.autorun ()->
-      handle = Wings.SubsManager.subscribe('publishCounts')
-      self.ready.set(handle.ready())
+#    self = this
+#    self.ready = new ReactiveVar()
+#    self.autorun ()->
+#      handle = Wings.SubsManager.subscribe('publishCounts')
+#      self.ready.set(handle.ready())
 
     Session.set('merchantFullSearches', {orders: [], imports: [], products:[], customers: [], providers: []})
 
   helpers:
-    isReady : -> Template.instance().ready.get()
+#    isReady : -> Template.instance().ready.get()
 
     isShowSearch: (collectionName)-> @[collectionName].length > 0
     decoratorIterator: ->

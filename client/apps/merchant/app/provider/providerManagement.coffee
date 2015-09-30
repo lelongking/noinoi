@@ -1,6 +1,20 @@
+Enums = Apps.Merchant.Enums
 scope = logics.providerManagement
 
-lemon.defineApp Template.providerManagement,
+Wings.defineApp 'providerManagement',
+  created: ->
+    self = this
+    self.autorun ()->
+      if currentProviderId = Session.get('mySession').currentProvider
+        scope.currentProvider = Schema.providers.findOne(currentProviderId)
+        Session.set "providerManagementCurrentProvider", scope.currentProvider
+
+        providerId = if scope.currentProvider?._id then scope.currentProvider._id else false
+        if Session.get("providerManagementProviderId") isnt providerId
+          Session.set "providerManagementProviderId", providerId
+
+    Session.set("providerManagementSearchFilter", "")
+
   helpers:
     providerLists: ->
       selector = {}; options  = {sort: {nameSearch: 1}}; searchText = Session.get("providerManagementSearchFilter")
@@ -12,9 +26,6 @@ lemon.defineApp Template.providerManagement,
       scope.providerLists = Schema.providers.find(selector, options).fetch()
       scope.providerLists
 
-  created: ->
-    Session.set("providerManagementSearchFilter", "")
-
   events:
     "keyup input[name='searchFilter']": (event, template) ->
       scope.searchOrCreateProviderByInput(event, template)
@@ -25,15 +36,3 @@ lemon.defineApp Template.providerManagement,
     "click .list .doc-item": (event, template) ->
       Provider.selectProvider(@_id)
       Session.set('providerManagementIsShowProviderDetail', false)
-
-#    "click .excel-provider": (event, template) -> $(".excelFileSource").click()
-#    "change .excelFileSource": (event, template) ->
-#      if event.target.files.length > 0
-#        console.log 'importing'
-#        $excelSource = $(".excelFileSource")
-#        $excelSource.parse
-#          config:
-#            complete: (results, file) ->
-#              console.log file, results
-#              Apps.Merchant.importFileProviderCSV(results.data)
-#        $excelSource.val("")
