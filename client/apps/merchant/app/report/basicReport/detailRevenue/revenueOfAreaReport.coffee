@@ -1,6 +1,6 @@
 scope = logics.basicReport
 
-lemon.defineApp Template.revenueOfAreaReport,
+Wings.defineApp 'revenueOfAreaReport',
   helpers:
     areaSelectOptions: -> scope.areaSelectOptions
 

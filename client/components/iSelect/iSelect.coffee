@@ -36,7 +36,7 @@ setReadonly = ($element, context) ->
 destroySelection = ($element, context) -> $element.select2('destroy') if $element
 stopTrackingValue = (context) -> context.valueTracker.stop() if context.valueTracker
 
-lemon.defineWidget Template.iSelect,
+Wings.defineWidget 'iSelect',
   ui:
     component: ".select2component"
   rendered: ->

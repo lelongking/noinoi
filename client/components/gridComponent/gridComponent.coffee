@@ -1,4 +1,4 @@
-lemon.defineWidget Template.gridComponent,
+Wings.defineWidget 'gridComponent',
   helpers:
     itemTemplate: ->
       template = Template.instance()

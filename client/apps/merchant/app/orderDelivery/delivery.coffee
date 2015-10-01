@@ -1,4 +1,8 @@
 lemon.defineApp Template.delivery,
+  created: ->
+    self = this
+    self.autorun ()->
+
   helpers:
     activeDeliveryFilter: (status)-> return 'active' if Session.get('deliveryFilter') is status
 

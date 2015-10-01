@@ -1,6 +1,6 @@
 scope = logics.basicReport
 
-lemon.defineApp Template.productOfCustomerReport,
+Wings.defineApp 'productOfCustomerReport',
   helpers:
     customerSelectOptions: -> scope.customerSelectOptions
 

@@ -20,7 +20,7 @@ generateActiveClass = (context, instance) ->
   currentSource = Session.get(context.data.options.currentSource)
   if instance[key] is currentSource?[key] then 'active' else ''
 
-lemon.defineWidget Template.tabComponent,
+Wings.defineWidget 'tabComponent',
   helpers:
     activeClass: -> generateActiveClass(Template.instance(), @)
     dynamicCaption: -> @[Template.instance().data.options.caption ? 'caption']

@@ -77,8 +77,8 @@ metroHome.transactionApp =
   isCanvas     : false
   canvasClass  : ''
 
-metroHome.saleApp =
-  appName      : 'sales'
+metroHome.orderApp =
+  appName      : 'order'
   appColor     : 'wet-asphalt'
   appCount     : 'orders'
   appSize      : ''
@@ -171,7 +171,7 @@ metroHome.priceBookApp =
 
 
 metroHome.staffManagementApp =
-  appName      : 'staffManagement'
+  appName      : 'staff'
   appColor     : 'emeral'
   appCount     : 'staffs'
   appSize      : ''
@@ -186,7 +186,7 @@ metroHome.staffManagementApp =
   canvasClass  : ''
 
 metroHome.merchantOptionsApp =
-  appName      : 'merchantOptions'
+  appName      : 'option'
   appColor     : 'dark-blue'
   appCount     : ''
   appSize      : ''
@@ -201,7 +201,7 @@ metroHome.merchantOptionsApp =
   canvasClass  : ''
 
 metroHome.customerReturnApp =
-  appName      : 'customerReturn'
+  appName      : 'returnCustomer'
   appColor     : 'pink'
   appCount     : 'customerReturnHistories'
   appSize      : ''
@@ -231,7 +231,7 @@ metroHome.orderManagerApp =
   canvasClass  : ''
 
 metroHome.providerReturnApp =
-  appName      : 'providerReturn'
+  appName      : 'returnProvider'
   appColor     : 'pumpkin'
   appCount     : 'providerReturnHistories'
   appSize      : ''
@@ -261,7 +261,7 @@ metroHome.basicHistoryApp =
   canvasClass  : ''
 
 metroHome.programManagerApp =
-  appName      : ''
+  appName      : 'saleProgram'
   appColor     : 'peter-river'
   appCount     : ''
   appSize      : ''

@@ -3,3 +3,5 @@ scope = logics.turnoverStaff
 
 lemon.defineApp Template.turnoverStaff,
   created: ->
+    self = this
+    self.autorun ()->

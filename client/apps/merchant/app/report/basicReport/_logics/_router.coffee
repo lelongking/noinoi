@@ -1,12 +1,15 @@
-scope = logics.basicReport
-lemon.addRoute
-  template: 'basicReport'
-  onBeforeAction: ->
-    if @ready()
-      Apps.setup(scope, Apps.Merchant.basicReportInit, 'basicReport')
-      Session.set "currentAppInfo",
-        name: "báo cáo"
-      @next()
-  data: ->
-    Apps.setup(scope, Apps.Merchant.basicReportReactive)
-, Apps.Merchant.RouterBase
+FlowRouter.route '/basicReport',
+  name: 'basicReport'
+  action: ->
+    Session.set "currentAppInfo",
+      name: "báo cáo"
+
+    BlazeLayout.render 'merchantLayout',
+      content: 'basicReport'
+    return
+
+  triggersEnter: [ (context, redirect) ->
+    console.log 'running /provider trigger'
+    return
+  ]
+

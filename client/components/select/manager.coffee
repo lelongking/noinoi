@@ -1,2 +1,2 @@
-lemon.defineWidget Template.selectComponent,
+Wings.defineWidget 'selectComponent',
   rendered: -> console.log "rendered"

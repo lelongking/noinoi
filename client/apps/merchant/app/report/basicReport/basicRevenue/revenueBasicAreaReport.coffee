@@ -1,6 +1,6 @@
 scope = logics.basicReport
 
-lemon.defineApp Template.revenueBasicAreaReport,
+Wings.defineApp 'revenueBasicAreaReport',
   created: ->
     Session.set('revenueBasicAreaReportView', 'totalCash')
     scope.dataView =

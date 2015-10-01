@@ -1,6 +1,6 @@
 scope = logics.basicReport
 
-lemon.defineApp Template.revenueBasicCustomerReport,
+Wings.defineApp 'revenueBasicCustomerReport',
   rendered: ->
     nv.addGraph ->
       customerGroups = Schema.customers.find({debtCash: {$gt: 0}},{$sort: {debtCash: -1}, limit: 20}).fetch()

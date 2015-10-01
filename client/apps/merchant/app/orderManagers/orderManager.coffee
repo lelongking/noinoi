@@ -1,4 +1,8 @@
 lemon.defineApp Template.orderManagers,
+  created: ->
+    self = this
+    self.autorun ()->
+
   rendered: ->
     $("[name=fromDate]").datepicker('setDate', Session.get('orderFilterStartDate'))
     $("[name=toDate]").datepicker('setDate', Session.get('orderFilterToDate'))

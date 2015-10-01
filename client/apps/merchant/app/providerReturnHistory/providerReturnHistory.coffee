@@ -16,6 +16,9 @@ lemon.defineApp Template.providerReturnHistory,
           details.push({createdAt: key, data: value})
       details
 
+  created: ->
+    self = this
+    self.autorun ()->
   rendered: ->
   destroyed: ->
 

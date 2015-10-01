@@ -1,0 +1,1 @@
+logics.orderManager = { name: 'sale-logics' }

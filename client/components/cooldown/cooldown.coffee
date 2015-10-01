@@ -1,4 +1,4 @@
-lemon.defineWidget Template.iCooldown,
+Wings.defineWidget 'iCooldown',
   ui:
     iCooldown: ".iCooldown"
 

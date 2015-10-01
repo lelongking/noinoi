@@ -22,8 +22,8 @@ generateActiveClass = (context, instance) ->
   currentSource = Session.get(context.data.options.currentSource)
   if !currentSource || instance[key] isnt currentSource[key] then '' else 'active'
 
-lemon.defineWidget Template.iTab,
-  sources: -> Session.get(@options.source)
+Wings.defineWidget 'iTab',
+  sources: -> @options.source
   getCaption: -> @[Template.instance().data.options.caption ? 'caption']
   activeClass: -> generateActiveClass(Template.instance(), @)
 

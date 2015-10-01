@@ -1,6 +1,6 @@
 scope = logics.basicReport
 
-lemon.defineApp Template.revenueBasicStaffReport,
+Wings.defineApp 'revenueBasicStaffReport',
   rendered: ->
     nv.addGraph ->
       customerGroups = Meteor.users.find().fetch()

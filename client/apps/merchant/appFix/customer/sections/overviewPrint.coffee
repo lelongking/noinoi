@@ -1,3 +1,3 @@
-lemon.defineWidget Template.customerManagementOverViewPrint,
+Wings.defineWidget 'customerManagementOverViewPrint',
   helpers:
     a: ->

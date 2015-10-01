@@ -1,92 +1,23 @@
 Wings.SubsManager = new SubsManager({cacheLimit: 9999, expireIn: 9999})
+
+#Module 'Wings.Merchant',
+#  router:
+#
+#  customer:
+#    url: ''
+#    name: ''
+#    render:
+
+
+
+
 BlazeLayout.setRoot('body') if Meteor.isClient
 FlowRouter.notFound =
   subscriptions: ->
   action: ->
 
-FlowRouter.route '/',
-  name: 'home'
-  action: ->
-    BlazeLayout.render 'about'
-    return
-  triggersEnter: [ (context, redirect) ->
-    console.log 'running /admin trigger'
-    return
-  ]
 
-FlowRouter.route '/merchant',
-  name: 'metro'
-  action: ->
-    Session.set "currentAppInfo", name: "trung tâm"
-
-    BlazeLayout.render 'merchantLayout',
-      content: 'merchantHome'
-      contentData: setups.metroHome.metroData
-
-    return
-  triggersEnter: [ (context, redirect) ->
-    console.log 'running /metro trigger'
-    return
-  ]
-
-
-FlowRouter.route '/customer',
-  name: 'customer'
-  action: ->
-    Session.set "currentAppInfo",
-      name: "khách hàng"
-      navigationPartial:
-        template: "customerManagementNavigationPartial"
-        data: {}
-
-    BlazeLayout.render 'merchantLayout',
-      content: 'customerManagement'
-    return
-
-  triggersEnter: [ (context, redirect) ->
-    console.log 'running /customer trigger'
-    return
-  ]
-
-FlowRouter.route '/provider',
-  name: 'provider'
-  action: ->
-    Session.set "currentAppInfo",
-      name: "nhà cung cấp"
-      navigationPartial:
-        template: "providerManagementNavigationPartial"
-        data: {}
-
-    BlazeLayout.render 'merchantLayout',
-      content: 'providerManagement'
-    return
-
-  triggersEnter: [ (context, redirect) ->
-    console.log 'running /provider trigger'
-    return
-  ]
-
-
-FlowRouter.route '/product',
-  name: 'product'
-  action: ->
-    Session.set "currentAppInfo",
-      name: "sản phầm"
-      navigationPartial:
-        template: "productManagementNavigationPartial"
-        data: {}
-
-    BlazeLayout.render 'merchantLayout',
-      content: 'productManagement'
-    return
-
-  triggersEnter: [ (context, redirect) ->
-    console.log 'running /provider trigger'
-    return
-  ]
-
-
-FlowRouter.route '/customerGroup',
+FlowRouter.route '/saleProgram',
   name: 'customerGroup'
   action: ->
     Session.set "currentAppInfo",
@@ -100,9 +31,6 @@ FlowRouter.route '/customerGroup',
     console.log 'running /provider trigger'
     return
   ]
-
-
-
 
 
 
@@ -122,7 +50,7 @@ setups.metroHome.metroData = [
     ,
       setups.metroHome.transactionApp
     ,
-      setups.metroHome.saleApp
+      setups.metroHome.orderApp
     ,
       setups.metroHome.billManagerApp
     ,

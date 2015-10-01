@@ -1,4 +1,4 @@
-lemon.defineWidget Template.customerManagementSaleDetails,
+Wings.defineWidget 'customerManagementSaleDetails',
   helpers:
     isBase: -> @conversion is 1
     isDelete: -> moment().diff(@version.createdAt ? new Date(), 'days') < 1

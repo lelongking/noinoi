@@ -1,4 +1,4 @@
-lemon.defineWidget Template.iGrid,
+Wings.defineWidget 'iGrid',
   helpers:
     itemTemplate: ->
       template = Template.instance()
