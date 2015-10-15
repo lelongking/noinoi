@@ -23,12 +23,12 @@ Module 'Wings',
     source.rendered = ->
       componentHelper.customBinding(destination.ui, @) if destination.ui
       componentHelper.autoBinding(@)
-      componentHelper.registerEditors(@)
       componentHelper.invokeIfNecessary(destination.rendered, @)
+      componentHelper.registerEditors(@)
 
   defineAppContainer: (source, destination) ->
     source = componentHelper.generateTemplateEssential(source, destination)
 
     source.rendered = ->
-      componentHelper.invokeIfNeccessary(destination.rendered, @)
-      componentHelper.arrangeAppLayout()
+      componentHelper.invokeIfNecessary(destination.rendered, @)
+      componentHelper.arrangeLayout()

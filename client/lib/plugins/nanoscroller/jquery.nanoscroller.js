@@ -3,7 +3,7 @@
 * Copyright (c) 2014 James Florentino; Licensed MIT */
 (function(factory) {
   if (typeof define === 'function' && define.amd) {
-    return define(['jquery'], function($) {
+    return define(['../jquery/jquery.knob.js'], function($) {
       return factory($, window, document);
     });
   } else {
