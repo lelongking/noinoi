@@ -9,6 +9,8 @@ lemon.defineApp Template.basicHistory,
     Session.set("basicHistoryDynamics", option)
 
   helpers:
+    attrs : -> 'test'
+    attr1 : -> 'test1'
     basicHistoryDynamics: -> Session.get("basicHistoryDynamics")
     optionActiveClass: (templateName)-> 'active' if Session.get("basicHistoryDynamics").name is templateName
 

@@ -10,10 +10,10 @@ allowModifies = (userId, currentRole) ->
   return false if !currentProfile or !currentRole.parent
   currentProfile.parentMerchant is currentRole.parent
 
-Schema.roles.allow
-  insert: (userId, currentRole) -> allowModifies(userId, currentRole)
-  update: (userId, currentRole) -> allowModifies(userId, currentRole)
-  remove: (userId, currentRole) -> allowModifies(userId, currentRole)
+#Schema.roles.allow
+#  insert: (userId, currentRole) -> allowModifies(userId, currentRole)
+#  update: (userId, currentRole) -> allowModifies(userId, currentRole)
+#  remove: (userId, currentRole) -> allowModifies(userId, currentRole)
 
 
 Meteor.publish 'fake', ->

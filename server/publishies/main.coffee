@@ -25,3 +25,14 @@ Meteor.publish null, ->
   } })
 
   return collections
+
+Meteor.publish 'secrets', ->
+  user = Meteor.users.findOne(_id: @userId)
+  if Roles.userIsInRole(user, [
+    'admin'
+    'view-secrets'
+  ])
+    console.log 'publishing secrets', @userId
+    return Meteor.secrets.find()
+  @stop()
+  return

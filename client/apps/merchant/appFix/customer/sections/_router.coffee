@@ -33,6 +33,6 @@ FlowRouter.route '/customer/:customerId',
         data: {}
 
     BlazeLayout.render 'merchantLayout',
-      content: 'customerManagement'
+        content: 'customerManagement'
     return
 
