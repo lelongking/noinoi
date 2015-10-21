@@ -1,44 +1,44 @@
 Enums = Apps.Merchant.Enums
 simpleSchema.customers = new SimpleSchema
-  name   : type: String, index: 1
-  avatar : type: String, optional: true
+  name      : type: String, index: 1
+  nameSearch: type: String, index: 1, optional: true
+  firstName : type: String, optional: true
+  lastName  : type: String, optional: true
+  avatar    : type: String, optional: true
 
   customerCode    : type: String, optional: true
-  customerOfGroup : type: String , optional: true
-  customerOfStaff : type: String , optional: true
+  customerOfGroup : type: String, optional: true
+  customerOfStaff : type: String, optional: true
 
-  deliveryCompany : type: String , optional: true
-  deliveryAddress : type: String , optional: true
+  deliveryCompany : type: String, optional: true
+  deliveryAddress : type: String, optional: true
 
   saleBillNo        : type: Number, defaultValue: 0 #số phiếu bán
   importBillNo      : type: Number, defaultValue: 0 #số phiếu nhap
   returnBillNo      : type: Number, defaultValue: 0 #số phiếu tra hang
   transactionBillNo : type: Number, defaultValue: 0 #số phiếu thu chi
 
-  firstName     : type: String
-  lastName      : type: String
-  nameSearch    : type: String
-  merchant    : type: String
-  allowDelete : type: Boolean
-  creator     : type: String
+  merchant    : type: String, optional: true
+  creator     : type: String, optional: true
+  allowDelete : type: Boolean, optional: true
   version     : { type: simpleSchema.Version }
 
-  orderWaiting : type: [String]
-  orderFailure : type: [String]
-  orderSuccess : type: [String]
+  orderWaiting : type: [String], optional: true
+  orderFailure : type: [String], optional: true
+  orderSuccess : type: [String], optional: true
 
-  debtRequiredCash : type: Number #số nợ bắt buộc phải thu
-  paidRequiredCash : type: Number #số nợ bắt buộc đã trả
+  debtRequiredCash : type: Number, optional: true #số nợ bắt buộc phải thu
+  paidRequiredCash : type: Number, optional: true #số nợ bắt buộc đã trả
 
-  debtBeginCash    : type: Number #số nợ đầu kỳ phải thu
-  paidBeginCash    : type: Number #số nợ đầu kỳ đã trả
+  debtBeginCash    : type: Number, optional: true #số nợ đầu kỳ phải thu
+  paidBeginCash    : type: Number, optional: true #số nợ đầu kỳ đã trả
 
-  debtIncurredCash : type: Number #chi phí phát sinh cộng
-  paidIncurredCash : type: Number #chi phí phát sinh trừ
+  debtIncurredCash : type: Number, optional: true #chi phí phát sinh cộng
+  paidIncurredCash : type: Number, optional: true #chi phí phát sinh trừ
 
-  debtSaleCash     : type: Number #số tiền bán hàng phát sinh trong kỳ
-  paidSaleCash     : type: Number #số tiền đã trả phát sinh trong kỳ
-  returnSaleCash   : type: Number #số tiền trả hàng phát sinh trong kỳ
+  debtSaleCash     : type: Number, optional: true #số tiền bán hàng phát sinh trong kỳ
+  paidSaleCash     : type: Number, optional: true #số tiền đã trả phát sinh trong kỳ
+  returnSaleCash   : type: Number, optional: true #số tiền trả hàng phát sinh trong kỳ
 
   profiles               : type: Object, optional: true
   'profiles.gender'      : simpleSchema.DefaultBoolean()
@@ -70,25 +70,8 @@ Schema.add 'customers', "Customer", class Customer
 
     doc.remove = ->
       if @allowDelete and Schema.customers.remove(@_id)
-        randomGetCustomerId = Schema.customers.findOne()?._id ? ''
+        randomGetCustomerId = Schema.customers.findOne({merchant: Merchant.getId()})?._id ? ''
         @setCustomerSession(randomGetCustomerId)
-
-        #update customer group
-        if @customerOfGroup
-          customerGroupUpdate =
-            $pull:
-              customerLists: @_id
-            $inc:
-              debtRequiredCash: -@debtRequiredCash
-              paidRequiredCash: -@paidRequiredCash
-              debtBeginCash   : -@debtBeginCash
-              paidBeginCash   : -@paidBeginCash
-              debtIncurredCash: -@debtIncurredCash
-              paidIncurredCash: -@paidIncurredCash
-              debtSaleCash    : -@debtSaleCash
-              paidSaleCash    : -@paidSaleCash
-              returnSaleCash  : -@returnSaleCash
-          Schema.customerGroups.update(@customerOfGroup, customerGroupUpdate)
 
 
     doc.calculateBalance = ->
@@ -139,8 +122,9 @@ Schema.add 'customers', "Customer", class Customer
     )
 
   @insert: (name, description) ->
-    customerId = Schema.customers.insert({name: name, description: descriptions})
-    CustomerGroup.addCustomer(customerId) if customerId
+    insertOption = {name: name}
+    insertOption.description = description if description
+    customerId = Schema.customers.insert insertOption
 
   @splitName: (fullText) ->
     if fullText.indexOf("(") > 0

@@ -8,7 +8,6 @@ Wings.defineApp 'customerManagement',
     self.searchFilter = new ReactiveVar('')
     self.autorun ()->
       if customerId = Session.get('mySession')?.currentCustomer
-#        Wings.SubsManager.subscribe('getCustomerId', customerId)
         self.currentCustomer.set(Schema.customers.findOne(customerId))
 
   rendered: ->
@@ -21,31 +20,36 @@ Wings.defineApp 'customerManagement',
     activeClass: ->
       if @_id is Template.instance().currentCustomer.get()?._id then 'active' else ''
 
-    customerListFilters: ->
-      getCustomerLists(Template.instance())
-
 
     customerGroupLists: ->
-      Schema.customerGroups.find({}, {sort: {nameSearch: 1}}).map(
+      merchantId = Merchant.getId()
+      customerGroups = Schema.customerGroups.find({merchant: merchantId}, {sort: {nameSearch: 1}}).map(
         (customerGroup) ->
-          selector = {group: customerGroup._id}
-          if searchText = Session.get("customerManagementSearchFilter")
-            regExp = Helpers.BuildRegExp(searchText);
-            selector = {$or: [{code: regExp, group: customerGroup._id}, {nameSearch: regExp, group: customerGroup._id}]}
-
-          if Session.get('myProfile')?.roles is 'seller'
-            addCustomerIds = {$in: Session.get('myProfile').customers}
-            if(searchText)
-              selector.$or[0]._id = addCustomerIds
-              selector.$or[1]._id = addCustomerIds
-            else
-              selector._id = addCustomerIds
-
-          customerLists = Schema.customers.find(selector, {sort: {nameSearch: 1}})
-          customerGroup.customerLists    = customerLists
-          customerGroup.hasCustomerLists = customerLists.count() > 0
+          customerGroup.customerListSearched = []
+          customerGroup.hasCustomerList = -> customerGroup.customerListSearched.length > 0
           customerGroup
       )
+
+      selector = {};
+      if searchText = Template.instance().searchFilter.get()
+        regExp = Helpers.BuildRegExp(searchText);
+        selector = {$or: [{customerCode: regExp, merchant: merchantId}, {nameSearch: regExp, merchant: merchantId}]}
+
+      if Session.get('myProfile')?.roles is 'seller'
+        addCustomerIds = {$in: Session.get('myProfile').customers}
+        if(searchText)
+          selector.$or[0]._id = addCustomerIds
+          selector.$or[1]._id = addCustomerIds
+        else
+          selector._id = addCustomerIds
+      scope.customerLists = []
+      Schema.customers.find(selector, {sort: {nameSearch: 1}}).forEach(
+        (customer) ->
+          if customerGroup = _.findWhere(customerGroups, {_id: customer.customerOfGroup ? customer.group})
+            customerGroup.customerListSearched.push(customer)
+            scope.customerLists.push(customer)
+      )
+      customerGroups
 
   events:
     "keyup input[name='searchFilter']": (event, template) ->
@@ -63,13 +67,12 @@ Wings.defineApp 'customerManagement',
 
 searchCustomerOrCreateCustomer = (event, template, instance)->
   Helpers.deferredAction ()->
-    searchFilter  = template.ui.$searchFilter.val()
-    customerSearch = Helpers.Searchify searchFilter
+    searchFilter = template.ui.$searchFilter.val()
     instance.searchFilter.set(searchFilter)
 
     if event.which is 17 then console.log 'up'
-    else if event.which is 38 then scope.CustomerSearchFindPreviousCustomer(customerSearch)
-    else if event.which is 40 then scope.CustomerSearchFindNextCustomer(customerSearch)
+#    else if event.which is 38 then scope.CustomerSearchFindPreviousCustomer(customerSearch)
+#    else if event.which is 40 then scope.CustomerSearchFindNextCustomer(customerSearch)
     else
       if User.hasManagerRoles()
         scope.createNewCustomer(template, searchFilter) if event.which is 13
@@ -78,7 +81,7 @@ searchCustomerOrCreateCustomer = (event, template, instance)->
         Session.set("customerManagementCreationMode", false)
 
   , "customerManagementSearchPeople"
-  , 50
+  , 200
 
 
 createNewCustomer = (event, template, instance)->
@@ -95,24 +98,3 @@ selectCustomer = (event, template, customer)->
     Meteor.users.update(userId, {$set: {'sessions.currentCustomer': customer._id}})
     Template.instance().currentCustomer.set(customer)
     Session.set('customerManagementIsShowCustomerDetail', false)
-
-
-getCustomerLists = (intance)->
-  selector   = {}
-  options    = {sort: {nameSearch: 1}}
-  searchText = intance.searchFilter.get()
-
-  if(searchText)
-    regExp = Helpers.BuildRegExp(searchText);
-    selector = {$or: [
-      {nameSearch: regExp}
-    ]}
-
-  if Session.get('myProfile')?.roles is 'seller'
-    if(searchText)
-      selector.$or[0]._id = $in: Session.get('myProfile').customers
-    else
-      selector = {_id: {$in: Session.get('myProfile').customers}}
-
-  scope.customerLists = Schema.customers.find(selector, options).fetch()
-  scope.customerLists

@@ -1,6 +1,7 @@
 logics.customerManagement = {} unless logics.customerManagement
 Enums = Apps.Merchant.Enums
 scope = logics.customerManagement
+scope.customerLists = []
 
 scope.resetShowEditCommand = -> Session.set "customerManagementShowEditCommand"
 scope.transactionFind = (parentId)-> Schema.transactions.find({parent: parentId}, {sort: {'version.createdAt': 1}})
@@ -168,8 +169,5 @@ scope.createNewCustomer = (template, customerSearch) ->
     template.ui.$searchFilter.notify("Khách hàng đã tồn tại.", {position: "bottom"})
   else
     newCustomerId = Schema.customers.insert newCustomer
-    console.log Schema.customers.findOne(newCustomerId)
     if Match.test(newCustomerId, String)
-      CustomerGroup.addCustomer(newCustomerId)
       Meteor.users.update(Meteor.userId(), {$set: {'sessions.currentCustomer': newCustomerId}})
-

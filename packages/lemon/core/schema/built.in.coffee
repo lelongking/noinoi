@@ -6,7 +6,6 @@ simpleSchema.Version = new SimpleSchema
   createdAt:
     type: Date
     autoValue: ->
-      console.log 'update createdAt'
       if @isInsert
         return new Date
       else if @isUpsert
@@ -16,7 +15,6 @@ simpleSchema.Version = new SimpleSchema
   updateAt:
     type: Date
     autoValue: ->
-      console.log 'update updateAt'
       return new Date() if @isUpdate
       return
     denyInsert: true

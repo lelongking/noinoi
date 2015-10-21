@@ -2,25 +2,26 @@ template(name="customerManagement")
   #content.modern.customer-management
     .dual-content
       .dual-detail-wrapper: .dual-detail: .nano: .nano-content
-        +Template.dynamic(template='customerManagementOverviewSection' data=currentCustomer)
-        +Template.dynamic(template='customerManagementSalesHistorySection' data=currentCustomer)
+        if currentCustomer
+          +Template.dynamic(template='customerManagementOverviewSection' data=currentCustomer)
+          +Template.dynamic(template='customerManagementSalesHistorySection' data=currentCustomer)
 
 
 
       .dual-addon
         .search-filter.icon-search-8
           input(name='searchFilter' type="text" placeholder="tìm khách hàng...")
-          if creationMode
+          if getSession 'customerManagementCreationMode'
             .lemon.btn.rounded.tiny.lime.icon-plus-6.create-command.createCustomerBtn
 
         .nano
           .nano-content(style="margin-bottom: 35px;")
             each customerGroupLists
-              if hasCustomerLists
+              if hasCustomerList
                 .list
                   .caption-item: b {{name}}
 
-                  each customerLists
+                  each customerListSearched
                     .doc-item(class="{{activeClass}}")
                       .avatar-wrapper: .avatar-image(class="{{hasAvatar}}"
                       style="background-image:url('{{avatarUrl}}')") {{aliasLetter firstName}}

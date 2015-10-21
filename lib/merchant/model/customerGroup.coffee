@@ -5,8 +5,8 @@ simpleSchema.customerGroups = new SimpleSchema
   description : simpleSchema.OptionalString
   staff       : simpleSchema.OptionalString
   priceBook   : simpleSchema.OptionalString
-  customerLists : type: [String], defaultValue: []
   totalCash   : type: Number, defaultValue: 0
+  customerLists : type: [String], defaultValue: []
 
 
   debtRequiredCash : type: Number, defaultValue: 0 #số nợ bắt buộc phải thu
@@ -37,11 +37,11 @@ simpleSchema.customerGroups = new SimpleSchema
 Schema.add 'customerGroups', "CustomerGroup", class CustomerGroup
   @transform: (doc) ->
     doc.customerCount = ->
-      if @customers
+      if @customerLists
         if User.hasManagerRoles()
-          @customers.length
+          @customerLists.length
         else
-          _.intersection(@customers, Meteor.users.findOne(Meteor.userId()).profile.customers).length
+          _.intersection(@customerLists, Meteor.users.findOne(Meteor.userId()).profile.customers).length
       else 0
 
     doc.reCalculateTotalCash = ->
