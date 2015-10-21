@@ -19,10 +19,13 @@ Wings.defineHyper 'customerManagementOverviewSection',
       @name
     firstName: -> Helpers.firstName(@name)
 
+    currentCustomer: -> console.log @
+
   events:
     "click .avatar": (event, template) ->
       if User.hasManagerRoles()
         template.find('.avatarFile').click()
+
     "change .avatarFile": (event, template) ->
       if User.hasManagerRoles()
         files = event.target.files
@@ -44,19 +47,45 @@ Wings.defineHyper 'customerManagementOverviewSection',
 
 
     "keyup input.editable": (event, template) ->
-      if Session.get("customerManagementCurrentCustomer")
+      console.log template
+      if template.data
         scope.editCustomer(template) if event.which is 13
 
         if event.which is 27
           if $(event.currentTarget).attr('name') is 'customerName'
-            $(event.currentTarget).val(Session.get("customerManagementCurrentCustomer").name)
+            $(event.currentTarget).val(template.data.name)
             $(event.currentTarget).change()
           else if $(event.currentTarget).attr('name') is 'customerPhone'
-            $(event.currentTarget).val(Session.get("customerManagementCurrentCustomer").phone)
+            $(event.currentTarget).val(template.data.phone)
           else if $(event.currentTarget).attr('name') is 'customerAddress'
-            $(event.currentTarget).val(Session.get("customerManagementCurrentCustomer").address)
+            $(event.currentTarget).val(template.data.address)
 
           scope.checkAllowUpdateOverview(template)
+
+
+    "keyup [name='customerCode']": (event, template) ->
+      $customerCode   = $(template.find("[name='customerCode']"))
+      currentCustomer = template.data
+      Helpers.deferredAction ->
+        if $customerCode.val() isnt currentCustomer.code
+          Schema.customers.update(currentCustomer._id, $set:{customerCode: $customerCode.val()})
+#            ProductSearch.cleanHistory()
+#            ProductSearch.search Session.get("productManagementSearchFilter")
+      , "customerManagerChangeCustomerCode"
+      , 1000
+      event.stopPropagation()
+
+    "keyup [name='deliveryAddress']": (event, template) ->
+      $deliveryAddress  = $(template.find("[name='deliveryAddress']"))
+      currentCustomer   = template.data
+      Helpers.deferredAction ->
+        if $deliveryAddress.val() isnt currentCustomer.deliveryAddress
+          Schema.customers.update(currentCustomer._id, $set:{deliveryAddress: $deliveryAddress.val()})
+#            ProductSearch.cleanHistory()
+#            ProductSearch.search Session.get("productManagementSearchFilter")
+      , "customerManagerChangeCustomerDeliveryAddress"
+      , 1000
+      event.stopPropagation()
 
     "click .syncCustomerEdit": (event, template) -> scope.editCustomer(template)
     "click .customerDelete": (event, template) -> scope.currentCustomer.remove()

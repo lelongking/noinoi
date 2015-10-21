@@ -19,6 +19,27 @@ Helpers.JSON2CSV = (objArray, maxLength = 5) ->
     i++
   str
 
+Helpers.GetFirstNameOrLastName = (name = '', getValue = '') ->
+  firstName = ''; lastName = ''
+  if typeof name is 'string'
+    nameArray = name.split(' ')
+    if nameArray.length > 1
+      firstName = nameArray[nameArray.length-1]
+
+      for index in [0...nameArray.length-1]
+        lastName += nameArray[index] + ' '
+      lastName = lastName.trim()
+    else
+      firstName = name
+
+  if getValue is 'firstName' then firstName
+  else if getValue is 'lastName' then lastName
+  else {firstName:firstName, lastName: lastName}
+
+
+
+
+
 Helpers.Searchify = (source) ->
   source.toLowerCase()
   .replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a")

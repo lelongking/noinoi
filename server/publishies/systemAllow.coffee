@@ -5,10 +5,10 @@ AvatarImages.allow
   download: -> true
 
 
-allowModifies = (userId, currentRole) ->
-  currentProfile = Schema.userProfiles.findOne({user: userId})
-  return false if !currentProfile or !currentRole.parent
-  currentProfile.parentMerchant is currentRole.parent
+#allowModifies = (userId, currentRole) ->
+#  currentProfile = Schema.userProfiles.findOne({user: userId})
+#  return false if !currentProfile or !currentRole.parent
+#  currentProfile.parentMerchant is currentRole.parent
 
 #Schema.roles.allow
 #  insert: (userId, currentRole) -> allowModifies(userId, currentRole)
@@ -50,6 +50,7 @@ Meteor.users.allow
 Meteor.publish 'unreadNotifications', ->
   return [] if !@userId
   Schema.notifications.find {receiver: @userId, seen: false}
+
 Schema.notifications.allow
   insert: -> true
   update: -> true

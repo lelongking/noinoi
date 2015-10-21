@@ -14,18 +14,36 @@ simpleSchema.providers = new SimpleSchema
   returnBillNo      : type: Number, defaultValue: 0 #số phiếu tra hang
   transactionBillNo : type: Number, defaultValue: 0 #số phiếu thu chi
 
-  beginCash : simpleSchema.DefaultNumber()
-  debtCash  : simpleSchema.DefaultNumber()
-  loanCash  : simpleSchema.DefaultNumber()
-  paidCash  : simpleSchema.DefaultNumber()
-  returnCash: simpleSchema.DefaultNumber()
-  totalCash : simpleSchema.DefaultNumber()
+  debtRequiredCash : type: Number, defaultValue: 0 #số nợ bắt buộc phải thu
+  paidRequiredCash : type: Number, defaultValue: 0 #số nợ bắt buộc đã trả
+
+  debtBeginCash    : type: Number, defaultValue: 0 #số nợ đầu kỳ phải thu
+  paidBeginCash    : type: Number, defaultValue: 0 #số nợ đầu kỳ đã trả
+
+  debtIncurredCash : type: Number, defaultValue: 0 #chi phí phát sinh cộng
+  paidIncurredCash : type: Number, defaultValue: 0 #chi phí phát sinh trừ
+
+  debtSaleCash     : type: Number, defaultValue: 0 #số tiền bán hàng phát sinh trong kỳ
+  paidSaleCash     : type: Number, defaultValue: 0 #số tiền đã trả phát sinh trong kỳ
+  returnSaleCash   : type: Number, defaultValue: 0 #số tiền trả hàng phát sinh trong kỳ
 
   merchant    : simpleSchema.DefaultMerchant
   avatar      : simpleSchema.OptionalString
   allowDelete : simpleSchema.DefaultBoolean()
   creator     : simpleSchema.DefaultCreator
   version     : { type: simpleSchema.Version }
+
+  profiles               : type: Object, optional: true
+  'profiles.phone'       : type: String, optional: true
+  'profiles.address'     : type: String, optional: true
+  'profiles.gender'      : simpleSchema.DefaultBoolean()
+  'profiles.areas'       : type: [String], optional: true
+  'profiles.description' : type: [String], optional: true
+
+  'profiles.dateOfBirth' : type: String, optional: true
+  'profiles.pronoun'     : type: String, optional: true
+  'profiles.companyName' : type: String, optional: true
+  'profiles.email'       : type: String, optional: true
 
 Schema.add 'providers', "Provider", class Provider
   @transform: (doc) ->

@@ -2,17 +2,13 @@ scope = logics.basicHistory
 
 lemon.defineApp Template.basicHistory,
   created: ->
-    self = this
-    self.autorun ()->
-
-    option = {name: 'synthesisDebts',template: 'historySynthesisDebts', data: {}}
+    option = {name: 'customerGroup',template: 'historySynthesisDebts', data: {}}
     Session.set("basicHistoryDynamics", option)
+    Session.set("basicHistoryCustomerSearchText", '')
 
   helpers:
-    attrs : -> 'test'
-    attr1 : -> 'test1'
     basicHistoryDynamics: -> Session.get("basicHistoryDynamics")
-    optionActiveClass: (templateName)-> 'active' if Session.get("basicHistoryDynamics").name is templateName
+    isActive: (name)-> 'active' if Session.get("basicHistoryDynamics").name is name
 
   events:
     "click .icon-print-6": (event, template)->

@@ -18,14 +18,20 @@ scope.findOldDebtCustomer = (customer)->
 
 scope.findAllOrders = (customer)->
   if customerId = customer?._id
+    beforeDebtCash = (customer.debtRequiredCash ? 0) + (customer.debtBeginCash ? 0)
     orders = Schema.orders.find({
       buyer     : customerId
       orderType  : Enums.getValue('OrderTypes', 'success')
       orderStatus: Enums.getValue('OrderStatus', 'finish')
     }).map(
       (item) ->
-#        Wings.SubsManager.subscribe('getProductId', detail.product) for detail in item.details
-        item.transactions = scope.transactionFind(item._id).fetch()
+        item.transactions = scope.transactionFind(item._id).map(
+          (transaction) ->
+            transaction.hasDebitBegin = beforeDebtCash > 0
+            transaction.sumBeforeBalance = beforeDebtCash + transaction.balanceBefore
+            transaction.sumLatestBalance = beforeDebtCash + transaction.balanceLatest
+            transaction
+        )
         item.transactions[item.transactions.length-1].isLastTransaction = true if item.transactions.length > 0
         item
     )
@@ -36,8 +42,13 @@ scope.findAllOrders = (customer)->
       returnStatus: Enums.getValue('ReturnStatus', 'success')
     }).map(
       (item) ->
-#        Wings.SubsManager.subscribe('getProductId', detail.product) for detail in item.details
-        item.transactions = scope.transactionFind(item._id).fetch()
+        item.transactions = scope.transactionFind(item._id).map(
+          (transaction) ->
+            transaction.hasDebitBegin = beforeDebtCash > 0
+            transaction.sumBeforeBalance = beforeDebtCash + transaction.balanceBefore
+            transaction.sumLatestBalance = beforeDebtCash + transaction.balanceLatest
+            transaction
+        )
         item.transactions[item.transactions.length-1].isLastTransaction = true if item.transactions.length > 0
         item
     )
@@ -59,13 +70,14 @@ scope.findAllOrders = (customer)->
 
 
 scope.checkAllowUpdateOverview = (template) ->
+  console.log template
   Session.set "customerManagementShowEditCommand",
-    template.ui.$customerName.val() isnt Session.get("customerManagementCurrentCustomer").name or
-      template.ui.$customerPhone.val() isnt (Session.get("customerManagementCurrentCustomer").profiles.phone ? '') or
-      template.ui.$customerAddress.val() isnt (Session.get("customerManagementCurrentCustomer").profiles.address ? '')
+    template.ui.$customerName.val() isnt template.data.name or
+      template.ui.$customerPhone.val() isnt (template.data.profiles.phone ? '') or
+      template.ui.$customerAddress.val() isnt (template.data.profiles.address ? '')
 
 scope.editCustomer = (template) ->
-  customer = Session.get("customerManagementCurrentCustomer")
+  customer = template.data
   if customer and Session.get("customerManagementShowEditCommand")
     name    = template.ui.$customerName.val()
     phone   = template.ui.$customerPhone.val()
@@ -156,6 +168,7 @@ scope.createNewCustomer = (template, customerSearch) ->
     template.ui.$searchFilter.notify("Khách hàng đã tồn tại.", {position: "bottom"})
   else
     newCustomerId = Schema.customers.insert newCustomer
+    console.log Schema.customers.findOne(newCustomerId)
     if Match.test(newCustomerId, String)
       CustomerGroup.addCustomer(newCustomerId)
       Meteor.users.update(Meteor.userId(), {$set: {'sessions.currentCustomer': newCustomerId}})

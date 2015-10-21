@@ -9,7 +9,6 @@ FlowRouter.route '/basicReport',
     return
 
   triggersEnter: [ (context, redirect) ->
-    console.log 'running /provider trigger'
+    console.log 'running /basicReport trigger'
     return
   ]
-

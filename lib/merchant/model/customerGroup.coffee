@@ -1,11 +1,24 @@
 simpleSchema.customerGroups = new SimpleSchema
   name        : simpleSchema.StringUniqueIndex
   nameSearch  : simpleSchema.searchSource('name')
+
   description : simpleSchema.OptionalString
   staff       : simpleSchema.OptionalString
   priceBook   : simpleSchema.OptionalString
-  customers   : type: [String], defaultValue: []
+  customerLists : type: [String], defaultValue: []
   totalCash   : type: Number, defaultValue: 0
+
+
+  debtRequiredCash : type: Number, defaultValue: 0 #số nợ bắt buộc phải thu
+  paidRequiredCash : type: Number, defaultValue: 0 #số nợ bắt buộc đã trả
+  debtBeginCash    : type: Number, defaultValue: 0 #số nợ đầu kỳ phải thu
+  paidBeginCash    : type: Number, defaultValue: 0 #số nợ đầu kỳ đã trả
+  debtIncurredCash : type: Number, defaultValue: 0 #chi phí phát sinh cộng
+  paidIncurredCash : type: Number, defaultValue: 0 #chi phí phát sinh trừ
+  debtSaleCash     : type: Number, defaultValue: 0 #số tiền bán hàng phát sinh trong kỳ
+  paidSaleCash     : type: Number, defaultValue: 0 #số tiền đã trả phát sinh trong kỳ
+  returnSaleCash   : type: Number, defaultValue: 0 #số tiền trả hàng phát sinh trong kỳ
+
 
   merchant    : simpleSchema.DefaultMerchant
   allowDelete : simpleSchema.DefaultBoolean()
@@ -74,6 +87,18 @@ Schema.add 'customerGroups', "CustomerGroup", class CustomerGroup
         userUpdate = $pull:{}; userUpdate.$pull["sessions.customerSelected.#{@_id}"] = customerId
         Meteor.users.update(userId, userUpdate)
 
+    doc.reCalculateTotalCash = ->
+      totalCash = 0
+      Schema.customers.find({group: @_id}).forEach(
+        (customer) ->
+          totalCash +=
+            (customer.debtRequiredCash ? 0) - (customer.paidRequiredCash ? 0) +
+              (customer.debtBeginCash ? 0) - (customer.paidBeginCash ? 0) +
+              (customer.debtIncurredCash ? 0) - (customer.paidIncurredCash ? 0) +
+              (customer.debtSaleCash ? 0) - (customer.paidSaleCash ? 0) - (customer.returnSaleCash ? 0)
+      )
+      Schema.customerGroups.update @_id, $set:{totalCash: totalCash}
+
   @insert: (name, description)->
     return false if !name
 
@@ -101,3 +126,6 @@ Schema.add 'customerGroups', "CustomerGroup", class CustomerGroup
       Schema.customers.update customer._id, $set: {group: group._id}
       Schema.customerGroups.update customer.group, {$pull: {customers: customer._id }, $inc:{totalCash: -customer.totalCash}} if customer.group
       Schema.customerGroups.update group._id, {$addToSet: {customers: customer._id }, $inc:{totalCash: customer.totalCash}}
+
+  @recalculateTotalCash : ->
+    Schema.customerGroups.find().forEach( (group) -> group.reCalculateTotalCash() )

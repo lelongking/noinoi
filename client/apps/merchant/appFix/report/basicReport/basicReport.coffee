@@ -1,12 +1,17 @@
 scope = logics.basicReport
+Enums = Apps.Merchant.Enums
 
-Wings.defineApp 'basicReport',
+lemon.defineApp Template.basicReport,
   created: ->
-    self = this
+    option = {name: 'revenueBasicArea',template: 'revenueBasicAreaReport', data: {}}
+    Session.set("basicReportDynamics", option)
+    CustomerGroup.recalculateTotalCash()
+
+    self = @
     self.autorun ()->
       if dynamics = Session.get("basicReportDynamics")
         if dynamics.template is 'revenueOfAreaReport'
-          scope.customers = Schema.customers.find({group: Session.get("basicReportDynamics").data._id},{$sort: {billNo: -1}}).fetch()
+          scope.customers = Schema.customers.find({group: Session.get("basicReportDynamics").data._id},{$sort: {saleBillNo: -1}}).fetch()
 
         if dynamics.template is 'productOfCustomerReport'
           customerId = Session.get("basicReportDynamics").data._id
@@ -23,8 +28,6 @@ Wings.defineApp 'basicReport',
             scope.products.push({name: Schema.products.findOne(key).name, totalCash: value})
 
           console.log scope.products
-    option = {name: 'revenueBasicArea',template: 'revenueBasicAreaReport', data: {}}
-    Session.set("basicReportDynamics", option)
 
   helpers:
     basicReportDynamics: -> Session.get("basicReportDynamics")
@@ -34,12 +37,12 @@ Wings.defineApp 'basicReport',
     "click .revenueBasicArea": ->
       option = {name: 'revenueBasicArea',template: 'revenueBasicAreaReport', data: {}}
       Session.set("basicReportDynamics", option)
-    "click .revenueBasicCustomer": ->
-      option = {name: 'revenueBasicCustomer',template: 'revenueBasicCustomerReport', data: {}}
-      Session.set("basicReportDynamics", option)
-    "click .revenueBasicStaff": ->
-      option = {name: 'revenueBasicStaff',template: 'revenueBasicStaffReport', data: {}}
-      Session.set("basicReportDynamics", option)
+#    "click .revenueBasicCustomer": ->
+#      option = {name: 'revenueBasicCustomer',template: 'revenueBasicCustomerReport', data: {}}
+#      Session.set("basicReportDynamics", option)
+#    "click .revenueBasicStaff": ->
+#      option = {name: 'revenueBasicStaff',template: 'revenueBasicStaffReport', data: {}}
+#      Session.set("basicReportDynamics", option)
 
     "click .revenueOfArea": ->
       option = {name: 'revenueOfArea',template: 'revenueOfAreaReport', data: Schema.customerGroups.findOne({totalCash: {$gt: 0}})}
@@ -47,6 +50,6 @@ Wings.defineApp 'basicReport',
     "click .revenueOfCustomer": ->
       option = {name: 'revenueOfCustomer',template: 'productOfCustomerReport', data: Schema.customers.findOne({debtCash: {$gt: 0}})}
       Session.set("basicReportDynamics", option)
-    "click .revenueOfStaff": ->
-      option = {name: 'revenueOfStaff',template: 'revenueOfStaffReport', data: {}}
-      Session.set("basicReportDynamics", option)
+#    "click .revenueOfStaff": ->
+#      option = {name: 'revenueOfStaff',template: 'revenueOfStaffReport', data: {}}
+#      Session.set("basicReportDynamics", option)

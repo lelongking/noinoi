@@ -23,30 +23,30 @@ template(name="customerManagementSaleDetails")
         td.last-column.number {{formatNumber totalPrice}}
 
 
-  if discountCash
-    tr.detail-row
-      td.number(colspan="4"): span Tổng phiếu :
-      td.number.receive.border-top: span.s5 <b>{{formatNumber totalPrice}}</b>
-
-    tr.detail-row
-      td.number(colspan="4"): span Chiết khấu :
-      td.number.paid: span.s5 <b>{{formatNumber discountCash}}</b>
-
-    if depositCash
-      tr.detail-row
-        td.number(colspan="4"): span Thanh toán :
-        td.number.paid: span.s5 <b>{{formatNumber depositCash}}</b>
-
-
-  else
-    if depositCash
-      tr.detail-row
-        td.number(colspan="4"): span Tổng phiếu :
-        td.number.receive.border-top: span.s5 <b>{{formatNumber totalPrice}}</b>
-
-      tr.detail-row
-        td.number(colspan="4"): span Thanh toán :
-        td.number.paid: span.s5 <b>{{formatNumber depositCash}}</b>
+  //if discountCash
+  //  tr.detail-row
+  //    td.number(colspan="4"): span Tổng phiếu :
+  //    td.number.receive.border-top: span.s5 <b>{{formatNumber totalPrice}}</b>
+  //
+  //  tr.detail-row
+  //    td.number(colspan="4"): span Chiết khấu :
+  //    td.number.paid: span.s5 <b>{{formatNumber discountCash}}</b>
+  //
+  //  if depositCash
+  //    tr.detail-row
+  //      td.number(colspan="4"): span Thanh toán :
+  //      td.number.paid: span.s5 <b>{{formatNumber depositCash}}</b>
+  //
+  //
+  //else
+  //  if depositCash
+  //    tr.detail-row
+  //      td.number(colspan="4"): span Tổng phiếu :
+  //      td.number.receive.border-top: span.s5 <b>{{formatNumber totalPrice}}</b>
+  //
+  //    tr.detail-row
+  //      td.number(colspan="4"): span Thanh toán :
+  //      td.number.paid: span.s5 <b>{{formatNumber depositCash}}</b>
 
 
 
@@ -55,18 +55,16 @@ template(name="customerManagementSaleDetails")
       td.has-commands(colspan="3")
         span {{description}}
         if isManager
-          if isDelete
+          if allowDelete
             .commands: .lemon.rounded.tiny.btn.red.deleteTransaction: span.icon-minus-4
-      td.number.border-top(style="color: #666;")
-        if showBeforeDebtBalance
-          span.icon-feather-1.s5 <b>{{formatNumberBeforeDebtBalance}}</b>
-      td.number.border-top: span.s5 <b>{{formatNumber owedCash}}</b>
+      td.number(style="color: #666;")
+        if hasDebitBegin
+          span.icon-feather-1.s5 <b>{{formatNumber sumBeforeBalance}}</b>
+      td.number: span.s5 <b>{{formatNumber balanceChange}}</b>
 
-
-    if isLastTransaction
-      tr.detail-row
-        td.number(colspan="3")
-        td.number.border-top
-        td.number.border-top: span.s5 <b>{{formatNumber latestDebtBalance}}</b>
+    tr.detail-row
+      td.number(colspan="3")
+      td.number.border-top
+      td.number.border-top: span.s5 <b>{{formatNumber sumLatestBalance}}</b>
 
   tr.detail-row(style="background-color: #EFEFF4;"): td(colspan="5")

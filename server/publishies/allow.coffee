@@ -24,7 +24,9 @@ Schema.priceBooks.allow
   remove: -> true
 
 Schema.customers.allow
-  insert: -> true
+  insert: ->
+    console.log 'allow insert'
+    true
   update: -> true
   remove: -> true
 

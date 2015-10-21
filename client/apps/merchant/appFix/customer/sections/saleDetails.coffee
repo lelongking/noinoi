@@ -2,7 +2,7 @@ Wings.defineWidget 'customerManagementSaleDetails',
   helpers:
     isBase: -> @conversion is 1
     isDelete: -> moment().diff(@version.createdAt ? new Date(), 'days') < 1
-    allowDelete: -> @_id isnt Template.parentData().transaction
+    allowDelete: -> false # @_id isnt Template.parentData().transaction
     billNo: ->
       if @model is 'orders'
         'Số phiếu: ' + @orderCode + if @description then " (#{@description})" else ''

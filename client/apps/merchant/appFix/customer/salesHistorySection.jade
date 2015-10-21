@@ -31,25 +31,56 @@ template(name="customerManagementSalesHistorySection")
           th(style="width:120px")
           th(style="width:150px")
 
-        with findOldDebts
-          if hasOldDebts
-            tr.header-row
-              td.has-commands(colspan="5")
-                | &nbsp;
-                .bill-header <b>Nợ tồn đầu kỳ</b>
-            tr
 
-            each oldDebts
-              tr.paid-row.top(class="{{transactionClass}}" style="border-bottom: none;")
-                td.has-commands(colspan="3" style="border-left: solid 2px #d35400;")
-                  .bill-header {{description}}
-                  if isManager
-                    if isDelete
-                      .commands: .lemon.rounded.tiny.btn.red.deleteTransaction: span.icon-minus-4
-                td.number(style="color: #666;")
-                  if showBeforeDebtBalance
-                    span.icon-feather-1.s5 <b>{{formatNumberBeforeDebtBalance}}</b>
-                td.number(align="right"): span.s5 <b>{{formatNumber owedCash}}</b>
+        if hasDebitBegin
+          tr.header-row
+            td.has-commands(colspan="5")
+              | &nbsp;
+              .bill-header <b>Nợ tồn mùa trước</b>
+          tr
+
+          if debtRequiredCash
+            tr.paid-row.top.receive(style="border-bottom: none;")
+              //td.has-commands(colspan="3" style="border-left: solid 2px #d35400;")
+              td.has-commands(colspan="3")
+                .bill-header Nợ Phải Thu
+              td.number(style="color: #666;")
+              td.number(align="right"): span.s5 <b>{{formatNumber debtRequiredCash}}</b>
+
+          if debtBeginCash
+            tr.paid-row.top.receive(style="border-bottom: none;")
+              //td.has-commands(colspan="3" style="border-left: solid 2px #d35400;")
+              td.has-commands(colspan="3")
+                .bill-header Nợ Đầu Kỳ
+              td.number(style="color: #666;")
+                if debtRequiredCash
+                  span.icon-feather-1.s5 <b>{{formatNumber debtRequiredCash}}</b>
+              td.number(align="right"): span.s5 <b>{{formatNumber debtBeginCash}}</b>
+
+            if debtRequiredCash
+              tr.detail-row
+                td.number(colspan="3")
+                td.number.border-top
+                td.number.border-top: span.s5 <b>{{formatNumber sumRequiredAndBeginDebtCash}}</b>
+
+        each oldDebts
+          tr.paid-row.top(class="{{transactionClass}}" style="border-bottom: none;")
+            //td.has-commands(colspan="3" style="border-left: solid 2px #d35400;")
+            td.has-commands(colspan="3")
+              .bill-header {{description}}
+              if isManager
+                if isDelete
+                  .commands: .lemon.rounded.tiny.btn.red.deleteTransaction: span.icon-minus-4
+            td.number(style="color: #666;")
+              if hasDebitBegin
+                span.icon-feather-1.s5 <b>{{formatNumber sumBeforeBalance}}</b>
+            td.number(align="right"): span.s5 <b>{{formatNumber balanceChange}}</b>
+
+          tr.detail-row
+            td.number(colspan="3")
+            td.number.border-top
+            td.number.border-top: span.s5 <b>{{formatNumber sumLatestBalance}}</b>
+
 
         each allSales
           +customerManagementSaleDetails this
@@ -73,13 +104,33 @@ template(name="customerManagementSalesHistorySection")
 
         tr
           td
-          td Nợ đầu kỳ:
-          td.number <b>{{formatNumber beginCash}}</b> VND
+          td Nợ phải thu:
+          td.number <b>{{formatNumber debtRequiredCash}}</b> VND
 
         tr
           td
-          td Phát sinh trong kỳ:
-          td.number <b>{{formatNumber totalDebtCash}}</b> VND
+          td Nợ đầu kỳ:
+          td.number <b>{{formatNumber debtBeginCash}}</b> VND
+
+        tr
+          td
+          td Phát sinh cộng:
+          td.number <b>{{formatNumber debtIncurredCash}}</b> VND
+
+        tr
+          td
+          td Phát sinh trừ:
+          td.number <b>{{formatNumber paidIncurredCash}}</b> VND
+
+        tr
+          td
+          td Bán hàng trong kỳ:
+          td.number <b>{{formatNumber debtSaleCash}}</b> VND
+
+        tr
+          td
+          td Trả hàng trong kỳ:
+          td.number <b>{{formatNumber returnSaleCash}}</b> VND
 
         tr
           td

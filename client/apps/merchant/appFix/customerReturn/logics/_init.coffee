@@ -41,11 +41,11 @@ scope.orderSelectOptions =
   reactiveValueGetter: -> Session.get('currentCustomerReturn')?.parent ? 'skyReset'
 
 customerSearch = (query) ->
-  selector = {merchant: Merchant.getId(), billNo: {$gt: 0}}; options = {sort: {nameSearch: 1}}
+  selector = {merchant: Merchant.getId(), saleBillNo: {$gt: 0}}; options = {sort: {nameSearch: 1}}
   if(query.term)
     regExp = Helpers.BuildRegExp(query.term);
     selector = {$or: [
-      {nameSearch: regExp, merchant: Merchant.getId(), billNo: {$gt: 0}}
+      {nameSearch: regExp, merchant: Merchant.getId(), saleBillNo: {$gt: 0}}
     ]}
   Schema.customers.find(selector, options).fetch()
 

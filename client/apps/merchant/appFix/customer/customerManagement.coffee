@@ -19,11 +19,33 @@ Wings.defineApp 'customerManagement',
       Template.instance().currentCustomer.get()
 
     activeClass: ->
-      if Template.parentData()?._id is Template.currentData()?._id then 'active' else ''
+      if @_id is Template.instance().currentCustomer.get()?._id then 'active' else ''
 
     customerListFilters: ->
       getCustomerLists(Template.instance())
 
+
+    customerGroupLists: ->
+      Schema.customerGroups.find({}, {sort: {nameSearch: 1}}).map(
+        (customerGroup) ->
+          selector = {group: customerGroup._id}
+          if searchText = Session.get("customerManagementSearchFilter")
+            regExp = Helpers.BuildRegExp(searchText);
+            selector = {$or: [{code: regExp, group: customerGroup._id}, {nameSearch: regExp, group: customerGroup._id}]}
+
+          if Session.get('myProfile')?.roles is 'seller'
+            addCustomerIds = {$in: Session.get('myProfile').customers}
+            if(searchText)
+              selector.$or[0]._id = addCustomerIds
+              selector.$or[1]._id = addCustomerIds
+            else
+              selector._id = addCustomerIds
+
+          customerLists = Schema.customers.find(selector, {sort: {nameSearch: 1}})
+          customerGroup.customerLists    = customerLists
+          customerGroup.hasCustomerLists = customerLists.count() > 0
+          customerGroup
+      )
 
   events:
     "keyup input[name='searchFilter']": (event, template) ->
@@ -71,6 +93,7 @@ selectCustomer = (event, template, customer)->
   if userId = Meteor.userId()
 #    Wings.SubsManager.subscribe('getCustomerId', customer._id)
     Meteor.users.update(userId, {$set: {'sessions.currentCustomer': customer._id}})
+    Template.instance().currentCustomer.set(customer)
     Session.set('customerManagementIsShowCustomerDetail', false)
 
 

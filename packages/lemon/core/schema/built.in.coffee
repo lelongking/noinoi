@@ -6,6 +6,7 @@ simpleSchema.Version = new SimpleSchema
   createdAt:
     type: Date
     autoValue: ->
+      console.log 'update createdAt'
       if @isInsert
         return new Date
       else if @isUpsert
@@ -15,6 +16,7 @@ simpleSchema.Version = new SimpleSchema
   updateAt:
     type: Date
     autoValue: ->
+      console.log 'update updateAt'
       return new Date() if @isUpdate
       return
     denyInsert: true
@@ -79,6 +81,24 @@ simpleSchema.OptionalNumberArray = { type: [Number], optional: true }
 simpleSchema.searchSource = (field) ->
   type: String
   autoValue: ->
+    return Helpers.Searchify(@field(field).value) if @field(field).isSet
+
+
+simpleSchema.splitName = (field, getValue = 'firstName') ->
+  type: String
+  autoValue: ->
+    fieldFound = @field(field)
+    return if !fieldFound
+    console.log @field(field)
+
+    if (fieldFound.isSet or fieldFound.isUpdate) and (getValue is 'firstName' or getValue is 'lastName')
+      return Helpers.GetFirstNameOrLastName(fieldFound.value, getValue)
+
+
+simpleSchema.lastName = (field) ->
+  type: String
+  autoValue: ->
+    return new Date() if @isUpdate
     return Helpers.Searchify(@field(field).value) if @field(field).isSet
 
 simpleSchema.DefaultString = (value = '') ->

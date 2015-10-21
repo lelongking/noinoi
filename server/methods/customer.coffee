@@ -1,4 +1,7 @@
 Meteor.methods
+  addCustomer:(name, description) ->
+    customerId = Schema.customers.insert({name: name})
+
   calculateCustomer: (id)->
     if !mySession = Schema.userSessions.findOne({user: Meteor.userId()}) then throw 'Không tìm thấy mySession'
     if !id then id = mySession.currentCustomerManagementSelection

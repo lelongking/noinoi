@@ -21,9 +21,37 @@ template(name="customerManagementOverviewSection")
           .title.customerDetail
             if getSession 'customerManagementIsShowCustomerDetail'
               span.s5.note.icon-angle-right <b>Thu gọn</b>
-              textarea.editDescription(name="editDescription" maxlength="2000" style="border:none; width:100%; resize:none; padding-left:20px; outline: none !important; height: 85px;") {{description}}
+
+              with this
+                .detail-wrapper(style="padding: 5px;")
+                  form.form-inline: .form-group: .input-group
+                    input.hide
+                    .input-group-addon(style="font-size: 14px;") Mã khách hàng:
+                    .input-group-addon(style="width: 150px")
+                      if isManager
+                        input.editable.dashed(style="text-align: center;" data-toggle="tooltip" data-container="body" data-placement="right"
+                        name="customerCode" placeholder="mã khách hàng" title="Mã Khách Hàng" value="{{customerCode}}")
+                      else
+                        |{{customerCode}}
+
+                .detail-wrapper(style="padding: 5px;")
+                  form.form-inline: .form-group: .input-group
+                    input.hide
+                    .input-group-addon(style="font-size: 14px;") Địa chỉ Chành:
+                    .input-group-addon(style="width: 500px")
+                      if isManager
+                        input.editable.dashed(style="text-align: left;" data-toggle="tooltip" data-container="body" data-placement="right"
+                        name="deliveryAddress" placeholder="địa chỉ chành" title="Địa Chỉ Chành" value="{{deliveryAddress}}")
+                      else
+                        |{{deliveryAddress}}
+
+              span.s5.note(style="margin-left: 10px; cursor:none;") <b>Ghi chú:</b>
+              textarea.editDescription(style="width:100%; height: 85px; resize:none; outline: none !important;  margin-left: 10px; padding-left:5px; border-radius: 5px;"
+              name="editDescription" maxlength="2000") {{description}}
+
             else
               span.s5.note.icon-angle-right <b>Thông tin chi tiết</b>
+
 
 
   else

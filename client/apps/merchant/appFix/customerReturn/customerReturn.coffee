@@ -28,7 +28,27 @@ Wings.defineApp 'customerReturn',
             detail.availableBasicQuantity = productQuantities[detail.product]
             detail.availableQuantity      = Math.floor(productQuantities[detail.product]/detail.conversion)
 
-          Session.set 'currentReturnParent', parent.details
+          returnParent = []
+          for productId, value of productQuantities
+            if product = Schema.products.findOne(productId)
+              for unit in product.units
+                returnParent.push({
+                  product: productId
+                  productUnit: unit._id
+                  availableBasicQuantity: value
+                  availableQuantity: Math.floor(value / unit.conversion)
+                })
+
+          for detail, index in returnParent
+            found = _.findWhere(parent.details, {productUnit: detail.productUnit})
+            found = _.findWhere(parent.details, {product: detail.product}) if !found
+            if found
+              detail.price = found.price
+              detail._id = found._id
+            else
+              returnParent.splice(index, 1)
+
+          Session.set 'currentReturnParent', returnParent
 
       #readonly 2 Select Khach Hang va Phieu Ban
       if customerReturn = Session.get('currentCustomerReturn')
