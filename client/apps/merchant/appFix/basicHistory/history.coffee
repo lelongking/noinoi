@@ -5,8 +5,17 @@ lemon.defineApp Template.basicHistory,
     option = {name: 'customerGroup',template: 'historySynthesisDebts', data: {}}
     Session.set("basicHistoryDynamics", option)
     Session.set("basicHistoryCustomerSearchText", '')
+    Session.set("basicHistoryProviderSearchText", '')
+    Session.set("basicHistoryIsShowCustomer", true)
+
+#    self = this
+#    self.isShowCustomer = new ReactiveVar(true)
+#    self.autorun ()->
+#      if customerId = Session.get('mySession')?.currentCustomer
+#        self.currentCustomer.set(Schema.customers.findOne(customerId))
 
   helpers:
+    isShowCustomer: -> Session.get("basicHistoryIsShowCustomer")
     basicHistoryDynamics: -> Session.get("basicHistoryDynamics")
     isActive: (name)-> 'active' if Session.get("basicHistoryDynamics").name is name
 

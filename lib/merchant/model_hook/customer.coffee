@@ -142,13 +142,8 @@ removeCashOfCustomerCash = (userId, customer)->
 
 
 
-
-
-
-
-
+#-----------------------------------------------------------------------------------------------------------------------
 Schema.customers.before.insert (userId, customer)->
-  console.log 'customers before insert'
   user = Meteor.users.findOne(userId)
   splitName = Helpers.GetFirstNameOrLastName(customer.name)
   generateInit(user, customer, splitName)
@@ -157,28 +152,23 @@ Schema.customers.before.insert (userId, customer)->
   setCustomerGroupDefault(user, customer)
 
 Schema.customers.after.insert (userId, customer) ->
-  console.log 'customers after insert'
   addCustomerInCustomerGroup(userId, customer)
 
-
+#-----------------------------------------------------------------------------------------------------------------------
 Schema.customers.before.update (userId, customer, fieldNames, modifier, options) ->
-  console.log 'customer before update'
   updateIsNameChanged(userId, customer, fieldNames, modifier, options)
 
-
-
 Schema.customers.after.update (userId, newCustomer, fieldNames, modifier, options) ->
-  console.log 'customer after update'
   oldCustomer = @previous
-  if oldCustomer.customerOfGroup is newCustomer.customerOfGroup
+  isChangeCustomerGroup = oldCustomer.customerOfGroup isnt newCustomer.customerOfGroup
+
+  if isChangeCustomerGroup
     updateCashOfCustomerGroup(userId, oldCustomer, newCustomer, fieldNames, modifier, options)
   else
     updateCustomerGroup(userId, oldCustomer, newCustomer, fieldNames, modifier, options)
 
-
+#-----------------------------------------------------------------------------------------------------------------------
 Schema.customers.before.remove (userId, customer) ->
-  console.log 'customer before remove'
 
 Schema.customers.after.remove (userId, doc)->
-  console.log 'customer after remove'
   removeCashOfCustomerCash(userId, doc)

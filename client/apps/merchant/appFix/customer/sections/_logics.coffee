@@ -5,9 +5,9 @@ scope.customerLists = []
 
 scope.resetShowEditCommand = -> Session.set "customerManagementShowEditCommand"
 scope.transactionFind = (parentId)-> Schema.transactions.find({parent: parentId}, {sort: {'version.createdAt': 1}})
-scope.findOldDebtCustomer = (customer)->
-  if customerId = customer?._id
-    transaction = Schema.transactions.find({owner: customerId, parent:{$exists: false}}, {sort: {'version.createdAt': 1}})
+scope.findOldDebtCustomer = ->
+  if customer = Template.currentData()
+    transaction = Schema.transactions.find({owner: customer._id, parent:{$exists: false}}, {sort: {'version.createdAt': 1}})
     transactionCount = transaction.count(); count = 0
     transaction.map(
       (transaction) ->
@@ -17,11 +17,11 @@ scope.findOldDebtCustomer = (customer)->
     )
   else []
 
-scope.findAllOrders = (customer)->
-  if customerId = customer?._id
+scope.findAllOrders = ()->
+  if customer = Template.currentData()
     beforeDebtCash = (customer.debtRequiredCash ? 0) + (customer.debtBeginCash ? 0)
     orders = Schema.orders.find({
-      buyer     : customerId
+      buyer      : customer._id
       orderType  : Enums.getValue('OrderTypes', 'success')
       orderStatus: Enums.getValue('OrderStatus', 'finish')
     }).map(
@@ -38,7 +38,7 @@ scope.findAllOrders = (customer)->
     )
 
     returns = Schema.returns.find({
-      owner       : customerId
+      owner       : customer._id
       returnType  : Enums.getValue('ReturnTypes', 'customer')
       returnStatus: Enums.getValue('ReturnStatus', 'success')
     }).map(
@@ -127,16 +127,26 @@ scope.createTransactionOfCustomer = (event, template) ->
     description     = $payDescription.val()
 
     if !isNaN(payAmount) and payAmount != 0
-      ownerId         = scope.currentCustomer._id
+      ownerId         = Template.currentData()._id
       debitCash       = Math.abs(payAmount)
-      transactionType = Enums.getValue('TransactionTypes', 'customer')
-      receivable      = Session.get("customerManagementOldDebt")
+      transactionType = Enums.getValue('TransactionTypes', 'saleCash')
+      receivable      = false
       console.log debitCash
       Session.set("allowCreateTransactionOfCustomer", false)
       Session.set("customerManagementOldDebt")
       $payDescription.val(''); $payAmount.val('')
       console.log ownerId, debitCash, null, description, transactionType, receivable
-      Meteor.call 'createTransaction', ownerId, debitCash, null, description, transactionType, receivable, (error, result) ->
+      Meteor.call(
+        'createNewTransaction'
+        Enums.getValue('TransactionGroups', 'customer')
+        transactionType
+        receivable
+
+        ownerId
+        debitCash
+        description
+        (error, result) -> console.log error, result
+      )
 
 
 

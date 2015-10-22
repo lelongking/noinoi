@@ -1,0 +1,5 @@
+template(name="basicHistoryNavigationPartial")
+  if getSession 'basicHistoryIsShowCustomer'
+    li.blue.teleport.inav.animated.fadeInUp.icon-tags.showProvider Nhà Cung Cấp
+  else
+    li.blue.teleport.inav.animated.fadeInUp.icon-export-outline.showCustomer Khách Hàng

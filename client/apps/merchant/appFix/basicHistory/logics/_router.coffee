@@ -3,6 +3,9 @@ FlowRouter.route '/basicHistory',
   action: ->
     Session.set "currentAppInfo",
       name: "báo cáo"
+      navigationPartial:
+        template: "basicHistoryNavigationPartial"
+        data: {}
 
     BlazeLayout.render 'merchantLayout',
       content: 'basicHistory'

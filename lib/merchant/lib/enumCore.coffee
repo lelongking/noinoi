@@ -201,22 +201,43 @@ Apps.Merchant.Enums.ImportTypes = [
 ]
 
 #----------Transaction---------->
-Apps.Merchant.Enums.TransactionTypes = [
+Apps.Merchant.Enums.TransactionGroups = [
   _id    : 0
-  value  : 'provider'
+  value  : 'customer'
   display: 'Nhà Cung Cấp'
 ,
   _id    : 1
-  value  : 'customer'
+  value  : 'provider'
   display: 'Khách Hàng'
+#,
+#  _id    : 2
+#  value  : 'partner'
+#  display: 'Đối Tác'
+]
+Apps.Merchant.Enums.TransactionTypes = [
+  _id    : 0
+  value  : 'requiredCash'
+  display: 'Phải Thu'
+,
+  _id    : 1
+  value  : 'beginCash'
+  display: 'Đầu Kỳ'
 ,
   _id    : 2
-  value  : 'return'
+  value  : 'incurredCash'
+  display: 'Phát Sinh Khác'
+,
+  _id    : 3
+  value  : 'saleCash'
+  display: 'Bán Hàng'
+,
+  _id    : 4
+  value  : 'importCash'
+  display: 'Nhập Hàng'
+,
+  _id    : 5
+  value  : 'returnCash'
   display: 'Trả Hàng'
-#,
-#  _id    : 3
-#  value  : 'other'
-#  display: 'Thu Chi Khác'
 ]
 
 Apps.Merchant.Enums.TransactionStatuses = [
@@ -241,6 +262,28 @@ Apps.Merchant.Enums.TransactionReceivable = [
   _id    : true
   value  : 'true'
   display: 'Phiếu Thu'
+]
+
+Apps.Merchant.Enums.TransactionCustomerIncomeOrCost = [
+  _id    : 0
+  value  : 'requiredCash'
+  display: 'Phiếu Thu - Nợ Phải Thu'
+,
+  _id    : 1
+  value  : 'beginCash'
+  display: 'Phiếu Thu - Nợ Đầu Kỳ'
+,
+  _id    : 2
+  value  : 'saleCash'
+  display: 'Phiếu Thu - Nợ Trong Kỳ'
+,
+  _id    : 3
+  value  : 'incurredInComeCash'
+  display: 'Phiếu Thu - Phát Sinh Trừ'
+,
+  _id    : 4
+  value  : 'incurredCostCash'
+  display: 'Phiếu Chi - Phát Sinh Cộng'
 ]
 
 #----------Return---------->

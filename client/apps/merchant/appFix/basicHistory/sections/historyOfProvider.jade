@@ -1,0 +1,95 @@
+template(name="historyOfProvider")
+  table.lemon-grid(style='font-size: 12px; margin-top: 22px;background-color: #fff; height: 32px;')
+    tr
+      th(style='width:auto')
+      th.number(style='width:90px')
+      th(style='width:90px').show-on-print
+      th.number(style='width:90px')
+      th.number(style='width:90px')
+      th.number(style='width:90px')
+      th.number(style='width:90px')
+      th.number(style='width:90px')
+      th.number(style='width:90px')
+      th.number(style='width:90px')
+      th.number(style='width:90px')
+      th.number(style='width:90px')
+      th.number(style='width:110px; padding-right: 10px;')
+
+    tr
+      td(style="padding-left: 0px;")
+        .search-filter.icon-search-8: input(style="height: 34px; background-color: #f5f5f5" name='searchFilter' type="text")
+
+
+    tr(style='font-size: 13px; font-weight: bold; height: 30px;')
+      td(style='padding-left: 10px;') Tên Nhà Cung Cấp
+      th(style='width:90px').show-on-print
+      td.number Nợ Quá Hạn
+      td.number TT.Nợ QH
+      td.number Nợ Đầu Kỳ
+      td.number TT.Nợ ĐK
+      td.number PS.Cộng
+      td.number PS.Trừ
+      td.number Mua Hàng
+      td.number Trả Hàng
+      td.number D.Số Thực
+      td.number TT.Mua Hàng
+      td.number Nợ Cuối Kỳ
+
+  .nano: .nano-content(style="right: -3px;padding-bottom: 80px;")
+    .section.panel.panel-default.printable-area(style="margin-top: 0;")
+      .panel-body(style="padding: 0px;")
+        table#historyTable.lemon-grid
+          tr
+            th(style="width:90px").show-on-print
+            th(style="width:auto")
+            th(style='width:90px')
+            th(style="width:90px")
+            th(style="width:90px")
+            th(style="width:90px")
+            th(style="width:90px")
+            th(style="width:90px")
+            th(style="width:90px")
+            th(style="width:90px")
+            th(style="width:90px")
+            th(style="width:90px")
+            th(style="width:110px")
+
+          tr
+            td.show-on-print Mã Nhà Cung Cấp
+            td.number.show-on-print Tên Nhà Cung Cấp
+            td.number.show-on-print Nợ QH
+            td.number.show-on-print TT.Nợ Quá Hạn
+            td.number.show-on-print Nợ Đầu Kỳ
+            td.number.show-on-print TT.Nợ ĐK
+            td.number.show-on-print PS.Cộng
+            td.number.show-on-print PS.Trừ
+            td.number.show-on-print Nhập Hàng
+            td.number.show-on-print Trả Hàng
+            td.number.show-on-print D.Số Thực
+            td.number.show-on-print TT.Nhập Hàng
+            td.number.show-on-print Nợ Cuối Kỳ
+
+
+          each providerLists
+            tr(style="background-color: #fff;")
+              td.show-on-print {{code}}
+              td.first-column(style="font-size: 13px; padding-left: 10px;") {{name}}
+              td.number
+                input.number.debtRequiredCash.hide-on-print(style="font-weight: bolder; color: #7ac5f9" type="text" size="10" name="{{_id}}" placeholder="số tiền"
+                value="{{formatNumber debtRequiredCash}}")
+                span.show-on-print {{formatNumber debtRequiredCash}}
+              td.number {{formatNumber paidRequiredCash}}
+              td.number.hide-on-print
+                input.number.debtBeginCash.hide-on-print(style="font-weight: bolder; color: #7ac5f9" type="text" size="10" name="{{_id}}" placeholder="số tiền"
+                value="{{formatNumber debtBeginCash}}")
+                span.show-on-print {{formatNumber debtBeginCash}}
+              td.number {{formatNumber paidBeginCash}}
+              td.number {{formatNumber debtIncurredCash}}
+              td.number {{formatNumber paidIncurredCash}}
+              td.number {{formatNumber debtSaleCash}}
+              td.number {{formatNumber returnSaleCash}}
+              td.number {{formatNumber turnoverSaleCash}}
+              td.number {{formatNumber paidSaleCash}}
+              td.number {{formatNumber totalCash}}
+
+            +Template.dynamic(template='basicHistorySumAllCash' data=sumCash)

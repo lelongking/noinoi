@@ -1,0 +1,10 @@
+@require '../lib.import.styl'
+
+span-color(color)
+  color color
+
+
+span
+  for $color in colors
+    &.{$color[0]}
+      span-color($color[1])
