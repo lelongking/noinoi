@@ -3,6 +3,9 @@ FlowRouter.route '/transaction',
   action: ->
     Session.set "currentAppInfo",
       name: "thu chi - tài chính"
+      navigationPartial:
+        template: "transactionNavigationPartial"
+        data: {}
 
     BlazeLayout.render 'merchantLayout',
       content: 'transaction'

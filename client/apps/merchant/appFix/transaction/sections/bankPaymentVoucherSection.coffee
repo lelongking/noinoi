@@ -2,7 +2,7 @@ Enums = Apps.Merchant.Enums
 scope = logics.transaction
 numericOption = {autoGroup: true, groupSeparator:",", radixPoint: ".", suffix: " VNĐ", integerDigits:11}
 
-Wings.defineApp 'bankPaymentVoucherTransactionHistorySection',
+lemon.defineApp Template.bankPaymentVoucherTransactionHistorySection,
   rendered: ->
   helpers:
     details: ->

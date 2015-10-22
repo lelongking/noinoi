@@ -1,19 +1,11 @@
 Enums = Apps.Merchant.Enums
 scope = logics.transaction
 
-findTransactionReceivable = (receivable) -> _.findWhere(Enums.TransactionReceivable, {_id: receivable})
-findTransactionType       = (transactionType) -> _.findWhere(Enums.TransactionTypes, {_id: transactionType})
-formatDefaultSearch       = (item) -> "#{item.display}" if item
-formatReceivableSearch    = (item) ->
-  transaction = Session.get('transactionDetail')
-  if transaction.transactionType is Enums.getValue('TransactionTypes', 'provider')
-    if item._id then 'Phiếu Thu' else 'Phiếu Chi'
 
-  else if transaction.transactionType is Enums.getValue('TransactionTypes', 'customer')
-    if item._id then 'Phiếu Chi' else 'Phiếu Thu'
+formatDefaultSearch  = (item) -> "#{item.display}" if item
+formatCustomerSearch = (item) -> "#{item.name}" if item
 
-formatOwnerSearch         = (item) -> "#{item.name}" if item
-ownerSearch = (textSearch) ->
+customerSearch = (textSearch) ->
   transaction = Session.get('transactionDetail')
   return [] unless transaction
 
@@ -23,67 +15,52 @@ ownerSearch = (textSearch) ->
     selector = {$or: [
       {nameSearch: regExp, merchant: Merchant.getId()}
     ]}
-  if transaction.transactionType is Enums.getValue('TransactionTypes', 'provider')
-    Schema.providers.find(selector, options).fetch()
-  else if transaction.transactionType is Enums.getValue('TransactionTypes', 'customer')
-    Schema.customers.find(selector, options).fetch()
+  scope.customerList = Schema.customers.find(selector, options).fetch()
+  scope.customerList
 
-findOwner = (ownerId) ->
-  transaction = Session.get('transactionDetail')
-  if transaction.transactionType is Enums.getValue('TransactionTypes', 'provider')
-    Schema.providers.findOne(ownerId)
-  else if transaction.transactionType is Enums.getValue('TransactionTypes', 'customer')
-    Schema.customers.findOne(ownerId)
+findTransactionReceivable = (receivable) ->
+  _.findWhere(Enums.TransactionCustomerIncomeOrCost, {_id: receivable})
+
+findTransactionOwner = (ownerId)->
+  _.findWhere(scope.customerList, {_id: ownerId})
 
 
-
-Wings.defineApp 'transaction',
+lemon.defineApp Template.transaction,
   created: ->
+    Session.get('transactionShowHistory', false)
+    Session.set('transactionDetail',
+      transactionGroup: Enums.getValue('TransactionGroups', 'customer')
+      transactionType: Enums.getValue('TransactionTypes', 'saleCash')
+      incomeOrCost: Enums.getValue('TransactionCustomerIncomeOrCost', 'saleCash')
+      receivable: false
+      amount: 0
+      description: ''
+    )
+
     self = this
     self.autorun ()->
       transaction = Session.get('transactionDetail')
       if transaction?.owner
-        if transaction.transactionType is Enums.getValue('TransactionTypes', 'provider')
-          owner = Schema.providers.findOne(transaction.owner)
-        else if transaction.transactionType is Enums.getValue('TransactionTypes', 'customer')
-          owner = Schema.customers.findOne(transaction.owner)
+        owner = Schema.customers.findOne(transaction.owner)
+        owner.requiredCash = (owner.debtRequiredCash ? 0) - (owner.paidRequiredCash ? 0)
+        owner.beginCash    = (owner.debtBeginCash ? 0) - (owner.paidBeginCash ? 0)
+        owner.saleCash     = (owner.debtSaleCash ? 0) - (owner.paidSaleCash ? 0) - (owner.returnSaleCash ? 0)
+        owner.incurredCash = (owner.debtIncurredCash ? 0) - (owner.paidIncurredCash ? 0)
+        owner.totalCash    = owner.requiredCash + owner.beginCash + owner.saleCash + owner.incurredCash
         Session.set('transactionOwner', owner)
 
-    Session.set('transactionDetail', {transactionType: 1, receivable: false, amount: 0, description: ''})
-    Session.set('transactionOwner')
-
   helpers:
-    typeSelectOptions:
-      query: (query) -> query.callback
-        results: _.filter(Enums.TransactionTypes, (num) -> return num unless num._id is 2)
-        text: '_id'
-      initSelection: (element, callback) -> callback findTransactionType(Session.get('transactionDetail')?.transactionType)
-      formatSelection: (item)-> formatDefaultSearch(item)
-      formatResult: (item)-> formatDefaultSearch(item)
-      placeholder: 'CHỌN NHÓM'
-      minimumResultsForSearch: -1
-      changeAction: (e) ->
-        if e.added
-          newTransaction = Session.get('transactionDetail')
-          if newTransaction.transactionType is Enums.getValue('TransactionTypes', 'provider')
-            newTransaction.receivable = if e.added._id then false else true
-          else if newTransaction.transactionType is Enums.getValue('TransactionTypes', 'customer')
-            newTransaction.receivable = unless e.added._id then false else true
+    isShowHistory: -> Session.get('transactionShowHistory')
 
-          delete newTransaction.owner
-          newTransaction.transactionType = e.added._id
-          Session.set('transactionDetail', newTransaction)
-      reactiveValueGetter: -> findTransactionType(Session.get('transactionDetail')?.transactionType)
-
-    ownerSelectOptions:
+    customerSelectOptions:
       query: (query) -> query.callback
-        results: ownerSearch(query.term)
+        results: customerSearch(query.term)
         text: 'name'
-      initSelection: (element, callback) -> callback findOwner(Session.get('transactionDetail')?.owner)
-      formatSelection: formatOwnerSearch
-      formatResult: formatOwnerSearch
+      initSelection: (element, callback) -> callback findTransactionOwner(Session.get('transactionDetail')?.owner)
+      formatSelection: formatCustomerSearch
+      formatResult: formatCustomerSearch
       id: '_id'
-      placeholder: 'KH Hoặc NCC'
+      placeholder: 'chọn khách hàng'
       changeAction: (e) ->
         if e.added
           newTransaction = Session.get('transactionDetail')
@@ -91,45 +68,64 @@ Wings.defineApp 'transaction',
           Session.set('transactionDetail', newTransaction)
       reactiveValueGetter: -> Session.get('transactionDetail')?.owner ? 'skyReset'
 
-    receivableSelectOptions:
+    customerIncomeOrCostSelectOptions:
       query: (query) -> query.callback
-        results: Enums.TransactionReceivable
+        results: Enums.TransactionCustomerIncomeOrCost
         text: '_id'
-      initSelection: (element, callback) -> callback findTransactionReceivable(Session.get('transactionDetail')?.receivable)
-      formatSelection: (item)-> formatReceivableSearch(item)
-      formatResult: (item)-> formatReceivableSearch(item)
+      initSelection: (element, callback) -> callback findTransactionReceivable(Session.get('transactionDetail')?.incomeOrCost)
+      formatSelection: (item)-> formatDefaultSearch(item)
+      formatResult: (item)-> formatDefaultSearch(item)
       placeholder: 'LOẠI PHIẾU'
       minimumResultsForSearch: -1
       changeAction: (e) ->
         if e.added
+          console.log e.added
           newTransaction = Session.get('transactionDetail')
-          newTransaction.receivable = e.added._id
+          newTransaction.incomeOrCost = e.added._id
+          if newTransaction.incomeOrCost is 0
+            newTransaction.transactionType = Enums.getValue('TransactionTypes', 'requiredCash')
+            newTransaction.receivable      = false
+          else if newTransaction.incomeOrCost is 1
+            newTransaction.transactionType = Enums.getValue('TransactionTypes', 'beginCash')
+            newTransaction.receivable      = false
+          else if newTransaction.incomeOrCost is 2
+            newTransaction.transactionType = Enums.getValue('TransactionTypes', 'saleCash')
+            newTransaction.receivable      = false
+          else if newTransaction.incomeOrCost is 3
+            newTransaction.transactionType = Enums.getValue('TransactionTypes', 'incurredCash')
+            newTransaction.receivable      = false
+          else if newTransaction.incomeOrCost is 4
+            newTransaction.transactionType = Enums.getValue('TransactionTypes', 'incurredCash')
+            newTransaction.receivable      = true
+
+
           Session.set('transactionDetail', newTransaction)
-      reactiveValueGetter: -> findTransactionReceivable(Session.get('transactionDetail')?.receivable)
+      reactiveValueGetter: -> findTransactionReceivable(Session.get('transactionDetail')?.incomeOrCost)
 
-  events:
-    "click .createTransaction":  (event, template) ->
-      $payDescription = template.ui.$transactionDescription
-      $payAmount      = template.ui.$transactionAmount
-      transaction = Session.get('transactionDetail')
-
-      if transaction.transactionType isnt undefined and
-        transaction.receivable isnt undefined and
-        transaction.owner and
-        transaction.amount > 0 and
-        transaction.description.length > 0
-
-          Meteor.call(
-            'createTransaction'
-            transaction.owner
-            transaction.amount
-            null
-            transaction.description
-            transaction.transactionType
-            transaction.receivable
-            (error, result) -> console.log error, result
-          )
-
-          $payDescription.val(''); $payAmount.val('')
-          transaction.amount = 0
-          Session.set('transactionDetail', transaction)
+#  events:
+#    "click .createTransaction":  (event, template) ->
+#      $payDescription = template.ui.$transactionDescription
+#      $payAmount      = template.ui.$transactionAmount
+#      transaction     = Session.get('transactionDetail')
+#
+#      if transaction.transactionType isnt undefined and
+#        transaction.receivable isnt undefined and
+#        transaction.owner and
+#        transaction.amount > 0 and
+#        transaction.description.length > 0
+#
+#        Meteor.call(
+#          'createNewTransaction'
+#          Enums.getValue('TransactionGroups', 'customer')
+#          transaction.transactionType
+#          transaction.receivable
+#
+#          transaction.owner
+#          transaction.amount
+#          transaction.description
+#          (error, result) -> console.log error, result
+#        )
+#
+#        $payDescription.val(''); $payAmount.val('')
+#        transaction.amount = 0
+#        Session.set('transactionDetail', transaction)

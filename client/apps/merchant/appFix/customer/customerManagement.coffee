@@ -76,7 +76,7 @@ searchCustomerOrCreateCustomer = (event, template, instance)->
     else
       if User.hasManagerRoles()
         scope.createNewCustomer(template, searchFilter) if event.which is 13
-        setTimeout (-> scope.customerManagementCreationMode(searchFilter); return), 300
+        setTimeout (-> scope.customerManagementCreationMode(searchFilter.trim()); return), 300
       else
         Session.set("customerManagementCreationMode", false)
 

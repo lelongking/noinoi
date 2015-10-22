@@ -1,20 +1,21 @@
 template(name="transaction")
   #header
-    .editor-row
-      .editor-wrapper(style="width: 150px")
-        span.ilabel.optional chọn đối tượng:
-        +iSelect(options=typeSelectOptions class="field")
+    unless isShowHistory
+      .editor-row
+        //.editor-wrapper(style="width: 150px")
+        //  span.ilabel.optional chọn đối tượng:
+        //  +iSelect(options=typeSelectOptions class="field")
 
-      .editor-wrapper(style="width: 200px")
-        span.ilabel.optional tên:
-        +iSelect(options=ownerSelectOptions class="field")
+        .editor-wrapper(style="width: 300px")
+          span.ilabel.optional tên khách hàng:
+          +iSelect(options=customerSelectOptions class="field")
 
-      .editor-wrapper(style="width: 150px")
-        span.ilabel.optional loại phiếu:
-        +iSelect(options=receivableSelectOptions class="field")
+        .editor-wrapper(style="width: 250px")
+          span.ilabel.optional loại phiếu:
+          +iSelect(options=customerIncomeOrCostSelectOptions class="field")
 
-      .editor-wrapper.pull-right
-        button.flat.btn.lime.createTransaction(class="{{getSession 'transactionCreateNewIsDisabled'}}") XÁC NHẬN
+        .editor-wrapper.pull-right
+          button.flat.btn.lime.createTransaction(class="{{getSession 'transactionCreateNewIsDisabled'}}") XÁC NHẬN
 
 
   #content.modern.product-management
@@ -22,9 +23,12 @@ template(name="transaction")
       .dual-detail-wrapper
         //.dual-detail
         .nano: .nano-content
-          +transactionOverviewSection
-          +cashReceiptVoucherTransactionHistorySection
-          +bankPaymentVoucherTransactionHistorySection
+          if isShowHistory
+            +cashReceiptVoucherTransactionHistorySection
+          else
+            +transactionOverviewSection
+
+          //+bankPaymentVoucherTransactionHistorySection
 
       //.dual-addon
       //  .search-filter.icon-search-8

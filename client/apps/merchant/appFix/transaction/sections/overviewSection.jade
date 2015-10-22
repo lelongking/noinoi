@@ -8,8 +8,8 @@ template(name="transactionOverviewSection")
       table.lemon-grid
         tr
           th(style="width:auto")
-          th(style="width:150px")
           th(style="width:250px")
+          th(style="width:300px")
 
 
         tr.editors(style="{{showTransaction}}")
@@ -18,12 +18,24 @@ template(name="transactionOverviewSection")
 
         tr
           td.date: span NGƯỜI NHẬN
-          td.number: span.s5 {{transaction.typeDisplay}}:
+          td.number: span.s5 Khách Hàng:
           td.number: span.s4 {{owner.name}}
         tr
           td.date
-          td.number: span.s5 TIỀN CŨ:
-          td.number: span.s4 <b>{{formatNumber owner.totalCash}}</b> VNĐ
+          td.number: span.s5 Nợ Phải Thu:
+          td.number: span.s4 <b>{{formatNumber owner.requiredCash}}</b> VNĐ
+        tr
+          td.date
+          td.number: span.s5 Nợ Đầu Kỳ:
+          td.number: span.s4 <b>{{formatNumber owner.beginCash}}</b> VNĐ
+        tr
+          td.date
+          td.number: span.s5 Nợ Trong Kỳ:
+          td.number: span.s4 <b>{{formatNumber owner.saleCash}}</b> VNĐ
+        tr
+          td.date
+          td.number: span.s5 Phát Sinh Khác:
+          td.number: span.s4 <b>{{formatNumber owner.incurredCash}}</b> VNĐ
         tr
           td.date: span.s6.note (<i>Chữ ký và Họ Tên</i>)
           td.number: span.s5 {{transaction.receivableDisplay}}:
