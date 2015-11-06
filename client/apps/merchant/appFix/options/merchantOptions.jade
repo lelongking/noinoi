@@ -12,17 +12,17 @@ template(name="merchantOptions")
 
           .group-wrapper
             .caption.group CÁ NHÂN
-            each settings.mySystem
+            each settings.account
               .caption.inner(class="{{optionActiveClass}}")
                 span.avatar.letter(class="{{icon}}")
                 span.text.uppercase <b>{{display}}</b>
 
-          //.group-wrapper
-          //  .caption.group ĐẠI LÝ
-          //  each settings.merchant
-          //    .caption.inner(class="{{optionActiveClass}}")
-          //      span.avatar.letter(class="{{icon}}")
-          //      span.text.uppercase <b>{{display}}</b>
+          .group-wrapper
+            .caption.group CỬA HÀNG
+            each settings.merchant
+              .caption.inner(class="{{optionActiveClass}}")
+                span.avatar.letter(class="{{icon}}")
+                span.text.uppercase <b>{{display}}</b>
 
           .group-wrapper
             .caption.group HỆ THỐNG
@@ -38,8 +38,8 @@ template(name="merchantOptions")
           //      span.avatar.letter(class="{{icon}}")
           //      span.text.uppercase <b>{{display}}</b>
 
-  #footer.modern
-    .editor-row
-      .editor-wrapper.dual-spacer
-      .editor-wrapper.right
-        button.flat.btn.lime.pull-right.finish ÁP DỤNG
+  //#footer.modern
+  //  .editor-row
+  //    .editor-wrapper.dual-spacer
+  //    .editor-wrapper.right
+  //      button.flat.btn.lime.pull-right.finish ÁP DỤNG

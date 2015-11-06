@@ -82,57 +82,50 @@ scope.updateAccountOptionChangePassword = (template)->
 settings = scope.settings = {}
 
 
-settings.mySystem = [
+settings.account = [
   display: "tài khoản"
-  icon: "icon-group"
+  icon: "icon-user-7"
   template: "merchantAccountOptions"
   data: Session.get("myProfile")
 ,
   display: "ghi chú"
   icon: "icon-code-outline"
   template: "merchantNoteOptions"
-  data: undefined
-#,
-#  display: "tùy chỉnh"
-#  icon: "icon-group"
-#  template: "merchantHROptions"
-#  data: Session.get("myProfile")
+  data: Session.get("myProfile")
+]
+
+settings.merchant = [
+  display: "đại lý"
+  icon: "icon-shop"
+  template: "merchantInfoOptions"
+  data: Session.get("merchant")
+,
+  display: "kho hàng"
+  icon: "icon-cubes"
+  template: "warehouseInfoOptions"
+  data: Session.get("myProfile")
 ]
 
 settings.system = [
-  display: "đại lý"
-  icon: "icon-cog-outline"
-  template: "merchantSystemOptions"
-  data: undefined
-,
   display: "tùy chỉnh"
-  icon: "icon-cog-outline"
-  template: "merchantHROptions"
-  data: undefined
+  icon: "icon-tools"
+  template: "merchantSystemOptions"
+  data: Session.get("myProfile")
+
 #,
-#  display: "thông tin"
-#  icon: "icon-group"
-#  template: "merchantAccountOptions"
-#  data: Session.get("myProfile")
+#  display: "ngôn ngữ"
+#  icon: "icon-location-1"
+#  template: "merchantLanguageOptions"
+#  data: undefined
 #,
-#  display: "tài khoản"
-#  icon: "icon-group"
-#  template: "merchantAccountOptions"
-#  data: Session.get("myProfile")
-#  ,
-#    display: "ngôn ngữ"
-#    icon: "icon-location-1"
-#    template: "merchantLanguageOptions"
-#    data: undefined
-#  ,
-#    display: "trò chuyện"
-#    icon: "icon-chat-6"
-#    template: "merchantMessengerOptions"
-#    data: undefined
-#  ,
-#    display: "nhắc nhở"
-#    icon: "pink icon-globe-6"
-#    template: "merchantNotificationOptions"
+#  display: "trò chuyện"
+#  icon: "icon-chat-6"
+#  template: "merchantMessengerOptions"
+#  data: undefined
+#,
+#  display: "nhắc nhở"
+#  icon: "icon-bell"
+#  template: "merchantNotificationOptions"
 #  data: undefined
 ]
 

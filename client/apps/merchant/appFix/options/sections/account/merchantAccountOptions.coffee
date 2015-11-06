@@ -10,7 +10,6 @@ Wings.defineHyper 'merchantAccountOptions',
 
   rendered: ->
     self = this
-    console.log self
     syncGenderStatus(self.switch.gender, Session.get("myProfile")?.gender ? true)
     @datePicker.$dateOfBirth.datepicker('setDate', Session.get('myProfile')?.dateOfBirth)
 

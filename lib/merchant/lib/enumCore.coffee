@@ -922,3 +922,39 @@ Apps.Merchant.Enums.Area = [
   children : [
   ]
 ]
+
+
+##----------------------------------------------------
+#Apps.Merchant.Enums.AllowDeleteDay = [
+#  _id    : 1
+#  value  : 1
+#  display: '1 ngày'
+#,
+#  _id    : 1
+#  value  :
+#  display: '2 ngày'
+#,
+#  _id    : 1
+#  value  :
+#  display: '3 ngày'
+#,
+#  _id    : 1
+#  value  :
+#  display: '5 ngày'
+#,
+#  _id    : 1
+#  value  :
+#  display: '7 ngày'
+#,
+#  _id    : 1
+#  value  :
+#  display: '10 ngày'
+#,
+#  _id    : 1
+#  value  :
+#  display: '14 ngày'
+#,
+#  _id    : 1
+#  value  :
+#  display: '14 ngày'
+#]

@@ -1,11 +1,6 @@
 scope = logics.merchantOptions
 
 Wings.defineAppContainer 'merchantOptions',
-  helpers:
-    settings: -> scope.settings
-    currentSectionDynamic: -> Session.get("merchantOptionsCurrentDynamics")
-    optionActiveClass: -> if @template is Session.get("merchantOptionsCurrentDynamics")?.template then 'active' else ''
-
   created: ->
     self = this
     self.autorun ()->
@@ -15,5 +10,16 @@ Wings.defineAppContainer 'merchantOptions',
           Session.set "merchantOptionsCurrentDynamics", scope.settings.system[0]
 
   rendered: -> console.log 'rendered'
+
+  destroyed: ->
+    Wings.Helper.ResetSession([
+      'merchantOptionsCurrentDynamics'
+    ])
+
+  helpers:
+    settings: -> scope.settings
+    currentSectionDynamic: -> Session.get("merchantOptionsCurrentDynamics")
+    optionActiveClass: -> if @template is Session.get("merchantOptionsCurrentDynamics")?.template then 'active' else ''
+
   events:
     "click .caption.inner": -> Session.set("merchantOptionsCurrentDynamics", @)

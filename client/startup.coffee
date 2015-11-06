@@ -16,8 +16,17 @@ Meteor.startup ->
         user.profile._id = user._id
         Session.set 'myProfile', user.profile
 
-        Session.set 'merchant', Schema.merchants.findOne(user.profile.merchant)
-        Session.set 'priceBookBasic', Schema.priceBooks.findOne({priceBookType: 0, merchant: user.profile.merchant})
+        if user.profile.merchant
+          priceBookBasic = Schema.priceBooks.findOne({priceBookType: 0, merchant: user.profile.merchant})
+          Session.set 'priceBookBasic', priceBookBasic
+
+          merchant = Schema.merchants.findOne(user.profile.merchant)
+          Session.set 'merchant', merchant
+
+          if merchant.warehouses
+            warehouse = merchant.warehouses[0]
+            warehouse.merchantId = merchant._id
+            Session.set 'warehouse', warehouse
 
 
       unless Session.get('mySession')
