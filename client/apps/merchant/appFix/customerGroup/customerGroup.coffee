@@ -2,21 +2,18 @@ scope = logics.customerGroup
 
 Wings.defineApp 'customerGroup',
   created: ->
-    self = this
-    self.autorun ()->
-
     Session.set("customerGroupSearchFilter", "")
     Session.set("customerGroupCreationMode", false)
-#    self = this
-#    self.autorun() ->
-#      if currentCustomerGroupId = Session.get('mySession').currentCustomerGroup
-#        customerGroup = Schema.customerGroups.findOne({_id: currentCustomerGroupId})
-#        customerGroup = Schema.customerGroups.findOne({isBase: true, merchant: Merchant.getId()}) unless customerGroup
-#        if customerGroup
-#          customerGroup.customerCount = if customerGroup.customers then customerGroup.customers.length else 0
-#          scope.currentCustomerGroup = customerGroup
-#          Session.set "currentCustomerGroup", scope.currentCustomerGroup
-#          Session.set "customerSelectLists", Session.get('mySession').customerSelected?[Session.get('currentCustomerGroup')._id] ? []
+    self = this
+    self.autorun ()->
+      if currentCustomerGroupId = Session.get('mySession')?.currentCustomerGroup
+        customerGroup = Schema.customerGroups.findOne({_id: currentCustomerGroupId})
+        customerGroup = Schema.customerGroups.findOne({isBase: true, merchant: Merchant.getId()}) unless customerGroup
+        if customerGroup
+          customerGroup.customerCount = if customerGroup.customerLists then customerGroup.customerLists.length else 0
+          scope.currentCustomerGroup = customerGroup
+          Session.set "currentCustomerGroup", scope.currentCustomerGroup
+          Session.set "customerSelectLists", Session.get('mySession').customerSelected?[Session.get('currentCustomerGroup')._id] ? []
 #          $(".changeCustomer").select2("readonly", Session.get("customerSelectLists").length is 0)
 
   helpers:
@@ -31,9 +28,9 @@ Wings.defineApp 'customerGroup',
 
       unless User.hasManagerRoles()
         if searchText
-          selector.$or[0].customers = {$in: Session.get('myProfile').customers}
+          selector.$or[0].customerLists = {$in: Session.get('myProfile').customers}
         else
-          selector.customers = {$in: Session.get('myProfile').customers}
+          selector.customerLists = {$in: Session.get('myProfile').customers}
 
       scope.customerGroupLists = Schema.customerGroups.find(selector, options).fetch()
       scope.customerGroupLists

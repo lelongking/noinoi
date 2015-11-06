@@ -129,3 +129,15 @@ Schema.add 'customerGroups', "CustomerGroup", class CustomerGroup
 
   @recalculateTotalCash : ->
     Schema.customerGroups.find().forEach( (group) -> group.reCalculateTotalCash() )
+
+  @update: ->
+    Schema.customerGroups.find({}).forEach(
+      (customerGroup)->
+        customerListIds = []
+        Schema.customers.find({$or: [ {group: customerGroup._id}, {customerOfGroup: customerGroup._id} ]} ).forEach(
+          (customer) ->
+            customerListIds.push(customer._id)
+            Schema.customers.update customer._id, $set:{customerOfGroup: customerGroup._id}
+        )
+        Schema.customerGroups.update customerGroup._id, $set: {customerLists: customerListIds}
+    )

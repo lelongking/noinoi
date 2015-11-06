@@ -23,9 +23,10 @@ generateActiveClass = (context, instance) ->
   if !currentSource || instance[key] isnt currentSource[key] then '' else 'active'
 
 Wings.defineWidget 'iTab',
-  sources: -> @options.source
-  getCaption: -> @[Template.instance().data.options.caption ? 'caption']
-  activeClass: -> generateActiveClass(Template.instance(), @)
+  helpers:
+    sources: -> @options.source
+    getCaption: -> @[Template.instance().data.options.caption ? 'caption']
+    activeClass: -> generateActiveClass(Template.instance(), @)
 
   events:
     "click li:not(.new-button):not(.active)": (event, template) ->

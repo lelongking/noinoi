@@ -367,7 +367,7 @@ Schema.add 'returns', "Return", class Return
 
   @findNotSubmitOf: (returnType = 'customer')->
     if returnType is 'customer' or returnType is 'provider'
-      Schema.returns.find({
+      return Schema.returns.find({
         creator     : Meteor.userId()
         merchant    : Merchant.getId()
         returnType  : Enums.getValue('ReturnTypes', returnType)

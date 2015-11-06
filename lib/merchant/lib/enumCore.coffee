@@ -204,11 +204,11 @@ Apps.Merchant.Enums.ImportTypes = [
 Apps.Merchant.Enums.TransactionGroups = [
   _id    : 0
   value  : 'customer'
-  display: 'Nhà Cung Cấp'
+  display: 'Khách Hàng'
 ,
   _id    : 1
   value  : 'provider'
-  display: 'Khách Hàng'
+  display: 'Nhà Cung Cấp'
 #,
 #  _id    : 2
 #  value  : 'partner'
@@ -320,6 +320,10 @@ Apps.Merchant.Enums.ProductStatuses = [
   _id    : 1
   value  : 'confirmed'
   display: 'da kiem tra'
+,
+  _id    : 2
+  value  : 'stop'
+  display: 'ngung ban'
 ]
 
 #---------Loại Hinh Cty---

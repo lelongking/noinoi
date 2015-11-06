@@ -11,9 +11,9 @@
     ]}
   unless User.hasManagerRoles()
     if searchText
-      selector.$or[0]._id = {$in: Session.get('myProfile').customers}
+      selector.$or[0]._id = {$in: Session.get('myProfile')?.customers}
     else
-      selector._id = {$in: Session.get('myProfile').customers}
+      selector._id = {$in: Session.get('myProfile')?.customers}
 
   callback(false, Schema.customers.find(selector, options).fetch())
 

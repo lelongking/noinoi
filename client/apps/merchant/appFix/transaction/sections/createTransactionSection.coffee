@@ -2,7 +2,7 @@ Enums = Apps.Merchant.Enums
 scope = logics.transaction
 numericOption = {autoGroup: true, groupSeparator:",", radixPoint: ".", suffix: " VNĐ", integerDigits:11}
 
-lemon.defineApp Template.transactionOverviewSection,
+lemon.defineApp Template.createTransactionSection,
   rendered: ->
     @ui.$transactionAmount.inputmask("numeric", numericOption) if @ui.$transactionAmount
 

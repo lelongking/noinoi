@@ -43,7 +43,7 @@ Wings.defineApp 'customerManagement',
         else
           selector._id = addCustomerIds
       scope.customerLists = []
-      Schema.customers.find(selector, {sort: {nameSearch: 1}}).forEach(
+      Schema.customers.find(selector, {sort: {firstName:1 ,nameSearch: 1}}).forEach(
         (customer) ->
           if customerGroup = _.findWhere(customerGroups, {_id: customer.customerOfGroup ? customer.group})
             customerGroup.customerListSearched.push(customer)

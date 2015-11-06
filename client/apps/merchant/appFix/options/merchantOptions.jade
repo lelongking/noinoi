@@ -5,9 +5,24 @@ template(name="merchantOptions")
         .dual-detail
           .nano: .nano-content
             +Template.dynamic(template=currentSectionDynamic.template data=currentSectionDynamic.data)
-            //+merchantPrintDesigner merchantProfile
+
+
       .dual-addon
-        .nano: .nano-content(style="margin-bottom: 35px;")
+        .nano(style="margin-top: -22px;"): .nano-content(style="margin-bottom: 35px;")
+
+          .group-wrapper
+            .caption.group CÁ NHÂN
+            each settings.mySystem
+              .caption.inner(class="{{optionActiveClass}}")
+                span.avatar.letter(class="{{icon}}")
+                span.text.uppercase <b>{{display}}</b>
+
+          //.group-wrapper
+          //  .caption.group ĐẠI LÝ
+          //  each settings.merchant
+          //    .caption.inner(class="{{optionActiveClass}}")
+          //      span.avatar.letter(class="{{icon}}")
+          //      span.text.uppercase <b>{{display}}</b>
 
           .group-wrapper
             .caption.group HỆ THỐNG
@@ -15,20 +30,6 @@ template(name="merchantOptions")
               .caption.inner(class="{{optionActiveClass}}")
                 span.avatar.letter(class="{{icon}}")
                 span.text.uppercase <b>{{display}}</b>
-
-          //.group-wrapper
-          //  .caption.group NHÂN SỰ
-          //  each settings.staff
-          //    .caption.inner(class="{{optionActiveClass}}")
-          //      span.avatar.letter(class="{{icon}}")
-          //      span.text.uppercase <b>{{display}}</b>
-          //
-          //.group-wrapper
-          //  .caption.group VĂN BẢN
-          //  each settings.printing
-          //    .caption.inner(class="{{optionActiveClass}}")
-          //      span.avatar.letter(class="{{icon}}")
-          //      span.text.uppercase <b>{{display}}</b>
 
           //.group-wrapper
           //  .caption.group CHỨC NĂNG

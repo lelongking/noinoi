@@ -81,16 +81,44 @@ scope.updateAccountOptionChangePassword = (template)->
 
 settings = scope.settings = {}
 
-settings.system = [
-#    display: "hệ thống"
-#    icon: "icon-cog-outline"
-#    template: "merchantSystemOptions"
-#    data: undefined
-#  ,
+
+settings.mySystem = [
   display: "tài khoản"
   icon: "icon-group"
   template: "merchantAccountOptions"
   data: Session.get("myProfile")
+,
+  display: "ghi chú"
+  icon: "icon-code-outline"
+  template: "merchantNoteOptions"
+  data: undefined
+#,
+#  display: "tùy chỉnh"
+#  icon: "icon-group"
+#  template: "merchantHROptions"
+#  data: Session.get("myProfile")
+]
+
+settings.system = [
+  display: "đại lý"
+  icon: "icon-cog-outline"
+  template: "merchantSystemOptions"
+  data: undefined
+,
+  display: "tùy chỉnh"
+  icon: "icon-cog-outline"
+  template: "merchantHROptions"
+  data: undefined
+#,
+#  display: "thông tin"
+#  icon: "icon-group"
+#  template: "merchantAccountOptions"
+#  data: Session.get("myProfile")
+#,
+#  display: "tài khoản"
+#  icon: "icon-group"
+#  template: "merchantAccountOptions"
+#  data: Session.get("myProfile")
 #  ,
 #    display: "ngôn ngữ"
 #    icon: "icon-location-1"
@@ -105,12 +133,7 @@ settings.system = [
 #    display: "nhắc nhở"
 #    icon: "pink icon-globe-6"
 #    template: "merchantNotificationOptions"
-  data: undefined
-,
-  display: "ghi chú"
-  icon: "icon-code-outline"
-  template: "merchantNoteOptions"
-  data: undefined
+#  data: undefined
 ]
 
 settings.printing = [

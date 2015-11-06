@@ -24,7 +24,7 @@ template(name="customerManagement")
                   each customerListSearched
                     .doc-item(class="{{activeClass}}")
                       .avatar-wrapper: .avatar-image(class="{{hasAvatar}}"
-                      style="background-image:url('{{avatarUrl}}')") {{aliasLetter firstName}}
+                      style="background-image:url('{{avatarUrl}}')") {{aliasLetter this.firstName}}
 
                       .doc-info
                         .title {{name}}

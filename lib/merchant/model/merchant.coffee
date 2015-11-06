@@ -19,7 +19,16 @@ simpleSchema.merchants = new SimpleSchema
   "warehouses.$.address"     : type: String, optional: true
   "warehouses.$.phone"       : type: String, optional: true
 
-  merchantOptions                 : type: Object  , optional    : true
+  options                         : type: Object, optional: true
+  'options.deliveryLateDay'       : type: Number, optional: true
+  'options.orderDeleteInDay'      : type: Number, optional: true
+  'options.transactionDeleteInDay': type: Number, optional: true
+  'options.returnDeleteInDay'     : type: Number, optional: true
+  'options.dueDay'                : type: Number, optional: true
+  'options.showInventory'         : type: Boolean, optional: true
+  'options.autoConfirm'           : type: Boolean, optional: true
+
+
   merchantSummaries               : type: Object  , optional    : true
   "merchantSummaries.barcodeUsed" : type: [String], defaultValue: []
 

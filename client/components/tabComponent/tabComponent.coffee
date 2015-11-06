@@ -1,6 +1,6 @@
 destroyTab = (context, instance) ->
   options = context.data.options
-  allTabs = options.source.fetch()
+  allTabs = options.source().fetch()
   currentSource = _.findWhere(allTabs, {_id: instance._id})
   currentIndex = allTabs.indexOf(currentSource)
   latestLength = options.destroyAction?(instance)

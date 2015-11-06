@@ -30,10 +30,10 @@
   // Configure environment
   "env": {
 //    "METEOR_ENV": "development",
-    "PORT": 3011,
+    "PORT": 3003,
     "UPSTART_UID": "meteoruser",
     "ROOT_URL": "http://gera.vn",
-    "MONGO_URL": "mongodb://localhost:27017/edsFree201509",
+    "MONGO_URL": "mongodb://localhost:27017/edsChauAClone",
     "MAIL_URL": "smtp://thienbantech@gmail.com:thienban2014@stmp.gmail.com:465/"
   },
 

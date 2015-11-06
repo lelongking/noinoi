@@ -149,24 +149,7 @@ Schema.add 'customers', "Customer", class Customer
     Schema.customers.find({}).forEach(
       (customer)->
         console.log customer
-        Schema.customers.update(customer._id, {
-          $set:{
-            saleBillNo       : 0
-            importBillNo     : 0
-            returnBillNo     : 0
-            transactionBillNo: 0
-            beginCash : 0
-            debtCash  : 0
-            loanCash  : 0
-            paidCash  : 0
-            returnCash: 0
-            totalCash : 0
-            orderWaiting: []
-            orderFailure: []
-            orderSuccess: []
-            allowDelete : true
-          }
-        })
+        Schema.customers.update(customer._id, { $set: {name: customer.name} })
     )
 
   @updateGroup: ->

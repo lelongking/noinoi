@@ -5,7 +5,6 @@ Wings.defineAppContainer 'merchantOptions',
     settings: -> scope.settings
     currentSectionDynamic: -> Session.get("merchantOptionsCurrentDynamics")
     optionActiveClass: -> if @template is Session.get("merchantOptionsCurrentDynamics")?.template then 'active' else ''
-#    settings: -> scope.settings
 
   created: ->
     self = this

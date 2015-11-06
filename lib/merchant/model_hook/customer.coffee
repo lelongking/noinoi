@@ -1,5 +1,5 @@
 #----------Before-Insert---------------------------------------------------------------------------------------------
-generateInitCash = (customer)->
+generateCustomerInitCash = (customer)->
   customer.debtRequiredCash = 0
   customer.paidRequiredCash = 0
   customer.debtBeginCash    = 0
@@ -15,7 +15,7 @@ generateOrderStatus = (customer)->
   customer.orderFailure = []
   customer.orderSuccess = []
 
-generateInit = (user, customer, splitName)->
+generateCustomerInit = (user, customer, splitName)->
   customer.merchant     = user.profile.merchant
   customer.creator      = user._id
   customer.allowDelete  = true
@@ -50,7 +50,7 @@ addCustomerInCustomerGroup = (userId, customer) ->
     Schema.customerGroups.direct.update(customer.customerOfGroup, customerGroupUpdate)
 
 #----------Before-Update---------------------------------------------------------------------------------------------
-updateIsNameChanged = (userId, customer, fieldNames, modifier, options) ->
+updateIsNameChangedOfCustomer = (userId, customer, fieldNames, modifier, options) ->
   if _.contains(fieldNames, "name")
     if customer.name isnt modifier.$set.name
       modifier.$set.nameSearch  = Helpers.Searchify(modifier.$set.name)
@@ -146,8 +146,8 @@ removeCashOfCustomerCash = (userId, customer)->
 Schema.customers.before.insert (userId, customer)->
   user = Meteor.users.findOne(userId)
   splitName = Helpers.GetFirstNameOrLastName(customer.name)
-  generateInit(user, customer, splitName)
-  generateInitCash(customer)
+  generateCustomerInit(user, customer, splitName)
+  generateCustomerInitCash(customer)
   generateOrderStatus(customer)
   setCustomerGroupDefault(user, customer)
 
@@ -156,7 +156,7 @@ Schema.customers.after.insert (userId, customer) ->
 
 #-----------------------------------------------------------------------------------------------------------------------
 Schema.customers.before.update (userId, customer, fieldNames, modifier, options) ->
-  updateIsNameChanged(userId, customer, fieldNames, modifier, options)
+  updateIsNameChangedOfCustomer(userId, customer, fieldNames, modifier, options)
 
 Schema.customers.after.update (userId, newCustomer, fieldNames, modifier, options) ->
   oldCustomer = @previous

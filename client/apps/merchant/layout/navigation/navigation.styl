@@ -54,6 +54,36 @@ nav.main
     > li
       i { font-size: 15px; }
 
+  .sub-menu
+    margin-right 0
+    padding-left 5px
+    li
+      margin 4px 3px 0 0
+      &.tile
+        width 160px
+        height 70px
+
+        -moz-transform: scale(1);
+        -webkit-transform: scale(1);
+        -o-transform: scale(1);
+        -ms-transform: scale(1);
+        transform: scale(1);
+        -webkit-transition: -webkit-transform .2s ease-out;
+        -moz-transition: -moz-transform .2s ease-out;
+        -o-transition: -o-transform .2s ease-out;
+        -ms-transition: -ms-transform .2s ease-out;
+        transition: transform .2s ease-out;
+
+        &:hover
+          z-index: 10;
+          -moz-transform: scale(1.05);
+          -webkit-transform: scale(1.05);
+          -o-transform: scale(1.05);
+          -ms-transform: scale(1.05);
+          transform: scale(1.05);
+          transition-duration: .2s;
+
+
   li
     /*border-right solid 1px #F0F0F0*/
     &.inav
@@ -114,7 +144,7 @@ nav.main
 
     &.app-name
       position relative
-      width dual-left-width; min-height 60px
+      width dual-left-width; min-height navigation-height
       padding 24px 10px 7px 10px
       font-size 20px; font-weight lighter; color default-navigation-color
       border-right solid 1px #E4E4E4

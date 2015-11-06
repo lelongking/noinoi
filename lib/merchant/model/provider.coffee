@@ -1,6 +1,10 @@
 simpleSchema.providers = new SimpleSchema
   name        : simpleSchema.StringUniqueIndex
-  nameSearch  : simpleSchema.searchSource('name')
+  nameSearch: type: String, index: 1, optional: true
+  firstName : type: String, optional: true
+  lastName  : type: String, optional: true
+
+  avatar    : type: String, optional: true
   description : simpleSchema.OptionalString
 
   phone          : simpleSchema.OptionalString
@@ -28,7 +32,6 @@ simpleSchema.providers = new SimpleSchema
   returnSaleCash   : type: Number, defaultValue: 0 #số tiền trả hàng phát sinh trong kỳ
 
   merchant    : simpleSchema.DefaultMerchant
-  avatar      : simpleSchema.OptionalString
   allowDelete : simpleSchema.DefaultBoolean()
   creator     : simpleSchema.DefaultCreator
   version     : { type: simpleSchema.Version }

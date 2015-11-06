@@ -4,7 +4,7 @@ scope = logics.customerReturn
 
 
 scope.tabCustomerReturnOptions =
-  source: Return.findNotSubmitOf('customer')
+  source: -> Return.findNotSubmitOf('customer')
   currentSource: 'currentCustomerReturn'
   caption: 'returnName'
   key: '_id'

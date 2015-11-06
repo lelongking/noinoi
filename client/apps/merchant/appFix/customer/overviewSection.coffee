@@ -28,11 +28,11 @@ Wings.defineHyper 'customerManagementOverviewSection',
 
     "change .avatarFile": (event, template) ->
       if User.hasManagerRoles()
-        files = event.target.files
-        if files.length > 0 and Session.get('customerManagementCurrentCustomer')
+        files = event.target.files; customer = Template.currentData()
+        if files.length > 0 and customer?._id
           AvatarImages.insert files[0], (error, fileObj) ->
-            Schema.customers.update(Session.get('customerManagementCurrentCustomer')._id, {$set: {avatar: fileObj._id}})
-            AvatarImages.findOne(Session.get('customerManagementCurrentCustomer').avatar)?.remove()
+            Schema.customers.update(customer._id, {$set: {avatar: fileObj._id}})
+            AvatarImages.findOne(customer.avatar)?.remove()
 
     "input .editable": (event, template) -> scope.checkAllowUpdateOverview(template)
     "keyup .editDescription": (event, template) ->
