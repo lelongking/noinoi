@@ -80,9 +80,11 @@ Schema.add 'products', "Product", class Product
       doc.basicUnitId = -> doc.units[0]._id
 
     if doc.quantities?.length > 0
-      doc.allQuantity   = doc.quantities[0].inStockQuantity
-      doc.normsQuantity = doc.quantities[0].normsQuantity
-      doc.normsCount    = doc.quantities[0].normsQuantity - doc.quantities[0].inStockQuantity
+      doc.allQuantity       = doc.quantities[0].inStockQuantity
+      doc.saleQuantity      = doc.quantities[0].saleQuantity
+      doc.saleReturnQuantity= doc.quantities[0].returnSaleQuantity
+      doc.normsQuantity     = doc.quantities[0].normsQuantity
+      doc.normsCount        = doc.quantities[0].normsQuantity - doc.quantities[0].inStockQuantity
 
 
     doc.getPrice = (ownerId, priceType = 'sale') ->

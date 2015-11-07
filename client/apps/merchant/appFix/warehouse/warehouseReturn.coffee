@@ -1,9 +1,8 @@
 scope = logics.warehouse
 
-Wings.defineApp 'warehouse',
+Wings.defineApp 'warehouseReturn',
   created: ->
-    Session.set('warehouseShowAll', true)
-    Session.set('warehouseShowReturn', false)
+    Session.set('warehouseShowReturn', true)
 
   helpers:
     listProductsTrade: -> scope.listProductsTrade().details
@@ -13,9 +12,3 @@ Wings.defineApp 'warehouse',
       scope.listProductsTrade().totalCostPrice
     totalRevenue: ->
       scope.listProductsTrade().totalRevenue
-
-  events:
-    "keyup input.upperGap":  (event, template) ->
-      console.log @
-      upperGap = Number(template.ui["$#{@_id}"].val())
-      Schema.products.update @_id, $set:{'quantities.0.normsQuantity': upperGap}

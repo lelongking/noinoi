@@ -104,6 +104,11 @@ settings.merchant = [
   icon: "icon-cubes"
   template: "warehouseInfoOptions"
   data: Session.get("myProfile")
+,
+  display: "phân quyền"
+  icon: "icon-group"
+  template: "merchantHROptions"
+  data: Session.get("myProfile")
 ]
 
 settings.system = [

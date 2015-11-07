@@ -3,6 +3,9 @@ FlowRouter.route '/warehouse',
   action: ->
     Session.set "currentAppInfo",
       name: "quản lý kho hàng"
+      navigationPartial:
+        template: "warehouseNavigationPartial"
+        data: {}
 
     BlazeLayout.render 'merchantLayout',
       content: 'warehouse'
