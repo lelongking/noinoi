@@ -1,0 +1,15 @@
+template(name="lockScreen_v1")
+  .lock-wrapper
+    //#time {{timeHMS}}
+    with sessionGet 'myProfile'
+      .lock-box.text-center
+        .lock-name
+          i.icon-off-1.logOut
+          span {{name}}
+        if image
+          img(src='{{image}}')
+        else
+          img(src='images/lockScreen/lock_thumb.jpg')
+        .lock-pwd: .form-inline: .form-group
+          input.form-control.lock-input(type='password', placeholder='Password')
+          button.btn.btn-lock(type='submit'): i.icon-right-open-5

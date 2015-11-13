@@ -63,6 +63,7 @@ Template.registerHelper 'appCollapseClass', -> if Session.get('collapse') then '
 
 Template.registerHelper 'dayOfWeek', -> moment(Session.get('realtime-now')).format("dddd")
 Template.registerHelper 'timeDMY', -> moment(Session.get('realtime-now')).format("DD/MM/YYYY")
+Template.registerHelper 'timeHMS', -> moment(Session.get('realtime-now')).format("HH:mm:ss")
 Template.registerHelper 'timeHM', -> moment(Session.get('realtime-now')).format("HH:mm")
 Template.registerHelper 'timeS', -> moment(Session.get('realtime-now')).format("ss")
 

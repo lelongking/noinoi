@@ -1,4 +1,20 @@
 Meteor.methods
+  checkPassword: (digest) ->
+    check digest, String
+    if @userId
+      user = Meteor.user()
+      password =
+        digest: digest
+        algorithm: 'sha-256'
+      result = Accounts._checkPassword(user, password)
+      result.error == null
+      if result.error
+        throw new Meteor.Error(result.error.error, result.error.reason, result.error.details)
+      else
+        return result
+    else
+      false
+
   checkProductExpireDate: (value)->
     Apps.Merchant.checkProductExpireDate(Schema.userProfiles.findOne({user: Meteor.userId()}), value)
 

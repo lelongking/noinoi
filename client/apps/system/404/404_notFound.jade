@@ -1,0 +1,33 @@
+template(name="notFound")
+  body
+    .wrapper.full-page-wrapper.page-error.text-center
+      .inner-page
+        h1
+          span.clearfix.title
+            span.number 404
+            span.text
+              | Oops!
+              br
+              | Page Not Found
+        p
+          | The page you were looking for could not be found, please
+          a(href='#') contact us
+          |  to report this issue.
+
+        p You can also use search form below to find the page you are looking for.
+
+        //form.searchbox.center-block
+        //  .input-group.input-group-lg
+        //    input.form-control(type='search', placeholder='type keyword here')
+        //    span.input-group-btn
+        //      button.btn.btn-primary(type='button')
+        //        i.fa.fa-search
+        //        |  Search
+
+        //div
+        //  a.btn.btn-custom-primary(href='javascript:history.go(-1)')
+        //    i.fa.fa-arrow-left
+        //    |  Go Back
+        //  a.btn.btn-primary(href='#')
+        //    i.fa.fa-home
+        //    |  Home

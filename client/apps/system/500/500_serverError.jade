@@ -1,0 +1,17 @@
+template(name="serverError")
+  body.gray-bg.pace-done
+    .pace.pace-inactive
+      .pace-progress(data-progress-text='100%', data-progress='99', style='transform: translate3d(100%, 0px, 0px);')
+        .pace-progress-inner
+      .pace-activity
+
+    // Main view
+    .middle-box.text-center.animated.fadeInDown
+      h1 500
+      h3.font-bold Internal Server Error
+      .error-desc
+        | The server encountered something unexpected that didn't allow it to complete the request. We apologize.
+        br
+        |             You can go back to main page:
+        br
+        a.btn.btn-primary.m-t(href='/dashboard1') Dashboard

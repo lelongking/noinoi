@@ -1,0 +1,99 @@
+@import "../../../styles/lib.import.styl"
+
+.lock-screen
+  background #1FB3A3 url("/images/lockScreen/lock-screen.jpg") no-repeat fixed 0 0 / cover
+.lock-wrapper
+  margin 10% auto
+  max-width 550px
+
+  .notifyjs-wrapper
+    line-height: 20px;
+
+  .avatarImage, img
+    vertical-align: middle;
+    position: absolute;
+    left: 35%;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    border: 10px solid #fff;
+    width: 160px;
+    height: 160px;
+    background: #fff;
+
+  .lock-box
+    position: relative;
+
+    .lock-name
+      background: #fff;
+      width: 50%;
+      float: left;
+      height: 50px;
+      line-height: 50px;
+      margin-top: 55px;
+      padding: 0 10px;
+      text-align: left;
+      border-radius: 5px 0 0 5px;
+      -webkit-border-radius: 5px 0 0 5px;
+      color: #1fb5ad;
+
+      span
+        padding-left: 5px;
+
+      i.logOut
+        cursor: pointer;
+        color: #626f81;
+        &:focus, &:hover
+          color: #333;
+          text-decoration: none;
+
+  .lock-pwd
+    background: #fff;
+    width: 50%;
+    float: right;
+    height: 50px;
+    line-height: 50px;
+    margin-top: 55px;
+    padding: 0 0 0 80px;
+    border-radius: 0 5px 5px 0;
+    -webkit-border-radius: 0 5px 5px 0;
+    color: #1fb5ad;
+
+    input
+      box-shadow: none
+      width: 70% !important;
+      margin-top: 8px;
+      color: #626f81;
+      &:focus
+        border-color: #fff
+
+  .lock-input
+    width: 83%;
+    border: none;
+    float: left;
+    margin-right: 3px;
+
+
+  .btn-lock, .btn-lock:hover
+    background: #fff;
+    color: #626f81;
+    margin-top: -2px;
+    outline: none !important;
+    box-shadow: none !important;
+
+  .btn.focus, .btn:focus, .btn:hover
+    color: #333;
+    text-decoration: none;
+
+
+
+
+
+#time
+  width: 100%;
+  color: #fff;
+  font-size: 125px;
+  margin-bottom: 50px;
+  display: inline-block;
+  text-align: center;
+  font-family: 'Lato',sans-serif;
+  font-weight: 100;
