@@ -24,3 +24,34 @@ if Meteor.isServer
           username: 1
       UserStatus.connections.find()
     ]
+
+
+
+if Meteor.isClient
+  BlazeLayout.setRoot('body')
+
+  # Only login in one browser
+  Accounts.onLogin (user) ->
+    accountStatus = AccountStatus.findOne({_id: Accounts.connection._lastSessionId})
+    statusBrowsers = Meteor.user().sessions.statusBrowsers
+
+    browserOption = {ipAddr: accountStatus.ipAddr, userAgent: accountStatus.userAgent}
+
+    if accountStatus and statusBrowsers
+      if findBrowser = _.findWhere(statusBrowsers, browserOption)
+        if findBrowser.status
+        else
+      else
+        Meteor.users.update(Meteor.userId(), {$set: {'sessions.statusBrowsers': orderId}})
+
+
+
+    #Todo: xem lai ??? 1 browser mo hai tab van bi
+    #    # logout other clients
+    #    Meteor.logoutOtherClients()
+    #    Session.set 'loggedIn', true
+
+    redirect = Session.get 'redirectAfterLogin'
+    if redirect?
+      unless redirect is '/login'
+        FlowRouter.go redirect

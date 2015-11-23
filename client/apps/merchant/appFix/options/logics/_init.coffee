@@ -1,19 +1,3 @@
-FlowRouter.route '/option',
-  name: 'option'
-  action: ->
-    Session.set "currentAppInfo",
-      name: "tuỳ chỉnh"
-
-    BlazeLayout.render 'merchantLayout',
-      content: 'merchantOptions'
-    return
-
-  triggersEnter: [ (context, redirect) ->
-    console.log 'running /provider trigger'
-    return
-  ]
-
-
 logics.merchantOptions = {} unless logics.merchantOptions
 scope = logics.merchantOptions
 

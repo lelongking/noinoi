@@ -1,32 +1,16 @@
 Enums = Apps.Merchant.Enums
 simpleSchema.customers = new SimpleSchema
-  name      : type: String, index: 1
-  nameSearch: type: String, index: 1, optional: true
-  firstName : type: String, optional: true
-  lastName  : type: String, optional: true
-  avatar    : type: String, optional: true
+#----Required Information-------------------------------
+  name  : type: String, index: 1
+  code  : type: String, index: 1, optional: true
+  phone : type: String, index: 1, optional: true
 
-  customerCode    : type: String, optional: true
-  customerOfGroup : type: String, optional: true
-  customerOfStaff : type: String, optional: true
+#----Important Information-------------------------------
+  address  : type: String, optional: true
+  location : type: String, optional: true
+  avatar   : type: String, optional: true
 
-  deliveryCompany : type: String, optional: true
-  deliveryAddress : type: String, optional: true
-
-  saleBillNo        : type: Number, defaultValue: 0 #số phiếu bán
-  importBillNo      : type: Number, defaultValue: 0 #số phiếu nhap
-  returnBillNo      : type: Number, defaultValue: 0 #số phiếu tra hang
-  transactionBillNo : type: Number, defaultValue: 0 #số phiếu thu chi
-
-  merchant    : type: String, optional: true
-  creator     : type: String, optional: true
-  allowDelete : type: Boolean, optional: true
-  version     : { type: simpleSchema.Version }
-
-  orderWaiting : type: [String], optional: true
-  orderFailure : type: [String], optional: true
-  orderSuccess : type: [String], optional: true
-
+#----Debt information--------------------------------------------------------------
   debtRequiredCash : type: Number, optional: true #số nợ bắt buộc phải thu
   paidRequiredCash : type: Number, optional: true #số nợ bắt buộc đã trả
 
@@ -40,6 +24,11 @@ simpleSchema.customers = new SimpleSchema
   paidSaleCash     : type: Number, optional: true #số tiền đã trả phát sinh trong kỳ
   returnSaleCash   : type: Number, optional: true #số tiền trả hàng phát sinh trong kỳ
 
+
+#----Detailed information--------------------------------
+  deliveryCompany        : type: String, optional: true
+  deliveryAddress        : type: String, optional: true
+
   profiles               : type: Object, optional: true
   'profiles.gender'      : simpleSchema.DefaultBoolean()
   'profiles.description' : type: String, optional: true
@@ -51,6 +40,37 @@ simpleSchema.customers = new SimpleSchema
   'profiles.pronoun'     : type: String, optional: true
   'profiles.companyName' : type: String, optional: true
   'profiles.email'       : type: String, optional: true
+
+#----System Information-------------------------------
+  customerCode      : type: String, optional: true
+  customerOfGroup   : type: String, optional: true
+  customerOfStaff   : type: String, optional: true
+
+  merchant          : type: String, optional: true
+  creator           : type: String, optional: true
+  allowDelete       : type: Boolean, optional: true
+  version           : { type: simpleSchema.Version }
+
+#----Automatic Information-------------------------------
+  nameSearch        : type: String, index: 1, optional: true
+  firstName         : type: String, optional: true
+  lastName          : type: String, optional: true
+
+  orderWaiting      : type: [String], optional: true
+  orderFailure      : type: [String], optional: true
+  orderSuccess      : type: [String], optional: true
+
+  saleBillNo        : type: Number, defaultValue: 0 #số phiếu bán
+  importBillNo      : type: Number, defaultValue: 0 #số phiếu nhap
+  returnBillNo      : type: Number, defaultValue: 0 #số phiếu tra hang
+  transactionBillNo : type: Number, defaultValue: 0 #số phiếu thu chi
+
+
+
+
+
+
+
 
 
 Schema.add 'customers', "Customer", class Customer

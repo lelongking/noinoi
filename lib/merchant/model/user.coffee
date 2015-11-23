@@ -63,6 +63,12 @@ userSession = new SimpleSchema
   productUnitSelected     : type: Object, blackbox: true, optional: true
   customerOfStaffSelected : type: Object, blackbox: true, optional: true
 
+  statusBrowsers : type: [Object], blackbox: true, optional: true
+  'statusBrowsers.$._id'   : simpleSchema.UniqueId
+  'statusBrowsers.$.ipAddr'   : simpleSchema.UniqueId
+  'statusBrowsers.$.userAgent': type: String
+  'statusBrowsers.$.status'   : type: String
+
 Meteor.users.attachSchema new SimpleSchema
   username:
     type: String

@@ -3,7 +3,19 @@ simpleSchema.merchants = new SimpleSchema
   address : type: String, optional: true
   phone   : type: String, optional: true
   email   : type: String, optional: true
+  logo    : type: String, optional: true
   version : type: simpleSchema.Version
+
+  customerCodes    : type: [String], defaultValue: []
+  customerPhones   : type: [String], defaultValue: []
+  providerCodes    : type: [String], defaultValue: []
+  productCodes     : type: [String], defaultValue: []
+
+  importCodes      : type: [String], defaultValue: []
+  orderCodes       : type: [String], defaultValue: []
+  returnCodes      : type: [String], defaultValue: []
+  transactionCodes : type: [String], defaultValue: []
+
 
   saleBillNo        : type: Number, defaultValue: 0 #số phiếu bán
   importBillNo      : type: Number, defaultValue: 0 #số phiếu nhap
