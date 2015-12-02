@@ -26,7 +26,7 @@ animateBackgroundColor = ->
   currentIndex++
   currentIndex = 0 if currentIndex > colors.length
 
-lemon.defineWidget Template.home,
+Wings.defineWidget 'home',
   helpers:
     registerValid: ->
       if Session.get('registerAccountValid') == Session.get('registerSecretValid') == 'valid'
@@ -38,7 +38,7 @@ lemon.defineWidget Template.home,
 
 #  created: -> Router.go('/merchant') unless Meteor.userId() is null or (Session.get('autoNatigateDashboardOff'))
   created: ->
-    Router.go('/merchant') if Meteor.userId()
+    FlowRouter.go('/merchant') if Meteor.userId()
 
   rendered: ->
     self = @
@@ -50,8 +50,8 @@ lemon.defineWidget Template.home,
 
   events:
     "click #authButton.valid": (event, template) -> logics.homeHeader.login(event, template)
-    "click #gotoMerchantButton": -> Router.go('/merchant')
-    "click #logoutButton": -> lemon.logout()
+    "click #gotoMerchantButton": -> FlowRouter.go('/merchant')
+    "click #logoutButton": -> Wings.logout()
     "keypress .login-field": (event, template) ->
       $(template.find("#authButton")).click() if event.which is 13 and Session.get('loginValid') is 'valid'
 
@@ -63,6 +63,8 @@ lemon.defineWidget Template.home,
       else
         Session.set('loginValid', 'invalid')
 
+
+
     "click #terms": -> Session.set('topPanelMinimize', !Session.get('topPanelMinimize'))
     "click #merchantRegister.valid": (event, template)->
       $companyName    = $(template.find("#companyName"))
@@ -70,19 +72,27 @@ lemon.defineWidget Template.home,
       $account        = $(template.find("#account"))
       $secret         = $(template.find("#secret"))
 
-#      Meteor.call "registerMerchant", $account.val(), $secret.val(), $companyName.val(), $companyPhone.val(), (error, result) ->
-#        (return; console.log error) if error
-#        Meteor.loginWithPassword $account.val(), $secret.val(), (error) -> Router.go('/merchantWizard') if !error
+      console.log  $account.val(), $secret.val(), $companyName.val(), $companyPhone.val()
+      Meteor.call "registerMerchant", $account.val(), $secret.val(), $companyName.val(), $companyPhone.val(), (error, result) ->
+        if error
+          console.log error
+        else
+          Meteor.loginWithPassword $account.val(), $secret.val(), (error, result) ->
 
     "blur #account": (event, template) ->
       $account = $(template.find("#account"))
-      if $account.val().length > 0
-        Meteor.loginWithPassword $account.val(), '', (error) ->
-          if error?.reason is "Incorrect password"
-            $account.notify("tài khoản đã tồn tại", {position: "top"})
-            Session.set('registerAccountValid', 'invalid')
-          else
-            Session.set('registerAccountValid', 'valid')
+      account = $account.val()
+      if account.length > 0
+        if Wings.Validate.isEmail(account)
+          Meteor.loginWithPassword account, '', (error, result) ->
+            console.log error, result
+            if error?.reason is "Incorrect password"
+              $account.notify("tài khoản đã tồn tại", {position: "top"})
+              Session.set('registerAccountValid', 'invalid')
+            else
+              Session.set('registerAccountValid', 'valid')
+        else
+          $account.notify("email không chính xác", {position: "top"})
       else
         Session.set('registerAccountValid', 'invalid')
 

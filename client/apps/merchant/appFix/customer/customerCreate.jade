@@ -1,0 +1,43 @@
+template(name="customerCreate")
+  .dual-detail-wrapper: .dual-detail
+    .section.top.panel.panel-default.options-section
+      .panel-heading
+        span.icon-contacts tạo mới khách hàng
+        //.commands
+        //  if showEditCommand
+        //    .lemon.btn.rounded.lime.icon-ok-6.syncAccountProfileEdit
+      .panel-body
+        .collapsible-row
+          .description Mã khách hàng
+          input.input-field.newCustomerOption(name="code" placeholder="Mã mặc định")
+        .collapsible-row
+          .description Tên khách hàng
+          input.input-field.newCustomerOption(name="name")
+        .collapsible-row
+          .description Điện thoại
+          input.input-field.newCustomerOption(name="phone")
+        .collapsible-row
+          .description Giới tính
+          .input-field {{genderString gender}}
+          .commands: input.newCustomerOption(binding="switch" type="checkbox" name="gender")
+        .collapsible-row
+          .description Ngày sinh
+          input.input-field.newCustomerOption(name="dateOfBirth" binding="datePicker" todayHighlight="true" maxlength="20" tabindex="4")
+        .collapsible-row
+          .description Địa chỉ
+          input.input-field.newCustomerOption(name="address" placeholder="không bắt buộc")
+        .collapsible-row
+          .description Khu vực
+          input.input-field.newCustomerOption(name="area" placeholder="không bắt buộc")
+        .collapsible-row
+          .description Nhóm khách hàng
+          input.input-field.newCustomerOption(name="address" value="{{profile.address}}" placeholder="chưa cập nhật")
+        .collapsible-row
+          .description Nhân viên quản lý
+          input.input-field.newCustomerOption(name="address" value="{{profile.address}}" placeholder="chưa cập nhật")
+        .collapsible-row
+          .description Địa chỉ giao hàng
+          input.input-field.newCustomerOption(name="address" value="{{profile.address}}" placeholder="chưa cập nhật")
+        .collapsible-row
+          .description Ghi chú
+          input.input-field.newCustomerOption(name="address" value="{{profile.address}}" placeholder="chưa cập nhật")

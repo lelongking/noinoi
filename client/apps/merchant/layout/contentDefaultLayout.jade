@@ -1,0 +1,4 @@
+template(name="contentDefaultLayout")
+  #content.modern: .dual-content
+    +Template.dynamic(template=contentAddon data=addonData)
+    +Template.dynamic(template=contentDetail data=detailData)

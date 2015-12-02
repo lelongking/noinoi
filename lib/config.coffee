@@ -32,17 +32,17 @@ if Meteor.isClient
 
   # Only login in one browser
   Accounts.onLogin (user) ->
-    accountStatus = AccountStatus.findOne({_id: Accounts.connection._lastSessionId})
-    statusBrowsers = Meteor.user().sessions.statusBrowsers
-
-    browserOption = {ipAddr: accountStatus.ipAddr, userAgent: accountStatus.userAgent}
-
-    if accountStatus and statusBrowsers
-      if findBrowser = _.findWhere(statusBrowsers, browserOption)
-        if findBrowser.status
-        else
-      else
-        Meteor.users.update(Meteor.userId(), {$set: {'sessions.statusBrowsers': orderId}})
+#    accountStatus = AccountStatus.findOne({_id: Accounts.connection._lastSessionId})
+#    statusBrowsers = Meteor.user().sessions.statusBrowsers
+#
+#    browserOption = {ipAddr: accountStatus.ipAddr, userAgent: accountStatus.userAgent}
+#
+#    if accountStatus and statusBrowsers
+#      if findBrowser = _.findWhere(statusBrowsers, browserOption)
+#        if findBrowser.status
+#        else
+#      else
+#        Meteor.users.update(Meteor.userId(), {$set: {'sessions.statusBrowsers': orderId}})
 
 
 

@@ -1,0 +1,5 @@
+template(name="customerManagementLayout")
+  #content.modern.customer-management
+    .dual-content
+      +Template.dynamic(template=contentAddon data=addonData)
+      +Template.dynamic(template=contentDetail data=detailData)

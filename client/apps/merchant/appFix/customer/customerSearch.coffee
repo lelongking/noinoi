@@ -1,8 +1,9 @@
 Enums = Apps.Merchant.Enums
 scope = logics.customerManagement
 
-Wings.defineApp 'customerManagement',
+Wings.defineHyper 'customerSearch',
   created: ->
+    console.log 'created customerSearch'
     self = this
     self.currentCustomer = new ReactiveVar()
     self.searchFilter = new ReactiveVar('')
@@ -11,7 +12,6 @@ Wings.defineApp 'customerManagement',
         self.currentCustomer.set(Schema.customers.findOne(customerId))
 
   rendered: ->
-
 
   helpers:
     currentCustomer: ->
@@ -63,8 +63,6 @@ Wings.defineApp 'customerManagement',
 
 
 
-
-
 searchCustomerOrCreateCustomer = (event, template, instance)->
   Helpers.deferredAction ()->
     searchFilter = template.ui.$searchFilter.val()
@@ -74,7 +72,7 @@ searchCustomerOrCreateCustomer = (event, template, instance)->
 #    else if event.which is 38 then scope.CustomerSearchFindPreviousCustomer(customerSearch)
 #    else if event.which is 40 then scope.CustomerSearchFindNextCustomer(customerSearch)
     else
-      if User.hasManagerRoles()
+      if true #User.hasManagerRoles()
         scope.createNewCustomer(template, searchFilter) if event.which is 13
         setTimeout (-> scope.customerManagementCreationMode(searchFilter.trim()); return), 300
       else
@@ -83,6 +81,13 @@ searchCustomerOrCreateCustomer = (event, template, instance)->
   , "customerManagementSearchPeople"
   , 200
 
+selectCustomer = (event, template, customer)->
+  if userId = Meteor.userId()
+#    Wings.SubsManager.subscribe('getCustomerId', customer._id)
+    Meteor.users.update(userId, {$set: {'sessions.currentCustomer': customer._id}})
+    Template.instance().currentCustomer.set(customer)
+    Session.set('customerManagementIsShowCustomerDetail', false)
+
 
 createNewCustomer = (event, template, instance)->
   if User.hasManagerRoles()
@@ -90,11 +95,3 @@ createNewCustomer = (event, template, instance)->
     customerSearch = Helpers.Searchify(fullText)
     scope.createNewCustomer(template, customerSearch)
     CustomerSearch.search customerSearch
-
-
-selectCustomer = (event, template, customer)->
-  if userId = Meteor.userId()
-#    Wings.SubsManager.subscribe('getCustomerId', customer._id)
-    Meteor.users.update(userId, {$set: {'sessions.currentCustomer': customer._id}})
-    Template.instance().currentCustomer.set(customer)
-    Session.set('customerManagementIsShowCustomerDetail', false)

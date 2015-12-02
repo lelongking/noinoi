@@ -1,10 +1,12 @@
 template(name="merchantLayout")
   +watermark
   .application(class="{{collapse}} {{homeClass}}")
-    +navigation
-    +sidebar
+    +Template.dynamic(template='navigation' data=navigationData)
+    +Template.dynamic(template='sidebar' data=sidebarData)
     #container
+      +Template.dynamic(template=header data=headerData)
       +Template.dynamic(template=content data=contentData)
+      +Template.dynamic(template=footer data=footerData)
 
   .unsupported-resolution
     span HIỆN NAY HỆ THỐNG EDS CHƯA HỖ TRỢ MÀN HÌNH NHỎ! <br />

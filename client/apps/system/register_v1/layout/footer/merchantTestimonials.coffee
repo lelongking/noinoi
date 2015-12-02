@@ -43,7 +43,7 @@ navigateComment = (step = 1)->
   Session.set('currentCommentPosition', currentCommentIndex)
   Sky.helpers.animateUsing("#home-comment-wrapper", "fadeIn")
 
-lemon.defineWidget Template.merchantTestimonials,
+Wings.defineWidget 'merchantTestimonials',
   helpers:
     currentComment: -> comments[Session.get('currentCommentPosition')]
 

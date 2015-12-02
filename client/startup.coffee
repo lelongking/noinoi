@@ -1,20 +1,20 @@
 Meteor.startup ->
   moment.locale('vi')
-  Meteor.call('trackingProduct')
+#  Meteor.call('trackingProduct')
 
   Tracker.autorun ->
-    accountStatus = AccountStatus.findOne({_id: Accounts.connection._lastSessionId})
-    if accountStatus?.userId
-      accountLastActivity = AccountStatus.findOne
-        userId   : accountStatus.userId
-        ipAddr   : accountStatus.ipAddr
-        userAgent: accountStatus.userAgent
-      ,
-        sort:
-          lastActivity: 1
-
-      console.log accountStatus.idle
-      console.log accountLastActivity.idle
+#    accountStatus = AccountStatus.findOne({_id: Accounts.connection._lastSessionId})
+#    if accountStatus?.userId
+#      accountLastActivity = AccountStatus.findOne
+#        userId   : accountStatus.userId
+#        ipAddr   : accountStatus.ipAddr
+#        userAgent: accountStatus.userAgent
+#      ,
+#        sort:
+#          lastActivity: 1
+#
+#      console.log accountStatus.idle
+#      console.log accountLastActivity.idle
 
 
     if Meteor.userId()
@@ -35,11 +35,6 @@ Meteor.startup ->
 
           merchant = Schema.merchants.findOne(user.profile.merchant)
           Session.set 'merchant', merchant
-
-          if merchant.warehouses
-            warehouse = merchant.warehouses[0]
-            warehouse.merchantId = merchant._id
-            Session.set 'warehouse', warehouse
 
 
       unless Session.get('mySession')

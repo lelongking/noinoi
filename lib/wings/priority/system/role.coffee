@@ -19,7 +19,7 @@ Module "Wings.Roles",
     newRoles = []
     for role in roles
       newRole = @merchantRoles[role]
-      found = if typeof newRole is 'functions' then newRole() else newRole
+      found = if typeof newRole is 'function' then newRole() else newRole
       newRoles.push(found) if found
     newRoles = _.uniq(_.flatten([newRoles]))
 

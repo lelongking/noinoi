@@ -1,0 +1,59 @@
+@require '../lib.import.styl'
+
+#kernel-addon-nav
+  position relative; user-select none
+  width dual-left-width - 1; height 50px
+  transition margin-right ease 0.15s
+  background-color #ffffff
+  padding-top 5px
+  top -22px
+  border-left kernel-addon-border
+  border-bottom 1px solid #e8e8e8
+
+  .app-descriptions
+    cursor pointer; min-width 30px
+    absolute top 10px
+    left dual-left-width - 1;
+    padding 0 10px 0 10px
+    white-space nowrap
+    background-color lime
+    height 30px; line-height @height
+    color #fff; font-weight 600
+    border-radius right 5px
+    for color in colors
+      &.{color[0]}
+        background-color color[1]
+
+  .addon-launcher
+    display inline
+    margin-right 8px
+    padding 2px; border-radius 10px
+    color #fff; font-size 25px
+    cursor pointer
+    position relative
+    //&.active:after
+    //  content: " "
+    //  width 0; height @width
+    //  absolute bottom -15px left 9px
+    //  border-left solid 10px transparent
+    //  border-right solid 10px transparent
+    //  border-top solid 10px #ffffff
+    for color in colors
+      &.{color[0]}
+        background-color lighten(color[1], 5)
+
+  .history-navigators
+    float left;  font-size 0; margin-right 15px
+    .navigator
+      display inline; cursor pointer
+      border-left 1px solid #EAEAEA
+      background-color #fff
+      font-size 16px
+      padding 6px 3px
+      &:hover { color: theme-color }
+      &.home  { padding: 6px }
+      &:first-child
+        border-radius left 3px
+        border-left none
+      &:last-child
+        border-radius right 3px

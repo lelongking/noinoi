@@ -154,9 +154,14 @@ simpleSchema.DefaultMerchant =
     if @isInsert and not @isSet
       Meteor.user().profile.merchant
 
-simpleSchema.DefaultCreator =
+simpleSchema.DefaultCreator = (field) ->
   type: String
-  autoValue: -> Meteor.userId() if @isInsert and not @isSet
+  autoValue: ->
+    if @isInsert and not @isSet
+      if Meteor.userId()
+        Meteor.userId()
+      else
+        @field(field).value
 
 simpleSchema.DefaultCreatedAt =
   type: Date

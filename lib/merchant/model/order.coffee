@@ -9,7 +9,7 @@ simpleSchema.orders = new SimpleSchema
 
   merchant    : simpleSchema.DefaultMerchant
   allowDelete : simpleSchema.DefaultBoolean()
-  creator     : simpleSchema.DefaultCreator
+  creator     : simpleSchema.DefaultCreator('creator')
   version     : { type: simpleSchema.Version }
 
   orderType        : type: Number, defaultValue: Enums.getValue('OrderTypes', 'initialize')
@@ -27,7 +27,7 @@ simpleSchema.orders = new SimpleSchema
   billNoOfMerchant : type: String, optional: true
 
 #nhan vien tao phieu
-  seller          : simpleSchema.DefaultCreator
+  seller          : simpleSchema.DefaultCreator('creator')
   sellerConfirmAt : type: Date, optional: true
 #ke toan xac nhan phieu
   accounting          : type: String  , optional: true

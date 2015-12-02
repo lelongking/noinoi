@@ -96,18 +96,29 @@ Meteor.users.attachSchema new SimpleSchema
     optional: true
     blackbox: true
 
+  roles:
+    type: Object
+    optional: true
+    blackbox: true
+
   profile:
     type: userProfile
-    optional: true
-#  "profile.name": cloneName
+    defaultValue: {}
+
+  sessions:
+    type: userSession
+    defaultValue: {}
+
+  profiles:
+    type: userProfile
+    defaultValue: {}
 
   saleCash    : type: Number, defaultValue: 0
   turnoverCash: type: Number, defaultValue: 0
 
-  sessions    : type: userSession, defaultValue: {}
-  creator     : simpleSchema.DefaultCreator
-  createdAt   : type: Date      , defaultValue: new Date
-  allowDelete : type: Boolean   , defaultValue: true
+  creator     : type: String  , optional: true
+  createdAt   : type: Date    , defaultValue: new Date
+  allowDelete : type: Boolean , defaultValue: true
 
 class @User
   @hasManagerRoles: ->

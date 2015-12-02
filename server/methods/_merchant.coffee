@@ -1,3 +1,5 @@
+
+
 Meteor.methods
   checkPassword: (digest) ->
     check digest, String
@@ -15,6 +17,84 @@ Meteor.methods
     else
       false
 
+  registerMerchant: (email, password, companyName, contactPhone) ->
+    userId = Accounts.createUser {email: email, password: password}
+    user = Meteor.users.findOne {_id: userId}
+    return Wings.Helper.ThrowError("loi tao tai khoan", "khong the tao tai khoan") if !user
+
+
+    merchantId = Schema.merchants.insert
+      owner : user._id
+      name  : companyName
+      phone : contactPhone
+      branches: [{
+        isRoot: true
+        name  : companyName
+        phone : contactPhone
+      }]
+    merchant = Schema.merchants.findOne {_id: merchantId}
+    return Wings.Helper.ThrowError("loi tao tai khoan", "khong the tao tai khoan") if !merchant
+
+
+    customerGroupId = Schema.customerGroups.insert
+      merchant    : merchantId
+      creator     : userId
+      name        : 'Cơ Bản'
+      description : 'Danh sách khách hàng mới tạo.'
+      isBase      : true
+
+    productGroupId = Schema.productGroups.insert
+      merchant    : merchantId
+      creator     : userId
+      name        : 'Cơ Bản'
+      description : 'Danh sách sản phẩm mới tạo.'
+      isBase      : true
+
+
+    priceBookId = Schema.priceBooks.insert
+      merchant    : merchantId
+      creator     : userId
+      name        : 'Cơ Bản'
+      description : 'Bảng giá mặc định của sản phẩm.'
+      isBase      : true
+
+    Roles.addUsersToRoles(userId, 'merchant-admin', branch._id) for branch in merchant.branches
+    Meteor.users.update userId, $set: {'profile.merchant': merchantId}
+
+    return user
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   checkProductExpireDate: (value)->
     Apps.Merchant.checkProductExpireDate(Schema.userProfiles.findOne({user: Meteor.userId()}), value)
 
@@ -29,56 +109,7 @@ Meteor.methods
       if parentMerchantProfile = Schema.branchProfiles.findOne({merchant: profile.parentMerchant})
         Apps.Merchant.checkExpireDateCreateTransaction(profile, transactionId, parentMerchantProfile.notifyReceivableExpireRange ? 90)
 
-  registerMerchant: (email, password, companyName, contactPhone) ->
-    return
-    userId = Accounts.createUser {email: email, password: password}
-    user = Meteor.users.findOne(userId)
 
-    if !user
-      throw new Meteor.Error("loi tao tai khoan", "khong the tao tai khoan")
-      return
-
-    merchantId = Schema.merchants.insert({owner: userId, creator: userId, name: companyName})
-    merchantProfileId = Schema.merchantProfiles.insert
-      merchant          : merchantId
-      merchantRegistered: false
-      user              : userId
-      companyName       : companyName
-      contactPhone      : contactPhone
-      merchantName      : 'Trụ Sở'
-      warehouseName     : 'Kho Trụ Sở'
-
-    warehouseId = Schema.warehouses.insert Warehouse.newDefault {
-      merchantId        : merchantId
-      parentMerchantId  : merchantId
-      creator           : userId
-      name              : 'Kho Trụ Sở'
-    }
-
-    Schema.userProfiles.insert
-      user              : userId
-      parentMerchant    : merchantId
-      currentMerchant   : merchantId
-      currentWarehouse  : warehouseId
-      isRoot            : true
-      systemVersion     : Schema.systems.findOne().version
-
-    Schema.metroSummaries.insert
-      parentMerchant: merchantId
-      merchant      : merchantId
-      warehouseList : [warehouseId]
-      staffList     : [userId]
-
-    Schema.merchantProfiles.update merchantProfileId, $addToSet: {
-      merchantList : merchantId
-      warehouseList: warehouseId
-      staffList    : userId
-    }
-
-    Schema.branchProfiles.insert { merchant: merchantId }
-    Schema.userSessions.insert { user: userId }
-
-    return user
 
   createMerchantStaff: (email, password, profile)->
     userId = Accounts.createUser {email: email, password: password}

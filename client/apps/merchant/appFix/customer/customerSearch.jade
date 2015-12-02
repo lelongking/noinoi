@@ -1,0 +1,27 @@
+template(name="customerSearch")
+  .dual-addon
+    //+navComponent
+    .search-filter.icon-search-8
+      input(name='searchFilter' type="text" placeholder="tìm khách hàng...")
+      if getSession 'customerManagementCreationMode'
+        .lemon.btn.rounded.tiny.lime.icon-plus-6.create-command.createCustomerBtn
+
+    .nano: .nano-content(style="margin-bottom: 35px;")
+      each customerGroupLists
+        if hasCustomerList
+          .list
+            .caption-item: b {{name}}
+
+            each customerListSearched
+              .doc-item(class="{{activeClass}}")
+                .avatar-wrapper: .avatar-image(class="{{hasAvatar}}"
+                style="background-image:url('{{avatarUrl}}')") {{aliasLetter this.firstName}}
+
+                .doc-info
+                  .title {{name}}
+                  .sub-title {{customerCode}}
+
+                  if totalCash
+                    .price-stamp
+                      <b>{{formatNumber totalCash}}</b>
+                      span(style="font-size: 11px;") <b>VND</b>

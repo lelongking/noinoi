@@ -7,7 +7,7 @@ simpleSchema.productGroups = new SimpleSchema
 
   merchant    : simpleSchema.DefaultMerchant
   allowDelete : simpleSchema.DefaultBoolean()
-  creator     : simpleSchema.DefaultCreator
+  creator     : simpleSchema.DefaultCreator('creator')
   version     : { type: simpleSchema.Version }
   isBase      :
     type: Boolean

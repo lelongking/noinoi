@@ -1,4 +1,4 @@
-lemon.defineWidget Template.homeHeader,
+Wings.defineWidget 'homeHeader',
   helpers:
     languages: -> i18n.languages
 

@@ -22,7 +22,7 @@ simpleSchema.customerGroups = new SimpleSchema
 
   merchant    : simpleSchema.DefaultMerchant
   allowDelete : simpleSchema.DefaultBoolean()
-  creator     : simpleSchema.DefaultCreator
+  creator     : simpleSchema.DefaultCreator('creator')
   version     : { type: simpleSchema.Version }
   isBase      :
     type: Boolean
@@ -31,7 +31,6 @@ simpleSchema.customerGroups = new SimpleSchema
         return false
       else if @isUpsert
         return { $setOnInsert: false }
-
       return
 
 Schema.add 'customerGroups', "CustomerGroup", class CustomerGroup

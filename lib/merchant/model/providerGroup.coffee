@@ -6,7 +6,7 @@ simpleSchema.providerGroups = new SimpleSchema
 
   merchant    : simpleSchema.DefaultMerchant
   allowDelete : simpleSchema.DefaultBoolean()
-  creator     : simpleSchema.DefaultCreator
+  creator     : simpleSchema.DefaultCreator('creator')
   version     : { type: simpleSchema.Version }
 
 Schema.add 'providerGroups', "ProviderGroup", class ProviderGroup

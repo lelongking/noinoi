@@ -1,4 +1,6 @@
 #----------Before-Insert---------------------------------------------------------------------------------------------
+generateCustomerCode = (user, customer)->
+
 generateCustomerInitCash = (customer)->
   customer.debtRequiredCash = 0
   customer.paidRequiredCash = 0
@@ -30,6 +32,24 @@ setCustomerGroupDefault = (user, customer)->
     groupBasic = Schema.customerGroups.findOne({merchant: merchantId, isBase: true})
     customer.customerOfGroup = groupBasic._id if groupBasic
 
+Schema.customers.before.insert (userId, customer)->
+  user      = Meteor.users.findOne({_id:userId})
+  merchant  = Schema.merchants.findOne({_id: user.profile.merchant})
+  splitName = Helpers.GetFirstNameOrLastName(customer.name)
+
+  lastCode          = merchant.summaries.lastCustomerCode ? 0
+  listCustomerCodes = merchant.summaries.listCustomerCodes ? []
+  customer.code     = Wings.Helper.GenerateCustomerCode(lastCode, listCustomerCodes)
+
+  generateCustomerCode(user, customer)
+  generateCustomerInit(user, customer, splitName)
+  generateCustomerInitCash(customer)
+  generateOrderStatus(customer)
+  setCustomerGroupDefault(user, customer)
+########################################################################################################################
+
+
+
 #----------After-Insert------------------------------------------------------------------------------------------------
 addCustomerInCustomerGroup = (userId, customer) ->
   console.log customer
@@ -49,6 +69,19 @@ addCustomerInCustomerGroup = (userId, customer) ->
         returnSaleCash  : customer.returnSaleCash
     Schema.customerGroups.direct.update(customer.customerOfGroup, customerGroupUpdate)
 
+addCustomerCodeInMerchantSummary = (userId, customer) ->
+  if customer.code
+
+    Schema.merchants.direct.update customer.merchant, $addToSet: {'summaries.listCustomerCodes': customer.code}
+
+
+Schema.customers.after.insert (userId, customer) ->
+  addCustomerInCustomerGroup(userId, customer)
+  addCustomerCodeInMerchantSummary(userId, customer)
+########################################################################################################################
+
+
+
 #----------Before-Update---------------------------------------------------------------------------------------------
 updateIsNameChangedOfCustomer = (userId, customer, fieldNames, modifier, options) ->
   if _.contains(fieldNames, "name")
@@ -65,6 +98,12 @@ updateIsNameChangedOfCustomer = (userId, customer, fieldNames, modifier, options
             modifier.$set.lastName = splitName.lastName
         else
           modifier.$set.lastName  = splitName.lastName
+
+Schema.customers.before.update (userId, customer, fieldNames, modifier, options) ->
+  updateIsNameChangedOfCustomer(userId, customer, fieldNames, modifier, options)
+########################################################################################################################
+
+
 
 #----------After-Update-------------------------------------------------------------------------------------------------
 updateCashOfCustomerGroup = (userId, oldCustomer, newCustomer, fieldNames, modifier, options) ->
@@ -121,7 +160,24 @@ updateCustomerGroup = (userId, oldCustomer, newCustomer, fieldNames, modifier, o
       returnSaleCash  : newCustomer.returnSaleCash
   Schema.customerGroups.direct.update newCustomer.customerOfGroup, updateNewCustomerGroup
 
+Schema.customers.after.update (userId, newCustomer, fieldNames, modifier, options) ->
+  oldCustomer = @previous
+  isChangeCustomerGroup = oldCustomer.customerOfGroup isnt newCustomer.customerOfGroup
+
+  if isChangeCustomerGroup
+    updateCashOfCustomerGroup(userId, oldCustomer, newCustomer, fieldNames, modifier, options)
+  else
+    updateCustomerGroup(userId, oldCustomer, newCustomer, fieldNames, modifier, options)
+########################################################################################################################
+
+
+
 #----------Before-Remove-----------------------------------------------------------------------------------------------
+Schema.customers.before.remove (userId, customer) ->
+########################################################################################################################
+
+
+
 #----------After-Remove-------------------------------------------------------------------------------------------------
 removeCashOfCustomerCash = (userId, customer)->
   if customer.customerOfGroup
@@ -140,35 +196,6 @@ removeCashOfCustomerCash = (userId, customer)->
         returnSaleCash  : -customer.returnSaleCash
     Schema.customerGroups.direct.update(customer.customerOfGroup, customerGroupUpdate)
 
-
-
-#-----------------------------------------------------------------------------------------------------------------------
-Schema.customers.before.insert (userId, customer)->
-  user = Meteor.users.findOne(userId)
-  splitName = Helpers.GetFirstNameOrLastName(customer.name)
-  generateCustomerInit(user, customer, splitName)
-  generateCustomerInitCash(customer)
-  generateOrderStatus(customer)
-  setCustomerGroupDefault(user, customer)
-
-Schema.customers.after.insert (userId, customer) ->
-  addCustomerInCustomerGroup(userId, customer)
-
-#-----------------------------------------------------------------------------------------------------------------------
-Schema.customers.before.update (userId, customer, fieldNames, modifier, options) ->
-  updateIsNameChangedOfCustomer(userId, customer, fieldNames, modifier, options)
-
-Schema.customers.after.update (userId, newCustomer, fieldNames, modifier, options) ->
-  oldCustomer = @previous
-  isChangeCustomerGroup = oldCustomer.customerOfGroup isnt newCustomer.customerOfGroup
-
-  if isChangeCustomerGroup
-    updateCashOfCustomerGroup(userId, oldCustomer, newCustomer, fieldNames, modifier, options)
-  else
-    updateCustomerGroup(userId, oldCustomer, newCustomer, fieldNames, modifier, options)
-
-#-----------------------------------------------------------------------------------------------------------------------
-Schema.customers.before.remove (userId, customer) ->
-
 Schema.customers.after.remove (userId, doc)->
   removeCashOfCustomerCash(userId, doc)
+########################################################################################################################

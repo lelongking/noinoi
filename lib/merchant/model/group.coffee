@@ -13,7 +13,7 @@ simpleSchema.groups = new SimpleSchema
   isBase      : simpleSchema.BooleanNotUpdate(false)
   allowDelete : simpleSchema.DefaultBoolean()
   merchant    : simpleSchema.DefaultMerchant
-  creator     : simpleSchema.DefaultCreator
+  creator     : simpleSchema.DefaultCreator('creator')
   version     : { type: simpleSchema.Version }
 
 Schema.add 'groups', "Group", class Group

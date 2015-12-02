@@ -12,7 +12,7 @@ simpleSchema.deliveryCompanies = new SimpleSchema
   nameSearch  : simpleSchema.searchSource('name')
   merchant    : simpleSchema.DefaultMerchant
   allowDelete : simpleSchema.DefaultBoolean()
-  creator     : simpleSchema.DefaultCreator
+  creator     : simpleSchema.DefaultCreator('creator')
   version     : type: simpleSchema.Version
 
   contacts: type: Object, optional: true

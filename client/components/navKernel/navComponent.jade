@@ -1,0 +1,6 @@
+template(name="navComponent")
+   #kernel-addon-nav.navigator
+      if currentDescription
+         .app-descriptions(class="{{currentColor}}") {{currentDescription}}
+      each addonMenus
+         a.pull-right.addon-launcher(class="{{color}} {{icon}}" description="{{description}}")
