@@ -55,7 +55,7 @@ addCustomerInCustomerGroup = (userId, customer) ->
   console.log customer
   if customer.customerOfGroup
     customerGroupUpdate =
-      $pull:
+      $addToSet:
         customerLists: customer._id
       $inc:
         debtRequiredCash: customer.debtRequiredCash
@@ -71,7 +71,6 @@ addCustomerInCustomerGroup = (userId, customer) ->
 
 addCustomerCodeInMerchantSummary = (userId, customer) ->
   if customer.code
-
     Schema.merchants.direct.update customer.merchant, $addToSet: {'summaries.listCustomerCodes': customer.code}
 
 
@@ -182,7 +181,7 @@ Schema.customers.before.remove (userId, customer) ->
 removeCashOfCustomerCash = (userId, customer)->
   if customer.customerOfGroup
     customerGroupUpdate =
-      $addToSet:
+      $pull:
         customerLists: customer._id
       $inc:
         debtRequiredCash: -customer.debtRequiredCash

@@ -1,0 +1,16 @@
+template(name="customerGroupSearch")
+  .dual-addon
+    .search-filter.icon-search-8
+      input(name='searchFilter' type="text" placeholder="tìm nhóm khách hàng...")
+      if getSession 'customerGroupCreationMode'
+        .lemon.btn.rounded.tiny.lime.icon-plus-6.create-command.createCustomerGroupBtn
+
+    .nano: .nano-content(style="margin-bottom: 35px;")
+      .list
+        each customerGroupLists
+          .doc-item(class="{{activeClass 'currentCustomerGroup'}}")
+            .avatar-wrapper: .avatar-image(class="missing"
+            style="background-image:url('')") A
+            .doc-info
+              .title {{name}}
+              .price-stamp {{customerCount}} khách hàng

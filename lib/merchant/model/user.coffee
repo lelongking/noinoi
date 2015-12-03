@@ -121,12 +121,12 @@ Meteor.users.attachSchema new SimpleSchema
   allowDelete : type: Boolean , defaultValue: true
 
 class @User
-  @hasManagerRoles: ->
-    myProfile = Meteor.users.findOne(Meteor.userId())?.profile
-    return false if !myProfile or !myProfile.roles
-    myProfile.roles isnt 'seller'
+  @hasManagerRoles: -> true
+#    myProfile = Meteor.users.findOne(Meteor.userId())?.profile
+#    return false if !myProfile or !myProfile.roles
+#    myProfile.roles isnt 'seller'
 
-  @hasAdminRoles: ->
-    myProfile = Meteor.users.findOne(Meteor.userId())?.profile
-    return false if !myProfile or !myProfile.roles
-    myProfile.roles is 'admin'
+  @hasAdminRoles: -> true
+#    myProfile = Meteor.users.findOne(Meteor.userId())?.profile
+#    return false if !myProfile or !myProfile.roles
+#    myProfile.roles is 'admin'

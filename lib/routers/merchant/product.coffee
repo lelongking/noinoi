@@ -24,11 +24,13 @@ merchantRouter.route '/product',
         data: {}
 
     BlazeLayout.render 'merchantLayout',
-      content: 'productManagement'
+      content: 'contentDefaultLayout'
+      contentData:
+        contentAddon: 'productSearch'
+        contentDetail: 'productDetail'
     return
 
   triggersEnter: [ (context, redirect) ->
-    console.log 'running /provider trigger'
     return
   ]
 
@@ -44,6 +46,5 @@ merchantRouter.route '/productGroup',
     return
 
   triggersEnter: [ (context, redirect) ->
-    console.log 'running /provider trigger'
     return
   ]

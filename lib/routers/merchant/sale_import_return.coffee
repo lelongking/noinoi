@@ -1,11 +1,4 @@
 merchantRouter = Wings.Routers.merchantRouter
-
-
-
-
-
-
-
 merchantRouter.route '/import',
   name: 'import'
   action: ->
@@ -18,7 +11,7 @@ merchantRouter.route '/import',
 
   triggersEnter: [ (context, redirect) ->
     merchantRouter.go('/merchant') unless User.hasManagerRoles()
-    console.log 'running /provider trigger'
+    console.log 'running /import trigger'
     return
   ]
 
@@ -30,11 +23,13 @@ merchantRouter.route '/order',
       name: "bán hàng"
 
     BlazeLayout.render 'merchantLayout',
-      content: 'order'
+      content: 'contentDefaultLayout'
+      contentData:
+        contentAddon: 'productSearch'
+        contentDetail: 'orderDetail'
     return
 
   triggersEnter: [ (context, redirect) ->
-    console.log 'running /provider trigger'
     return
   ]
 

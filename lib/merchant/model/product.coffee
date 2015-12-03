@@ -1,4 +1,29 @@
 Enums = Apps.Merchant.Enums
+quantityHistory = new SimpleSchema
+  parent        : type: String
+  code          : type: String
+  method        : type: String
+  createdAt     : type: Date
+  price         : type: Number
+  quantity      : type: Number
+  finalQuantity : type: Number
+
+
+merchantQuantity = new SimpleSchema
+  lowNormsQuantity   : type: Number
+  highNormsQuantity  : type: Number
+
+  availableQuantity : type: Number #so luong có thể bán
+  orderQuantity     : type: Number #so luong đặt hàng
+  inventoryQuantity : type: Number #so luong tồn kho
+
+  saleQuantity          : type: Number #so luong đã bán
+  returnSaleQuantity    : type: Number #so luong trả hàng bán
+  importQuantity        : type: Number #so luong nhập kho
+  returnImportQuantity  : type: Number #so luong trả hàng nhập
+
+
+
 simpleSchema.products = new SimpleSchema
   name        : type: String , unique  : true, index: 1
   avatar      : type: String , optional: true
@@ -8,6 +33,7 @@ simpleSchema.products = new SimpleSchema
   lastExpire  : type: Date   , optional: true
   nameSearch  : simpleSchema.searchSource('name')
   inventoryInitial: type: Boolean , defaultValue: false
+  interestRate: type: Boolean , defaultValue: false #tinh lai suat
 
 
   merchant    : simpleSchema.DefaultMerchant
@@ -31,6 +57,13 @@ simpleSchema.products = new SimpleSchema
   'quantityRevenues.$.importTurnover'      : type: Number
   'quantityRevenues.$.returnSaleTurnover'  : type: Number
   'quantityRevenues.$.returnImportTurnover': type: Number
+
+
+  quantityHistories              : type: Object, optional: true
+  'quantityHistories.merchantId' : type: quantityHistory
+
+  merchantQuantities              : type: [Object], optional: true
+  'merchantQuantities.merchantId' : type: merchantQuantity
 
   #so luong san pham trong kho
   quantities                         : type: [Object]

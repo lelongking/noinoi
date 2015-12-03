@@ -17,7 +17,10 @@ merchantCustomerGroupRouter.route '/',
       name: "nhóm khách hàng"
 
     BlazeLayout.render 'merchantLayout',
-      content: 'customerGroup'
+      content: 'contentDefaultLayout'
+      contentData:
+        contentAddon: 'customerGroupSearch'
+        contentDetail: 'customerGroupDetail'
     return
 
   triggersEnter: [ (context, redirect) ->

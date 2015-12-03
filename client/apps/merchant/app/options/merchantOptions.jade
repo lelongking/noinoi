@@ -1,0 +1,47 @@
+template(name="merchantOptions")
+  #content.modern.merchant-options
+    .dual-content
+      .dual-addon
+        .nano(style="margin-top: -22px;"): .nano-content(style="margin-bottom: 35px;")
+
+          .group-wrapper
+            .caption.group CÁ NHÂN
+            each settings.account
+              .caption.inner(class="{{optionActiveClass}}")
+                span.avatar.letter(class="{{icon}}")
+                span.text.uppercase <b>{{display}}</b>
+
+          .group-wrapper
+            .caption.group CỬA HÀNG
+            each settings.merchant
+              .caption.inner(class="{{optionActiveClass}}")
+                span.avatar.letter(class="{{icon}}")
+                span.text.uppercase <b>{{display}}</b>
+
+          .group-wrapper
+            .caption.group HỆ THỐNG
+            each settings.system
+              .caption.inner(class="{{optionActiveClass}}")
+                span.avatar.letter(class="{{icon}}")
+                span.text.uppercase <b>{{display}}</b>
+
+          //.group-wrapper
+          //  .caption.group CHỨC NĂNG
+          //  each settings.apps
+          //    .caption.inner(class="{{optionActiveClass}}")
+          //      span.avatar.letter(class="{{icon}}")
+          //      span.text.uppercase <b>{{display}}</b>
+
+
+      .dual-detail-wrapper
+        .dual-detail
+          .nano: .nano-content
+            +Template.dynamic(template=currentSectionDynamic.template data=currentSectionDynamic.data)
+
+
+
+  //#footer.modern
+  //  .editor-row
+  //    .editor-wrapper.dual-spacer
+  //    .editor-wrapper.right
+  //      button.flat.btn.lime.pull-right.finish ÁP DỤNG
