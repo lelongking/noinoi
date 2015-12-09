@@ -1,6 +1,7 @@
 Enums = Apps.Merchant.Enums
 quantityHistory = new SimpleSchema
   parent        : type: String
+  parentType    : type: String
   code          : type: String
   method        : type: String
   createdAt     : type: Date
@@ -10,31 +11,33 @@ quantityHistory = new SimpleSchema
 
 
 merchantQuantity = new SimpleSchema
-  lowNormsQuantity   : type: Number
-  highNormsQuantity  : type: Number
+  lowNormsQuantity      : type: Number, defaultValue: 0
+  highNormsQuantity     : type: Number, defaultValue: 999999
 
-  availableQuantity : type: Number #so luong có thể bán
-  orderQuantity     : type: Number #so luong đặt hàng
-  inventoryQuantity : type: Number #so luong tồn kho
+  availableQuantity     : type: Number, defaultValue: 0
+  orderQuantity         : type: Number, defaultValue: 0
+  inventoryQuantity     : type: Number, defaultValue: 0
 
-  saleQuantity          : type: Number #so luong đã bán
-  returnSaleQuantity    : type: Number #so luong trả hàng bán
-  importQuantity        : type: Number #so luong nhập kho
-  returnImportQuantity  : type: Number #so luong trả hàng nhập
+  saleQuantity          : type: Number, defaultValue: 0
+  returnSaleQuantity    : type: Number, defaultValue: 0
+  importQuantity        : type: Number, defaultValue: 0
+  returnImportQuantity  : type: Number, defaultValue: 0
 
 
 
 simpleSchema.products = new SimpleSchema
-  name        : type: String , unique  : true, index: 1
-  avatar      : type: String , optional: true
-  description : type: String , optional: true
+  name    : type: String , index: 1
+  code    : type: String , index: 1
+  avatar  : type: String , optional: true
+  status  : type: Number , defaultValue: Enums.getValue('ProductStatuses', 'initialize')
+
   group       : type: String , optional: true
-  status      : type: Number , defaultValue: Enums.getValue('ProductStatuses', 'initialize')
+  description : type: String , optional: true
   lastExpire  : type: Date   , optional: true
   nameSearch  : simpleSchema.searchSource('name')
+
   inventoryInitial: type: Boolean , defaultValue: false
   interestRate: type: Boolean , defaultValue: false #tinh lai suat
-
 
   merchant    : simpleSchema.DefaultMerchant
   allowDelete : simpleSchema.DefaultBoolean()
@@ -59,10 +62,10 @@ simpleSchema.products = new SimpleSchema
   'quantityRevenues.$.returnImportTurnover': type: Number
 
 
-  quantityHistories              : type: Object, optional: true
+  quantityHistories              : type: Object, defaultValue: {}
   'quantityHistories.merchantId' : type: quantityHistory
 
-  merchantQuantities              : type: [Object], optional: true
+  merchantQuantities              : type: Object, defaultValue: {}
   'merchantQuantities.merchantId' : type: merchantQuantity
 
   #so luong san pham trong kho

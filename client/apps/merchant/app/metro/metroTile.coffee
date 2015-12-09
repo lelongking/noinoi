@@ -13,4 +13,4 @@ Wings.defineApp 'metroTile',
 #    console.log 'metroTile render'
 
   helpers:
-    getCount: -> if Counts.has(@appCount) then Counts.get(@appCount) else undefined
+    getCount: -> if Counts.has(@appCount) then Counts.get(@appCount) else 0

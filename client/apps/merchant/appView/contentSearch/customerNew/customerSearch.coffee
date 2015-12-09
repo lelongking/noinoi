@@ -1,9 +1,9 @@
 Enums = Apps.Merchant.Enums
 scope = logics.customerManagement
 
-Wings.defineHyper 'customerCreate',
+Wings.defineHyper 'createNew',
   created: ->
-    console.log 'created customerCreate'
+    console.log 'created customerSearch'
     self = this
     self.currentCustomer = new ReactiveVar()
     self.searchFilter = new ReactiveVar('')
@@ -12,15 +12,15 @@ Wings.defineHyper 'customerCreate',
         self.currentCustomer.set(Schema.customers.findOne(customerId))
 
   rendered: ->
-    console.log 'render --------------- customerCreate'
 
   helpers:
     currentCustomer: ->
       Template.instance().currentCustomer.get()
 
-    activeClass: ->
-      if @_id is Template.instance().currentCustomer.get()?._id then 'active' else ''
-
 
   events:
-    "keyup input[name='searchFilter']": (event, template) ->
+    "click .create-new-customer": (event, template) ->
+      FlowRouter.go('customerCreate')
+
+    "click .caption.inner.toCustomerGroup": (event, template) ->
+      FlowRouter.go('customerGroup')

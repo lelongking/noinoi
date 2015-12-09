@@ -1,0 +1,105 @@
+template(name="customerManagementOverviewSection")
+  if isManager
+    .section.top.panel.panel-default
+      input.hidden.avatarFile(type="file")
+      .panel-heading
+        +avatarImageComponent(avatar=avatarUrl alias=firstName)
+        .caption
+          input.editable.dashed(data-toggle="tooltip" data-container="body" data-placement="right" maxlength="50"
+          name="customerName" placeholder="tên khách hàng" title="tên khách hàng" value="{{name}}")
+          //if description
+          //  span.blured-color ({{description}})
+
+        .sub1
+          input.editable.dashed(data-toggle="tooltip" data-container="body" data-placement="right" maxlength="20" size="10"
+          name="customerPhone" placeholder="số điện thoại" title="số điện thoại" value="{{profile.phone}}")
+
+        .sub2
+          input.editable.dashed(data-toggle="tooltip" data-container="body" data-placement="right" maxlength="20" size="25"
+          name="customerCode" placeholder="địa chỉ" title="địa chỉ" value="{{profile.address}}")
+
+
+
+        .commands
+          .lemon.btn.rounded.lime.icon-ok-6.syncCustomerEdit(
+          data-toggle="tooltip" data-container="body" data-placement="left" title="xác nhận")
+          .lemon.btn.rounded.peter-river.icon-reply-3.customerDelete(
+          data-toggle="tooltip" data-container="body" data-placement="left" title="quay lại")
+          .lemon.btn.rounded.red.icon-minus-4.customerDelete(
+          data-toggle="tooltip" data-container="body" data-placement="left" title="xóa")
+          .lemon.btn.rounded.silver.icon-wrench-outline.syncCustomerEdit(
+          data-toggle="tooltip" data-container="body" data-placement="left" title="chỉnh sửa")
+
+      .panel-tab
+        .panel-heading(style="padding-top: 6px; padding-bottom: 6px;")
+          span.icon-up-open-3.hideTab(class="{{isShowTab true}}" style="cursor:pointer;") Thông tin mở rộng
+          span.icon-down-open-3.showTab(class="{{isShowTab false}}" style="cursor:pointer;") Thông tin mở rộng
+        .panel-body(class="{{isShowTab true}}")
+          .collapsible-row
+            .description Mã khách hàng
+            input.input-field.newCustomerOption(name="code" placeholder="Mã mặc định")
+          .collapsible-row
+            .description Nhóm khách hàng
+            input.input-field.newCustomerOption(name="address" value="" placeholder="Chưa cập nhật")
+          .collapsible-row
+            .description Giới tính
+            .input-field {{genderString gender}}
+            //.commands: input.newCustomerOption(binding="switch" type="checkbox" name="gender")
+          .collapsible-row
+            .description Sinh nhật
+            input.input-field.newCustomerOption(name="dateOfBirth" binding="datePicker" todayHighlight="true" maxlength="20" tabindex="4")
+          .collapsible-row
+            .description Ghi chú
+            input.input-field.newCustomerOption(name="address" value="" placeholder="Ghi thêm thông tin")
+
+
+      //.panel-footer
+      //  .region
+      //    .title.customerDetail
+      //      if getSession 'customerManagementIsShowCustomerDetail'
+      //        span.s5.note.icon-angle-right <b>Thu gọn</b>
+      //
+      //        with this
+      //          .detail-wrapper(style="padding: 5px;")
+      //            form.form-inline: .form-group: .input-group
+      //              input.hide
+      //              .input-group-addon(style="font-size: 14px;") Mã khách hàng:
+      //              .input-group-addon(style="width: 150px")
+      //                if isManager
+      //                  input.editable.dashed(style="text-align: center;" data-toggle="tooltip" data-container="body" data-placement="right"
+      //                  name="customerCode" placeholder="mã khách hàng" title="Mã Khách Hàng" value="{{customerCode}}")
+      //                else
+      //                  |{{customerCode}}
+      //
+      //          .detail-wrapper(style="padding: 5px;")
+      //            form.form-inline: .form-group: .input-group
+      //              input.hide
+      //              .input-group-addon(style="font-size: 14px;") Địa chỉ Chành:
+      //              .input-group-addon(style="width: 500px")
+      //                if isManager
+      //                  input.editable.dashed(style="text-align: left;" data-toggle="tooltip" data-container="body" data-placement="right"
+      //                  name="deliveryAddress" placeholder="địa chỉ chành" title="Địa Chỉ Chành" value="{{deliveryAddress}}")
+      //                else
+      //                  |{{deliveryAddress}}
+      //
+      //        span.s5.note(style="margin-left: 10px; cursor:none;") <b>Ghi chú:</b>
+      //        textarea.editDescription(style="width:100%; height: 85px; resize:none; outline: none !important;  margin-left: 10px; padding-left:5px; border-radius: 5px;"
+      //        name="editDescription" maxlength="2000") {{description}}
+      //
+      //      else
+      //        span.s5.note.icon-angle-right <b>Thông tin chi tiết</b>
+
+
+
+  else
+    .section.top.panel.panel-default
+      .panel-heading
+        +avatarImageComponent(avatar=avatarUrl alias=firstName)
+        .caption: span.editable.dashed(data-toggle="tooltip" data-container="body" data-placement="right"
+        placeholder="tên khách hành" title="tên khách hành") {{name}}
+
+        .sub1: span.editable.dashed(style="width: 125px" data-toggle="tooltip" data-container="body" data-placement="right"
+        placeholder="điện thoại" title="điện thoại") {{profiles.phone}}
+
+        .sub2: span.editable.dashed(style="width: 125px" data-toggle="tooltip" data-container="body" data-placement="right"
+        placeholder="địa chỉ" title="địa chỉ") {{profiles.address}}

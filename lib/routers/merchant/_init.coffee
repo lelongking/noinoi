@@ -346,8 +346,8 @@ metroHome.programManagerApp =
   appClass     : ''
   appIcon      : ''
 
-  description  : 'Chương Trình'
-  caption      : 'Bán Hàng'
+  description  : ''
+  caption      : 'Lãi S uất'
   captionClass : 'bottom right'
 
   isCanvas     : false

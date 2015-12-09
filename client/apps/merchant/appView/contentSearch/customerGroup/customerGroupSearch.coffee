@@ -18,6 +18,9 @@ Wings.defineHyper 'customerGroupSearch',
 
 
   helpers:
+
+
+
     customerGroupLists: ->
       console.log 'reactive....'
       selector = {}; options  = {sort: {isBase: 1, nameSearch: 1}}; searchText = Session.get("customerGroupSearchFilter")
@@ -37,24 +40,30 @@ Wings.defineHyper 'customerGroupSearch',
       scope.customerGroupLists
 
   events:
-    "keyup input[name='searchFilter']": (event, template) ->
-      Helpers.deferredAction ->
-        searchFilter  = template.ui.$searchFilter.val()
-        Session.set("customerGroupSearchFilter", searchFilter)
+    "click .caption.inner.toCustomer": (event, template) ->
+      FlowRouter.go('customer')
 
-        if event.which is 17 then console.log 'up'
-        else if event.which is 27 then scope.resetSearchFilter(template)
-        else if event.which is 38 then scope.searchFindPreviousCustomerGroup()
-        else if event.which is 40 then scope.searchFindNextCustomerGroup()
-        else
-          if User.hasManagerRoles()
-            nameIsExisted = CustomerGroup.nameIsExisted(Session.get("customerGroupSearchFilter"), Session.get("myProfile").merchant)
-            Session.set("customerGroupCreationMode", !nameIsExisted)
-            scope.createNewCustomerGroup(template) if event.which is 13
-          else
-            Session.set("customerGroupCreationMode", false)
-      , "customerGroupSearchPeople"
-      , 50
+    "click .create-new-customer": (event, template) ->
+      FlowRouter.go('newCustomer')
 
-    "click .createCustomerGroupBtn": (event, template) -> scope.createNewCustomerGroup(template) if User.hasManagerRoles()
-    "click .list .doc-item": (event, template) -> CustomerGroup.setSessionCustomerGroup(@_id)
+#    "keyup input[name='searchFilter']": (event, template) ->
+#      Helpers.deferredAction ->
+#        searchFilter  = template.ui.$searchFilter.val()
+#        Session.set("customerGroupSearchFilter", searchFilter)
+#
+#        if event.which is 17 then console.log 'up'
+#        else if event.which is 27 then scope.resetSearchFilter(template)
+#        else if event.which is 38 then scope.searchFindPreviousCustomerGroup()
+#        else if event.which is 40 then scope.searchFindNextCustomerGroup()
+#        else
+#          if User.hasManagerRoles()
+#            nameIsExisted = CustomerGroup.nameIsExisted(Session.get("customerGroupSearchFilter"), Session.get("myProfile").merchant)
+#            Session.set("customerGroupCreationMode", !nameIsExisted)
+#            scope.createNewCustomerGroup(template) if event.which is 13
+#          else
+#            Session.set("customerGroupCreationMode", false)
+#      , "customerGroupSearchPeople"
+#      , 50
+#
+#    "click .createCustomerGroupBtn": (event, template) -> scope.createNewCustomerGroup(template) if User.hasManagerRoles()
+#    "click .list .doc-item": (event, template) -> CustomerGroup.setSessionCustomerGroup(@_id)

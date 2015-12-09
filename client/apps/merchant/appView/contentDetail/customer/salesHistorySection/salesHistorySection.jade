@@ -3,8 +3,7 @@ template(name="customerManagementSalesHistorySection")
     .panel-heading
       .show-on-print
         +merchantPrintingHeader
-        .printing-info
-          .document-name {{name}}
+        .printing-info: .document-name {{name}}
 
       .show-on-print
         table.lemon-grid: tr
@@ -21,7 +20,6 @@ template(name="customerManagementSalesHistorySection")
           th(style="width:100px") ĐƠN VỊ
           th.number(style="width:120px") ĐƠN GIÁ
           th.number(style="width:140px") THÀNH TIỀN
-
 
     .panel-body.debt-details
       table#exportData.lemon-grid.safe
@@ -96,49 +94,38 @@ template(name="customerManagementSalesHistorySection")
           class="{{isNotDisabled 'allowCreateTransactionOfCustomer'}}") {{transactionStatus}}
 
     with currentCustomer
-      .panel-footer
-        table.lemon-grid.safe
-          tr
-            th(style="width:auto")
-            th(style="width:200px")
-            th(style="width:200px")
+      +panelFooter_salesHistory
 
-          tr
-            td
-            td Nợ phải thu:
-            td.number <b>{{formatNumber debtRequiredCash}}</b> VND
 
-          tr
-            td
-            td Nợ đầu kỳ:
-            td.number <b>{{formatNumber debtBeginCash}}</b> VND
 
-          tr
-            td
-            td Phát sinh cộng:
-            td.number <b>{{formatNumber debtIncurredCash}}</b> VND
 
-          tr
-            td
-            td Phát sinh trừ:
-            td.number <b>{{formatNumber paidIncurredCash}}</b> VND
 
-          tr
-            td
-            td Bán hàng trong kỳ:
-            td.number <b>{{formatNumber debtSaleCash}}</b> VND
 
-          tr
-            td
-            td Trả hàng trong kỳ:
-            td.number <b>{{formatNumber returnSaleCash}}</b> VND
+template(name="panelFooter_salesHistory")
+  .panel-footer
+    table.lemon-grid.safe
+      tr
+        th(style="width:auto")
+        th(style="width:200px")
+        th(style="width:200px")
 
-          tr
-            td
-            td Thu nợ trong kỳ:
-            td.number <b>{{formatNumber totalPaidCash}}</b> VND
-
-          tr
-            td
-            td Nợ cuối kỳ:
-            td.number <b>{{formatNumber totalCash}}</b> VND
+      tr
+        td
+        td Nợ Đầu Kỳ:
+        td.number <b>{{formatNumber totalPaidCash}}</b> VND
+      tr
+        td
+        td Nợ Tiền Vay:
+        td.number <b>{{formatNumber totalPaidCash}}</b> VND
+      tr
+        td
+        td Nợ Lãi Suất:
+        td.number <b>{{formatNumber totalPaidCash}}</b> VND
+      tr
+        td
+        td Nợ Mua Hàng:
+        td.number <b>{{formatNumber totalPaidCash}}</b> VND
+      tr
+        td
+        td Tổng Nợ:
+        td.number <b>{{formatNumber totalCash}}</b> VND

@@ -72,6 +72,8 @@ addCustomerInCustomerGroup = (userId, customer) ->
 addCustomerCodeInMerchantSummary = (userId, customer) ->
   if customer.code
     Schema.merchants.direct.update customer.merchant, $addToSet: {'summaries.listCustomerCodes': customer.code}
+  if customer.phone
+    Schema.merchants.direct.update customer.merchant, $addToSet: {'summaries.listCustomerPhones': customer.phone}
 
 
 Schema.customers.after.insert (userId, customer) ->

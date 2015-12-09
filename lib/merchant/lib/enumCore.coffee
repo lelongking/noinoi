@@ -319,11 +319,15 @@ Apps.Merchant.Enums.ProductStatuses = [
 ,
   _id    : 1
   value  : 'confirmed'
-  display: 'da kiem tra'
+  display: 'Bán trực tiếp'
 ,
   _id    : 2
-  value  : 'stop'
-  display: 'ngung ban'
+  value  : 'active'
+  display: 'Đang kinh doanh'
+,
+  _id    : 3
+  value  : 'inactive'
+  display: 'Ngừng kinh doanh'
 ]
 
 #---------Loại Hinh Cty---

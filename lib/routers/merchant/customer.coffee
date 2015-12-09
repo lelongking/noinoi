@@ -27,7 +27,7 @@ merchantCustomerRouter.route '/',
     return
   ]
 
-merchantCustomerRouter.route '/new',
+merchantCustomerRouter.route '/create',
   name: 'newCustomer'
   triggersEnter: [ (context, redirect) ->
     console.log 'running /customer trigger'
@@ -52,14 +52,7 @@ merchantCustomerRouter.route '/new',
 
 merchantCustomerRouter.route '/:customerId',
   name: 'customerId'
-  triggersEnter: [ (context, redirect) ->
-    console.log 'running /customer trigger'
-    return
-  ]
-
-  action: (params, queryParams) ->
-    console.log params, queryParams
-
+  action: ->
     Session.set "currentAppInfo",
       name: "khách hàng"
       navigationPartial:
@@ -68,4 +61,12 @@ merchantCustomerRouter.route '/:customerId',
 
     BlazeLayout.render 'merchantLayout',
       content: 'contentDefaultLayout'
+      contentData:
+        contentAddon: 'customerSearch'
+        contentDetail: 'customerDetail'
     return
+
+  triggersEnter: [ (context, redirect) ->
+    console.log 'running /customerId trigger'
+    return
+  ]

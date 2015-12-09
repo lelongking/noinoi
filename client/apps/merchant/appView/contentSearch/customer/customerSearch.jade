@@ -1,9 +1,17 @@
 template(name="customerSearch")
   .dual-addon
+    .group-nav
+      .caption.inner.active
+        span.avatar.letter {{getPublishedCount 'customers'}}
+        span.text.uppercase KHÁCH HÀNG
+      .caption.inner.toCustomerGroup
+        span.avatar.letter {{getPublishedCount 'customerGroups'}}
+        span.text.uppercase NHÓM KHÁCH HÀNG
+
+
     .search-filter.icon-search-8
       input(name='searchFilter' type="text" placeholder="tìm khách hàng...")
-      if getSession 'customerManagementCreationMode'
-        .lemon.btn.rounded.tiny.lime.icon-plus-6.create-command.createCustomerBtn
+      .icon-user-add-1.create-new-customer(data-toggle="tooltip" data-container="body" data-placement="right" title="Tạo mới")
 
     .nano: .nano-content(style="margin-bottom: 35px;")
       each customerGroupLists
@@ -18,7 +26,7 @@ template(name="customerSearch")
 
                 .doc-info
                   .title {{name}}
-                  .sub-title {{customerCode}}
+                  .sub-title {{code}}
 
                   if totalCash
                     .price-stamp

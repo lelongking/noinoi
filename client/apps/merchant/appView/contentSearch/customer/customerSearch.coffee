@@ -52,14 +52,25 @@ Wings.defineHyper 'customerSearch',
       customerGroups
 
   events:
-    "keyup input[name='searchFilter']": (event, template) ->
-      searchCustomerOrCreateCustomer(event, template, Template.instance())
+    "click .create-new-customer": (event, template) ->
+      FlowRouter.go('newCustomer')
 
-    "click .createCustomerBtn": (event, template) ->
-      createNewCustomer(event, template, Template.instance())
+    "click .caption.inner.toCustomerGroup": (event, template) ->
+      FlowRouter.go('customerGroup')
 
     "click .list .doc-item": (event, template) ->
       selectCustomer(event, template, @)
+
+
+#
+#    "keyup input[name='searchFilter']": (event, template) ->
+#      searchCustomerOrCreateCustomer(event, template, Template.instance())
+#
+#    "click .createCustomerBtn": (event, template) ->
+#      createNewCustomer(event, template, Template.instance())
+
+
+
 
 
 
