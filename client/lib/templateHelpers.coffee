@@ -4,7 +4,10 @@ Template.registerHelper 'sellerName', -> Session.get('myProfile')?.name ? 'Nhân
 Template.registerHelper 'isRowEditing', -> Session.get("editingId") is @_id
 Template.registerHelper 'totalPrice', -> if @totalPrice then @totalPrice else @price * @quality * @conversion
 
-Template.registerHelper 'firstName', -> Helpers.firstName(@?name ? @)
+Template.registerHelper 'getString', (value, text)->
+  if value is undefined then (if _.isString(text) then text else 'Chưa nhập thông tin') else value
+Template.registerHelper 'firstName', -> if @firstName then @firstName else Helpers.firstName(@?name ? @)
+
 Template.registerHelper 'avatarUrl', -> if @avatar then AvatarImages.findOne(@avatar)?.url() else undefined
 Template.registerHelper 'activeClass', (sessionName)-> if Session.get(sessionName)?._id is @_id  then 'active' else ''
 Template.registerHelper 'isDisabled', (sessionName)-> if Session.get(sessionName) then '' else 'disabled'

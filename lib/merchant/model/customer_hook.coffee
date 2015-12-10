@@ -197,6 +197,13 @@ removeCashOfCustomerCash = (userId, customer)->
         returnSaleCash  : -customer.returnSaleCash
     Schema.customerGroups.direct.update(customer.customerOfGroup, customerGroupUpdate)
 
-Schema.customers.after.remove (userId, doc)->
-  removeCashOfCustomerCash(userId, doc)
+removeCustomerCodeAndPhoneInMerchantSummary = (userId, customer)->
+  if customer.code
+    Schema.merchants.direct.update customer.merchant, $pull: {'summaries.listCustomerCodes': customer.code}
+  if customer.phone
+    Schema.merchants.direct.update customer.merchant, $pull: {'summaries.listCustomerPhones': customer.phone}
+
+Schema.customers.after.remove (userId, customer)->
+  removeCashOfCustomerCash(userId, customer)
+  removeCustomerCodeAndPhoneInMerchantSummary(userId, customer)
 ########################################################################################################################

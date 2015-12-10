@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="EDS Pro" pattern="file[noinoi]:client//*&amp;&amp;!file[noinoi]:client/lib/plugins//*||file[noinoi]:lib//*||file[noinoi]:server/*||file[noinoi]:server//*||file:mup.json||file:packages.json||file:settings.json" />
+</component>
