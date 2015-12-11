@@ -1,70 +1,39 @@
+scope = logics.providerManagement
+numericOption = {autoGroup: true, groupSeparator:",", radixPoint: ".", suffix: " VNĐ", integerDigits:11}
+
 Wings.defineHyper 'providerDetailSection',
+  rendered: ->
+    @ui.$payImportAmount.inputmask("numeric", numericOption)
+
   helpers:
-    isSearch: -> Session.get("customerGroupDetailSectionSearchCustomer")
-    selected: -> if _.contains(Session.get("customerSelectLists"), @_id) then 'selected' else ''
-    totalCashByStaff: ->
-      totalCash = 0
-      if Session.get("customerSelectLists")
-        (totalCash += customer.debtCash + customer.loanCash) for customer in Session.get("customerSelectLists")
-      totalCash
+    allImports: -> [] #scope.findAllImport()
+    oldDebts: -> [] #scope.findOldDebt()
+    hasOldDebts: -> false #scope.findOldDebt().length > 0
 
-    customerLists: ->
-      return [] if !@customerLists or @customerLists.length is 0
-      customerListId = _.intersection(@customerLists, Session.get('myProfile').customerLists)
-      customerQuery = {customerOfGroup: @_id}
-      customerQuery._id = {$in: customerListId} unless User.hasManagerRoles()
-      customerList = Schema.customers.find(customerQuery,{sort: {name: 1}}).map(
-        (item) ->
-          order = Schema.orders.findOne({
-            buyer       : item._id
-            orderType   : Enums.getValue('OrderTypes', 'success')
-            orderStatus : Enums.getValue('OrderStatus', 'finish')
-          })
-          if order
-            item.latestTradingDay       = order.successDate
-            item.latestTradingTotalCash = accounting.formatNumber(order.finalPrice) + ' VND'
+    isDelete: -> moment().diff(@version.createdAt ? new Date(), 'days') < 1
 
-          item.debtTotalCash = accounting.formatNumber(item.debtCash + item.loanCash) + ' VND'
-          item
-      )
-#      scope.customerList = customerList
+    totalDebtCash: ->
+      if provider = Session.get('providerManagementCurrentProvider')
+        provider.debtCash + provider.loanCash
+      else 0
 
-      customerSearchText = Session.get('customerGroupDetailSectionCustomerSearchText')
-      if customerSearchText?.length > 1
-        _.filter customerList, (customer) ->
-          unsignedTerm = Helpers.RemoveVnSigns customerSearchText
-          unsignedName = Helpers.RemoveVnSigns customer.name
-          unsignedName.indexOf(unsignedTerm) > -1
-      else
-        customerList
+    totalPaidCash: ->
+      if provider = Session.get('providerManagementCurrentProvider')
+        (unless provider.paidCash is undefined then provider.paidCash else 0) + (unless provider.returnCash is undefined then provider.returnCash else 0)
+      else 0
 
+    transactionDescription: -> if Session.get("providerManagementOldDebt") then 'ghi chú nợ tiền' else 'ghi chú trả tiền'
+    transactionStatus: -> if Session.get("providerManagementOldDebt") then 'Nợ Tiền' else 'Trả Tiền'
+    showTransaction: -> if Session.get("providerManagementOldDebt") is undefined then 'display: none'
 
   events:
-    "click .searchCustomer": (event, template) ->
-      isSearch = Session.get("customerGroupDetailSectionSearchCustomer")
-      Session.set("customerGroupDetailSectionSearchCustomer", !isSearch)
-      Session.set("customerGroupDetailSectionCustomerSearchText",'')
+    "keyup input.transaction-field":  (event, template) ->
+      scope.checkAllowCreateAndCreateTransaction(event, template)
 
-    "keyup input[name='searchCustomerFilter']": (event, template) ->
-      Helpers.deferredAction ->
-        searchFilter  = $("input[name='searchCustomerFilter']").val()
-        Session.set("customerGroupDetailSectionCustomerSearchText", searchFilter.replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,"").replace(/\s+/g," "))
-      , "customerGroupDetailSectionCustomerSearchText"
-      , 100
+    "click .deleteTransaction": (event, template) ->
+      Meteor.call 'deleteTransaction', @_id
 
+    "click .createTransaction": (event, template) ->
+      scope.createTransactionOfProvider(event, template)
 
-
-    "click .detail-row:not(.selected) td.command": (event, template) ->
-      template.data.selectedCustomer(@_id)
-      event.stopPropagation()
-
-    "click .detail-row.selected td.command": (event, template) ->
-      template.data.unSelectedCustomer(@_id)
-      event.stopPropagation()
-
-
-    "click .detail-row": (event, template) ->
-      FlowRouter.go('customer')
-      Session.set 'currentOrder', @
-      Customer.setSession(@_id)
 

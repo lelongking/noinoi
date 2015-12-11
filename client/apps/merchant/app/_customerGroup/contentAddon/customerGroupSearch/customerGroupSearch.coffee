@@ -4,20 +4,30 @@ scope = logics.customerManagement
 Wings.defineHyper 'customerGroupSearch',
   created: ->
     self = this
-    self.autorun ()->
-      if currentCustomerGroupId = Session.get('mySession')?.currentCustomerGroup
-        customerGroup = Schema.customerGroups.findOne({_id: currentCustomerGroupId})
-        customerGroup = Schema.customerGroups.findOne({isBase: true, merchant: Merchant.getId()}) unless customerGroup
+    self.searchFilter = new ReactiveVar('')
 
-        if customerGroup
-          customerGroup.customerCount = if customerGroup.customerLists then customerGroup.customerLists.length else 0
-          Session.set "currentCustomerGroup", customerGroup
-          Session.set "customerSelectLists", Session.get('mySession').customerSelected?[Session.get('currentCustomerGroup')._id] ? []
-
-    initializeTemplate(self)
 
   helpers:
-    listCustomerGroups: -> getListCustomerGroups(this)
+    activeClass: ->
+      if @_id is Session.get('mySession')?.currentCustomerGroup then 'active' else ''
+
+    listCustomerGroups: ->
+      selector = {}; options  = {sort: {isBase: 1, nameSearch: 1}}
+      searchText = Template.instance().searchFilter.get()
+
+      if(searchText)
+        regExp = Helpers.BuildRegExp(searchText);
+        selector = {$or: [
+          {nameSearch: regExp}
+        ]}
+
+#      unless User.hasManagerRoles()
+#        if searchText
+#          selector.$or[0].customerLists = {$in: Session.get('myProfile').customers}
+#        else
+#          selector.customerLists = {$in: Session.get('myProfile').customers}
+
+      Schema.customerGroups.find(selector, options).fetch()
 
 
   events:
@@ -30,49 +40,19 @@ Wings.defineHyper 'customerGroupSearch',
     "click .list .doc-item": (event, template) ->
       CustomerGroup.setSessionCustomerGroup(@_id)
 
-
-#    "keyup input[name='searchFilter']": (event, template) ->
-#      Helpers.deferredAction ->
-#        searchFilter  = template.ui.$searchFilter.val()
-#        Session.set("customerGroupSearchFilter", searchFilter)
-#
-#        if event.which is 17 then console.log 'up'
-#        else if event.which is 27 then scope.resetSearchFilter(template)
-#        else if event.which is 38 then scope.searchFindPreviousCustomerGroup()
-#        else if event.which is 40 then scope.searchFindNextCustomerGroup()
-#        else
-#          if User.hasManagerRoles()
-#            nameIsExisted = CustomerGroup.nameIsExisted(Session.get("customerGroupSearchFilter"), Session.get("myProfile").merchant)
-#            Session.set("customerGroupCreationMode", !nameIsExisted)
-#            scope.createNewCustomerGroup(template) if event.which is 13
-#          else
-#            Session.set("customerGroupCreationMode", false)
-#      , "customerGroupSearchPeople"
-#      , 50
-#
-#    "click .createCustomerGroupBtn": (event, template) -> scope.createNewCustomerGroup(template) if User.hasManagerRoles()
+    "keyup input[name='searchFilter']": (event, template) ->
+      customerGroupSearchByInput(event, template)
 
 
-initializeTemplate = (self) ->
-  Session.set("customerGroupSearchFilter", "")
-  Session.set("customerGroupCreationMode", false)
 
+customerGroupSearchByInput = (event, template) ->
+  searchFilter      = Template.instance().searchFilter
+  $searchFilter     = template.ui.$searchFilter
+  searchFilterText  = $searchFilter.val().replace(/^\s*/, "").replace(/\s*$/, "")
 
-getListCustomerGroups = (self) ->
-  console.log 'reactive....'
-  searchText = Session.get("customerGroupSearchFilter")
-  selector = {}; options  = {sort: {isBase: 1, nameSearch: 1}}
+  Helpers.deferredAction ->
+    if searchFilter.get() isnt searchFilterText
+      searchFilter.set(searchFilterText)
+  , "customerGroupSearch"
+  , 50
 
-  if(searchText)
-    regExp = Helpers.BuildRegExp(searchText);
-    selector = {$or: [
-      {nameSearch: regExp}
-    ]}
-
-  unless User.hasManagerRoles()
-    if searchText
-      selector.$or[0].customerLists = {$in: Session.get('myProfile').customers}
-    else
-      selector.customerLists = {$in: Session.get('myProfile').customers}
-
-  Schema.customerGroups.find(selector, options).fetch()

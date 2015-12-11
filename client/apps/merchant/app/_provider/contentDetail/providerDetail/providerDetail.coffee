@@ -5,11 +5,7 @@ Wings.defineHyper 'providerDetail',
     self.searchFilter = new ReactiveVar('')
     self.autorun ()->
       if currentProviderId = Session.get('mySession')?.currentProvider
-        currentProvider = Schema.providers.findOne({_id:currentProviderId})
-        currentProvider.isShowProviderDetail = false
-        currentProvider.isShowEditCommand = false
-        currentProvider.isEditMode = false
-        self.currentProvider.set currentProvider
+        self.currentProvider.set Schema.providers.findOne({_id:currentProviderId})
 
 
   rendered: ->

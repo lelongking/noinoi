@@ -61,36 +61,22 @@ Wings.defineHyper 'customerSearch',
     "click .list .doc-item": (event, template) ->
       selectCustomer(event, template, @)
 
-
-#
-#    "keyup input[name='searchFilter']": (event, template) ->
-#      searchCustomerOrCreateCustomer(event, template, Template.instance())
-#
-#    "click .createCustomerBtn": (event, template) ->
-#      createNewCustomer(event, template, Template.instance())
+    "keyup input[name='searchFilter']": (event, template) ->
+      customerSearchByInput(event, template, Template.instance())
 
 
 
 
+customerSearchByInput = (event, template, instance)->
+  searchFilter      = instance.searchFilter
+  $searchFilter     = template.ui.$searchFilter
+  searchFilterText  = $searchFilter.val().replace(/^\s*/, "").replace(/\s*$/, "")
 
-
-searchCustomerOrCreateCustomer = (event, template, instance)->
-  Helpers.deferredAction ()->
-    searchFilter = template.ui.$searchFilter.val()
-    instance.searchFilter.set(searchFilter)
-
-    if event.which is 17 then console.log 'up'
-#    else if event.which is 38 then scope.CustomerSearchFindPreviousCustomer(customerSearch)
-#    else if event.which is 40 then scope.CustomerSearchFindNextCustomer(customerSearch)
-    else
-      if true #User.hasManagerRoles()
-        scope.createNewCustomer(template, searchFilter) if event.which is 13
-        setTimeout (-> scope.customerManagementCreationMode(searchFilter.trim()); return), 300
-      else
-        Session.set("customerManagementCreationMode", false)
-
+  Helpers.deferredAction ->
+    if searchFilter.get() isnt searchFilterText
+      searchFilter.set(searchFilterText)
   , "customerManagementSearchPeople"
-  , 200
+  , 100
 
 selectCustomer = (event, template, customer)->
   if userId = Meteor.userId()
@@ -99,11 +85,3 @@ selectCustomer = (event, template, customer)->
     Template.instance().currentCustomer.set(customer)
     Session.set('customerManagementIsShowCustomerDetail', false)
     Session.set('customerManagementIsEditMode', false)
-
-
-createNewCustomer = (event, template, instance)->
-  if User.hasManagerRoles()
-    fullText       = instance.searchFilter.get()
-    customerSearch = Helpers.Searchify(fullText)
-    scope.createNewCustomer(template, customerSearch)
-    CustomerSearch.search customerSearch
