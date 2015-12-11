@@ -1,5 +1,5 @@
 scope = logics.customerGroup
-formatCustomerSearch = (item) -> "#{item.name}" if item
+currentCustomerGroup = {}
 Wings.defineApp 'customerGroupOverviewSection',
   created: ->
 #    self = this
@@ -10,7 +10,7 @@ Wings.defineApp 'customerGroupOverviewSection',
     Session.set("customerGroupManagementShowEditCommand", false)
     Session.set('customerGroupManagementIsEditMode', false)
 
-    scope.overviewTemplateInstance = @
+#    scope.overviewTemplateInstance = @
     @ui.$customerGroupName.autosizeInput({space: 10}) if @ui.$customerGroupName
 #    changeCustomerReadonly = if Session.get("customerSelectLists") then Session.get("customerSelectLists").length is 0 else true
 #    $(".changeCustomer").select2("readonly", changeCustomerReadonly)
@@ -33,24 +33,9 @@ Wings.defineApp 'customerGroupOverviewSection',
       editMode = Session.get("customerGroupManagementIsEditMode")
       if editMode and @allowDelete then '' else 'hidden'
 
-    name: ->
-      Meteor.setTimeout ->
-        scope.overviewTemplateInstance.ui.$customerGroupName.change()
-      ,50 if scope.overviewTemplateInstance?.ui.$customerGroupName?
-      @name
-
-
-    customerGroupSelects: ->
-      query: (query) -> query.callback
-        results: Schema.customerGroups.find({$or: [{name: Helpers.BuildRegExp(query.term), _id: {$not:template.data._id }}]}).fetch()
-        text: 'name'
-      initSelection: (element, callback) -> callback 'skyReset'
-      formatSelection: formatCustomerSearch
-      formatResult: formatCustomerSearch
-      id: '_id'
-      placeholder: 'Chuyển nhóm'
-      changeAction: (e) -> scope.currentCustomerGroup.changeCustomerTo(e.added._id) if User.hasManagerRoles()
-      reactiveValueGetter: -> 'skyReset'
+    customerGroupSelected: ->
+      currentCustomerGroup = Template.currentData()
+      customerGroupSelects
 
   events:
     "click .deleteCustomerGroup": (event, template) ->
@@ -60,7 +45,7 @@ Wings.defineApp 'customerGroupOverviewSection',
       clickShowCustomerGroupDetailTab(event, template)
 
     "click .syncEditCustomerGroup": (event, template) ->
-      editCustomer(template)
+      editCustomerGroup(template)
 
     "click .cancelEditCustomerGroup": (event, template) ->
       Session.set('customerGroupManagementIsEditMode', false)
@@ -73,13 +58,13 @@ Wings.defineApp 'customerGroupOverviewSection',
       clickShowCustomerGroupDetailTab(event, template)
 
 
-
-    "click .avatar": (event, template) ->
-      if User.hasManagerRoles()
-        template.find('.avatarFile').click()
-
-    "change .avatarFile": (event, template) ->
-      updateCustomerGroupChangeAvatar(event, template)
+#
+#    "click .avatar": (event, template) ->
+#      if User.hasManagerRoles()
+#        template.find('.avatarFile').click()
+#
+#    "change .avatarFile": (event, template) ->
+#      updateCustomerGroupChangeAvatar(event, template)
 
 
 
@@ -92,6 +77,8 @@ Wings.defineApp 'customerGroupOverviewSection',
       else if event.which is 27 and template.data
         rollBackCustomerGroupData(event, template)
       checkAllowUpdateCustomerGroupOverview(template)
+
+
 
 #----------------------------------------------------------------------------------------------------------------------
 clickShowCustomerGroupDetailTab = (event, template)->
@@ -141,3 +128,22 @@ editCustomerGroup = (template) ->
       toastr["success"]("Cập nhật nhóm khách hàng.")
 
 
+customerGroupSelects =
+  query: (query) -> query.callback
+    results: Schema.customerGroups.find(
+      {$or: [{name: Helpers.BuildRegExp(query.term), _id: {$not: currentCustomerGroup._id }}]}
+    ,
+      {sort: {nameSearch: 1, name: 1}}
+    ).fetch()
+    text: 'name'
+  initSelection: (element, callback) -> callback 'skyReset'
+  formatSelection: (item) -> "#{item.name}" if item
+  formatResult: (item) -> "#{item.name}" if item
+  id: '_id'
+  placeholder: 'Chọn nhóm'
+  changeAction: (e) ->
+    if User.hasManagerRoles()
+      Session.set("customerGroupSelectGroup", 'selectChange')
+      currentCustomerGroup.changeCustomerTo(e.added._id)
+      Session.set("customerGroupSelectGroup", 'skyReset')
+  reactiveValueGetter: -> 'skyReset' if Session.get("customerGroupSelectGroup")

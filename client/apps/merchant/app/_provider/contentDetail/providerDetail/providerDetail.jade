@@ -1,0 +1,6 @@
+template(name="providerDetail")
+  .dual-detail-wrapper: .dual-detail
+    .nano: .nano-content
+      if currentProvider
+        +Template.dynamic(template='providerOverviewSection' data=currentProvider)
+        +Template.dynamic(template='providerDetailSection' data=currentProvider)

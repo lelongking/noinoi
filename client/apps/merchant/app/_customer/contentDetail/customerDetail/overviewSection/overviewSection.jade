@@ -7,21 +7,21 @@ template(name="customerManagementOverviewSection")
         span.editable.dashed(data-toggle="tooltip" data-container="body" data-placement="right" maxlength="50"
         class="{{isEditMode false}}" name="customerName" placeholder="tên khách hàng" title="tên khách hàng") {{name}}
 
-        input.editable.dashed.customerEdit(data-toggle="tooltip" data-container="body" data-placement="right" maxlength="50"
+        input.editable.dashed.customerEdit(data-toggle="tooltip" data-container="body" data-placement="right" maxlength="50" size="20"
         class="{{isEditMode true}}" name="customerName" placeholder="tên khách hàng" title="tên khách hàng" value="{{name}}")
         //if description
         //  span.blured-color ({{description}})
 
       .sub1
         span.editable.dashed(data-toggle="tooltip" data-container="body" data-placement="right" maxlength="15" size="10"
-        class="{{isEditMode false}}" name="customerPhone" title="điện thoại" style="color: #a3a3a3;") {{getString phone 'điện thoại'}}
+        class="{{isEditMode false}}" name="customerPhone" title="điện thoại" style="{{colorIsUndefined phone}}") {{getString phone 'điện thoại'}}
 
         input.editable.dashed.customerEdit(data-toggle="tooltip" data-container="body" data-placement="right" maxlength="15" size="10"
         class="{{isEditMode true}}" name="customerPhone" placeholder="điện thoại" title="điện thoại" value="{{phone}}")
 
       .sub2
         span.editable.dashed(data-toggle="tooltip" data-container="body" data-placement="right" maxlength="20" size="25"
-        class="{{isEditMode false}}" name="customerAddress" title="địa chỉ" style="color: #a3a3a3;") {{getString address 'địa chỉ'}}
+        class="{{isEditMode false}}" name="customerAddress" title="địa chỉ" style="{{colorIsUndefined address}}") {{getString address 'địa chỉ'}}
 
         input.editable.dashed.customerEdit(data-toggle="tooltip" data-container="body" data-placement="right" maxlength="100" size="25"
         class="{{isEditMode true}}" name="customerAddress" placeholder="địa chỉ" title="địa chỉ" value="{{address}}" )

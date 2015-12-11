@@ -5,10 +5,10 @@ template(name="customerGroupOverviewSection")
       +avatarImageComponent(avatar=avatarUrl alias=firstName)
       .caption
         span.editable.dashed(data-toggle="tooltip" data-container="body" data-placement="right"
-        class="{{isEditMode false}}" title="tên khách hàng") {{name}}
+        class="{{isEditMode false}}" title="tên nhóm khách hàng") {{name}}
 
         input.editable.dashed.customerGroupEdit(data-toggle="tooltip" data-container="body" data-placement="right"
-        class="{{isEditMode true}}" placeholder="tên khách hàng" title="tên khách hàng" maxlength="50"
+        class="{{isEditMode true}}" placeholder="tên nhóm khách hàng" title="tên nhóm khách hàng" maxlength="50" size="20"
         name="customerGroupName" value="{{name}}")
         //span.blured-color ({{customerCount}} khách hàng)
 
@@ -18,11 +18,11 @@ template(name="customerGroupOverviewSection")
 
       .sub2
         span.editable.dashed(data-toggle="tooltip" data-container="body" data-placement="right"
-        class="{{isEditMode false}}" title="ghi chú" style="color: #a3a3a3;") {{getString address 'ghi chú'}}
+        class="{{isEditMode false}}" title="ghi chú" style="{{colorIsUndefined description}}") {{getString description 'ghi chú'}}
 
         input.editable.dashed.customerGroupEdit(data-toggle="tooltip" data-container="body" data-placement="right"
         class="{{isEditMode true}}" placeholder="ghi chú" title="ghi chú" maxlength="100" size="25"
-        name="customerGroupDescription" value="{{address}}")
+        name="customerGroupDescription" value="{{description}}")
 
 
 
@@ -47,4 +47,4 @@ template(name="customerGroupOverviewSection")
 
     .panel-footer.has-details
       .editor-wrapper(style="width: 200px; padding-left: 5px;")
-        +iSelect(options=customerGroupSelects class="field changeCustomer newComponent")
+        +iSelect(options=customerGroupSelected class="field changeCustomer newComponent")

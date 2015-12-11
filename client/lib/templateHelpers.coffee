@@ -6,7 +6,11 @@ Template.registerHelper 'totalPrice', -> if @totalPrice then @totalPrice else @p
 
 Template.registerHelper 'getString', (value, text)->
   if value is undefined then (if _.isString(text) then text else 'Chưa nhập thông tin') else value
-Template.registerHelper 'firstName', -> if @firstName then @firstName else Helpers.firstName(@?name ? @)
+Template.registerHelper 'colorIsUndefined', (value)->
+  if value is undefined then 'color: #a3a3a3;' else ''
+
+
+Template.registerHelper 'firstName', -> if @firstName then @firstName else Helpers.firstName(@?.name ? @)
 
 Template.registerHelper 'avatarUrl', -> if @avatar then AvatarImages.findOne(@avatar)?.url() else undefined
 Template.registerHelper 'activeClass', (sessionName)-> if Session.get(sessionName)?._id is @_id  then 'active' else ''

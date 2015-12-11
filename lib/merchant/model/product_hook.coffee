@@ -39,7 +39,7 @@
 #
 #  lastCode          = merchant.summaries.lastCustomerCode ? 0
 #  listCustomerCodes = merchant.summaries.listCustomerCodes ? []
-#  customer.code     = Wings.Helper.GenerateCustomerCode(lastCode, listCustomerCodes)
+#  customer.code     = Wings.Helper.checkAndGenerateCode(lastCode, listCustomerCodes)
 #
 #  generateCustomerCode(user, customer)
 #  generateCustomerInit(user, customer, splitName)

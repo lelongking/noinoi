@@ -1,5 +1,8 @@
 simpleSchema.providers = new SimpleSchema
-  name        : simpleSchema.StringUniqueIndex
+  name  : type: String, index: 1
+  code  : type: String, index: 1, optional: true
+  phone : type: String, index: 1, optional: true
+
   nameSearch: type: String, index: 1, optional: true
   firstName : type: String, optional: true
   lastName  : type: String, optional: true
@@ -7,7 +10,6 @@ simpleSchema.providers = new SimpleSchema
   avatar    : type: String, optional: true
   description : simpleSchema.OptionalString
 
-  phone          : simpleSchema.OptionalString
   address        : simpleSchema.OptionalString
   billNo         : type: Number, defaultValue: 0
   representative : simpleSchema.OptionalString

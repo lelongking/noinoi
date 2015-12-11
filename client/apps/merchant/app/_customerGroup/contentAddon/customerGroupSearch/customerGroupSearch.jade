@@ -19,7 +19,7 @@ template(name="customerGroupSearch")
         each listCustomerGroups
           .doc-item(class="{{activeClass 'currentCustomerGroup'}}")
             .avatar-wrapper: .avatar-image(class="missing"
-            style="background-image:url('')") A
+            style="background-image:url('')") {{aliasLetter firstName}}
             .doc-info
               .title {{name}}
               //.price-stamp {{customerCount}} khách hàng

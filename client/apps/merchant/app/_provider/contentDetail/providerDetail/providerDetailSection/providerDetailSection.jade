@@ -1,0 +1,49 @@
+template(name="providerDetailSection")
+  .section.panel.panel-default.printable-area
+    .panel-heading
+      .show-on-print
+        +merchantPrintingHeader
+        .printing-info
+          .document-name {{name}}
+
+      table.lemon-grid: tr
+        th(style="width:30px")
+          i.icon-search-8.searchCustomer(style="color: #ABD4E3; font-size: 16px; cursor:pointer;")
+        th(style="width:auto")
+          if getSession 'customerGroupDetailSectionSearchCustomer'
+            input(name='searchCustomerFilter' type="text" placeholder="tìm khách hàng...")
+          else
+            |TÊN KHÁCH HÀNG
+        th(style="width:110px; text-align:center") GD GẦN NHẤT
+        th.number(style="width:110px") GIÁ TRỊ PHIẾU
+        th.number(style="width:140px") TỔNG NỢ
+
+    .panel-body.debt-details
+      table.lemon-grid(style="cursor: pointer;")
+        +providerHeader
+        each customerLists
+          tr.detail-row(class="{{selected}}")
+            if isManager
+              td.command.icon-ok-6
+            td {{name}}
+            td.date {{momentFormat latestTradingDay 'DD/MM/YYYY'}}
+            td.number {{latestTradingTotalCash}}
+            td.number {{debtTotalCash}}
+
+
+
+    .panel-footer
+      .right-float
+        span.s5 TỔNG NỢ:
+        if isManager
+          span.s3 <b>{{formatNumber totalCash}}</b> VNĐ
+        else
+          span.s3 <b>{{formatNumber totalCashByStaff}}</b> VNĐ
+
+template(name="providerHeader")
+  tr
+    th(style="width:30px")
+    th(style="width:auto")
+    th(style="width:90px")
+    th(style="width:120px")
+    th(style="width:150px")

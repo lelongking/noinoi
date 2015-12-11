@@ -8,10 +8,10 @@ Module 'Wings.Helper',
     return customerCode
 
 
-  GenerateCustomerCode: (number = 0, listCodes = [])->
+  checkAndGenerateCode: (number = 0, listCodes = [], sub = 'KH', maxLength = 7)->
     generateCode = true
     while generateCode
-      customerCode = Wings.Helper.GenerateCode(number)
+      customerCode = Wings.Helper.GenerateCode(number, sub, maxLength)
       codeIndexOf  = _.indexOf(listCodes, customerCode)
       generateCode = codeIndexOf > -1
       number++

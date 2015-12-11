@@ -11,8 +11,7 @@ Wings.defineHyper 'customerGroupSearch',
 
         if customerGroup
           customerGroup.customerCount = if customerGroup.customerLists then customerGroup.customerLists.length else 0
-          scope.currentCustomerGroup = customerGroup
-          Session.set "currentCustomerGroup", scope.currentCustomerGroup
+          Session.set "currentCustomerGroup", customerGroup
           Session.set "customerSelectLists", Session.get('mySession').customerSelected?[Session.get('currentCustomerGroup')._id] ? []
 
     initializeTemplate(self)
@@ -76,5 +75,4 @@ getListCustomerGroups = (self) ->
     else
       selector.customerLists = {$in: Session.get('myProfile').customers}
 
-  scope.listCustomerGroups = Schema.customerGroups.find(selector, options).fetch()
-  scope.listCustomerGroups
+  Schema.customerGroups.find(selector, options).fetch()

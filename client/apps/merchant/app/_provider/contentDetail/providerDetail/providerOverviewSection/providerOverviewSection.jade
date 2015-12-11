@@ -1,0 +1,62 @@
+template(name="providerOverviewSection")
+  .section.top.panel.panel-default
+    input.hidden.avatarFile(type="file")
+    .panel-heading
+      +avatarImageComponent(avatar=avatarUrl alias=firstName)
+      .caption
+        span.editable.dashed(data-toggle="tooltip" data-container="body" data-placement="right" maxlength="50"
+        class="{{isEditMode false}}" name="providerName" placeholder="tên nhà cung cấp" title="tên nhà cung cấp ") {{name}}
+
+        input.editable.dashed.providerEdit(data-toggle="tooltip" data-container="body" data-placement="right" maxlength="50" size="20"
+        class="{{isEditMode true}}" name="providerName" placeholder="tên nhà cung cấp" title="tên nhà cung cấp " value="{{name}}")
+        //if description
+        //  span.blured-color ({{description}})
+
+      .sub1
+        span.editable.dashed(data-toggle="tooltip" data-container="body" data-placement="right" maxlength="15" size="10"
+        class="{{isEditMode false}}" name="providerPhone" title="điện thoại" style="{{colorIsUndefined phone}}") {{getString phone 'điện thoại'}}
+
+        input.editable.dashed.providerEdit(data-toggle="tooltip" data-container="body" data-placement="right" maxlength="15" size="10"
+        class="{{isEditMode true}}" name="providerPhone" placeholder="điện thoại" title="điện thoại" value="{{phone}}")
+
+      .sub2
+        span.editable.dashed(data-toggle="tooltip" data-container="body" data-placement="right" maxlength="20" size="25"
+        class="{{isEditMode false}}" name="providerAddress" title="địa chỉ" style="{{colorIsUndefined address}}") {{getString address 'địa chỉ'}}
+
+        input.editable.dashed.providerEdit(data-toggle="tooltip" data-container="body" data-placement="right" maxlength="100" size="25"
+        class="{{isEditMode true}}" name="providerAddress" placeholder="địa chỉ" title="địa chỉ" value="{{address}}" )
+
+
+
+      .commands
+        .lemon.btn.rounded.red.icon-minus-4.providerDelete(class="{{showDeleteProvider}}"
+        data-toggle="tooltip" data-container="body" data-placement="bottom" title="xóa")
+
+        .lemon.btn.rounded.lime.icon-ok-6.syncProviderEdit(class="{{showSyncProvider}}"
+        data-toggle="tooltip" data-container="body" data-placement="bottom" title="xác nhận")
+
+        .lemon.btn.rounded.peter-river.icon-reply-3.cancelProvider(class="{{isEditMode true}}"
+        data-toggle="tooltip" data-container="body" data-placement="bottom" title="quay lại")
+
+        .lemon.btn.rounded.silver.icon-wrench-outline.editProvider(class="{{isEditMode false}}"
+        data-toggle="tooltip" data-container="body" data-placement="left" title="chỉnh sửa")
+
+    .panel-tab
+      .panel-heading(style="padding-top: 6px; padding-bottom: 6px;")
+        span.icon-up-open-3.hideTab(class="{{isShowTab true}}" style="cursor:pointer;") Thông tin mở rộng
+        span.icon-down-open-3.showTab(class="{{isShowTab false}}" style="cursor:pointer;") Thông tin mở rộng
+
+      .panel-body(class="{{isShowTab true}}")
+        .collapsible-row
+          .description Mã nhà cung cấp 
+          span.editable.dashed(class="{{isEditMode false}}") {{getString code}}
+          input.input-field.providerEdit(class="{{isEditMode true}}" value="{{code}}"
+          name="providerCode" placeholder="{{getString code}}")
+
+        .collapsible-row
+          .description Ghi chú
+          span.editable.dashed(class="{{isEditMode false}}") {{getString description}}
+          input.input-field.providerEdit(class="{{isEditMode true}}" value="{{description}}"
+          name="providerDescription" placeholder="Ghi thêm thông tin")
+
+

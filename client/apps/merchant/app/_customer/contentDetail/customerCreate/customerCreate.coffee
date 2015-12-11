@@ -14,7 +14,7 @@ Wings.defineHyper 'customerCreate',
       merchantSummaries = Session.get('merchant')?.summaries ? {}
       lastCode          = merchantSummaries.lastCustomerCode ? 0
       listCustomerCodes = merchantSummaries.listCustomerCodes ? []
-      Wings.Helper.GenerateCustomerCode(lastCode, listCustomerCodes)
+      Wings.Helper.checkAndGenerateCode(lastCode, listCustomerCodes)
 
   events:
     "click .cancelCustomer": (event, template) ->

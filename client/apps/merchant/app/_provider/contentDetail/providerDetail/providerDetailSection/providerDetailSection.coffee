@@ -1,7 +1,4 @@
-scope = logics.customerGroup
-Enums = Apps.Merchant.Enums
-
-Wings.defineHyper 'customerGroupDetailSection',
+Wings.defineHyper 'providerDetailSection',
   helpers:
     isSearch: -> Session.get("customerGroupDetailSectionSearchCustomer")
     selected: -> if _.contains(Session.get("customerSelectLists"), @_id) then 'selected' else ''

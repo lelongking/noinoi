@@ -1,0 +1,37 @@
+template(name="providerCreate")
+  .dual-detail-wrapper: .dual-detail
+    .nano: .nano-content
+      .section.top.panel.panel-default.new-options-section
+        .panel-heading
+          span.icon-contacts tạo nhà cung cấp
+          .commands
+            .lemon.btn.lime.icon-ok-6.addProvider Lưu
+            .lemon.btn.red.icon-cancel-7.cancelProvider Hủy
+
+        .panel-body
+          .collapsible-row
+            .description Tên nhà cung cấp
+            input.input-field.newProviderOption(name="providerName" placeholder="Nhập nhà cung cấp")
+          .collapsible-row
+            .description Điện thoại
+            input.input-field.newProviderOption(name="providerPhone" placeholder="Nhập số điện thoại")
+          .collapsible-row
+            .description Địa chỉ
+            input.input-field.newProviderOption(name="providerAddress" placeholder="Nhập địa chỉ")
+          .collapsible-row
+            .description Nợ đầu kỳ
+            input.input-field.newProviderOption(name="providerDebit" placeholder="Nhập nợ đầu kỳ" value="0")
+          .collapsible-row
+            .description Mã nhà cung cấp
+            input.input-field.newProviderOption(name="providerCode" placeholder="{{codeDefault}}")
+          //.collapsible-row
+          //  .description Giới tính
+          //  input.input-field.newProviderOption(name="genderSwitch" type="checkbox" checked)
+          //.collapsible-row
+          //  .description Sinh nhật
+          //  input.input-field.newProviderOption(name="dateOfBirth"
+          //  binding="datePicker" todayHighlight="true" maxlength="20" tabindex="4")
+          .collapsible-row
+            .description Ghi chú
+            input.input-field.newProviderOption(name="providerDescription" placeholder="Ghi thêm thông tin" value=""
+            style="width: 70%;")

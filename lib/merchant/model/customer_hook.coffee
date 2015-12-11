@@ -1,5 +1,11 @@
 #----------Before-Insert---------------------------------------------------------------------------------------------
-generateCustomerCode = (user, customer)->
+generateCustomerCode = (user, customer, summaries)->
+  lastCustomerCode  = summaries.lastCustomerCode ? 0
+  listCustomerCodes = summaries.listCustomerCodes ? []
+
+  customer.code = (customer.code ? '').replace(/^\s*/, "").replace(/\s*$/, "")
+  if customer.code.length is 0 or _.indexOf(listCustomerCodes, customer.code) > -1
+    customer.code = Wings.Helper.checkAndGenerateCode(lastCustomerCode, listCustomerCodes)
 
 generateCustomerInitCash = (customer)->
   customer.debtRequiredCash = 0
@@ -34,19 +40,19 @@ setCustomerGroupDefault = (user, customer)->
 
 Schema.customers.before.insert (userId, customer)->
   user      = Meteor.users.findOne({_id:userId})
-  merchant  = Schema.merchants.findOne({_id: user.profile.merchant})
   splitName = Helpers.GetFirstNameOrLastName(customer.name)
+  merchant  = Schema.merchants.findOne({_id: user.profile.merchant})
 
-  lastCode          = merchant.summaries.lastCustomerCode ? 0
-  listCustomerCodes = merchant.summaries.listCustomerCodes ? []
-  customer.code     = Wings.Helper.GenerateCustomerCode(lastCode, listCustomerCodes)
-
-  generateCustomerCode(user, customer)
+  generateCustomerCode(user, customer, merchant.summaries)
   generateCustomerInit(user, customer, splitName)
   generateCustomerInitCash(customer)
   generateOrderStatus(customer)
   setCustomerGroupDefault(user, customer)
-########################################################################################################################
+
+
+
+
+
 
 
 
@@ -79,7 +85,14 @@ addCustomerCodeInMerchantSummary = (userId, customer) ->
 Schema.customers.after.insert (userId, customer) ->
   addCustomerInCustomerGroup(userId, customer)
   addCustomerCodeInMerchantSummary(userId, customer)
-########################################################################################################################
+
+
+
+
+
+
+
+
 
 
 
@@ -102,7 +115,14 @@ updateIsNameChangedOfCustomer = (userId, customer, fieldNames, modifier, options
 
 Schema.customers.before.update (userId, customer, fieldNames, modifier, options) ->
   updateIsNameChangedOfCustomer(userId, customer, fieldNames, modifier, options)
-########################################################################################################################
+
+
+
+
+
+
+
+
 
 
 
@@ -161,6 +181,11 @@ updateCustomerGroup = (userId, oldCustomer, newCustomer, fieldNames, modifier, o
       returnSaleCash  : newCustomer.returnSaleCash
   Schema.customerGroups.direct.update newCustomer.customerOfGroup, updateNewCustomerGroup
 
+updateCustomerCodeInMerchantSummary = (userId, oldCustomer, newCustomer) ->
+  if oldCustomer.code isnt newCustomer.code
+    Schema.merchants.direct.update customer.merchant, $pull: {'summaries.listCustomerCodes': oldCustomer.code}
+    Schema.merchants.direct.update customer.merchant, $addToSet: {'summaries.listCustomerCodes': newCustomer.code}
+
 Schema.customers.after.update (userId, newCustomer, fieldNames, modifier, options) ->
   oldCustomer = @previous
   isChangeCustomerGroup = oldCustomer.customerOfGroup isnt newCustomer.customerOfGroup
@@ -169,13 +194,26 @@ Schema.customers.after.update (userId, newCustomer, fieldNames, modifier, option
     updateCashOfCustomerGroup(userId, oldCustomer, newCustomer, fieldNames, modifier, options)
   else
     updateCustomerGroup(userId, oldCustomer, newCustomer, fieldNames, modifier, options)
-########################################################################################################################
+
+
+  updateCustomerCodeInMerchantSummary(userId, oldCustomer, newCustomer)
+
+
+
+
+
 
 
 
 #----------Before-Remove-----------------------------------------------------------------------------------------------
 Schema.customers.before.remove (userId, customer) ->
-########################################################################################################################
+
+
+
+
+
+
+
 
 
 
@@ -206,4 +244,3 @@ removeCustomerCodeAndPhoneInMerchantSummary = (userId, customer)->
 Schema.customers.after.remove (userId, customer)->
   removeCashOfCustomerCash(userId, customer)
   removeCustomerCodeAndPhoneInMerchantSummary(userId, customer)
-########################################################################################################################
