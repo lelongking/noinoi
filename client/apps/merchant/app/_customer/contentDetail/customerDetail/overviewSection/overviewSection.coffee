@@ -189,5 +189,6 @@ editCustomer = (template) ->
       Schema.customers.update customer._id, {$set: editOptions}, (error, result) -> if error then console.log error
       Session.set("customerManagementShowEditCommand", false)
       Session.set('customerManagementIsEditMode', false)
+      toastr["success"]("Cập nhật khách hàng thành công.")
 
 

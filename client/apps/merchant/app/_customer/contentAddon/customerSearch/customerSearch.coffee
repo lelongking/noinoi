@@ -52,8 +52,8 @@ Wings.defineHyper 'customerSearch',
       customerGroups
 
   events:
-    "click .create-new-customer": (event, template) ->
-      FlowRouter.go('newCustomer')
+    "click .create-new-command": (event, template) ->
+      FlowRouter.go('createCustomer')
 
     "click .caption.inner.toCustomerGroup": (event, template) ->
       FlowRouter.go('customerGroup')

@@ -203,7 +203,7 @@ Meteor.methods
           (returnDetail) ->
             currentReturn = Schema.returns.findOne(returnDetail.return)
             if currentReturn.status is 2
-              branchProductOption.returnQuantityByCustomer += returnDetail.returnQuantity if currentReturn.customer
+              branchProductOption.returnQuantityByCustomer += returnDetail.returnQuantity if currentReturn.customerGroup
               branchProductOption.returnQuantityByDistributor += returnDetail.returnQuantity if currentReturn.distributor
         )
 

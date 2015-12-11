@@ -83,6 +83,25 @@ editor-font-size = 12px
 
   .switchery
     margin 6px 0
+
+  .select2component.newComponent > a
+    height 32px
+    padding-top 2px
+    .select2-chosen
+      color #7c7c7c
+      font-weight bold
+      font-style italic
+    .select2-arrow
+      absolute right 5px top 19px
+
+  .select2-dropdown-open.newComponent > a
+    border none !important
+    .select2-arrow
+      right -14px
+      &:before
+        content '\E8DF' !important
+        color #D0D0D0
+
   .select2component > a
     height 50px; font-size 14px
     border none; border-radius 0

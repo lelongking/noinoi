@@ -3,6 +3,7 @@ Enums = Apps.Merchant.Enums
 
 Wings.defineHyper 'customerGroupDetailSection',
   helpers:
+    isSearch: -> Session.get("customerGroupDetailSectionSearchCustomer")
     selected: -> if _.contains(Session.get("customerSelectLists"), @_id) then 'selected' else ''
     totalCashByStaff: ->
       totalCash = 0
@@ -31,10 +32,25 @@ Wings.defineHyper 'customerGroupDetailSection',
           item
       )
       scope.customerList = customerList
-      customerList
+
+      customerSearchText = Session.get('customerGroupDetailSectionCustomerSearchText')
+      if customerSearchText?.length > 1
+        _.filter scope.customerList, (customer) ->
+          unsignedTerm = Helpers.RemoveVnSigns customerSearchText
+          unsignedName = Helpers.RemoveVnSigns customer.name
+          unsignedName.indexOf(unsignedTerm) > -1
+      else
+        customerList
+
+
+
+
 
   events:
+
+
     "click .detail-row:not(.selected) td.command": (event, template) ->
+      console.log template.data
       scope.currentCustomerGroup.selectedCustomer(@_id) if User.hasManagerRoles()
       event.stopPropagation()
 
@@ -42,7 +58,19 @@ Wings.defineHyper 'customerGroupDetailSection',
       scope.currentCustomerGroup.unSelectedCustomer(@_id) if User.hasManagerRoles()
       event.stopPropagation()
 
+    "click .searchCustomer": (event, template) ->
+      isSearch = Session.get("customerGroupDetailSectionSearchCustomer")
+      Session.set("customerGroupDetailSectionSearchCustomer", !isSearch)
+      Session.set("customerGroupDetailSectionCustomerSearchText",'')
+
     "click .detail-row": (event, template) ->
-      FlowRouter.go('/customer')
+      FlowRouter.go('customer')
       Session.set 'currentOrder', @
       Customer.setSession(@_id)
+
+    "keyup input[name='searchCustomerFilter']": (event, template) ->
+      Helpers.deferredAction ->
+        searchFilter  = $("input[name='searchCustomerFilter']").val()
+        Session.set("customerGroupDetailSectionCustomerSearchText", searchFilter.replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,"").replace(/\s+/g," "))
+      , "customerGroupDetailSectionCustomerSearchText"
+      , 100

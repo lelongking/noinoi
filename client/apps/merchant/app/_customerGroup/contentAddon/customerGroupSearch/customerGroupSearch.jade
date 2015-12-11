@@ -10,17 +10,20 @@ template(name="customerGroupSearch")
 
     .search-filter.icon-search-8
       input(name='searchFilter' type="text" placeholder="tìm nhóm khách hàng...")
-      if getSession 'customerGroupCreationMode'
-        .lemon.btn.rounded.tiny.lime.icon-plus-6.create-command.createCustomerGroupBtn
+      .icon-user-add-1.create-new-command(data-toggle="tooltip" data-container="body" data-placement="right" title="Tạo mới")
 
     .nano: .nano-content(style="margin-bottom: 35px;")
       .list
         .caption-item: b DANH SÁCH NHÓM
 
-        each customerGroupLists
+        each listCustomerGroups
           .doc-item(class="{{activeClass 'currentCustomerGroup'}}")
             .avatar-wrapper: .avatar-image(class="missing"
             style="background-image:url('')") A
             .doc-info
               .title {{name}}
-              .price-stamp {{customerCount}} khách hàng
+              //.price-stamp {{customerCount}} khách hàng
+
+            .price-stamp
+              b {{customerCount}}
+              span(style="font-size: 13px;") khách hàng

@@ -1,13 +1,30 @@
 Enums = Apps.Merchant.Enums
 Wings.defineApp 'customerManagementNavigationPartial',
-  events:
-#    "click .customerOldDebt": (event, template) ->
-#      oldDebt = Session.get("customerManagementOldDebt")
-#      if oldDebt is true
-#        Session.set("customerManagementOldDebt")
-#      else
-#        Session.set("customerManagementOldDebt", true)
+  helpers:
+    navigates: [
+      {
+        defaultClass: 'inav teleport animated'
+        class: 'customerToSales'
+        icon: 'icon-basket'
+        animate: 'fadeInDown'
+        color: 'blue'
+        name: 'bán hàng'
+      }
+    ,
+      {
 
+      }
+    ,
+      {
+
+      }
+    ,
+      {
+
+      }
+
+    ]
+  events:
     "click .customerPaid": (event, template) ->
       oldDebt = Session.get("customerManagementOldDebt")
       if oldDebt is false

@@ -205,7 +205,7 @@ Meteor.methods
               Schema.metroSummaries.update {merchant: merchantId}, $pull: {importDay: itemId, importMonth: itemId}
 
           else if context is 'createReturnCustomer'
-            if Schema.returns.findOne({_id: itemId, merchant: merchantId, status: 2, customer: {$exists: true}})
+            if Schema.returns.findOne({_id: itemId, merchant: merchantId, status: 2, customerGroup: {$exists: true}})
               Schema.metroSummaries.update {merchant: merchantId}, $addToSet: {returnCustomerDay: itemId, returnCustomerMonth: itemId}
 
           else if context is 'createReturnDistributor'

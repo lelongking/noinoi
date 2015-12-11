@@ -11,7 +11,7 @@ template(name="customerSearch")
 
     .search-filter.icon-search-8
       input(name='searchFilter' type="text" placeholder="tìm khách hàng...")
-      .icon-user-add-1.create-new-customer(data-toggle="tooltip" data-container="body" data-placement="right" title="Tạo mới")
+      .icon-user-add-1.create-new-command(data-toggle="tooltip" data-container="body" data-placement="right" title="Tạo mới")
 
     .nano: .nano-content(style="margin-bottom: 35px;")
       each customerGroupLists
@@ -30,5 +30,5 @@ template(name="customerSearch")
 
                   //if totalCash
                   .price-stamp
-                    <b>{{formatNumber totalCash}}</b>
-                    span(style="font-size: 11px;") <b>VND</b>
+                    b {{formatNumber totalCash}}
+                    span(style="font-size: 11px;"): b VND

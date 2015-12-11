@@ -28,7 +28,7 @@ merchantCustomerRouter.route '/',
   ]
 
 merchantCustomerRouter.route '/create',
-  name: 'newCustomer'
+  name: 'createCustomer'
   triggersEnter: [ (context, redirect) ->
     console.log 'running /customer trigger'
     return
@@ -38,9 +38,9 @@ merchantCustomerRouter.route '/create',
     console.log params, queryParams
 
     Session.set "currentAppInfo",
-      name: "tạo mới khách hàng"
+      name: "khách hàng"
       navigationPartial:
-        template: "customerManagementNavigationPartial"
+        template: ""
         data: {}
 
     BlazeLayout.render 'merchantLayout',

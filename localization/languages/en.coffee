@@ -19,7 +19,7 @@ i18n.map 'en',
     subNews: 'Our latest updates'
     support: 'Support'
     subSupport: 'FAQ'
-    customer: 'Our Customers'
+    customerGroup: 'Our Customers'
     subCustomer: '& their commments'
     feature: 'Features'
     subFeature: 'EDS system'
@@ -36,7 +36,7 @@ i18n.map 'en',
   menu:
     role: 'phân quyền'
     staff: 'nhân viên'
-    customer: 'khách hàng'
+    customerGroup: 'khách hàng'
     sale: 'bán hàng'
     return: 'trả hàng'
     bill: 'đơn hàng'
