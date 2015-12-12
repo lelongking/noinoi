@@ -1,4 +1,4 @@
-merchantCustomerRouter = Wings.Routers.merchantCustomerRouter =
+merchantCustomerRouter = Wings.Routers.merchantProductGroupRouter =
   Wings.Routers.merchantRouter.group
     prefix: '/customer'
     name: "customerRouter"

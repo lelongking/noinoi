@@ -1,26 +1,18 @@
-merchantRouter = Wings.Routers.merchantRouter
-merchantRouter.route '/priceBook',
-  name: 'priceBook'
-  action: ->
-    Session.set "currentAppInfo",
-      name: "bảng giá"
+merchantProductRouter = Wings.Routers.merchantProductGroupRouter =
+  Wings.Routers.merchantRouter.group
+    prefix: '/product'
+    name: "productRouter"
+    triggersEnter: [ (context, redirect, stop) ->
+    ]
 
-    BlazeLayout.render 'merchantLayout',
-      content: 'priceBook'
-    return
 
-  triggersEnter: [ (context, redirect) ->
-    console.log 'running /provider trigger'
-    return
-  ]
-
-merchantRouter.route '/product',
+merchantProductRouter.route '/',
   name: 'product'
   action: ->
     Session.set "currentAppInfo",
-      name: "sản phầm"
+      name: "sản phẩm"
       navigationPartial:
-        template: "productManagementNavigationPartial"
+        template: ""
         data: {}
 
     BlazeLayout.render 'merchantLayout',
@@ -31,20 +23,27 @@ merchantRouter.route '/product',
     return
 
   triggersEnter: [ (context, redirect) ->
+    console.log 'running /product trigger'
     return
   ]
 
-
-merchantRouter.route '/productGroup',
-  name: 'productGroup'
-  action: ->
+merchantProductRouter.route '/create',
+  name: 'createProduct'
+  action: (params, queryParams) ->
     Session.set "currentAppInfo",
-      name: "nhóm sản phẩm"
+      name: "sản phẩm"
+      navigationPartial:
+        template: ""
+        data: {}
 
     BlazeLayout.render 'merchantLayout',
-      content: 'productGroup'
+      content: 'contentDefaultLayout'
+      contentData:
+        contentAddon: 'productSearch'
+        contentDetail: 'productCreate'
     return
 
   triggersEnter: [ (context, redirect) ->
+    console.log 'running /customer trigger'
     return
   ]

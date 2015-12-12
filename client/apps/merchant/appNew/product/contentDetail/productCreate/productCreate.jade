@@ -1,0 +1,40 @@
+template(name="productCreate")
+  .dual-detail-wrapper: .dual-detail
+    .nano: .nano-content
+      .section.top.panel.panel-default.new-options-section
+        .panel-heading
+          span.icon-contacts tạo khách hàng
+          .commands
+            .lemon.btn.lime.icon-ok-6.addCustomer Lưu
+            .lemon.btn.red.icon-cancel-7.cancelCustomer Hủy
+
+        .panel-body
+          .collapsible-row
+            .description Tên khách hàng
+            input.input-field.newCustomerOption(name="customerName" placeholder="Nhập tên khách hàng")
+          .collapsible-row
+            .description Điện thoại
+            input.input-field.newCustomerOption(name="customerPhone" placeholder="Nhập số điện thoại")
+          .collapsible-row
+            .description Địa chỉ
+            input.input-field.newCustomerOption(name="customerAddress" placeholder="Nhập địa chỉ")
+          .collapsible-row
+            .description Nợ đầu kỳ
+            input.input-field.newCustomerOption(name="customerDebit" placeholder="Nhập nợ đầu kỳ" value="0")
+          .collapsible-row
+            .description Mã khách hàng
+            input.input-field.newCustomerOption(name="customerCode" placeholder="{{codeDefault}}")
+          //.collapsible-row
+          //  .description Nhóm khách hàng
+          //  input.input-field.newCustomerOption(name="customerGroup" placeholder="Chưa cập nhật" value="")
+          .collapsible-row
+            .description Giới tính
+            input.input-field.newCustomerOption(name="genderSwitch" type="checkbox" checked)
+          .collapsible-row
+            .description Sinh nhật
+            input.input-field.newCustomerOption(name="dateOfBirth"
+            binding="datePicker" todayHighlight="true" maxlength="20" tabindex="4")
+          .collapsible-row
+            .description Ghi chú
+            input.input-field.newCustomerOption(name="customerDescription" placeholder="Ghi thêm thông tin" value=""
+            style="width: 70%;")

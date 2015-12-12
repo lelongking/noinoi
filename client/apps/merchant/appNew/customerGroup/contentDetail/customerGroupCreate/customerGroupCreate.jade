@@ -1,0 +1,20 @@
+template(name="customerGroupCreate")
+  .dual-detail-wrapper: .dual-detail
+    .nano: .nano-content
+      .section.top.panel.panel-default.new-options-section
+        .panel-heading
+          span.icon-contacts tạo nhóm khách hàng
+          .commands
+            .lemon.btn.lime.icon-ok-6.addProductGroup Lưu
+            .lemon.btn.red.icon-cancel-7.cancelProductGroup Hủy
+
+        .panel-body
+          .collapsible-row
+            .description Tên nhóm
+            input.input-field.newProductGroup(name="customerGroupName"
+            placeholder="Nhập tên khách hàng")
+
+          .collapsible-row
+            .description Ghi chú
+            input.input-field.newProductGroup(name="customerGroupDescription" style="width: 70%;"
+            placeholder="Ghi thêm thông tin")

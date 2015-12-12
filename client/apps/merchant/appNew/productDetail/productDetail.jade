@@ -1,6 +1,0 @@
-template(name="productDetail")
-  .dual-detail-wrapper: .dual-detail
-    .nano: .nano-content
-      if currentCustomer
-        +Template.dynamic(template='customerManagementOverviewSection' data=currentCustomer)
-        +Template.dynamic(template='customerManagementSalesHistorySection' data=currentCustomer)

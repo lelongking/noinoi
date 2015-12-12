@@ -1,0 +1,6 @@
+template(name="productDetail")
+  .dual-detail-wrapper: .dual-detail
+    .nano: .nano-content
+      if currentProduct
+        +Template.dynamic(template='productOverviewSection' data=currentProduct)
+        +Template.dynamic(template='productDetailSection' data=currentProduct)

@@ -1,0 +1,50 @@
+template(name="customerGroupOverviewSection")
+  .section.top.panel.panel-default
+    input.hidden.avatarFile(type="file")
+    .panel-heading
+      +avatarImageComponent(avatar=avatarUrl alias=firstName)
+      .caption
+        span.editable.dashed(data-toggle="tooltip" data-container="body" data-placement="right"
+        class="{{isEditMode false}}" title="tên nhóm khách hàng") {{name}}
+
+        input.editable.dashed.customerGroupEdit(data-toggle="tooltip" data-container="body" data-placement="right"
+        class="{{isEditMode true}}" placeholder="tên nhóm khách hàng" title="tên nhóm khách hàng" maxlength="50" size="20"
+        name="customerGroupName" value="{{name}}")
+        //span.blured-color ({{customerCount}} khách hàng)
+
+      .sub1
+        span.editable.dashed(data-toggle="tooltip" data-container="body" data-placement="right"
+        title="tổng nợ") {{getString totalCash '0'}} VNĐ
+
+      .sub2
+        span.editable.dashed(data-toggle="tooltip" data-container="body" data-placement="right"
+        class="{{isEditMode false}}" title="ghi chú" style="{{colorIsUndefined description}}") {{getString description 'ghi chú'}}
+
+        input.editable.dashed.customerGroupEdit(data-toggle="tooltip" data-container="body" data-placement="right"
+        class="{{isEditMode true}}" placeholder="ghi chú" title="ghi chú" maxlength="100" size="25"
+        name="customerGroupDescription" value="{{description}}")
+
+
+
+      .commands
+        .lemon.btn.rounded.red.icon-minus-4.deleteProductGroup(class="{{showDeleteProductGroup}}"
+        data-toggle="tooltip" data-container="body" data-placement="bottom" title="xóa")
+
+        .lemon.btn.rounded.lime.icon-ok-6.syncEditProductGroup(class="{{showSyncProductGroup}}"
+        data-toggle="tooltip" data-container="body" data-placement="bottom" title="xác nhận")
+
+        .lemon.btn.rounded.peter-river.icon-reply-3.cancelEditProductGroup(class="{{isEditMode true}}"
+        data-toggle="tooltip" data-container="body" data-placement="bottom" title="quay lại")
+
+        .lemon.btn.rounded.silver.icon-wrench-outline.unLockEditProduct(class="{{isEditMode false}}"
+        data-toggle="tooltip" data-container="body" data-placement="left" title="chỉnh sửa")
+
+    //.panel-tab
+    //  .panel-heading(style="padding-top: 6px; padding-bottom: 6px;")
+    //    span.icon-down-open-3.showTab(style="cursor:pointer;") Chuyển nhóm
+    //    +iSelect(options=customerGroupSelects class="field changeProduct hidden")
+
+
+    .panel-footer.has-details
+      .editor-wrapper(style="width: 200px; padding-left: 5px;")
+        +iSelect(options=customerGroupSelected class="field changeProduct newComponent")

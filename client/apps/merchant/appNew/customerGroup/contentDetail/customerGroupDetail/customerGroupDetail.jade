@@ -1,0 +1,6 @@
+template(name="customerGroupDetail")
+  .dual-detail-wrapper: .dual-detail
+    .nano: .nano-content
+      if currentProductGroup
+        +Template.dynamic(template='customerGroupOverviewSection' data=currentProductGroup)
+        +Template.dynamic(template='customerGroupDetailSection' data=currentProductGroup)
