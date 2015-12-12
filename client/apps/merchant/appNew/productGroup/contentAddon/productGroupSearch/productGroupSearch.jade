@@ -1,23 +1,23 @@
 template(name="productGroupSearch")
   .dual-addon
     .group-nav
-      .caption.inner.toCustomer
+      .caption.inner.toProduct
         span.avatar.letter {{getPublishedCount 'products'}}
-        span.text.uppercase KHÁCH HÀNG
+        span.text.uppercase SẢN PHẨM
       .caption.inner.active
         span.avatar.letter {{getPublishedCount 'productGroups'}}
-        span.text.uppercase NHÓM KHÁCH HÀNG
+        span.text.uppercase NHÓM SẢN PHẨM
 
     .search-filter.icon-search-8
-      input(name='searchFilter' type="text" placeholder="tìm nhóm khách hàng...")
+      input(name='searchFilter' type="text" placeholder="tìm nhóm sản phẩm...")
       .icon-user-add-1.create-new-command(data-toggle="tooltip" data-container="body" data-placement="right" title="Tạo mới")
 
     .nano: .nano-content(style="margin-bottom: 35px;")
       .list
         .caption-item: b DANH SÁCH NHÓM
 
-        each listCustomerGroups
-          .doc-item(class="{{activeClass 'currentCustomerGroup'}}")
+        each listProductGroups
+          .doc-item(class="{{activeClass}}")
             .avatar-wrapper: .avatar-image(class="missing"
             style="background-image:url('')") {{aliasLetter firstName}}
             .doc-info
@@ -26,4 +26,4 @@ template(name="productGroupSearch")
 
             .price-stamp
               b {{productCount}}
-              span(style="font-size: 13px;") khách hàng
+              span(style="font-size: 13px;") sản phẩm

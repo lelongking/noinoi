@@ -1,6 +1,6 @@
 scope = logics.productGroup
 
-Wings.defineApp 'productGroup',
+Wings.defineApp 'productGroups',
   created: ->
     Session.set("productGroupSearchFilter", "")
     Session.set("productGroupCreationMode", false)

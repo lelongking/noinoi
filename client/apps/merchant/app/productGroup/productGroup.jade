@@ -1,4 +1,4 @@
-template(name="productGroup")
+template(name="productGroups")
   #content.modern.product-management
     .dual-content
       .dual-addon
@@ -40,8 +40,8 @@ template(name="productGroup")
       .dual-detail-wrapper
         .dual-detail
           .nano: .nano-content
-            +productGroupOverviewSection getSession 'currentProductGroup'
-            +productGroupDetailSection getSession 'currentProductGroup'
+            +productGroupOverviewSections getSession 'currentProductGroup'
+            +productGroupDetailSections getSession 'currentProductGroup'
 
   //#footer.modern
   //  .editor-row

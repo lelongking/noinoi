@@ -3,7 +3,11 @@ merchantProductGroupRouter = Wings.Routers.merchantProductGroupRouter =
     prefix: '/productGroup'
     name: "productGroupRouter"
     triggersEnter: [ (context, redirect, stop) ->
+#      unless Roles.userIsInRole Meteor.user(), [ 'admin' ]
+#        FlowRouter.go FlowRouter.path('dashboard')
+#        stop()
     ]
+
 
 
 merchantProductGroupRouter.route '/',
@@ -23,6 +27,31 @@ merchantProductGroupRouter.route '/',
     return
 
   triggersEnter: [ (context, redirect) ->
-    console.log 'running /product trigger'
+    console.log 'running /provider trigger'
+    return
+  ]
+
+
+
+merchantProductGroupRouter.route '/create',
+  name: 'createProductGroup'
+  action: (params, queryParams) ->
+    console.log params, queryParams
+
+    Session.set "currentAppInfo",
+      name: "nhóm sản phẩm"
+      navigationPartial:
+        template: ""
+        data: {}
+
+    BlazeLayout.render 'merchantLayout',
+      content: 'contentDefaultLayout'
+      contentData:
+        contentAddon: 'productGroupSearch'
+        contentDetail: 'productGroupCreate'
+    return
+
+  triggersEnter: [ (context, redirect) ->
+    console.log 'running /provider trigger'
     return
   ]

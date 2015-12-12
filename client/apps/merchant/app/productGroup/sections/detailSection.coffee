@@ -1,6 +1,6 @@
 scope = logics.productGroup
 
-Wings.defineHyper 'productGroupDetailSection',
+Wings.defineHyper 'productGroupDetailSections',
   helpers:
     lastExpireDays: -> if @lastExpire then moment(@lastExpire).diff(new Date(), 'days') + ' Ngày' else '--- Ngày'
     selected: -> if _.contains(Session.get("productSelectLists"), @_id) then 'selected' else ''

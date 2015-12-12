@@ -5,12 +5,12 @@ template(name="productGroupOverviewSection")
       +avatarImageComponent(avatar=avatarUrl alias=firstName)
       .caption
         span.editable.dashed(data-toggle="tooltip" data-container="body" data-placement="right"
-        class="{{isEditMode false}}" title="tên nhóm khách hàng") {{name}}
+        class="{{isEditMode false}}" title="tên nhóm sản phẩm") {{name}}
 
         input.editable.dashed.productGroupEdit(data-toggle="tooltip" data-container="body" data-placement="right"
-        class="{{isEditMode true}}" placeholder="tên nhóm khách hàng" title="tên nhóm khách hàng" maxlength="50" size="20"
+        class="{{isEditMode true}}" placeholder="tên nhóm sản phẩm" title="tên nhóm sản phẩm" maxlength="50" size="20"
         name="productGroupName" value="{{name}}")
-        //span.blured-color ({{productCount}} khách hàng)
+        //span.blured-color ({{productCount}} sản phẩm)
 
       .sub1
         span.editable.dashed(data-toggle="tooltip" data-container="body" data-placement="right"

@@ -3,7 +3,7 @@ Enums = Apps.Merchant.Enums
 
 Wings.defineHyper 'productGroupDetailSection',
   helpers:
-    isSearch: -> Session.get("productGroupDetailSectionSearchCustomer")
+    isSearch: -> Session.get("productGroupDetailSectionSearchProduct")
     selected: -> if _.contains(Session.get("productSelectLists"), @_id) then 'selected' else ''
     totalCashByStaff: ->
       totalCash = 0
@@ -18,21 +18,21 @@ Wings.defineHyper 'productGroupDetailSection',
       productQuery._id = {$in: productListId} unless User.hasManagerRoles()
       productList = Schema.products.find(productQuery,{sort: {name: 1}}).map(
         (item) ->
-          order = Schema.orders.findOne({
-            buyer       : item._id
-            orderType   : Enums.getValue('OrderTypes', 'success')
-            orderStatus : Enums.getValue('OrderStatus', 'finish')
-          })
-          if order
-            item.latestTradingDay       = order.successDate
-            item.latestTradingTotalCash = accounting.formatNumber(order.finalPrice) + ' VND'
-
-          item.debtTotalCash = accounting.formatNumber(item.debtCash + item.loanCash) + ' VND'
+#          order = Schema.orders.findOne({
+#            buyer       : item._id
+#            orderType   : Enums.getValue('OrderTypes', 'success')
+#            orderStatus : Enums.getValue('OrderStatus', 'finish')
+#          })
+#          if order
+#            item.latestTradingDay       = order.successDate
+#            item.latestTradingTotalCash = accounting.formatNumber(order.finalPrice) + ' VND'
+#
+#          item.debtTotalCash = accounting.formatNumber(item.debtCash + item.loanCash) + ' VND'
           item
       )
 #      scope.productList = productList
 
-      productSearchText = Session.get('productGroupDetailSectionCustomerSearchText')
+      productSearchText = Session.get('productGroupDetailSectionProductSearchText')
       if productSearchText?.length > 1
         _.filter productList, (product) ->
           unsignedTerm = Helpers.RemoveVnSigns productSearchText
@@ -43,31 +43,31 @@ Wings.defineHyper 'productGroupDetailSection',
 
 
   events:
-    "click .searchCustomer": (event, template) ->
-      isSearch = Session.get("productGroupDetailSectionSearchCustomer")
-      Session.set("productGroupDetailSectionSearchCustomer", !isSearch)
-      Session.set("productGroupDetailSectionCustomerSearchText",'')
+    "click .searchProduct": (event, template) ->
+      isSearch = Session.get("productGroupDetailSectionSearchProduct")
+      Session.set("productGroupDetailSectionSearchProduct", !isSearch)
+      Session.set("productGroupDetailSectionProductSearchText",'')
 
-    "keyup input[name='searchCustomerFilter']": (event, template) ->
+    "keyup input[name='searchProductFilter']": (event, template) ->
       Helpers.deferredAction ->
-        searchFilter  = $("input[name='searchCustomerFilter']").val()
-        Session.set("productGroupDetailSectionCustomerSearchText", searchFilter.replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,"").replace(/\s+/g," "))
-      , "productGroupDetailSectionCustomerSearchText"
+        searchFilter  = $("input[name='searchProductFilter']").val()
+        Session.set("productGroupDetailSectionProductSearchText", searchFilter.replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,"").replace(/\s+/g," "))
+      , "productGroupDetailSectionProductSearchText"
       , 100
 
 
 
     "click .detail-row:not(.selected) td.command": (event, template) ->
-      template.data.selectedCustomer(@_id)
+      template.data.selectedProduct(@_id)
       event.stopPropagation()
 
     "click .detail-row.selected td.command": (event, template) ->
-      template.data.unSelectedCustomer(@_id)
+      template.data.unSelectedProduct(@_id)
       event.stopPropagation()
 
 
     "click .detail-row": (event, template) ->
       FlowRouter.go('product')
-      Session.set 'currentOrder', @
-      Customer.setSession(@_id)
+      Session.set 'currentProduct', @
+      Product.setSession(@_id)
 

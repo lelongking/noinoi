@@ -1,4 +1,4 @@
-template(name="productGroupDetailSection")
+template(name="productGroupDetailSections")
   .section.panel.panel-default.printable-area
     .panel-heading
       .show-on-print
@@ -15,7 +15,7 @@ template(name="productGroupDetailSection")
         th.number(style="width:160px") HÀNG TỒN KHO
     .panel-body.debt-details
       table.lemon-grid
-        +productGroupHeader
+        +productGroupHeaders
         each productLists
           tr.detail-row(class="{{selected}}")
             if isManager
@@ -31,7 +31,7 @@ template(name="productGroupDetailSection")
     //    span.s3 <b>{{formatNumber finalDebtBalance}}</b> VNĐ
         //h3 Tổng tiền: {{formatNumber totalPurchases}} VNĐ
 
-template(name="productGroupHeader")
+template(name="productGroupHeaders")
   tr
     if isManager
       th(style="width:30px")

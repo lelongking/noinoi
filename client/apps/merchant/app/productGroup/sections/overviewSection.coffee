@@ -1,6 +1,6 @@
 scope = logics.productGroup
 
-Wings.defineApp 'productGroupOverviewSection',
+Wings.defineApp 'productGroupOverviewSections',
   helpers:
     productGroupSelects: -> scope.productGroupSelects
     productSelectedCount: -> Session.get("productSelectLists")?.length > 0

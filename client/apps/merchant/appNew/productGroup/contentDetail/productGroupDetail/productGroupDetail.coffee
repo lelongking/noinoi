@@ -4,21 +4,21 @@ scope = logics.productManagement
 Wings.defineHyper 'productGroupDetail',
   created: ->
     self = this
-    self.currentCustomerGroup = new ReactiveVar()
+    self.currentProductGroup = new ReactiveVar()
     self.autorun ()->
-      if currentCustomerGroupId = Session.get('mySession')?.currentCustomerGroup
-        productGroup = Schema.productGroups.findOne({_id: currentCustomerGroupId})
+      if currentProductGroupId = Session.get('mySession')?.currentProductGroup
+        productGroup = Schema.productGroups.findOne({_id: currentProductGroupId})
         productGroup = Schema.productGroups.findOne({isBase: true, merchant: Merchant.getId()}) unless productGroup
 
         if productGroup
           productGroup.productCount = if productGroup.productLists then productGroup.productLists.length else 0
-          self.currentCustomerGroup.set(productGroup)
+          self.currentProductGroup.set(productGroup)
           Session.set "productSelectLists", Session.get('mySession').productSelected?[productGroup._id] ? []
 
   rendered: ->
 
   helpers:
-    currentCustomerGroup: -> Template.instance().currentCustomerGroup.get()
+    currentProductGroup: -> Template.instance().currentProductGroup.get()
 
   events:
     "keyup input[name='searchFilter']": (event, template) ->

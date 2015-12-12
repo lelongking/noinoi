@@ -1,4 +1,4 @@
-Wings.defineApp 'productGroupNavigationPartial',
+Wings.defineApp 'productGroupNavigationPartials',
   events:
     "click .productToSales": (event, template) ->
       if product = Session.get("productGroupCurrentProduct")
