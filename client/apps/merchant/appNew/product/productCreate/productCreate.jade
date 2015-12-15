@@ -1,0 +1,117 @@
+template(name="productCreate")
+  .dual-detail-wrapper: .dual-detail
+    .nano: .nano-content
+      with productUnit
+        .section.top.panel.panel-default.new-options-section
+          .panel-heading
+            span.icon-contacts tạo sản phẩm
+            .commands
+              .lemon.btn.lime.icon-ok-6.addProduct Lưu
+              .lemon.btn.red.icon-cancel-7.cancelProduct Hủy
+
+          .panel-body
+            .collapsible-row
+              .description Tên sản phẩm
+              input.input-field.newProductOption(name="productName" placeholder="Nhập tên sản phẩm")
+            .collapsible-row
+              .description Mã sản phẩm
+              input.input-field.newProductOption(name="productCode" placeholder="{{codeDefault}}")
+            .collapsible-row
+              .description Nhóm sản phẩm
+              input.input-field.newProductOption(name="productDebit" placeholder="Nhập nợ đầu kỳ" value="0")
+
+
+        //.section.top.panel.panel-default.new-options-section
+        //  .panel-heading
+        //    span.icon-contacts đơn vị tính
+        //
+        //  .panel-body
+        //    .collapsible-row
+        //      .description Đơn vị
+        //      input.input-field.editCash(value="Chai")
+        //      input.input-field.editCash(name="Thùng")
+        //    .collapsible-row
+        //      .description Quy đổi
+        //      input.input-field.editCash
+        //      input.input-field.editCash
+        //    .collapsible-row
+        //      .description Giá nhập
+        //      input.input-field.editCash(name="importPrice")
+        //      input.input-field.editCash(name="importPriceEx")
+        //    .collapsible-row
+        //      .description Giá bán nợ
+        //      input.input-field.editCash(name="debtSalePrice")
+        //      input.input-field.editCash(name="debtSalePriceEx")
+        //    .collapsible-row
+        //      .description Giá tiền mặt
+        //      input.input-field.editCash(name="directSalePrice")
+        //      input.input-field.editCash(name="directSalePriceEx")
+        //    .collapsible-row
+        //      .description Mã vạch
+        //      input.input-field.editCash
+        //      input.input-field.editCash
+
+
+        .section.top.panel.panel-default.new-options-section
+          .panel-heading
+            span.icon-contacts đơn vị tính
+
+          .panel-body
+            .collapsible-row.full-width.pull-right
+              .description.pull-right(style="width: 15%; margin: 0px 0px 0px 15px; padding-right: 0px;") Giá tiền mặt
+              .description.pull-right(style="width: 15%; margin: 0px 0px 0px 15px; padding-right: 0px;") Giá bán nợ
+              .description.pull-right(style="width: 15%; margin: 0px 0px 0px 15px; padding-right: 0px;") Giá nhập
+              .description.pull-right(style="width: 15%; margin: 0px 0px 0px 15px; padding-right: 0px;") Mã vạch
+
+
+            .collapsible-row.full-width.pull-right
+              input.input-field.pull-right.editCash(name="directSalePrice")
+              input.input-field.pull-right.editCash(name="debtSalePrice")
+              input.input-field.pull-right.editCash(name="importPrice")
+              input.input-field.pull-right.editCash(name="barcode" style="text-align: right;")
+              input.input-field.editCash(name="unitName" style="width: 28%" value="{{unitName}}")
+
+            .collapsible-row.full-width.pull-right
+              input.input-field.pull-right.editCash(name="directSalePriceEx")
+              input.input-field.pull-right.editCash(name="debtSalePriceEx")
+              input.input-field.pull-right.editCash(name="importPriceEx")
+              input.input-field.pull-right.editCash(name="barcodeEx" style="text-align: right;")
+              .description.editCash(style="width: 30%; min-width: 200px; height: 40px; padding-left: 15px;")
+                .input-group
+                  input.form-control.input-field.full-width(name="unitNameEx" value="{{unitNameEx}}"
+                  style="height: 40px;padding: 0;border: none; border-bottom: 1px solid #e0e0e0; box-shadow: none; border-radius: 0px; */")
+
+                  span.input-group-addon(style="height: 40px;width: 15px;padding: 0;border: none;background-color: #fff;") =
+
+                  input.form-control.input-field(name="conversion" value="{{conversion}}"
+                  style="height: 40px; width: 40px;padding: 0;text-align: center; border: none; border-bottom: 1px solid #e0e0e0; box-shadow: none;")
+
+                  span.input-group-addon(style="height: 40px; border: none; background-color: #fff; padding: 0px 0px 0px 10px;") {{unitName}}
+
+
+
+
+
+        .section.top.panel.panel-default.new-options-section
+          .panel-heading
+            span.icon-contacts tồn kho
+          .panel-body
+            .collapsible-row
+              .description Tồn kho đầu kỳ
+              .description.editCash(style="width: 20%; min-width: 200px; height: 40px; padding-left: 15px;")
+                .input-group
+                  input.form-control.input-field.full-width(name="importQuality"
+                  style="height: 40px;padding: 0;border: none; border-bottom: 1px solid #e0e0e0; box-shadow: none; border-radius: 0px; */")
+                  span.input-group-addon(style="height: 40px; border: none; background-color: #fff; padding: 0px 0px 0px 10px;") {{unitName}}
+
+
+              span.editable.pull-right Chưa nhập tồn kho lúc này
+              i.icon-ok-6.pull-right.inventory(class="{{isInventory}}")
+
+            .collapsible-row
+              .description Định mức tồn kho
+              .description.editCash(style="width: 20%; min-width: 200px; height: 40px; padding-left: 15px;")
+                .input-group
+                  input.form-control.input-field.full-width(name="lowNorms"
+                  style="height: 40px;padding: 0;border: none; border-bottom: 1px solid #e0e0e0; box-shadow: none; border-radius: 0px; */")
+                  span.input-group-addon(style="height: 40px; border: none; background-color: #fff; padding: 0px 0px 0px 10px;") {{unitName}}
