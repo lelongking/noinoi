@@ -1,5 +1,6 @@
 Enums = Apps.Merchant.Enums
 quantityHistory = new SimpleSchema
+  merchantId    : type: String
   parent        : type: String
   parentType    : type: String
   code          : type: String
@@ -11,6 +12,7 @@ quantityHistory = new SimpleSchema
 
 
 merchantQuantity = new SimpleSchema
+  merchantId            : type: String
   lowNormsQuantity      : type: Number, defaultValue: 0
   highNormsQuantity     : type: Number, defaultValue: 999999
 
@@ -23,74 +25,59 @@ merchantQuantity = new SimpleSchema
   importQuantity        : type: Number, defaultValue: 0
   returnImportQuantity  : type: Number, defaultValue: 0
 
+  totalSaleQuantity          : type: Number, defaultValue: 0
+  totalReturnSaleQuantity    : type: Number, defaultValue: 0
+  totalImportQuantity        : type: Number, defaultValue: 0
+  totalReturnImportQuantity  : type: Number, defaultValue: 0
+
+productPriceBook = new SimpleSchema
+  _id            : type: String
+  basicSale      : type: Number, optional: true
+  salePrice      : type: Number, optional: true
+  basicSaleDebt  : type: Number, optional: true
+  saleDebtPrice  : type: Number, optional: true
+  basicImport    : type: Number, optional: true
+  importPrice    : type: Number, optional: true
+
+productUnit = new SimpleSchema
+  _id         : type: String
+  barcode     : simpleSchema.Barcode
+  name        : type: String
+  conversion  : type: Number
+  isBase      : type: Boolean, defaultValue: false
+  allowDelete : type: Boolean, defaultValue: true
+  lastExpire  : type: Date   , optional: true
+  createdAt   : simpleSchema.DefaultCreatedAt
+
+productProfile = new SimpleSchema
+  inventoryInitial: type: Boolean , defaultValue: false
+  interestRate    : type: Boolean , defaultValue: false #tinh lai suat
+  description     : type: String  , optional: true
+  lastExpire      : type: Date    , optional: true
+  productGroup    : type: String  , optional: true
 
 
+#----------------------------------------------------------------------------------------------------------------------
 simpleSchema.products = new SimpleSchema
   name    : type: String , index: 1
   code    : type: String , index: 1
   avatar  : type: String , optional: true
   status  : type: Number , defaultValue: Enums.getValue('ProductStatuses', 'initialize')
 
-  group       : type: String , optional: true
-  description : type: String , optional: true
-  lastExpire  : type: Date   , optional: true
+  units      : type: [productUnit]     , defaultValue: []
+  profile    : type: productProfile    , defaultValue: {}
+  priceBooks : type: [productPriceBook], defaultValue: []
+
+  merchantQuantities : type: [merchantQuantity], defaultValue: []
+  quantityHistories  : type: [quantityHistory], defaultValue: []
+
   nameSearch  : simpleSchema.searchSource('name')
-
-  inventoryInitial: type: Boolean , defaultValue: false
-  interestRate: type: Boolean , defaultValue: false #tinh lai suat
-
   merchant    : simpleSchema.DefaultMerchant
   allowDelete : simpleSchema.DefaultBoolean()
   creator     : simpleSchema.DefaultCreator('creator')
   version     : {type: simpleSchema.Version}
 
-  #bang gia
-  priceBooks                 : type: [Object]
-  'priceBooks.$._id'         : type: String
-  'priceBooks.$.basicSale'   : type: Number, optional: true
-  'priceBooks.$.salePrice'   : type: Number, optional: true
-  'priceBooks.$.basicImport' : type: Number, optional: true
-  'priceBooks.$.importPrice' : type: Number, optional: true
 
-
-  #doanh thu cua ban hang, nhap hang, tra hang
-  quantityTurnover                         : type: [Object]
-  'quantityRevenues.$.warehouseId'         : type: String, optional: true
-  'quantityRevenues.$.saleTurnover'        : type: Number
-  'quantityRevenues.$.importTurnover'      : type: Number
-  'quantityRevenues.$.returnSaleTurnover'  : type: Number
-  'quantityRevenues.$.returnImportTurnover': type: Number
-
-
-  quantityHistories              : type: Object, defaultValue: {}
-  'quantityHistories.merchantId' : type: quantityHistory
-
-  merchantQuantities              : type: Object, defaultValue: {}
-  'merchantQuantities.merchantId' : type: merchantQuantity
-
-  #so luong san pham trong kho
-  quantities                         : type: [Object]
-  'quantities.$.warehouseId'         : type: String, optional: true
-  'quantities.$.normsQuantity'       : type: Number
-  'quantities.$.availableQuantity'   : type: Number
-  'quantities.$.inOderQuantity'      : type: Number
-
-  'quantities.$.inStockQuantity'     : type: Number
-  'quantities.$.saleQuantity'        : type: Number
-  'quantities.$.importQuantity'      : type: Number
-  'quantities.$.returnSaleQuantity'  : type: Number
-  'quantities.$.returnImportQuantity': type: Number
-
-  #don vi tinh
-  units                : type: [Object]
-  'units.$._id'        : type: String
-  'units.$.barcode'    : simpleSchema.Barcode
-  'units.$.name'       : type: String
-  'units.$.conversion' : type: Number
-  'units.$.isBase'     : type: Boolean, defaultValue: false
-  'units.$.allowDelete': type: Boolean, defaultValue: true
-  'units.$.lastExpire' : type: Date   , optional: true
-  'units.$.createdAt'  : simpleSchema.DefaultCreatedAt
 
 
 

@@ -18,7 +18,10 @@ template(name="productCreate")
               input.input-field.newProductOption(name="productCode" placeholder="{{codeDefault}}")
             .collapsible-row
               .description Nhóm sản phẩm
-              input.input-field.newProductOption(name="productDebit" placeholder="Nhập nợ đầu kỳ" value="0")
+              input.input-field.newProductOption(name="productDescription" placeholder="Ghi chú")
+            //.collapsible-row
+            //  .description Nhóm sản phẩm
+            //  input.input-field.newProductOption(name="productDebit" placeholder="Nhập nợ đầu kỳ" value="0")
 
 
         //.section.top.panel.panel-default.new-options-section
@@ -76,6 +79,7 @@ template(name="productCreate")
               input.input-field.pull-right.editCash(name="debtSalePriceEx")
               input.input-field.pull-right.editCash(name="importPriceEx")
               input.input-field.pull-right.editCash(name="barcodeEx" style="text-align: right;")
+
               .description.editCash(style="width: 30%; min-width: 200px; height: 40px; padding-left: 15px;")
                 .input-group
                   input.form-control.input-field.full-width(name="unitNameEx" value="{{unitNameEx}}"

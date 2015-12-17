@@ -6,14 +6,15 @@ Wings.defineHyper 'productCreate',
     self = this
     self.productUnitData = new ReactiveVar({
       isInventory: 'active'
+      importQuality: 0
       unitName: 'Chai'
       directSalePrice: 0
       debtSalePrice: 0
       importPrice: 0
 
       unitNameEx: 'Thùng'
-      barcode: ''
-      barcodeEx: ''
+      barcode: Wings.Helper.GenerateBarcode()
+      barcodeEx: Wings.Helper.GenerateBarcode()
       conversion: 0
       directSalePriceEx: 0
       debtSalePriceEx: 0
@@ -29,10 +30,9 @@ Wings.defineHyper 'productCreate',
     @ui.$directSalePrice.inputmask "integer", numericOption
     @ui.$debtSalePrice.inputmask "integer", numericOption
     @ui.$importPrice.inputmask "integer", numericOption
-    @ui.$conversion.inputmask "integer",
     @ui.$conversion.inputmask "integer", numericOptionNotSuffix
-    @ui.$importQuality.inputmask "integer", {autoGroup: true, groupSeparator:",", radixPoint: ".", integerDigits:11, rightAlign: true}
     @ui.$lowNorms.inputmask "integer", numericOptionNotSuffix
+    @ui.$importQuality.inputmask "integer", {autoGroup: true, groupSeparator:",", radixPoint: ".", integerDigits:11, rightAlign: true}
 
     self = this
     productUnit = self.productUnitData.get()
@@ -45,6 +45,9 @@ Wings.defineHyper 'productCreate',
     self.ui.$importPrice.val productUnit.importPrice
     self.ui.$conversion.val productUnit.conversion
     self.ui.$lowNorms.val productUnit.lowNorms
+
+    self.ui.$barcode.val productUnit.barcode
+    self.ui.$barcodeEx.val productUnit.barcodeEx
 
 
 
@@ -125,6 +128,7 @@ Wings.defineHyper 'productCreate',
           template.ui.$importPriceEx.val productUnit.importPriceEx
           productUnitData.set(productUnit)
 
+
       else if event.target.name is "directSalePrice"
         $directSalePrice  = template.ui.$directSalePrice
         directSalePriceText = Math.abs(Helpers.Number($directSalePrice.inputmask('unmaskedvalue')))
@@ -179,6 +183,25 @@ Wings.defineHyper 'productCreate',
         if productUnit.importPriceEx isnt importPriceEx
           productUnit.importPriceEx = importPriceEx
           productUnitData.set(productUnit)
+
+
+      else if event.target.name is "importQuality"
+        $importQuality  = template.ui.$importQuality
+        importQuality   = Math.abs(Helpers.Number($importQuality.inputmask('unmaskedvalue')))
+
+        if productUnit.importQuality isnt importQuality
+          productUnit.importQuality = importQuality
+          productUnitData.set(productUnit)
+
+
+      else if event.target.name is "lowNorms"
+        $lowNorms  = template.ui.$lowNorms
+        lowNorms = Math.abs(Helpers.Number($lowNorms.inputmask('unmaskedvalue')))
+
+        if productUnit.lowNorms isnt lowNorms
+          productUnit.lowNorms = lowNorms
+          productUnitData.set(productUnit)
+
 
 
     "focus [name='importQuality']": (event, template) ->
@@ -253,10 +276,68 @@ checkProductCode = (event, template, product) ->
     $productCode.val('')
 
 addNewProduct = (event, template, product = {}) ->
+  merchantId      = Merchant.getId()
+  productUnitData = Template.instance().productUnitData.get()
+  priceBookBasic  = Schema.priceBooks.findOne({priceBookType: 0, merchant: Merchant.getId()})
+
+  merchantSummaries = Session.get('merchant')?.summaries ? {}
+  lastCode          = merchantSummaries.lastProductCode ? 0
+  listProductCodes = merchantSummaries.listProductCodes ? []
+  code = Wings.Helper.checkAndGenerateCode(lastCode, listProductCodes, 'SP')
+
   if checkProductName(event, template, product)
     if checkProductCode(event, template, product)
+      product.code = code if !product.code
+      $productDescription = template.ui.$productDescription
+      productDescription  = $productDescription.val().replace(/^\s*/, "").replace(/\s*$/, "")
+      product.description = productDescription if productDescription
+
+      product.units = []
+
+      unitName = if productUnitData.unitName.length > 0 then productUnitData.unitName else 'Chai'
+      barcode  = if productUnitData.barcode.length > 0 then productUnitData.barcode else Wings.Helper.GenerateBarcode()
+      productUnitBasic =
+        _id        : Random.id()
+        name       : unitName
+        barcode    : barcode
+        conversion : 1
+        isBase     : true
+      product.units.push productUnitBasic
+
+      if productUnitData.conversion > 0
+        unitNameEx = if productUnitData.unitNameEx.length > 0 then productUnitData.unitNameEx else 'Thùng'
+        barcodeEx  = if productUnitData.barcodeEx.length > 0 then productUnitData.barcodeEx else Wings.Helper.GenerateBarcode()
+
+        productUnitEx =
+          _id        : Random.id()
+          name       : unitNameEx
+          barcode    : barcodeEx
+          conversion : productUnitData.conversion
+          isBase     : false
+        product.units.push productUnitEx
+
+      product.priceBooks = [{
+        _id           : priceBookBasic._id
+        basicSale     : productUnitData.directSalePrice
+        salePrice     : productUnitData.directSalePrice
+        basicSaleDebt : productUnitData.debtSalePrice
+        saleDebtPrice : productUnitData.debtSalePrice
+        basicImport   : productUnitData.importPrice
+        importPrice   : productUnitData.importPrice
+      }]
+
+
+
+      product.merchantQuantities = []
+      merchantQuantity =
+        merchantId       : merchantId
+        lowNormsQuantity : productUnitData.lowNorms
+      product.merchantQuantities.push merchantQuantity
+
+      console.log product
       newProductId = Schema.products.insert product
-      if Match.test(newProductId, String)
+
+      if Schema.products.findOne(newProductId)
         Meteor.users.update(Meteor.userId(), {$set: {'sessions.currentProduct': newProductId}})
         FlowRouter.go('product')
         toastr["success"]("Tạo sản phẩm thành công.")
