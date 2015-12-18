@@ -20,6 +20,7 @@ Schema.add 'priceBooks', "PriceBook", class PriceBook
   @transform: (doc) ->
     doc.hasAvatar = -> if @avatar then '' else 'missing'
     doc.avatarUrl = -> if @avatar then AvatarImages.findOne(@avatar)?.url() else undefined
+    doc.productCount = -> @products.length
 
     doc.remove = -> #ok
       if doc.allowDelete is true and doc.isBase is false
@@ -35,7 +36,7 @@ Schema.add 'priceBooks', "PriceBook", class PriceBook
           basicPrice = Schema.priceBooks.findOne({isBase: true, merchant: Merchant.getId()})
           Meteor.users.update(Meteor.userId(), {$set: {'sessions.currentPriceBook': basicPrice._id}})
 
-    doc.updatePriceOfProduct = (productId, salePrice, importPrice) -> #ok
+    doc.updatePriceOfProduct = (productId, salePrice, importPrice, saleDebtPrice) -> #ok
       priceBookId = @_id; priceBookIsBase = @isBase; priceBookType = @priceBookType; unitUpdateQuery = $set:{}
       if product = Schema.products.findOne({_id: productId, 'priceBooks._id': priceBookId, merchant: Merchant.getId()})
         for item, index in product.priceBooks
@@ -45,6 +46,10 @@ Schema.add 'priceBooks', "PriceBook", class PriceBook
               unitUpdateQuery.$set["#{priceBookQuery}.basicSale"] = salePrice
               unitUpdateQuery.$set["#{priceBookQuery}.salePrice"] = salePrice if item._id is priceBookId
 
+            if saleDebtPrice isnt undefined and saleDebtPrice >= 0 and saleDebtPrice isnt item.saleDebtPrice
+              unitUpdateQuery.$set["#{priceBookQuery}.basicSaleDebt"] = saleDebtPrice
+              unitUpdateQuery.$set["#{priceBookQuery}.saleDebtPrice"] = saleDebtPrice if item._id is priceBookId
+
             if importPrice isnt undefined and importPrice >= 0 and importPrice isnt item.importPrice
               unitUpdateQuery.$set["#{priceBookQuery}.basicImport"] = importPrice
               unitUpdateQuery.$set["#{priceBookQuery}.importPrice"] = importPrice if item._id is priceBookId
@@ -52,6 +57,9 @@ Schema.add 'priceBooks', "PriceBook", class PriceBook
           else if item._id is priceBookId
             if _.contains([0, 1, 2], priceBookType) and salePrice and salePrice >= 0 and salePrice isnt item.salePrice
               unitUpdateQuery.$set["#{priceBookQuery}.salePrice"] = salePrice
+
+            if _.contains([0, 1, 2], priceBookType) and saleDebtPrice and saleDebtPrice >= 0 and saleDebtPrice isnt item.saleDebtPrice
+              unitUpdateQuery.$set["#{priceBookQuery}.saleDebtPrice"] = saleDebtPrice
 
             if _.contains([0, 3, 4], priceBookType) and importPrice and importPrice >= 0 and importPrice isnt item.importPrice
               unitUpdateQuery.$set["#{priceBookQuery}.importPrice"] = importPrice
@@ -124,10 +132,12 @@ Schema.add 'priceBooks', "PriceBook", class PriceBook
             #bản giá cập nhật không có giá của unit dc chon
             else if query.priceBookFromIndex isnt undefined #lấy giá từ bảng gốc thêm vào bản cập nhật
               priceBook = { _id : priceBookOfGroup._id }
-              priceBook.basicSale   = query.basicSale if query.basicSale
-              priceBook.salePrice   = query.salePrice if query.salePrice
-              priceBook.basicImport = query.basicImport if query.basicImport
-              priceBook.importPrice = query.importPrice if query.importPrice
+              priceBook.basicSale     = query.basicSale if query.basicSale
+              priceBook.salePrice     = query.salePrice if query.salePrice
+              priceBook.basicSaleDebt = query.basicSaleDebt if query.basicSaleDebt
+              priceBook.saleDebtPrice = query.saleDebtPrice if query.saleDebtPrice
+              priceBook.basicImport   = query.basicImport if query.basicImport
+              priceBook.importPrice   = query.importPrice if query.importPrice
 
               console.log priceBook
               Schema.products.update query.productId, $push: { priceBooks: priceBook }
@@ -229,6 +239,8 @@ findProductIndexAndPriceBookIndex = (productId, priceBookFormId, priceBookToId, 
 
     basicSale          : undefined
     salePrice          : undefined
+    basicSaleDebt      : undefined
+    saleDebtPrice      : undefined
     basicImport        : undefined
     importPrice        : undefined
 
@@ -238,6 +250,9 @@ findProductIndexAndPriceBookIndex = (productId, priceBookFormId, priceBookToId, 
         query.priceBookFromIndex = index
         query.basicSale          = item.basicSale if item.basicSale
         query.salePrice          = item.salePrice if item.salePrice
+
+        query.basicSaleDebt      = item.basicSaleDebt if item.basicSaleDebt
+        query.saleDebtPrice      = item.saleDebtPrice if item.saleDebtPrice
 
         query.basicImport        = item.basicImport if item.basicImport
         query.importPrice        = item.importPrice if item.importPrice

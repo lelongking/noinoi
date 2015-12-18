@@ -1,0 +1,9 @@
+template(name="priceBookCustomerDetailRowEdit")
+  tr.editors.dual-border
+    if isGroup
+      td.command
+    td.first-column {{productName}}
+    td.date {{productUnitName}}
+    td.number {{formatNumber basicSale}} VNĐ
+    td.number {{formatNumber saleDiscount}} VNĐ
+    td.number: input(name="editSaleQuantity" min="0")

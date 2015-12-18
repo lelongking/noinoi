@@ -137,6 +137,6 @@ priceBookSelects =
   changeAction: (e) ->
     if User.hasManagerRoles()
       Session.set("priceBookSelectGroup", 'selectChange')
-      currentPriceBook.changePricePriceBookTo(e.added._id, e.added.model)
+      currentPriceBook.changePriceProductTo(e.added._id, e.added.model)
       Session.set("priceBookSelectGroup", 'skyReset')
   reactiveValueGetter: -> 'skyReset' if Session.get("priceBookSelectGroup")

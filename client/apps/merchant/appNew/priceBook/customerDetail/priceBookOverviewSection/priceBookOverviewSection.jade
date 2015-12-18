@@ -12,7 +12,7 @@ template(name="priceBookOverviewSection")
 
       .sub1
         span.editable.dashed(data-toggle="tooltip" data-container="body" data-placement="right"
-        title="tổng nợ") {{getString totalCash '0'}} sản phẩm
+        title="sản phẩm") {{productCount}} sản phẩm
 
       .sub2(data-toggle="tooltip" data-container="body" data-placement="right" title="ghi chú")
         span.editable.dashed(class="{{isEditMode false}}"

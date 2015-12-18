@@ -3,4 +3,6 @@ template(name="priceBookDetail")
     .nano: .nano-content
       if currentPriceBook
         +Template.dynamic(template='priceBookOverviewSection' data=currentPriceBook)
-        +Template.dynamic(template='priceBookDetailSection' data=currentPriceBook)
+        +Template.dynamic(template=priceBookDetailShow data=currentPriceBook)
+
+
