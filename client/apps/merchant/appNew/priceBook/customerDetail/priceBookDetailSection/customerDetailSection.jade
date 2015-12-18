@@ -9,9 +9,8 @@ template(name="customerPriceBookDetailSection")
       table.lemon-grid: tr
         th(style="width:auto") TÊN SẢN PHẨM
         th.number(style="width:100px") ĐƠN VỊ
-        th.number(style="width:120px") GIÁ BÁN GỐC
-        th.number(style="width:120px") CHIẾT KHẤU
-        th.number(style="width:120px") GIÁ BÁN
+        th.number(style="width:130px") GIÁ TIỀN MẶT
+        th.number(style="width:130px") GIÁ BÁN NỢ
 
     .panel-body.debt-details
       table.lemon-grid
@@ -20,9 +19,8 @@ template(name="customerPriceBookDetailSection")
             th(style="width:30px").hide-on-print
           th(style="width:auto")
           th(style="width:70px")
-          th(style="width:120px")
-          th(style="width:120px")
           th(style="width:130px")
+          th(style="width:140px")
 
         each allProductUnits
           if isRowEditing
@@ -35,9 +33,8 @@ template(name="customerPriceBookDetailSection")
                |{{productName}}
                .commands: .lemon.rounded.tiny.btn.blue.animated.bounceIn.deleteUnitPrice: span.icon-minus-4
               td.date {{productUnitName}}
-              td.number {{formatNumber basicSale}} VNĐ
-              td.number {{formatNumber saleDiscount}} VNĐ
               td.number {{formatNumber salePrice}} VNĐ
+              td.number {{formatNumber saleDebtPrice}} VNĐ
 
     .panel-footer
       .right-float

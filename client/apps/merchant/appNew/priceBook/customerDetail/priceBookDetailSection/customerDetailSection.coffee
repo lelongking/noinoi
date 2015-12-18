@@ -3,23 +3,24 @@ scope = logics.priceBook
 Wings.defineHyper 'customerPriceBookDetailSection',
   helpers:
     isGroup: ->
-      Session.get("currentPriceBook").priceBookType is 2
+      Template.currentData().priceBookType is 2
 
     allProductUnits: ->
       findAllProductUnits(@)
 
     productSelected: ->
-      if _.contains(Session.get("priceProductLists"), @_id) then 'selected' else ''
+      productUnitSelected = Session.get('mySession').productUnitSelected["#{Template.parentData()._id}"]
+      if _.contains(productUnitSelected, @_id) then 'selected' else ''
 
   events:
     "click .detail-row:not(.selected) td.command": (event, template) ->
-      scope.currentPriceBook.selectedPriceProduct(@_id)
+      Template.currentData().selectedPriceProduct(@_id)
 
     "click .detail-row.selected td.command": (event, template) ->
-      scope.currentPriceBook.unSelectedPriceProduct(@_id)
+      Template.currentData().unSelectedPriceProduct(@_id)
 
     "click .deleteUnitPrice": (event, template) ->
-      scope.currentPriceBook.deletePriceOfProduct(@_id)
+      Template.currentData().deletePriceOfProduct(@_id)
       Session.set("editingId")
 
     "dblclick .detail-row": (event, template) ->
@@ -47,6 +48,10 @@ findAllProductUnits = (priceBook)->
       product.basicSale    = productPriceBook.basicSale
       product.salePrice    = productPriceBook.salePrice
       product.saleDiscount = productPriceBook.basicSale - productPriceBook.salePrice
+
+      product.basicSaleDebt    = productPriceBook.basicSaleDebt
+      product.saleDebtPrice    = productPriceBook.saleDebtPrice
+      product.saleDebtDiscount = productPriceBook.basicSaleDebt - productPriceBook.saleDebtPrice
 
       product.basicImport    = productPriceBook.basicImport
       product.importPrice    = productPriceBook.importPrice
