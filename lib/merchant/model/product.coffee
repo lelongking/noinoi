@@ -62,6 +62,7 @@ simpleSchema.products = new SimpleSchema
   description     : type: String  , optional: true
   lastExpire      : type: Date    , optional: true
   productOfGroup  : type: String  , optional: true
+  importInventory : type: Number  , optional: true
 
   units      : type: [productUnit]     , defaultValue: []
   priceBooks : type: [productPriceBook], defaultValue: []

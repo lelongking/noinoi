@@ -1,9 +1,38 @@
 scope = {}
+numericOption = {autoGroup: true, groupSeparator:",", radixPoint: ".", suffix: " VNĐ", integerDigits:10, rightAlign: true}
+numericOptionNotSuffix = {autoGroup: true, groupSeparator:",", radixPoint: ".", integerDigits:3, rightAlign: true}
 Wings.defineHyper 'productOverviewSection',
   created: ->
-#    self = this
-#    self.newProductData = new ReactiveVar({})
-#    self.autorun ()->
+    currentData   = Template.currentData()
+    productUnit   = currentData.units[0]
+    productUnitEx = currentData.units[1]
+    quantities    = currentData.merchantQuantities[0]
+    priceBook     = currentData.priceBooks[0]
+
+    self = this
+    self.productUnitData = new ReactiveVar({
+      isInventory: 'active'
+      importQuality: currentData.importInventory ? 0
+
+      lowNorms: quantities.lowNormsQuantity
+
+      unitName: productUnit.name
+      barcode : productUnit.barcode
+
+      unitNameEx: productUnitEx.name
+      barcodeEx : productUnitEx.barcode
+      conversion: productUnitEx.conversion
+
+      directSalePrice   : priceBook.basicSale
+      debtSalePrice     : priceBook.basicSaleDebt
+      importPrice       : priceBook.basicImport
+
+      directSalePriceEx : priceBook.basicSale * productUnitEx.conversion
+      debtSalePriceEx   : priceBook.basicSaleDebt * productUnitEx.conversion
+      importPriceEx     : priceBook.basicImport * productUnitEx.conversion
+
+    })
+
   rendered: ->
     Session.set('productManagementIsShowProductDetail', false)
     Session.set("productManagementShowEditCommand", false)
@@ -11,6 +40,29 @@ Wings.defineHyper 'productOverviewSection',
 
     scope.overviewTemplateInstance = @
     @ui.$productName.autosizeInput({space: 10}) if @ui.$productName
+
+    console.log @ui
+
+    self = this
+    productUnit = self.productUnitData.get()
+    self.ui.$directSalePrice.inputmask "integer", numericOption
+    self.ui.$debtSalePrice.inputmask "integer", numericOption
+    self.ui.$importPrice.inputmask "integer", numericOption
+    self.ui.$conversion.inputmask "integer", numericOptionNotSuffix
+    self.ui.$lowNorms.inputmask "integer", numericOptionNotSuffix
+    self.ui.$importQuality.inputmask "integer", {autoGroup: true, groupSeparator:",", radixPoint: ".", integerDigits:11, rightAlign: true}
+
+
+
+    self.ui.$lowNorms.val productUnit.lowNorms
+    self.ui.$barcode.val productUnit.barcode
+    self.ui.$barcodeEx.val productUnit.barcodeEx
+
+    self.ui.$directSalePrice.val productUnit.directSalePrice
+    self.ui.$debtSalePrice.val productUnit.debtSalePrice
+    self.ui.$importPrice.val productUnit.importPrice
+    self.ui.$conversion.val productUnit.conversion
+
 
   destroyed: ->
 
@@ -36,6 +88,9 @@ Wings.defineHyper 'productOverviewSection',
         scope.overviewTemplateInstance.ui.$productName.change()
       ,50 if scope.overviewTemplateInstance?.ui.$productName?
       @name
+
+    productUnitDetail: ->
+      Template.instance().productUnitData.get()
 
   events:
     "click .productDelete": (event, template) ->
@@ -73,6 +128,31 @@ Wings.defineHyper 'productOverviewSection',
       updateChangeAvatar(event, template)
 
 
+    "focus [name='importQuality']": (event, template) ->
+      productUnit = Template.instance().productUnitData.get()
+      productUnit.isInventory = ''
+      Template.instance().productUnitData.set(productUnit)
+
+    "blur [name='importQuality']": (event, template) ->
+      productUnit = Template.instance().productUnitData.get()
+      importQuality = template.ui.$importQuality.inputmask('unmaskedvalue')
+      if importQuality is ''
+        productUnit.isInventory = 'active'
+      else
+        absImportQuality = Math.abs(Helpers.Number(importQuality))
+        template.ui.$importQuality.val absImportQuality
+        productUnit.isInventory = ''
+      Template.instance().productUnitData.set(productUnit)
+
+    "click i.inventory": (event, template) ->
+      productUnit   = Template.instance().productUnitData.get()
+      if productUnit.isInventory is 'active'
+        template.ui.$importQuality.val '0'
+        template.ui.$importQuality.select()
+      else
+        template.ui.$importQuality.val ''
+        template.ui.$importQuality.blur()
+
 
     'input input.productEdit': (event, template) ->
       checkAllowUpdateOverview(template)
@@ -84,6 +164,99 @@ Wings.defineHyper 'productOverviewSection',
         rollBackProductData(event, template)
       checkAllowUpdateOverview(template)
 
+
+    "keyup": (event, template) ->
+      productUnitData = Template.instance().productUnitData
+      productUnit = productUnitData.get()
+
+      if event.target.name is "unitName"
+        $unitName     = template.ui.$unitName
+        unitNameText = $unitName.val().replace(/^\s*/, "").replace(/\s*$/, "")
+
+        if productUnit.unitName isnt unitNameText
+          productUnit.unitName = unitNameText
+          productUnitData.set(productUnit)
+
+      else if event.target.name is "barcodeEx"
+        $unitNameEx  = template.ui.$unitNameEx
+        unitNameExText = $unitNameEx.val().replace(/^\s*/, "").replace(/\s*$/, "")
+
+        if productUnit.barcodeEx isnt unitNameExText
+          productUnit.barcodeEx = unitNameExText
+          productUnitData.set(productUnit)
+
+      else if event.target.name is "barcode"
+        $barcode  = template.ui.$barcode
+        barcodeText = $barcode.val().replace(/^\s*/, "").replace(/\s*$/, "")
+
+        if productUnit.barcode isnt barcodeText
+          productUnit.barcode = barcodeText
+          productUnitData.set(productUnit)
+
+      else if event.target.name is "barcodeEx"
+        $unitNameEx  = template.ui.$unitNameEx
+        unitNameExText = $unitNameEx.val().replace(/^\s*/, "").replace(/\s*$/, "")
+
+        if productUnit.barcodeEx isnt unitNameExText
+          productUnit.barcodeEx = unitNameExText
+          productUnitData.set(productUnit)
+
+      else if event.target.name is "conversion"
+        $conversion  = template.ui.$conversion
+        conversionText = Math.abs(Helpers.Number($conversion.inputmask('unmaskedvalue')))
+
+        if productUnit.conversion isnt conversionText
+          productUnit.conversion = conversionText
+          productUnit.directSalePriceEx = productUnit.directSalePrice * productUnit.conversion
+          productUnit.debtSalePriceEx = productUnit.debtSalePrice * productUnit.conversion
+          productUnit.importPriceEx = productUnit.importPrice * productUnit.conversion
+          productUnitData.set(productUnit)
+
+
+      else if event.target.name is "directSalePrice"
+        $directSalePrice  = template.ui.$directSalePrice
+        directSalePriceText = Math.abs(Helpers.Number($directSalePrice.inputmask('unmaskedvalue')))
+
+        if productUnit.directSalePrice isnt directSalePriceText
+          productUnit.directSalePrice = directSalePriceText
+          productUnit.directSalePriceEx = productUnit.directSalePrice * productUnit.conversion
+          productUnitData.set(productUnit)
+
+      else if event.target.name is "debtSalePrice"
+        $debtSalePrice  = template.ui.$debtSalePrice
+        debtSalePriceText = Math.abs(Helpers.Number($debtSalePrice.inputmask('unmaskedvalue')))
+
+        if productUnit.debtSalePrice isnt debtSalePriceText
+          productUnit.debtSalePrice = debtSalePriceText
+          productUnit.debtSalePriceEx = productUnit.debtSalePrice * productUnit.conversion
+          productUnitData.set(productUnit)
+
+      else if event.target.name is "importPrice"
+        $importPrice  = template.ui.$importPrice
+        importPrice = Math.abs(Helpers.Number($importPrice.inputmask('unmaskedvalue')))
+
+        if productUnit.importPrice isnt "importPrice"
+          productUnit.importPrice = importPrice
+          productUnit.importPriceEx = productUnit.importPrice * productUnit.conversion
+          productUnitData.set(productUnit)
+
+
+      else if event.target.name is "importQuality"
+        $importQuality  = template.ui.$importQuality
+        importQuality   = Math.abs(Helpers.Number($importQuality.inputmask('unmaskedvalue')))
+
+        if productUnit.importQuality isnt importQuality
+          productUnit.importQuality = importQuality
+          productUnitData.set(productUnit)
+
+
+      else if event.target.name is "lowNorms"
+        $lowNorms  = template.ui.$lowNorms
+        lowNorms = Math.abs(Helpers.Number($lowNorms.inputmask('unmaskedvalue')))
+
+        if productUnit.lowNorms isnt lowNorms
+          productUnit.lowNorms = lowNorms
+          productUnitData.set(productUnit)
 
 #----------------------------------------------------------------------------------------------------------------------
 clickShowProductDetailTab = (event, template)->
