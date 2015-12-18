@@ -23,7 +23,7 @@ template(name="priceBook")
       .dual-detail-wrapper
         .dual-detail
           .nano: .nano-content
-            +priceBookOverviewSection getSession 'currentPriceBook'
+            +priceBookOverviewSections getSession 'currentPriceBook'
 
             if isPriceBookType 'default'
               +priceBookDetailDefault getSession 'currentPriceBook'

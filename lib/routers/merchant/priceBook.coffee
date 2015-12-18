@@ -1,12 +1,29 @@
-merchantRouter = Wings.Routers.merchantRouter
-merchantRouter.route '/priceBook',
+merchantPriceBookRouter = Wings.Routers.merchantPriceBookRouter =
+  Wings.Routers.merchantRouter.group
+    prefix: '/priceBook'
+    name: "priceBookRouter"
+    triggersEnter: [ (context, redirect, stop) ->
+#      unless Roles.userIsInRole Meteor.user(), [ 'admin' ]
+#        FlowRouter.go FlowRouter.path('dashboard')
+#        stop()
+    ]
+
+
+
+merchantPriceBookRouter.route '/',
   name: 'priceBook'
   action: ->
     Session.set "currentAppInfo",
-      name: "bảng giá"
+      name: "bảng giá bán - nhập"
+      navigationPartial:
+        template: ""
+        data: {}
 
     BlazeLayout.render 'merchantLayout',
-      content: 'priceBook'
+      content: 'contentDefaultLayout'
+      contentData:
+        contentAddon: 'priceBookSearch'
+        contentDetail: 'priceBookDetail'
     return
 
   triggersEnter: [ (context, redirect) ->

@@ -1,8 +1,9 @@
 Enums = Apps.Merchant.Enums
 simpleSchema.priceBooks = new SimpleSchema
-  name            : type: String ,unique  : true, index: 1
+  name            : type: String , index: 1
   owner           : type: String ,optional: true
   description     : type: String ,optional: true
+  avatar          : type: String ,optional: true
   priceBookType   : type: Number ,defaultValue: Enums.getValue('PriceBookTypes', 'customer')
   products        : type: [String] ,optional: true
 
@@ -17,6 +18,9 @@ simpleSchema.priceBooks = new SimpleSchema
 
 Schema.add 'priceBooks', "PriceBook", class PriceBook
   @transform: (doc) ->
+    doc.hasAvatar = -> if @avatar then '' else 'missing'
+    doc.avatarUrl = -> if @avatar then AvatarImages.findOne(@avatar)?.url() else undefined
+
     doc.remove = -> #ok
       if doc.allowDelete is true and doc.isBase is false
         if Schema.priceBooks.remove doc._id

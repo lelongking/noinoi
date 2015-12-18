@@ -1,0 +1,131 @@
+//template(name="customerManagementSalesHistorySection")
+//  .section.panel.panel-default.printable-area
+//    .panel-heading
+//      .show-on-print
+//        +merchantPrintingHeader
+//        .printing-info: .document-name {{name}}
+//
+//      .show-on-print
+//        table.lemon-grid: tr
+//          th(style="width:auto") SẢN PHẨM
+//          th(style="width:50px") SL
+//          th(style="width:100px") ĐƠN VỊ
+//          th.number(style="width:120px") ĐƠN GIÁ
+//          th.number(style="width:150px") THÀNH TIỀN
+//
+//      .hide-on-print
+//        table.lemon-grid: tr
+//          th(style="width:auto") SẢN PHẨM
+//          th(style="width:50px") SL
+//          th(style="width:100px") ĐƠN VỊ
+//          th.number(style="width:120px") ĐƠN GIÁ
+//          th.number(style="width:140px") THÀNH TIỀN
+//
+//    .panel-body.debt-details
+//      table#exportData.lemon-grid.safe
+//        tr
+//          th(style="width:auto")
+//          th(style="width:50px")
+//          th(style="width:100px")
+//          th(style="width:120px")
+//          th(style="width:150px")
+//
+//
+//        if hasDebitBegin
+//          tr.header-row
+//            td.has-commands(colspan="5")
+//              | &nbsp;
+//              .bill-header <b>Nợ tồn mùa trước</b>
+//          tr
+//
+//          if debtRequiredCash
+//            tr.paid-row.top.receive(style="border-bottom: none;")
+//              td.has-commands(colspan="3")
+//                .bill-header Nợ Phải Thu
+//              td.number(colspan="2")
+//                span.s5: b {{formatNumber debtRequiredCash}}
+//
+//          if debtBeginCash
+//            tr.paid-row.top.receive(style="border-bottom: none;")
+//              td.has-commands(colspan="3")
+//                .bill-header Nợ Đầu Kỳ
+//              td.number
+//                if debtRequiredCash
+//                  span.s5.gray.icon-feather-1: b {{formatNumber debtRequiredCash}}
+//              td.number
+//                span.s5: b {{formatNumber debtBeginCash}}
+//
+//            if debtRequiredCash
+//              tr.detail-row
+//                td.number(colspan="3")
+//                td.number.border-top(colspan="2")
+//                  span.s5: b {{formatNumber sumRequiredAndBeginDebtCash}}
+//
+//        each oldDebts
+//          tr.paid-row.top(class="{{transactionClass}}" style="border-bottom: none;")
+//            td.has-commands(colspan="3")
+//              .bill-header {{description}}
+//              if isManager
+//                if isDelete
+//                  .commands: .lemon.rounded.tiny.btn.red.deleteTransaction: span.icon-minus-4
+//            td.number
+//              span.s5.gray.icon-feather-1: b {{formatNumber sumBeforeBalance}}
+//            td.number
+//              span.s5: b {{formatNumber balanceChange}}
+//
+//          tr.detail-row
+//            td.number(colspan="3")
+//            td.number.border-top(colspan="2")
+//              span.s5: b {{formatNumber sumLatestBalance}}
+//
+//
+//        each allSales
+//          +customerManagementSaleDetails this
+//
+//
+//        tr.editors(style="{{showTransaction}}")
+//          td(colspan="1"): input.transaction-field(type="text" size="10"
+//          name='paySaleDescription' placeholder="{{transactionDescription}}")
+//
+//          td(colspan="3"): input.transaction-field.number(type="text" size="10"
+//          name='paySaleAmount' placeholder="số tiền")
+//
+//          td(colspan="1"): .lemon.btn.lime.icon-money.pull-right.createTransaction(
+//          class="{{isNotDisabled 'allowCreateTransactionOfCustomer'}}") {{transactionStatus}}
+//
+//    with currentCustomer
+//      +panelFooter_salesHistory
+//
+//
+//
+//
+//
+//
+//template(name="panelFooter_salesHistory")
+//  .panel-footer
+//    table.lemon-grid.safe
+//      tr
+//        th(style="width:auto")
+//        th(style="width:200px")
+//        th(style="width:200px")
+//
+//      tr
+//        td
+//        td.number Nợ Đầu Kỳ :
+//        td.number <b>{{formatNumber totalPaidCash}}</b> VND
+//      tr
+//        td
+//        td.number Nợ Tiền Vay :
+//        td.number <b>{{formatNumber totalPaidCash}}</b> VND
+//      tr
+//        td
+//        td.number Nợ Lãi Suất :
+//        td.number <b>{{formatNumber totalPaidCash}}</b> VND
+//      tr
+//        td
+//        td.number Nợ Mua Hàng :
+//        td.number <b>{{formatNumber totalPaidCash}}</b> VND
+//      tr
+//        td
+//        td.number: b Tổng Nợ :
+//        td.number: b {{formatNumber totalCash}} VND

@@ -1,0 +1,19 @@
+template(name="priceBookSearch")
+  .dual-addon
+    .search-filter.icon-search-8
+      input(name='searchFilter' type="text" placeholder="tìm bản giá ...")
+      .icon-user-add-1.create-new-command(data-toggle="tooltip" data-container="body" data-placement="right" title="Tạo mới")
+
+    .nano: .nano-content(style="margin-bottom: 35px;")
+      each priceBookLists
+        .list
+          .caption-item: b {{_id}}
+
+          each childs
+            .doc-item(class="{{activeClass}}")
+              .avatar-wrapper: .avatar-image(class="{{hasAvatar}}"
+              style="background-image:url('{{avatarUrl}}')") {{aliasLetter firstName}}
+
+              .doc-info
+                .title {{name}}
+                .sub-title {{description}}

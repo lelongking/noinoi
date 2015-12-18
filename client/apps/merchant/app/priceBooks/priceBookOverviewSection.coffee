@@ -4,7 +4,7 @@
 
 scope = logics.priceBook
 
-Wings.defineHyper 'priceBookOverviewSection',
+Wings.defineHyper 'priceBookOverviewSections',
   helpers:
     priceBookSelectOptions : -> scope.priceBookSelectOptions
     priceProductSelectedCount: -> Session.get("priceProductLists")?.length > 0

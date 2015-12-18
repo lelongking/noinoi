@@ -1,0 +1,6 @@
+template(name="priceBookDetail")
+  .dual-detail-wrapper: .dual-detail
+    .nano: .nano-content
+      if currentPriceBook
+        +Template.dynamic(template='priceBookOverviewSection' data=currentPriceBook)
+        +Template.dynamic(template='priceBookDetailSection' data=currentPriceBook)

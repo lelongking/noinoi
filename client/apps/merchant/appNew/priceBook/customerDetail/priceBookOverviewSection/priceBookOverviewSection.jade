@@ -1,0 +1,43 @@
+template(name="priceBookOverviewSection")
+  .section.top.panel.panel-default
+    input.hidden.avatarFile(type="file")
+    .panel-heading
+      +avatarImageComponent(avatar=avatarUrl alias=firstName)
+
+      .caption(data-toggle="tooltip" data-container="body" data-placement="right" title="tên bản giá")
+        span.editable.dashed(class="{{isEditMode false}}") {{name}}
+
+        input.editable.dashed.priceBookEdit(class="{{isEditMode true}}" maxlength="50" size="20"
+        name="priceBookName" placeholder="tên bảng giá" value="{{name}}")
+
+      .sub1
+        span.editable.dashed(data-toggle="tooltip" data-container="body" data-placement="right"
+        title="tổng nợ") {{getString totalCash '0'}} sản phẩm
+
+      .sub2(data-toggle="tooltip" data-container="body" data-placement="right" title="ghi chú")
+        span.editable.dashed(class="{{isEditMode false}}"
+        style="{{colorIsUndefined description}}") {{getString description 'ghi chú'}}
+
+        input.editable.dashed.priceBookEdit(class="{{isEditMode true}}" maxlength="100" size="25"
+        name="priceBookDescription" placeholder="ghi chú" value="{{description}}")
+
+
+
+      .commands
+        .lemon.btn.rounded.red.icon-minus-4.deletePriceBook(class="{{showDeletePriceBook}}"
+        data-toggle="tooltip" data-container="body" data-placement="bottom" title="xóa")
+
+        .lemon.btn.rounded.lime.icon-ok-6.syncEditPriceBook(class="{{showSyncPriceBook}}"
+        data-toggle="tooltip" data-container="body" data-placement="bottom" title="xác nhận")
+
+        .lemon.btn.rounded.peter-river.icon-reply-3.cancelEditPriceBook(class="{{isEditMode true}}"
+        data-toggle="tooltip" data-container="body" data-placement="bottom" title="quay lại")
+
+        .lemon.btn.rounded.silver.icon-wrench-outline.unLockEditPriceBook(class="{{isEditMode false}}"
+        data-toggle="tooltip" data-container="body" data-placement="left" title="chỉnh sửa")
+
+
+
+    .panel-footer.has-details
+      .editor-wrapper(style="width: 250px; padding-left: 5px;")
+        +iSelect(options=priceBookSelected class="field changeProduct newComponent")
