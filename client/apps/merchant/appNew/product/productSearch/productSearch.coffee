@@ -10,7 +10,7 @@ Wings.defineHyper 'productSearch',
 
   helpers:
     activeClass: ->
-      if @_id is Session.get('mySession')?.currentProvider then 'active' else ''
+      if @_id is Session.get('mySession')?.currentProduct then 'active' else ''
 
 
     productGroupLists: ->
@@ -25,21 +25,22 @@ Wings.defineHyper 'productSearch',
       selector = {};
       if searchText = Template.instance().searchFilter.get()
         regExp = Helpers.BuildRegExp(searchText);
-        selector = {$or: [{productCode: regExp, merchant: merchantId}, {nameSearch: regExp, merchant: merchantId}]}
+        selector = {$or: [{code: regExp, merchant: merchantId}, {nameSearch: regExp, merchant: merchantId}]}
 
-      if Session.get('myProfile')?.roles is 'seller'
-        addProductIds = {$in: Session.get('myProfile').products}
-        if(searchText)
-          selector.$or[0]._id = addProductIds
-          selector.$or[1]._id = addProductIds
-        else
-          selector._id = addProductIds
+#      if Session.get('myProfile')?.roles is 'seller'
+#        addProductIds = {$in: Session.get('myProfile').products}
+#        if(searchText)
+#          selector.$or[0]._id = addProductIds
+#          selector.$or[1]._id = addProductIds
+#        else
+#          selector._id = addProductIds
 
       Schema.products.find(selector, {sort: {firstName:1 ,nameSearch: 1}}).forEach(
         (product) ->
           if productGroup = _.findWhere(productGroups, {_id: product.productOfGroup ? product.group})
             productGroup.productListSearched.push(product)
       )
+      console.log productGroups
       productGroups
 
   events:

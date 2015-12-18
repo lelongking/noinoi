@@ -49,13 +49,6 @@ productUnit = new SimpleSchema
   lastExpire  : type: Date   , optional: true
   createdAt   : simpleSchema.DefaultCreatedAt
 
-productProfile = new SimpleSchema
-  inventoryInitial: type: Boolean , defaultValue: false
-  interestRate    : type: Boolean , defaultValue: false #tinh lai suat
-  description     : type: String  , optional: true
-  lastExpire      : type: Date    , optional: true
-  productGroup    : type: String  , optional: true
-
 
 #----------------------------------------------------------------------------------------------------------------------
 simpleSchema.products = new SimpleSchema
@@ -64,8 +57,13 @@ simpleSchema.products = new SimpleSchema
   avatar  : type: String , optional: true
   status  : type: Number , defaultValue: Enums.getValue('ProductStatuses', 'initialize')
 
+  inventoryInitial: type: Boolean , defaultValue: false
+  interestRate    : type: Boolean , defaultValue: false #tinh lai suat
+  description     : type: String  , optional: true
+  lastExpire      : type: Date    , optional: true
+  productOfGroup  : type: String  , optional: true
+
   units      : type: [productUnit]     , defaultValue: []
-  profile    : type: productProfile    , defaultValue: {}
   priceBooks : type: [productPriceBook], defaultValue: []
 
   merchantQuantities : type: [merchantQuantity], defaultValue: []

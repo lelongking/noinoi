@@ -1,44 +1,40 @@
 template(name="productOverviewSection")
-  .section.top.panel.panel-default
+  .section.top.panel.panel-default.new-options-section
     input.hidden.avatarFile(type="file")
     .panel-heading
       +avatarImageComponent(avatar=avatarUrl alias=firstName)
-      .caption
-        span.editable.dashed(data-toggle="tooltip" data-container="body" data-placement="right" maxlength="50"
-        class="{{isEditMode false}}" name="customerName" placeholder="tên khách hàng" title="tên khách hàng") {{name}}
+      .caption(data-toggle="tooltip" data-container="body" data-placement="right" title="tên sản phẩm")
+        span.editable.dashed(class="{{isEditMode false}}") {{name}}
 
-        input.editable.dashed.customerEdit(data-toggle="tooltip" data-container="body" data-placement="right" maxlength="50" size="20"
-        class="{{isEditMode true}}" name="customerName" placeholder="tên khách hàng" title="tên khách hàng" value="{{name}}")
-        //if description
-        //  span.blured-color ({{description}})
+        input.editable.dashed.productEdit(class="{{isEditMode true}}" maxlength="50" size="20"
+        name="productName" placeholder="tên sản phẩm" value="{{name}}")
 
-      .sub1
-        span.editable.dashed(data-toggle="tooltip" data-container="body" data-placement="right" maxlength="15" size="10"
-        class="{{isEditMode false}}" name="customerPhone" title="điện thoại" style="{{colorIsUndefined phone}}") {{getString phone 'điện thoại'}}
 
-        input.editable.dashed.customerEdit(data-toggle="tooltip" data-container="body" data-placement="right" maxlength="15" size="10"
-        class="{{isEditMode true}}" name="customerPhone" placeholder="điện thoại" title="điện thoại" value="{{phone}}")
+      .sub1(data-toggle="tooltip" data-container="body" data-placement="right" title="mã sản phẩm")
+        span.editable.dashed(class="{{isEditMode false}}") {{code}}
 
-      .sub2
-        span.editable.dashed(data-toggle="tooltip" data-container="body" data-placement="right" maxlength="20" size="25"
-        class="{{isEditMode false}}" name="customerAddress" title="địa chỉ" style="{{colorIsUndefined address}}") {{getString address 'địa chỉ'}}
+        input.editable.dashed.productEdit(class="{{isEditMode true}}" maxlength="50" size="20"
+        name="productCode" placeholder="mã sản phẩm" value="{{code}}")
 
-        input.editable.dashed.customerEdit(data-toggle="tooltip" data-container="body" data-placement="right" maxlength="100" size="25"
-        class="{{isEditMode true}}" name="customerAddress" placeholder="địa chỉ" title="địa chỉ" value="{{address}}" )
+      .sub2(data-toggle="tooltip" data-container="body" data-placement="right" title="ghi chú")
+        span.editable.dashed(class="{{isEditMode false}}" style="{{colorIsUndefined description}}") {{getString description 'ghi chú'}}
+
+        input.editable.dashed.productEdit(class="{{isEditMode true}}" maxlength="100" size="25"
+         name="productDescription" placeholder="ghi chú" value="{{description}}")
 
 
 
       .commands
-        .lemon.btn.rounded.red.icon-minus-4.customerDelete(class="{{showDeleteCustomer}}"
+        .lemon.btn.rounded.red.icon-minus-4.productDelete(class="{{showDeleteProduct}}"
         data-toggle="tooltip" data-container="body" data-placement="bottom" title="xóa")
 
-        .lemon.btn.rounded.lime.icon-ok-6.syncCustomerEdit(class="{{showSyncCustomer}}"
+        .lemon.btn.rounded.lime.icon-ok-6.syncProductEdit(class="{{showSyncProduct}}"
         data-toggle="tooltip" data-container="body" data-placement="bottom" title="xác nhận")
 
-        .lemon.btn.rounded.peter-river.icon-reply-3.cancelCustomer(class="{{isEditMode true}}"
+        .lemon.btn.rounded.peter-river.icon-reply-3.cancelProduct(class="{{isEditMode true}}"
         data-toggle="tooltip" data-container="body" data-placement="bottom" title="quay lại")
 
-        .lemon.btn.rounded.silver.icon-wrench-outline.editCustomer(class="{{isEditMode false}}"
+        .lemon.btn.rounded.silver.icon-wrench-outline.editProduct(class="{{isEditMode false}}"
         data-toggle="tooltip" data-container="body" data-placement="left" title="chỉnh sửa")
 
     .panel-tab
@@ -47,29 +43,55 @@ template(name="productOverviewSection")
         span.icon-down-open-3.showTab(class="{{isShowTab false}}" style="cursor:pointer;") Thông tin mở rộng
 
       .panel-body(class="{{isShowTab true}}")
-        .collapsible-row
-          .description Mã khách hàng
-          span.editable.dashed(class="{{isEditMode false}}") {{getString code}}
-          input.input-field.customerEdit(class="{{isEditMode true}}" value="{{code}}"
-          name="customerCode" placeholder="{{getString code}}")
+        .collapsible-row.full-width.pull-right
+          .description.pull-right(style="width: 15%; margin: 0px 0px 0px 15px; padding-right: 0px;") Giá tiền mặt
+          .description.pull-right(style="width: 15%; margin: 0px 0px 0px 15px; padding-right: 0px;") Giá bán nợ
+          .description.pull-right(style="width: 15%; margin: 0px 0px 0px 15px; padding-right: 0px;") Giá nhập
+          .description.pull-right(style="width: 15%; margin: 0px 0px 0px 15px; padding-right: 0px;") Mã vạch
+          .description.pull-right(style="width: 15%; margin: 0px 0px 0px 15px; padding-right: 0px;") Đơn vị tính
 
-        //.collapsible-row
-        //  .description Nhóm khách hàng
-        //  input.input-field.customerEdit(name="address" value="" placeholder="Chưa cập nhật")
+
+        .collapsible-row.full-width.pull-right
+          input.input-field.pull-right.editCash(name="directSalePrice")
+          input.input-field.pull-right.editCash(name="debtSalePrice")
+          input.input-field.pull-right.editCash(name="importPrice")
+          input.input-field.pull-right.editCash(name="barcode" style="text-align: right;")
+          input.input-field.editCash(name="unitName" style="width: 28%" value="{{unitName}}")
+
+        .collapsible-row.full-width.pull-right
+          input.input-field.pull-right.editCash(name="directSalePriceEx")
+          input.input-field.pull-right.editCash(name="debtSalePriceEx")
+          input.input-field.pull-right.editCash(name="importPriceEx")
+          input.input-field.pull-right.editCash(name="barcodeEx" style="text-align: right;")
+
+          .description.editCash(style="width: 30%; min-width: 200px; height: 40px; padding-left: 15px;")
+            .input-group
+              input.form-control.input-field.full-width(name="unitNameEx" value="{{unitNameEx}}"
+              style="height: 40px;padding: 0;border: none; border-bottom: 1px solid #e0e0e0; box-shadow: none; border-radius: 0px; */")
+
+              span.input-group-addon(style="height: 40px;width: 15px;padding: 0;border: none;background-color: #fff;") =
+
+              input.form-control.input-field(name="conversion" value="{{conversion}}"
+              style="height: 40px; width: 40px;padding: 0;text-align: center; border: none; border-bottom: 1px solid #e0e0e0; box-shadow: none;")
+
+              span.input-group-addon(style="height: 40px; border: none; background-color: #fff; padding: 0px 0px 0px 10px;") {{unitName}}
 
         .collapsible-row
-          .description Giới tính
-          .genderSwitch
-            input.input-field.customerEdit(name="genderSwitch" type="checkbox" checked)
+          .description Tồn kho đầu kỳ
+          .description.editCash(style="width: 20%; min-width: 200px; height: 40px; padding-left: 15px;")
+            .input-group
+              input.form-control.input-field.full-width(name="importQuality"
+              style="height: 40px;padding: 0;border: none; border-bottom: 1px solid #e0e0e0; box-shadow: none; border-radius: 0px; */")
+              span.input-group-addon(style="height: 40px; border: none; background-color: #fff; padding: 0px 0px 0px 10px;") {{unitName}}
+
+
+          span.editable.pull-right Chưa nhập tồn kho lúc này
+          i.icon-ok-6.pull-right.inventory(class="{{isInventory}}")
 
         .collapsible-row
-          .description Sinh nhật
-          span.editable.dashed(class="{{isEditMode false}}") {{momentFormat profiles.dateOfBirth 'DD/MM/YYYY'}}
-          input.input-field.customerEdit(class="{{isEditMode true}}"
-          name="dateOfBirth" binding="datePicker" todayHighlight="true" maxlength="20" tabindex="4")
-
-        .collapsible-row
-          .description Ghi chú
-          span.editable.dashed(class="{{isEditMode false}}") {{getString profiles.description}}
-          input.input-field.customerEdit(class="{{isEditMode true}}" value="{{profiles.description}}"
-          name="customerDescription" placeholder="Ghi thêm thông tin")
+          .description Định mức tồn kho
+          .description.editCash(style="width: 20%; min-width: 200px; height: 40px; padding-left: 15px;")
+            .input-group
+              input.form-control.input-field.full-width(name="lowNorms"
+              style="height: 40px;padding: 0;border: none; border-bottom: 1px solid #e0e0e0; box-shadow: none; border-radius: 0px; */")
+              span.input-group-addon(style="height: 40px; border: none; background-color: #fff; padding: 0px 0px 0px 10px;") {{unitName}}

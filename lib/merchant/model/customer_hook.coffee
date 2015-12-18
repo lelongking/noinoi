@@ -7,6 +7,7 @@ generateCustomerCode = (user, customer, summaries)->
   if customer.code.length is 0 or _.indexOf(listCustomerCodes, customer.code) > -1
     customer.code = Wings.Helper.checkAndGenerateCode(lastCustomerCode, listCustomerCodes)
 
+
 generateCustomerInitCash = (customer)->
   customer.debtRequiredCash = 0
   customer.paidRequiredCash = 0
@@ -18,10 +19,12 @@ generateCustomerInitCash = (customer)->
   customer.paidSaleCash     = 0
   customer.returnSaleCash   = 0
 
+
 generateOrderStatus = (customer)->
   customer.orderWaiting = []
   customer.orderFailure = []
   customer.orderSuccess = []
+
 
 generateCustomerInit = (user, customer, splitName)->
   customer.merchant     = user.profile.merchant
@@ -32,11 +35,13 @@ generateCustomerInit = (user, customer, splitName)->
   customer.firstName    = splitName.firstName
   customer.lastName     = splitName.lastName
 
+
 setCustomerGroupDefault = (user, customer)->
   if !customer.customerOfGroup
     merchantId = user.profile.merchant
     groupBasic = Schema.customerGroups.findOne({merchant: merchantId, isBase: true})
     customer.customerOfGroup = groupBasic._id if groupBasic
+
 
 Schema.customers.before.insert (userId, customer)->
   user      = Meteor.users.findOne({_id:userId})

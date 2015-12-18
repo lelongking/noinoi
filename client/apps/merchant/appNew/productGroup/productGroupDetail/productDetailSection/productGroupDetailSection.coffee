@@ -12,8 +12,8 @@ Wings.defineHyper 'productGroupDetailSection',
       totalCash
 
     productLists: ->
-      return [] if !@productLists or @productLists.length is 0
-      productListId = _.intersection(@productLists, Session.get('myProfile').productLists)
+      return [] if !@products or @products.length is 0
+      productListId = _.intersection(@products, Session.get('myProfile').productSelected)
       productQuery = {productOfGroup: @_id}
       productQuery._id = {$in: productListId} unless User.hasManagerRoles()
       productList = Schema.products.find(productQuery,{sort: {name: 1}}).map(
