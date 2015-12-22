@@ -16,24 +16,6 @@ merchantRouter.route '/import',
   ]
 
 
-merchantRouter.route '/order',
-  name: 'order'
-  action: ->
-    Session.set "currentAppInfo",
-      name: "bán hàng"
-
-    BlazeLayout.render 'merchantLayout',
-      content: 'contentDefaultLayout'
-      contentData:
-        contentAddon: 'productSearch'
-        contentDetail: 'orderDetail'
-    return
-
-  triggersEnter: [ (context, redirect) ->
-    return
-  ]
-
-
 
 merchantRouter.route '/orderManager',
   name: 'orderManager'

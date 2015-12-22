@@ -14,7 +14,7 @@ merchantPriceBookRouter.route '/',
   name: 'priceBook'
   action: ->
     Session.set "currentAppInfo",
-      name: "bảng giá bán - nhập"
+      name: "bảng giá"
       navigationPartial:
         template: ""
         data: {}
