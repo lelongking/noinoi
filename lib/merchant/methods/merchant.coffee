@@ -49,7 +49,7 @@ Meteor.methods
     countLateExpireProduct   = 0
 #    Schema.products.find({}).forEach(
 #      (product) ->
-#        quality = product.quantities[0]
+#        quality = product.merchantQuantities[0]
 #        if product.status is Enums.getValue('ProductStatuses', 'initialize') then countNewProduct += 1
 #        else
 #          unless product.inventoryInitial then countNotInventoryProduct += 1

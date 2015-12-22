@@ -36,7 +36,7 @@ scope.listProductsNotTrade = ->
     (product) ->
       productCount += 1
       product.count = productCount
-      quality       = product.quantities[0].inStockQuantity
+      quality       = product.merchantQuantities[0].inStockQuantity
       quality       = 0 if quality < 0
       costPrice     = quality * product.getPrice(undefined, 'import')
       revenue       = quality * product.getPrice()
@@ -60,7 +60,7 @@ scope.listProductsTrade = (count = 0)->
     (product) ->
       productCount += 1
       product.count = productCount
-      quality       = product.quantities[0].inStockQuantity
+      quality       = product.merchantQuantities[0].inStockQuantity
       quality       = 0 if quality < 0
       costPrice     = quality * product.getPrice(undefined, 'import')
       revenue       = quality * product.getPrice()

@@ -259,7 +259,7 @@ Schema.add 'orders', "Order", class Order
         if !product = Schema.products.findOne(productId)
           (console.log('product not Found'); return)
 
-        availableQuantity = product.quantities[0].availableQuantity ? 0
+        availableQuantity = product.merchantQuantities[0].availableQuantity ? 0
         for orderDetail in details
           saleQuantity  = 0 unless saleQuantity
           saleQuantity += orderDetail.basicQuantity

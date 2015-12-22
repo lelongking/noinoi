@@ -83,8 +83,8 @@ updateSubtractQuantityInProductUnit = (product, orderDetail) ->
 
   if Schema.products.update(product._id, updateProductQuery)
     if product.inventoryInitial
-      inStockQuantity = product.quantities[0].inStockQuantity - orderDetail.basicQuantity
-      normsQuantity   = product.quantities[0].normsQuantity
+      inStockQuantity = product.merchantQuantities[0].inStockQuantity - orderDetail.basicQuantity
+      normsQuantity   = product.merchantQuantities[0].normsQuantity
       optionQuantity =
         notificationType: 'notify'
         product         : product._id
@@ -338,7 +338,7 @@ Meteor.methods
 
     for productId, details of _.groupBy(orderFound.details, (item) -> item.product)
       if product = Schema.products.findOne(productId)
-        availableQuantity = product.quantities[0].availableQuantity ? 0
+        availableQuantity = product.merchantQuantities[0].availableQuantity ? 0
 
         for orderDetail in details
           saleQuantity  = 0 unless saleQuantity

@@ -8,7 +8,7 @@ Meteor.methods
     return {valid: false, error: 'product not found!'} if !product
     return {valid: false, error: 'importDetails Error!'} if inventoryDetail.product isnt product._id
 
-    inventoryQuantities = -product.quantities[0].availableQuantity
+    inventoryQuantities = -product.merchantQuantities[0].availableQuantity
     inventoryQuantities += inventoryDetail.quantity if inventoryDetail.quantity > 0
 
     importId = Import.insert(null,'Tồn kho đầu kỳ', null)
@@ -21,8 +21,8 @@ Meteor.methods
         $set:
           importType: Enums.getValue('ImportTypes', 'inventorySuccess')
         $inc:
-          'details.0.basicOrderQuantity'     : product.quantities[0].saleQuantity
-          'details.0.basicQuantityAvailable' : -product.quantities[0].saleQuantity
+          'details.0.basicOrderQuantity'     : product.merchantQuantities[0].saleQuantity
+          'details.0.basicQuantityAvailable' : -product.merchantQuantities[0].saleQuantity
 
       if Schema.imports.update(importId, updateImportInventory)
         updateQuery =
