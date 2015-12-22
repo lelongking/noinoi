@@ -1,8 +1,5 @@
 merchantRouter = Wings.Routers.merchantRouter
 
-
-
-
 merchantRouter.route '/basicHistory',
   name: 'basicHistory'
   action: ->
