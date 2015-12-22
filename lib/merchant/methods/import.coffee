@@ -135,9 +135,9 @@ Meteor.methods
             updateQuery.$inc["units.#{index}.quality.importQuantity"]    = detail.basicQuantity
             break
 
-        updateQuery.$inc["quantities.#{productDetailIndex}.availableQuantity"] = detail.basicQuantity
-        updateQuery.$inc["quantities.#{productDetailIndex}.inStockQuantity"]   = detail.basicQuantity
-        updateQuery.$inc["quantities.#{productDetailIndex}.importQuantity"]    = detail.basicQuantity
+        updateQuery.$inc["merchantQuantities.#{productDetailIndex}.availableQuantity"] = detail.basicQuantity
+        updateQuery.$inc["merchantQuantities.#{productDetailIndex}.inStockQuantity"]   = detail.basicQuantity
+        updateQuery.$inc["merchantQuantities.#{productDetailIndex}.importQuantity"]    = detail.basicQuantity
         updateQuery.$set = {lastExpire: detail.expire} if detail.expire
         Schema.products.update detail.product, updateQuery
 

@@ -274,9 +274,9 @@ Schema.add 'returns', "Return", class Return
         for productId, quantities of productReturnQuantities
           productUpdate =
             $inc:
-              'quantities.0.inStockQuantity'    : quantities
-              'quantities.0.returnSaleQuantity' : quantities
-              'quantities.0.availableQuantity'  : quantities
+              'merchantQuantities.0.inStockQuantity'    : quantities
+              'merchantQuantities.0.returnSaleQuantity' : quantities
+              'merchantQuantities.0.availableQuantity'  : quantities
           Schema.products.update productId, productUpdate
 
         for importId, importUpdate of importUpdateOption
@@ -405,9 +405,9 @@ updateProductQuery = (returnDetail, returnType)->
         productUpdate.$inc["units.#{index}.quality.returnImportQuantity"] = returnDetail.basicQuantity
         break
 
-    productUpdate.$inc["quantities.#{detailIndex}.inStockQuantity"]      = -returnDetail.basicQuantity
-    productUpdate.$inc["quantities.#{detailIndex}.availableQuantity"]    = -returnDetail.basicQuantity
-    productUpdate.$inc["quantities.#{detailIndex}.returnImportQuantity"] = returnDetail.basicQuantity
+    productUpdate.$inc["merchantQuantities.#{detailIndex}.inStockQuantity"]      = -returnDetail.basicQuantity
+    productUpdate.$inc["merchantQuantities.#{detailIndex}.availableQuantity"]    = -returnDetail.basicQuantity
+    productUpdate.$inc["merchantQuantities.#{detailIndex}.returnImportQuantity"] = returnDetail.basicQuantity
 
   else if returnType is Enums.getValue('ReturnTypes', 'customer')
     for unit, index in product.units
@@ -417,9 +417,9 @@ updateProductQuery = (returnDetail, returnType)->
         productUpdate.$inc["units.#{index}.quality.availableQuantity"]  = returnDetail.basicQuantity
         break
 
-    productUpdate.$inc["quantities.#{detailIndex}.inStockQuantity"]    = returnDetail.basicQuantity
-    productUpdate.$inc["quantities.#{detailIndex}.returnSaleQuantity"] = returnDetail.basicQuantity
-    productUpdate.$inc["quantities.#{detailIndex}.availableQuantity"]  = returnDetail.basicQuantity
+    productUpdate.$inc["merchantQuantities.#{detailIndex}.inStockQuantity"]    = returnDetail.basicQuantity
+    productUpdate.$inc["merchantQuantities.#{detailIndex}.returnSaleQuantity"] = returnDetail.basicQuantity
+    productUpdate.$inc["merchantQuantities.#{detailIndex}.availableQuantity"]  = returnDetail.basicQuantity
 
   return {_id: returnDetail.product, updateOption: productUpdate}
 

@@ -102,10 +102,10 @@ Wings.defineHyper 'productManagementSalesHistorySection',
         details.push({createdAt: key, details: value}) for key, value of combined
       return details
 
-    saleQuantity    : -> @quantities?[0].saleQuantity ? 0
-    inStockQuantity : -> @quantities?[0].inStockQuantity ? 0
-    inOderQuantity  : -> @quantities?[0].inOderQuantity ? 0
-    importQuantity  : -> @quantities?[0].importQuantity ? 0
+    saleQuantity    : -> @merchantQuantities?[0].saleQuantity ? 0
+    inStockQuantity : -> @merchantQuantities?[0].inStockQuantity ? 0
+    inOderQuantity  : -> @merchantQuantities?[0].inOderQuantity ? 0
+    importQuantity  : -> @merchantQuantities?[0].importQuantity ? 0
     totalPrice      : -> @price * @quality
 
     isProduct: -> @product is Session.get("productManagementCurrentProduct")._id

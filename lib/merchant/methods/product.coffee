@@ -31,9 +31,9 @@ Meteor.methods
             allowDelete     : false
             status          : Enums.getValue('ProductStatuses', 'confirmed')
           $inc:
-            'quantities.0.availableQuantity' : inventoryQuantities
-            'quantities.0.inStockQuantity'   : inventoryQuantities
-            'quantities.0.importQuantity'    : inventoryQuantities
+            'merchantQuantities.0.availableQuantity' : inventoryQuantities
+            'merchantQuantities.0.inStockQuantity'   : inventoryQuantities
+            'merchantQuantities.0.importQuantity'    : inventoryQuantities
         Schema.products.update(product._id, updateQuery)
 
         importDetail = importFound.details[0]

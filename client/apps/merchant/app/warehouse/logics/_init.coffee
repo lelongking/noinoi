@@ -6,8 +6,8 @@ scope = logics.warehouse
 findProductTrade =
   Schema.products.find(
     {$or: [
-      {'quantities.saleQuantity'     : {$ne: 0}}
-      {'quantities.inStockQuantity'  : {$ne: 0}}
+      {'merchantQuantities.saleQuantity'     : {$ne: 0}}
+      {'merchantQuantities.inStockQuantity'  : {$ne: 0}}
     ]}
     {
       sort:
@@ -19,8 +19,8 @@ findProductTrade =
 findProductNotTrade =
   Schema.products.find(
     {
-      'quantities.saleQuantity'     : 0
-      'quantities.inStockQuantity'  : 0
+      'merchantQuantities.saleQuantity'     : 0
+      'merchantQuantities.inStockQuantity'  : 0
     }
     {
       sort:

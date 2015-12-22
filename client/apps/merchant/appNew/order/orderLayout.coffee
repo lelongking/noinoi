@@ -1,15 +1,29 @@
 Enums = Apps.Merchant.Enums
 
 formatDefaultSearch  = (item) -> "#{item.display}" if item
-findPaymentMethods   = (paymentMethodId)-> _.findWhere(Enums.PaymentMethods, {_id: paymentMethodId})
-findDeliveryTypes    = (deliveryTypeId)-> _.findWhere(Enums.DeliveryTypes, {_id: deliveryTypeId})
+findPaymentMethods   = (paymentMethodId) -> _.findWhere(Enums.PaymentMethods, {_id: paymentMethodId})
+findDeliveryTypes    = (deliveryTypeId) -> _.findWhere(Enums.DeliveryTypes, {_id: deliveryTypeId})
 customerSearch       = (query) -> CustomerSearch.search(query.term); CustomerSearch.getData({sort: {name: 1}})
 
 
-
+currentOrder = {}
 Wings.defineApp 'orderLayout',
   created: ->
+    self = this
+    self.currentOrder = new ReactiveVar({})
+    self.autorun ()->
+      if currentOrderId = Session.get('mySession')?.currentOrder
+        currentOrder = Schema.orders.findOne({_id: currentOrderId})
+        self.currentOrder.set(currentOrder)
+
+
+  rendered: ->
+  destroyed: ->
+
+
   helpers:
+    customerOrder: ->  Template.instance().currentOrder.get()
+
     #header
     customerSelectOptions: -> customerSelectOptions
     paymentMethodSelectOptions: -> paymentMethodSelectOptions
@@ -29,7 +43,7 @@ Wings.defineApp 'orderLayout',
       link.click()
 
     "click .finish": (event, template)->
-      scope.currentOrder.orderConfirm()
+      currentOrder.orderConfirm()
 
 
 
@@ -49,7 +63,7 @@ tabOptions =
 
 
 debtDateOptions =
-  reactiveSetter: (val) -> scope.currentOrder.changeDueDay(val)
+  reactiveSetter: (val) -> currentOrder.changeDueDay(val)
   reactiveValue: -> Session.get('currentOrder')?.dueDay ? 0
   reactiveMax: -> 180
   reactiveMin: -> 0
@@ -59,7 +73,7 @@ debtDateOptions =
 
 
 discountOptions =
-  reactiveSetter: (val) -> scope.currentOrder.changeDiscountCash(val)
+  reactiveSetter: (val) -> currentOrder.changeDiscountCash(val)
   reactiveValue: -> Session.get('currentOrder')?.discountCash ? 0
   reactiveMax: -> 99999999999
   reactiveMin: -> 0
@@ -68,7 +82,7 @@ discountOptions =
     forcestepdivisibility: 'none'
 
 depositOptions =
-  reactiveSetter: (val) -> scope.currentOrder.changeDepositCash(val)
+  reactiveSetter: (val) -> currentOrder.changeDepositCash(val)
   reactiveValue: -> Session.get('currentOrder')?.depositCash ? 0
   reactiveMax: -> 99999999999
   reactiveMin: -> 0
@@ -81,13 +95,13 @@ customerSelectOptions =
   query: (query) -> query.callback
     results: customerSearch(query)
     text: 'name'
-  initSelection: (element, callback) -> callback '' #Schema.customers.findOne(scope.currentOrder.buyer)
+  initSelection: (element, callback) -> callback Schema.customers.findOne(Session.get('currentOrder')?.buyer)
   formatSelection: (item) -> "#{item.name}" if item
   formatResult: (item) -> "#{item.name}" if item
   id: '_id'
   placeholder: 'CHỌN NGƯỜI MUA'
-  changeAction: (e) -> #scope.currentOrder.changeBuyer(e.added._id)
-  reactiveValueGetter: -> #Session.get('currentOrder')?.buyer ? 'skyReset'
+  changeAction: (e) -> currentOrder.changeBuyer(e.added._id)
+  reactiveValueGetter: -> Session.get('currentOrder')?.buyer ? 'skyReset'
 
 
 
@@ -100,18 +114,18 @@ paymentsDeliverySelectOptions =
   formatResult: (item) -> "#{item.display}" if item
   placeholder: 'CHỌN PTGD'
   minimumResultsForSearch: -1
-  changeAction: (e) -> #scope.currentOrder.changePaymentsDelivery(e.added._id)
-  reactiveValueGetter: -> #findDeliveryTypes(Session.get('currentOrder')?.paymentsDelivery)
+  changeAction: (e) -> currentOrder.changePaymentsDelivery(e.added._id)
+  reactiveValueGetter: -> findDeliveryTypes(Session.get('currentOrder')?.paymentsDelivery)
 
 
 paymentMethodSelectOptions =
   query: (query) -> query.callback
     results: Enums.PaymentMethods
     text: '_id'
-  initSelection: (element, callback) -> callback [] #findPaymentMethods(Session.get('currentOrder')?.paymentMethod)
+  initSelection: (element, callback) -> callback findPaymentMethods(Session.get('currentOrder')?.paymentMethod)
   formatSelection: (item) -> "#{item.display}" if item
   formatResult: (item) -> "#{item.display}" if item
   placeholder: 'CHỌN PTGD'
   minimumResultsForSearch: -1
-  changeAction: (e) -> #scope.currentOrder.changePaymentMethod(e.added._id)
-  reactiveValueGetter: -> #findPaymentMethods(Session.get('currentOrder')?.paymentMethod)
+  changeAction: (e) -> currentOrder.changePaymentMethod(e.added._id)
+  reactiveValueGetter: -> findPaymentMethods(Session.get('currentOrder')?.paymentMethod)

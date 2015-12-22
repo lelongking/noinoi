@@ -18,4 +18,4 @@ Wings.defineApp 'warehouse',
     "keyup input.upperGap":  (event, template) ->
       console.log @
       upperGap = Number(template.ui["$#{@_id}"].val())
-      Schema.products.update @_id, $set:{'quantities.0.normsQuantity': upperGap}
+      Schema.products.update @_id, $set:{'merchantQuantities.0.lowNormsQuantity': upperGap}

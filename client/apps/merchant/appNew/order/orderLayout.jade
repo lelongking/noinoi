@@ -14,8 +14,8 @@ template(name="orderLayout")
 
   #content.modern.sales-app
     .dual-content
-      +Template.dynamic(template='productUnitSearch' data=addonData)
-      +Template.dynamic(template='orderProductDetail' data=detailData)
+      +Template.dynamic(template='productUnitSearch' data=customerOrder)
+      +Template.dynamic(template='orderProductDetail' data=customerOrder)
 
   #footer.modern
     .editor-row

@@ -45,11 +45,11 @@ Wings.defineHyper 'overviewProductInventory',
 #        inventoryDetails[detailIndex].quality = Number($quantity.val())
 #        Session.set('productManagementInventoryDetails', inventoryDetails)
       else if isNaN(Number($quantity.val()))
-        $quantity.val(Session.get('productManagementCurrentProduct').quantities[0].normsQuantity)
+        $quantity.val(Session.get('productManagementCurrentProduct').merchantQuantities[0].lowNormsQuantity)
       else
         Schema.products.update(
           Session.get('productManagementCurrentProduct')._id
-          $set:{'quantities.0.normsQuantity': Number($quantity.val())}
+          $set:{'merchantQuantities.0.lowNormsQuantity': Number($quantity.val())}
         )
       event.stopPropagation()
 

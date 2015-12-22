@@ -14,8 +14,8 @@ checkProductInStockQuantity = (orderDetails)->
   if details.length > 0
     for currentDetail in details
       currentProduct = Document.Product.findOne(currentDetail.product)
-      console.log currentProduct.quantities[0].availableQuantity
-      if currentProduct.quantities[0].availableQuantity < currentDetail.basicQuantity
+      console.log currentProduct.merchantQuantities[0].availableQuantity
+      if currentProduct.merchantQuantities[0].availableQuantity < currentDetail.basicQuantity
         result.errorItem.push detail for detail in _.where(orderDetails, {product: currentDetail.product})
         (result.valid = false; result.message = "sản phẩm không đủ số lượng") if result.valid
   else
@@ -77,14 +77,14 @@ createTransaction = (customer, order)->
 
 updateSubtractQuantityInProductUnit = (product, orderDetail) ->
   detailIndex = 0; updateProductQuery = {$inc:{}}
-  updateProductQuery.$inc["quantities.#{detailIndex}.saleQuantity"]    = orderDetail.basicQuantity
-  updateProductQuery.$inc["quantities.#{detailIndex}.inOderQuantity"]  = -orderDetail.basicQuantity
-  updateProductQuery.$inc["quantities.#{detailIndex}.inStockQuantity"] = -orderDetail.basicQuantity
+  updateProductQuery.$inc["merchantQuantities.#{detailIndex}.saleQuantity"]    = orderDetail.basicQuantity
+  updateProductQuery.$inc["merchantQuantities.#{detailIndex}.inOderQuantity"]  = -orderDetail.basicQuantity
+  updateProductQuery.$inc["merchantQuantities.#{detailIndex}.inStockQuantity"] = -orderDetail.basicQuantity
 
   if Schema.products.update(product._id, updateProductQuery)
     if product.inventoryInitial
       inStockQuantity = product.merchantQuantities[0].inStockQuantity - orderDetail.basicQuantity
-      normsQuantity   = product.merchantQuantities[0].normsQuantity
+      normsQuantity   = product.merchantQuantities[0].lowNormsQuantity
       optionQuantity =
         notificationType: 'notify'
         product         : product._id
@@ -238,9 +238,9 @@ Meteor.methods
 
       updateProductQuery =
         $inc:
-          'quantities.0.saleQuantity'     : -orderDetail.basicQuantity
-          'quantities.0.availableQuantity': orderDetail.basicQuantity
-          'quantities.0.inStockQuantity'  : orderDetail.basicQuantity
+          'merchantQuantities.0.saleQuantity'     : -orderDetail.basicQuantity
+          'merchantQuantities.0.availableQuantity': orderDetail.basicQuantity
+          'merchantQuantities.0.inStockQuantity'  : orderDetail.basicQuantity
       console.log updateProductQuery
       Schema.products.update product._id, updateProductQuery
 
@@ -385,8 +385,8 @@ Meteor.methods
     for detail in orderFound.details
       if product = Schema.products.findOne(detail.product)
         updateQuery = $inc:
-          'quantities.0.inOderQuantity'    : detail.basicQuantity
-          'quantities.0.availableQuantity' : -detail.basicQuantity
+          'merchantQuantities.0.inOderQuantity'    : detail.basicQuantity
+          'merchantQuantities.0.availableQuantity' : -detail.basicQuantity
 
         console.log updateQuery
         Schema.products.update product._id, updateQuery
@@ -458,8 +458,8 @@ Meteor.methods
     for detail, detailIndex in orderFound.details
       if product = Schema.products.findOne(detail.product)
         updateQuery = $inc:
-          'quantities.0.inOderQuantity': -detail.basicQuantity
-          'quantities.0.availableQuantity':detail.basicQuantity
+          'merchantQuantities.0.inOderQuantity': -detail.basicQuantity
+          'merchantQuantities.0.availableQuantity':detail.basicQuantity
         Schema.products.update product._id, updateQuery
 
     orderUpdate = $set:

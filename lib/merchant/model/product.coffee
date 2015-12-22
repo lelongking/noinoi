@@ -101,12 +101,12 @@ Schema.add 'products', "Product", class Product
       doc.basicUnit   = -> doc.units[0]
       doc.basicUnitId = -> doc.units[0]._id
 
-    if doc.quantities?.length > 0
-      doc.allQuantity       = doc.quantities[0].inStockQuantity
-      doc.saleQuantity      = doc.quantities[0].saleQuantity
-      doc.saleReturnQuantity= doc.quantities[0].returnSaleQuantity
-      doc.normsQuantity     = doc.quantities[0].normsQuantity
-      doc.normsCount        = doc.quantities[0].normsQuantity - doc.quantities[0].inStockQuantity
+    if doc.merchantQuantities?.length > 0
+      doc.allQuantity       = doc.merchantQuantities[0].inStockQuantity
+      doc.saleQuantity      = doc.merchantQuantities[0].saleQuantity
+      doc.saleReturnQuantity= doc.merchantQuantities[0].returnSaleQuantity
+      doc.normsQuantity     = doc.merchantQuantities[0].lowNormsQuantity
+      doc.normsCount        = doc.merchantQuantities[0].lowNormsQuantity - doc.merchantQuantities[0].inStockQuantity
 
 
     doc.getPrice = (ownerId, priceType = 'sale') ->
@@ -236,7 +236,7 @@ Schema.add 'products', "Product", class Product
     if priceBookBasic   = Schema.priceBooks.findOne({priceBookType: 0, merchant: Merchant.getId()})
       option.units      = generateUnit(Random.id(), option.unitBasicName)
       option.priceBooks = generatePriceBook(priceBookBasic._id)
-      option.quantities = generateQuantity()
+      option.merchantQuantities = generateQuantity()
       option.quantityTurnover = generateTurnover()
 
       if newProductId = Schema.products.insert option
@@ -254,7 +254,7 @@ Schema.add 'products', "Product", class Product
 
 generateQuantity = (warehouseId)->
   quantity = [{
-    normsQuantity     : 0
+    lowNormsQuantity     : 0
     availableQuantity    : 0
     inOderQuantity       : 0
     inStockQuantity      : 0

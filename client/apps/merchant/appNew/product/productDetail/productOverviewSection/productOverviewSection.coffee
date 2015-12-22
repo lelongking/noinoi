@@ -13,15 +13,13 @@ Wings.defineHyper 'productOverviewSection',
     self.productUnitData = new ReactiveVar({
       isInventory: 'active'
       importQuality: currentData.importInventory ? 0
+      lowNorms        : quantities.lowNormsQuantity
 
-      lowNorms: quantities.lowNormsQuantity
-
-      unitName: productUnit.name
-      barcode : productUnit.barcode
-
-      unitNameEx: productUnitEx.name
-      barcodeEx : productUnitEx.barcode
-      conversion: productUnitEx.conversion
+      unitName        : productUnit.name
+      unitNameEx      : productUnitEx.name
+      conversion      : productUnitEx.conversion
+      barcode         : productUnit.barcode
+      barcodeEx       : productUnitEx.barcode
 
       directSalePrice   : priceBook.basicSale
       debtSalePrice     : priceBook.basicSaleDebt
@@ -31,6 +29,14 @@ Wings.defineHyper 'productOverviewSection',
       debtSalePriceEx   : priceBook.basicSaleDebt * productUnitEx.conversion
       importPriceEx     : priceBook.basicImport * productUnitEx.conversion
 
+      rollBackUnitName          : productUnit.name
+      rollBackUnitNameEx        : productUnitEx.name
+      rollBackConversion        : productUnitEx.conversion
+      rollBackBarcode           : productUnit.barcode
+      rollBackBarcodeEx         : productUnitEx.barcode
+      rollBackDirectSalePrice   : priceBook.basicSale
+      rollBackDebtSalePrice     : priceBook.basicSaleDebt
+      rollBackImportPrice       : priceBook.basicImport
     })
 
   rendered: ->
@@ -40,8 +46,6 @@ Wings.defineHyper 'productOverviewSection',
 
     scope.overviewTemplateInstance = @
     @ui.$productName.autosizeInput({space: 10}) if @ui.$productName
-
-    console.log @ui
 
     self = this
     productUnit = self.productUnitData.get()
@@ -98,10 +102,8 @@ Wings.defineHyper 'productOverviewSection',
       #TODO: xoa khach hang
 
     "click .editProduct": (event, template) ->
-      console.log template.data
-      clickShowProductDetailTab(event, template)
+      Session.set('productManagementIsShowProductDetail', true)
       Session.set('productManagementIsEditMode', true)
-
 
     "click .syncProductEdit": (event, template) ->
       editProduct(template)
@@ -111,15 +113,15 @@ Wings.defineHyper 'productOverviewSection',
 
 
 
-
+#-------------------------------------------------------------------------------------------------
     "click span.hideTab": (event, template)->
       Session.set('productManagementIsShowProductDetail', false)
 
     "click span.showTab": (event, template)->
-      clickShowProductDetailTab(event, template)
+      Session.set('productManagementIsShowProductDetail', true)
 
 
-
+#-------------------------------------------------------------------------------------------------
     "click .avatar": (event, template) ->
       if User.hasManagerRoles()
         template.find('.avatarFile').click()
@@ -127,7 +129,7 @@ Wings.defineHyper 'productOverviewSection',
     "change .avatarFile": (event, template) ->
       updateChangeAvatar(event, template)
 
-
+#-------------------------------------------------------------------------------------------------
     "focus [name='importQuality']": (event, template) ->
       productUnit = Template.instance().productUnitData.get()
       productUnit.isInventory = ''
@@ -153,7 +155,7 @@ Wings.defineHyper 'productOverviewSection',
         template.ui.$importQuality.val ''
         template.ui.$importQuality.blur()
 
-
+#-------------------------------------------------------------------------------------------------
     'input input.productEdit': (event, template) ->
       checkAllowUpdateOverview(template)
 
@@ -171,84 +173,103 @@ Wings.defineHyper 'productOverviewSection',
 
       if event.target.name is "unitName"
         $unitName     = template.ui.$unitName
-        unitNameText = $unitName.val().replace(/^\s*/, "").replace(/\s*$/, "")
+        if event.which is 27
+          $unitName.val productUnit.rollBackUnitName
+        else
+          unitNameText = $unitName.val().replace(/^\s*/, "").replace(/\s*$/, "")
 
-        if productUnit.unitName isnt unitNameText
-          productUnit.unitName = unitNameText
-          productUnitData.set(productUnit)
+          if productUnit.unitName isnt unitNameText
+            productUnit.unitName = unitNameText
+            productUnitData.set(productUnit)
 
       else if event.target.name is "barcodeEx"
         $unitNameEx  = template.ui.$unitNameEx
-        unitNameExText = $unitNameEx.val().replace(/^\s*/, "").replace(/\s*$/, "")
+        if event.which is 27
+          $unitNameEx.val productUnit.rollBackUnitNameEx
+        else
+          unitNameExText = $unitNameEx.val().replace(/^\s*/, "").replace(/\s*$/, "")
 
-        if productUnit.barcodeEx isnt unitNameExText
-          productUnit.barcodeEx = unitNameExText
-          productUnitData.set(productUnit)
+          if productUnit.barcodeEx isnt unitNameExText
+            productUnit.barcodeEx = unitNameExText
+            productUnitData.set(productUnit)
 
       else if event.target.name is "barcode"
         $barcode  = template.ui.$barcode
-        barcodeText = $barcode.val().replace(/^\s*/, "").replace(/\s*$/, "")
+        if event.which is 27
+          $barcode.val productUnit.rollBackBarcode
+        else
+          barcodeText = $barcode.val().replace(/^\s*/, "").replace(/\s*$/, "")
 
-        if productUnit.barcode isnt barcodeText
-          productUnit.barcode = barcodeText
-          productUnitData.set(productUnit)
+          if productUnit.barcode isnt barcodeText
+            productUnit.barcode = barcodeText
+            productUnitData.set(productUnit)
 
       else if event.target.name is "barcodeEx"
         $unitNameEx  = template.ui.$unitNameEx
-        unitNameExText = $unitNameEx.val().replace(/^\s*/, "").replace(/\s*$/, "")
+        if event.which is 27
+          $unitNameEx.val productUnit.rollBackUnitNameEx
+        else
+          unitNameExText = $unitNameEx.val().replace(/^\s*/, "").replace(/\s*$/, "")
 
-        if productUnit.barcodeEx isnt unitNameExText
-          productUnit.barcodeEx = unitNameExText
-          productUnitData.set(productUnit)
+          if productUnit.barcodeEx isnt unitNameExText
+            productUnit.barcodeEx = unitNameExText
+            productUnitData.set(productUnit)
 
       else if event.target.name is "conversion"
         $conversion  = template.ui.$conversion
-        conversionText = Math.abs(Helpers.Number($conversion.inputmask('unmaskedvalue')))
+        if event.which is 27
+          $conversion.val productUnit.rollBackConversion
+        else
+          conversionText = Math.abs(Helpers.Number($conversion.inputmask('unmaskedvalue')))
 
-        if productUnit.conversion isnt conversionText
-          productUnit.conversion = conversionText
-          productUnit.directSalePriceEx = productUnit.directSalePrice * productUnit.conversion
-          productUnit.debtSalePriceEx = productUnit.debtSalePrice * productUnit.conversion
-          productUnit.importPriceEx = productUnit.importPrice * productUnit.conversion
-          productUnitData.set(productUnit)
-
+          if productUnit.conversion isnt conversionText
+            productUnit.conversion = conversionText
+            productUnit.directSalePriceEx = productUnit.directSalePrice * productUnit.conversion
+            productUnit.debtSalePriceEx = productUnit.debtSalePrice * productUnit.conversion
+            productUnit.importPriceEx = productUnit.importPrice * productUnit.conversion
+            productUnitData.set(productUnit)
 
       else if event.target.name is "directSalePrice"
         $directSalePrice  = template.ui.$directSalePrice
-        directSalePriceText = Math.abs(Helpers.Number($directSalePrice.inputmask('unmaskedvalue')))
+        if event.which is 27
+          $directSalePrice.val productUnit.rollBackDirectSalePrice
+        else
+          directSalePriceText = Math.abs(Helpers.Number($directSalePrice.inputmask('unmaskedvalue')))
 
-        if productUnit.directSalePrice isnt directSalePriceText
-          productUnit.directSalePrice = directSalePriceText
-          productUnit.directSalePriceEx = productUnit.directSalePrice * productUnit.conversion
-          productUnitData.set(productUnit)
+          if productUnit.directSalePrice isnt directSalePriceText
+            productUnit.directSalePrice = directSalePriceText
+            productUnit.directSalePriceEx = productUnit.directSalePrice * productUnit.conversion
+            productUnitData.set(productUnit)
 
       else if event.target.name is "debtSalePrice"
         $debtSalePrice  = template.ui.$debtSalePrice
-        debtSalePriceText = Math.abs(Helpers.Number($debtSalePrice.inputmask('unmaskedvalue')))
+        if event.which is 27
+          $debtSalePrice.val productUnit.rollBackDebtSalePrice
+        else
+          debtSalePriceText = Math.abs(Helpers.Number($debtSalePrice.inputmask('unmaskedvalue')))
 
-        if productUnit.debtSalePrice isnt debtSalePriceText
-          productUnit.debtSalePrice = debtSalePriceText
-          productUnit.debtSalePriceEx = productUnit.debtSalePrice * productUnit.conversion
-          productUnitData.set(productUnit)
+          if productUnit.debtSalePrice isnt debtSalePriceText
+            productUnit.debtSalePrice = debtSalePriceText
+            productUnit.debtSalePriceEx = productUnit.debtSalePrice * productUnit.conversion
+            productUnitData.set(productUnit)
 
       else if event.target.name is "importPrice"
         $importPrice  = template.ui.$importPrice
-        importPrice = Math.abs(Helpers.Number($importPrice.inputmask('unmaskedvalue')))
-
-        if productUnit.importPrice isnt "importPrice"
-          productUnit.importPrice = importPrice
-          productUnit.importPriceEx = productUnit.importPrice * productUnit.conversion
-          productUnitData.set(productUnit)
-
+        if event.which is 27
+          $importPrice.val productUnit.rollBackImportPrice
+        else
+          importPrice = Math.abs(Helpers.Number($importPrice.inputmask('unmaskedvalue')))
+          if productUnit.importPrice isnt "importPrice"
+            productUnit.importPrice = importPrice
+            productUnit.importPriceEx = productUnit.importPrice * productUnit.conversion
+            productUnitData.set(productUnit)
 
       else if event.target.name is "importQuality"
         $importQuality  = template.ui.$importQuality
         importQuality   = Math.abs(Helpers.Number($importQuality.inputmask('unmaskedvalue')))
-
         if productUnit.importQuality isnt importQuality
           productUnit.importQuality = importQuality
           productUnitData.set(productUnit)
-
 
       else if event.target.name is "lowNorms"
         $lowNorms  = template.ui.$lowNorms
@@ -258,10 +279,14 @@ Wings.defineHyper 'productOverviewSection',
           productUnit.lowNorms = lowNorms
           productUnitData.set(productUnit)
 
-#----------------------------------------------------------------------------------------------------------------------
-clickShowProductDetailTab = (event, template)->
-  Session.set('productManagementIsShowProductDetail', true)
 
+
+
+
+
+
+
+#----------------------------------------------------------------------------------------------------------------------
 checkAllowUpdateOverview = (template) ->
   productData        = template.data
   productName        = template.ui.$productName.val().replace(/^\s*/, "").replace(/\s*$/, "")
@@ -283,7 +308,7 @@ rollBackProductData = (event, template)->
   else if $(event.currentTarget).attr('name') is 'productCode'
     $(event.currentTarget).val(productData.code)
   else if $(event.currentTarget).attr('name') is 'productDescription'
-    $(event.currentTarget).val(productData.profiles.description)
+    $(event.currentTarget).val(productData.description)
 
 updateChangeAvatar = (event, template)->
   if User.hasManagerRoles()
@@ -303,10 +328,8 @@ editProduct = (template) ->
     listCodes   = summaries.listProductCodes ? []
 
     editOptions = {}
-    editOptions.name    = name if name isnt product.name
-
-    editOptions.code    = code if code isnt product.code
-    editOptions.address = address if address isnt product.address
+    editOptions.name        = name if name isnt product.name
+    editOptions.code        = code if code isnt product.code
     editOptions.description = description if description isnt product.description
 
 
@@ -330,5 +353,6 @@ editProduct = (template) ->
       Session.set("productManagementShowEditCommand", false)
       Session.set('productManagementIsEditMode', false)
       toastr["success"]("Cập nhật sản phẩm thành công.")
+
 
 
