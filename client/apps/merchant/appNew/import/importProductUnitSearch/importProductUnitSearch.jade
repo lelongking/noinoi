@@ -1,0 +1,18 @@
+template(name="importProductUnitSearch")
+  .dual-addon
+    .search-filter.icon-search-8
+      input(name='searchFilter' type="text" placeholder="tìm sản phẩm...")
+
+    .nano: .nano-content(style="margin-bottom: 35px;")
+      .list
+        each unitProductSearches
+          .doc-item.product-selection(class="{{productSelectionActiveClass}}")
+            .avatar-wrapper: .avatar-image(class="missing"
+            style="background-image:url('')") {{aliasLetter name}}
+            .doc-info
+              .title {{name}}
+              unless inventoryInitial
+                .sub-title(data-toggle="tooltip" data-container="body" data-placement="right"
+                title="Quay về ô sản phẩm, nhập kho đầu kỳ.") chưa tồn kho đầu kỳ
+              .time-stamp.icon-angle-right.addImportDetail
+              .price-stamp.icon-ticket {{unitName}}

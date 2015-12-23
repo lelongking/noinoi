@@ -1,33 +1,43 @@
-merchantRouter = Wings.Routers.merchantRouter
-merchantRouter.route '/import',
+merchantImportRouter = Wings.Routers.merchantImportRouter =
+  Wings.Routers.merchantRouter.group
+    prefix: '/import'
+    name: "importRouter"
+    triggersEnter: [ (context, redirect, stop) ->
+    ]
+
+merchantImportRouter.route '/',
   name: 'import'
   action: ->
     Session.set "currentAppInfo",
       name: "nhập kho"
+      navigationPartial:
+        template: ""
+        data: {}
 
     BlazeLayout.render 'merchantLayout',
-      content: 'import'
+      container: 'importLayout'
     return
 
   triggersEnter: [ (context, redirect) ->
-    merchantRouter.go('/merchant') unless User.hasManagerRoles()
     console.log 'running /import trigger'
     return
   ]
 
 
-
-merchantRouter.route '/returnProvider',
-  name: 'returnProvider'
+merchantImportRouter.route '/return',
+  name: 'importReturn'
   action: ->
     Session.set "currentAppInfo",
-      name: "trả hàng NCC"
+      name: "trả hàng nhập"
+      navigationPartial:
+        template: ""
+        data: {}
 
     BlazeLayout.render 'merchantLayout',
-      content: 'providerReturn'
+      container: 'importReturnLayout'
     return
 
   triggersEnter: [ (context, redirect) ->
-    console.log 'running /provider trigger'
+    console.log 'running /import trigger'
     return
   ]

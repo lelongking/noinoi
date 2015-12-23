@@ -279,7 +279,7 @@ metroHome.merchantOptionsApp =
   canvasClass  : ''
 
 metroHome.customerReturnApp =
-  appName      : 'returnCustomer'
+  appName      : 'orderReturn'
   appColor     : 'pink'
   appCount     : 'customerReturnHistories'
   appSize      : ''
@@ -309,7 +309,7 @@ metroHome.orderManagerApp =
   canvasClass  : ''
 
 metroHome.providerReturnApp =
-  appName      : 'returnProvider'
+  appName      : 'importReturn'
   appColor     : 'pumpkin'
   appCount     : 'providerReturnHistories'
   appSize      : ''
@@ -347,7 +347,7 @@ metroHome.programManagerApp =
   appIcon      : ''
 
   description  : ''
-  caption      : 'Lãi S uất'
+  caption      : 'Lãi Suất'
   captionClass : 'bottom right'
 
   isCanvas     : false

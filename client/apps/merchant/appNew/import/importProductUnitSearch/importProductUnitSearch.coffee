@@ -1,7 +1,7 @@
 Enums = Apps.Merchant.Enums
 scope = logics.sales = {}
 
-Wings.defineApp 'orderProductUnitSearch',
+Wings.defineApp 'importProductUnitSearch',
   created: ->
     UnitProductSearch.search('')
     Session.setDefault('globalBarcodeInput', '')

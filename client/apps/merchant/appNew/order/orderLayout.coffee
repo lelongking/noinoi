@@ -47,11 +47,6 @@ Wings.defineApp 'orderLayout',
 
 
 
-
-
-
-
-
 tabOptions =
   source: -> Order.findNotSubmitted()
   currentSource: 'currentOrder'

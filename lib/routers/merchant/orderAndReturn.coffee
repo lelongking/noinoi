@@ -24,6 +24,8 @@ merchantOrderRouter.route '/',
     return
   ]
 
+
+
 merchantOrderRouter.route '/return',
   name: 'orderReturn'
   action: ->
@@ -34,7 +36,7 @@ merchantOrderRouter.route '/return',
         data: {}
 
     BlazeLayout.render 'merchantLayout',
-      container: 'orderLayout'
+      container: 'orderReturnLayout'
     return
 
   triggersEnter: [ (context, redirect) ->
@@ -48,10 +50,7 @@ merchantOrderRouter.route '/return',
 
 
 
-
-
 merchantRouter = Wings.Routers.merchantRouter
-
 merchantRouter.route '/orderManager',
   name: 'orderManager'
   action: ->

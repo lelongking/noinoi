@@ -1,0 +1,26 @@
+template(name="importLayout")
+  #content.modern
+    .dual-content
+      +Template.dynamic(template='importProductUnitSearch' data=currentImport)
+      +Template.dynamic(template='importProductDetail' data=currentImport)
+
+  #footer.modern
+    .editor-row
+      .editor-wrapper.dual-spacer
+      .editor-wrapper(style="width:180px")
+        span.ilabel.optional công ty cung cấp
+        +iSelect(options=providerSelectOptions class="field")
+      .editor-wrapper(style="width: 160px;")
+        span.ilabel.center chiết khấu
+        +iSpinEdit(options=discountOptions)
+      .editor-wrapper(style="width: 160px;")
+        span.ilabel.center thanh toán
+        +iSpinEdit(options=depositOptions)
+
+
+      .editor-wrapper.right
+        button.flat.btn.lime.icon-award.importSubmit(type='submit') HOÀN TẤT
+      .editor-wrapper.right
+        button.flat.btn.blue.print-command(type='submit'): span.icon-print-6
+
+    +tabComponent(options=tabOptions)

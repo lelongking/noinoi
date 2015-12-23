@@ -1,0 +1,22 @@
+template(name="importReturnLayout")
+  #content.modern.sales-app
+    .dual-content
+      +Template.dynamic(template='importReturnProductSearch' data=customerImport)
+      +Template.dynamic(template='importReturnDetail' data=customerImport)
+
+
+  #footer.modern
+    .editor-wrapper.dual-spacer
+    .editor-row
+      .editor-wrapper(style="width: 200px")
+        span.ilabel.optional khách hàng
+        +iSelect(options=customerSelectOptions class="field customerSelect")
+
+      .editor-wrapper(style="width: 200px")
+        span.ilabel.optional phiếu bán
+        +iSelect(options=orderSelectOptions class="field orderSelect")
+
+      .editor-wrapper.pull-right
+        button.lemon.btn.lime.pull-right.returnSubmit(class="{{allowSuccessReturn}}" type='submit' style="margin-right: 5px;") HOÀN TẤT
+
+    +tabComponent(options=tabCustomerReturnOptions)
