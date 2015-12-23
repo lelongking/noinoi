@@ -22,22 +22,3 @@ merchantImportRouter.route '/',
     console.log 'running /import trigger'
     return
   ]
-
-
-merchantImportRouter.route '/return',
-  name: 'importReturn'
-  action: ->
-    Session.set "currentAppInfo",
-      name: "trả hàng nhập"
-      navigationPartial:
-        template: ""
-        data: {}
-
-    BlazeLayout.render 'merchantLayout',
-      container: 'importReturnLayout'
-    return
-
-  triggersEnter: [ (context, redirect) ->
-    console.log 'running /import trigger'
-    return
-  ]
