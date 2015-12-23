@@ -35,7 +35,7 @@ Wings.defineHyper 'customerGroupSearch',
       FlowRouter.go('customer')
 
     "click .create-new-command": (event, template) ->
-      FlowRouter.go('createProductGroup')
+      FlowRouter.go('createCustomerGroup')
 
     "click .list .doc-item": (event, template) ->
       ProductGroup.setSessionProductGroup(@_id)

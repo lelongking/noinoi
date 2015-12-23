@@ -1,0 +1,17 @@
+template(name="orderDeliveryThumbnail")
+  .thumbnails(class="{{styles}}")
+    +avatarImageComponent(avatar=avatarUrl name=countDay)
+
+    .right-caption(style="font-size: 18px; top: 4px;") {{getBuyerName buyer}} - {{orderCode}}
+    .full-desc.price(style="bottom: 45px;font-size: 16px;") {{getSellerName seller}} - {{momentFormat accountingConfirmAt "DD/MM/YYYY"}}
+    .full-desc.status {{showStatus}}
+    if isManager
+      .command-container
+        if isFinish
+          .command-button.cancel-command.icon-reply-3
+          .command-button.finish-command.icon-ok-6
+        else
+          .command-button.animated.bounceIn.fail-command.icon-cancel-7
+          .command-button.animated.bounceIn.success-command.icon-ok-6
+
+

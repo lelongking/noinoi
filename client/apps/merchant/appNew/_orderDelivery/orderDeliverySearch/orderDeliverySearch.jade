@@ -1,0 +1,34 @@
+template(name="orderDeliverySearch")
+  .dual-addon
+    .group-nav
+      .caption.inner.active
+        span.avatar.letter {{getPublishedCount 'customers'}}
+        span.text.uppercase KHÁCH HÀNG
+      .caption.inner.toCustomerGroup
+        span.avatar.letter {{getPublishedCount 'customerGroups'}}
+        span.text.uppercase NHÓM KHÁCH HÀNG
+
+
+    .search-filter.icon-search-8
+      input(name='searchFilter' type="text" placeholder="tìm khách hàng...")
+      .icon-user-add-1.create-new-command(data-toggle="tooltip" data-container="body" data-placement="right" title="Tạo mới")
+
+    .nano: .nano-content(style="margin-bottom: 35px;")
+      each customerGroupLists
+        if hasCustomerList
+          .list
+            .caption-item: b {{name}}
+
+            each customerListSearched
+              .doc-item(class="{{activeClass}}")
+                .avatar-wrapper: .avatar-image(class="{{hasAvatar}}"
+                style="background-image:url('{{avatarUrl}}')") {{aliasLetter this.firstName}}
+
+                .doc-info
+                  .title {{name}}
+                  .sub-title {{code}}
+
+                  //if totalCash
+                  .price-stamp
+                    b {{formatNumber totalCash}}
+                    span(style="font-size: 11px;"): b VND
