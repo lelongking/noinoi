@@ -1,4 +1,4 @@
-template(name="importReturnDetail")
+template(name="orderReturnDetail")
   .dual-detail-wrapper: .dual-detail: .nano: .nano-content
     .section.top.panel.panel-default.printable-area
       .panel-heading
@@ -13,16 +13,16 @@ template(name="importReturnDetail")
         table.lemon-grid
           tr.table-header
             th(style="width:auto") SẢN PHẨM
-            th(style="width:70px") S.L
-            th.date(style="width:90px") ĐƠN VỊ TÍNH
-            th.number(style="width:110px") ĐƠN GIÁ
+            th(style="width:110px") ĐƠN GIÁ
+            th(style="width:70px") S.LƯỢNG
+            th(style="width:80px") ĐƠN VỊ
             th.number(style="width:140px") THÀNH TIỀN
 
           each details
             if isRowEditing
-              +providerReturnRowEdit
+              +orderReturnProductRowEdit
             else
-              +providerReturnRowDisplay
+              +orderReturnProductRowDisplay
 
 
       .panel-footer

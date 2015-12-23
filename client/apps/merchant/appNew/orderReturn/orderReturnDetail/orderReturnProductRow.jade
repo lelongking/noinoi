@@ -1,4 +1,4 @@
-template(name="importReturnProductRowEdit")
+template(name="orderReturnProductRowEdit")
   tr.detail-row.large-name: td(colspan="3")
     span {{getProductName product}}
     //if product.basicUnit
@@ -6,23 +6,24 @@ template(name="importReturnProductRowEdit")
     if discountPercent
       span.super.s7.color-lime GIẢM GIÁ {{round discountPercent}}%
 
-  tr.editors.dual-bimport(class="{{crossReturnAvailableQuantity.errorClass}}")
+  tr.editors.dual-border(class="{{crossReturnAvailableQuantity.errorClass}}")
     td.bill-name.has-commands
       |{{getProductName product}}
       .commands
         .lemon.rounded.tiny.btn.blue.animated.bounceIn.deleteReturnDetail: span.icon-minus-4
+
+    td.price: input.error-field(name="editPrice" min="0")
 
     td.quality: input.error-field(name="editQuantity" min="0")
 
     td: span
       |{{getProductUnitName productUnit}}
       unless showConversion
-        span.super.s7.color-lime {{conversion}} {{getProductBasicName productUnit}}
+        span.super.s7.color-lime {{basicQuantity}} {{getProductBasicName productUnit}}
 
-    td.number.price {{formatNumber price}}
     td.number.note <b>{{formatNumber calculateFinalPrice}}</b>
 
-template(name="importReturnProductRowDisplay")
+template(name="orderReturnProductRowDisplay")
   tr.detail-row.large-name: td(colspan="3")
     span {{getProductName product}}
     //if product.basicUnit
@@ -36,6 +37,8 @@ template(name="importReturnProductRowDisplay")
       .commands
         .lemon.rounded.tiny.btn.blue.deleteReturnDetail: span.icon-minus-4
 
+    td.price.editable-field {{formatNumber price}}
+
     td.quality.editable-field.error-field: span
       |{{formatNumber quality}}
       if crossReturnAvailableQuantity.invalid
@@ -44,7 +47,6 @@ template(name="importReturnProductRowDisplay")
     td: span
       |{{getProductUnitName productUnit}}
       unless showConversion
-        span.super.s7.color-lime {{conversion}} {{getProductBasicName productUnit}}
+        span.super.s7.color-lime {{basicQuantity}} {{getProductBasicName productUnit}}
 
-    td.number.price {{formatNumber price}}
     td.number.final-price <b>{{formatNumber calculateFinalPrice}}</b>

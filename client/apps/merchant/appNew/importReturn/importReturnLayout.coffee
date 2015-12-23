@@ -1,147 +1,132 @@
-scope = logics.customerReturn
+scope = logics.providerReturn = {}
 Enums = Apps.Merchant.Enums
+
 Wings.defineApp 'importReturnLayout',
-  created: ->
-    self = this
-    self.autorun ()->
-      if Session.get('mySession')
-        scope.currentCustomerReturn = Schema.returns.findOne(Session.get('mySession').currentCustomerReturn)
-        productQuantities = {}
-        if scope.currentCustomerReturn
-          for detail in scope.currentCustomerReturn.details
-            productQuantities[detail.product] = 0 unless productQuantities[detail.product]
-            productQuantities[detail.product] += detail.basicQuantity
-
-          for detail in scope.currentCustomerReturn.details
-            detail.returnQuantities = productQuantities[detail.product]
-
-        Session.set 'currentCustomerReturn', scope.currentCustomerReturn
-
-      #readonly 2 Select Khach Hang va Phieu Ban
-      if customerReturn = Session.get('currentCustomerReturn')
-        $(".customerSelect").select2("readonly", false)
-        $(".orderSelect").select2("readonly", if customerReturn.owner then false else true)
-      else
-        $(".customerSelect").select2("readonly", true)
-        $(".orderSelect").select2("readonly", true)
-    CustomerSearch.search('')
-    UnitProductSearch.search('')
-
-  rendered: ->
-    if customerReturn = Session.get('currentCustomerReturn')
-      $(".customerSelect").select2("readonly", false)
-      $(".orderSelect").select2("readonly", if customerReturn.owner then false else true)
-    else
-      $(".customerSelect").select2("readonly", true)
-      $(".orderSelect").select2("readonly", true)
-
-
   helpers:
-    tabCustomerReturnOptions : -> tabCustomerReturnOptions
-    customerSelectOptions    : -> customerSelectOptions
-    orderSelectOptions       : -> orderSelectOptions
-
+    tabProviderReturnOptions : -> scope.tabProviderReturnOptions
+    providerSelectOptions    : -> scope.providerSelectOptions
+    importSelectOptions      : -> scope.importSelectOptions
 
 
     allowSuccessReturn: ->
-      currentReturnDetails = Session.get('currentCustomerReturn')?.details
+      currentReturnDetails = Session.get('currentProviderReturn')?.details
       currentParentDetails = Session.get('currentReturnParent')
 
       if currentReturnDetails?.length > 0 and currentParentDetails?.length > 0
         for returnDetail in currentReturnDetails
+          currentProductQuantity = 0
+
           for parentDetail in currentParentDetails
-            if parentDetail.product is returnDetail.product
-              currentProductQuantity = parentDetail.availableBasicQuantity - returnDetail.returnQuantities
+            if parentDetail.productUnit is returnDetail.productUnit
+              currentProductQuantity += parentDetail.basicQuantityAvailable
 
-          #chua biet lam gi ???
-          if parentDetail.return?.length > 0
-            (currentProductQuantity -= item.basicQuantity) for item in parentDetail.return
-
-          console.log currentProductQuantity, returnDetail.basicQuantity, (currentProductQuantity - returnDetail.basicQuantity) < 0
-#          return 'disabled' if (currentProductQuantity - returnDetail.basicQuantity) < 0
-          return 'disabled' if currentProductQuantity < 0
+          return 'disabled' if (currentProductQuantity - returnDetail.basicQuantity) < 0
 
       else
         return 'disabled'
 
 
 
-  events:
-    "click .returnSubmit": (event, template) ->
-      if currentReturn = Session.get('currentCustomerReturn')
-        customerReturnLists = Return.findNotSubmitOf('customer').fetch()
-        if nextRow = customerReturnLists.getNextBy("_id", currentReturn._id)
-          Return.setReturnSession(nextRow._id, 'customer')
-        else if previousRow = customerReturnLists.getPreviousBy("_id", currentReturn._id)
-          Return.setReturnSession(previousRow._id, 'customer')
-        else
-          Return.setReturnSession(Return.insert(Enums.getValue('OrderTypes', 'customer')), 'customer')
-
-        scope.currentCustomerReturn.submitCustomerReturn()
 
 
+  created: ->
+    self = this
+    self.autorun ()->
+      if Session.get('mySession')
+        scope.currentProviderReturn = Schema.returns.findOne(Session.get('mySession').currentProviderReturn)
+        Session.set 'currentProviderReturn', scope.currentProviderReturn
+
+      #readonly 2 Select Khach Hang va Phieu Ban
+#      if providerReturn = Session.get('currentProviderReturn')
+#        $(".providerSelect").select2("readonly", false)
+#        $(".importSelect").select2("readonly", if providerReturn.owner then false else true)
+#      else
+#        $(".providerSelect").select2("readonly", true)
+#        $(".importSelect").select2("readonly", true)
+#        ProviderSearch.search('')
+#        UnitProductSearch.search('')
+#
+  rendered: ->
+    if providerReturn = Session.get('currentProviderReturn')
+      $(".providerSelect").select2("readonly", false)
+      $(".importSelect").select2("readonly", if providerReturn.owner then false else true)
+    else
+      $(".providerSelect").select2("readonly", true)
+      $(".importSelect").select2("readonly", true)
+#
+#
+#  events:
+#    "click .returnSubmit": (event, template) ->
+#      if currentReturn = Session.get('currentProviderReturn')
+#        providerReturnLists = Return.findNotSubmitOf('provider').fetch()
+#        if nextRow = providerReturnLists.getNextBy("_id", currentReturn._id)
+#          Return.setReturnSession(nextRow._id, 'provider')
+#        else if previousRow = providerReturnLists.getPreviousBy("_id", currentReturn._id)
+#          Return.setReturnSession(previousRow._id, 'provider')
+#        else
+#          Return.setReturnSession(Return.insert(Enums.getValue('OrderTypes', 'provider')), 'provider')
+#
+#        scope.currentProviderReturn.submitProviderReturn()
 
 
-
-
-
-tabCustomerReturnOptions =
-  source: -> Return.findNotSubmitOf('customer')
-  currentSource: 'currentCustomerReturn'
-  caption: 'returnName'
-  key: '_id'
-  createAction  : -> Return.insert(Enums.getValue('OrderTypes', 'customer'))
-  destroyAction : (instance) -> if instance then instance.remove(); Return.findNotSubmitOf('customer').count() else -1
-  navigateAction: (instance) -> Return.setReturnSession(instance._id, 'customer')
-
-formatCustomerSearch = (item) -> item.name if item
-
-
-customerSearch = (query) ->
-  selector = {merchant: Merchant.getId(), saleBillNo: {$gt: 0}}; options = {sort: {nameSearch: 1}}
+providerSearch = (query) ->
+  selector = {merchant: Merchant.getId(), billNo: {$gt: 0}}; options = {sort: {nameSearch: 1}}
   if(query.term)
     regExp = Helpers.BuildRegExp(query.term);
     selector = {$or: [
-      {nameSearch: regExp, merchant: Merchant.getId(), saleBillNo: {$gt: 0}}
+      {nameSearch: regExp, merchant: Merchant.getId(), billNo: {$gt: 0}}
     ]}
-  Schema.customers.find(selector, options).fetch()
+  Schema.providers.find(selector, options).fetch()
 
-customerSelectOptions =
-  query: (query) -> query.callback
-    results: customerSearch(query)
-    text: 'name'
-  initSelection: (element, callback) -> callback Schema.customers.findOne(scope.currentCustomerReturn.owner)
-  formatSelection: (item) -> item.name if item
-  formatResult: (item) -> item.name if item
-  id: '_id'
-  placeholder: 'CHỌN KHÁCH HÀNG'
-  readonly: -> true
-  changeAction: (e) -> scope.currentCustomerReturn.selectOwner(e.added._id)
-  reactiveValueGetter: -> Session.get('currentCustomerReturn')?.owner ? 'skyReset'
-
-
-
-findOrderByCustomer = (customerId) ->
-  orderLists = []
-  if customerId
-    orderLists = Schema.orders.find({
-      merchant    : Merchant.getId()
-      buyer       : customerId
-      orderType   : Enums.getValue('OrderTypes', 'success')
-      orderStatus : Enums.getValue('OrderStatus', 'finish')
+findImportByProvider = (providerId) ->
+  importLists = []
+  if providerId
+    importLists = Schema.imports.find({
+      merchant   : Merchant.getId()
+      provider   : providerId
+      importType : Enums.getValue('ImportTypes', 'success')
     }).fetch()
-  orderLists
+  importLists
 
-orderSelectOptions =
+
+formatProviderSearch = (item) ->
+  if item
+    name = "#{item.name} "; desc = if item.description then "(#{item.description})" else ""
+    name + desc
+
+
+scope.tabProviderReturnOptions =
+  source: -> Return.findNotSubmitOf('provider')
+  currentSource: 'currentProviderReturn'
+  caption: 'returnName'
+  key: '_id'
+  createAction  : -> Return.insert(Enums.getValue('ReturnTypes', 'provider'))
+  destroyAction : (instance) -> if instance then instance.remove(); Return.findNotSubmitOf('provider').count() else -1
+  navigateAction: (instance) -> Return.setReturnSession(instance._id, 'provider')
+
+scope.providerSelectOptions =
   query: (query) -> query.callback
-    results: findOrderByCustomer(Session.get('currentCustomerReturn')?.owner)
-    text: '_id'
-  initSelection: (element, callback) -> callback Schema.orders.findOne(scope.currentCustomerReturn?.parent)
-  formatSelection: (item) -> "#{item.orderCode}" if item
-  formatResult: (item) -> "#{item.orderCode}" if item
+    results: providerSearch(query)
+    text: 'name'
+  initSelection: (element, callback) -> callback Schema.providers.findOne(scope.currentProviderReturn.owner)
+  formatSelection: formatProviderSearch
+  formatResult: formatProviderSearch
   id: '_id'
-  placeholder: 'CHỌN PHIẾU BÁN'
+  placeholder: 'CHỌN NHÀ CUNG CẤP'
+  readonly: -> true
+  changeAction: (e) -> scope.currentProviderReturn.selectOwner(e.added._id)
+  reactiveValueGetter: -> Session.get('currentProviderReturn')?.owner ? 'skyReset'
+
+scope.importSelectOptions =
+  query: (query) -> query.callback
+    results: findImportByProvider(Session.get('currentProviderReturn')?.owner)
+    text: '_id'
+  initSelection: (element, callback) -> callback Schema.imports.findOne(scope.currentProviderReturn?.parent)
+  formatSelection: (item) -> "#{item.importCode}" if item
+  formatResult: (item) -> "#{item.importCode}" if item
+  id: '_id'
+  placeholder: 'CHỌN PHIẾU NHẬP'
   minimumResultsForSearch: -1
   readonly: -> true
-  changeAction: (e) -> scope.currentCustomerReturn.selectParent(e.added._id)
-  reactiveValueGetter: -> Session.get('currentCustomerReturn')?.parent ? 'skyReset'
+  changeAction: (e) -> scope.currentProviderReturn.selectParent(e.added._id)
+  reactiveValueGetter: -> Session.get('currentProviderReturn')?.parent ? 'skyReset'

@@ -1,9 +1,13 @@
-scope = logics.providerReturn
-Wings.defineHyper 'importReturnProductRowEdit',
+scope = logics.customerReturn
+Wings.defineHyper 'orderReturnProductRowEdit',
   rendered: ->
     @ui.$editQuantity.inputmask "numeric",
       {autoGroup: true, groupSeparator:",", radixPoint: ".", integerDigits:11, rightAlign: false}
     @ui.$editQuantity.val Template.currentData().quality
+
+    @ui.$editPrice.inputmask "numeric",
+      {autoGroup: true, groupSeparator:",", radixPoint: ".", integerDigits:11, rightAlign: false}
+    @ui.$editPrice.val Template.currentData().price
 
     @ui.$editQuantity.select()
 
@@ -17,12 +21,18 @@ Wings.defineHyper 'importReturnProductRowEdit',
         quality = Math.abs(quality)
         template.ui.$editQuantity.val(quality)
 
+      price = Number(template.ui.$editPrice.inputmask('unmaskedvalue'))
+      if price < 0
+        price = Math.abs(price)
+        template.ui.$editPrice.val(quality)
+
       if event.which is 13
         discountCash = undefined if discountCash is Template.currentData().price
         quality      = undefined if quality is Template.currentData().quality
+        price        = undefined if price is Template.currentData().price
 
-        if quality isnt undefined or discountCash isnt undefined
-          scope.currentProviderReturn.editReturnDetail(rowId, quality, discountCash)
+        if quality isnt undefined or discountCash isnt undefined or price isnt undefined
+          scope.currentCustomerReturn.editReturnDetail(rowId, quality, discountCash, price)
 
         nextRow = details.getNextBy("_id", rowId)
         Session.set("editingId", if nextRow then nextRow._id else undefined)
@@ -33,18 +43,18 @@ Wings.defineHyper 'importReturnProductRowEdit',
       else if event.which is 38  #upArrow
         Session.set("editingId", previousRow._id) if previousRow = details.getPreviousBy("_id", rowId)
 
-#lemon.defineHyper Template.providerReturnRowDisplay,
+#lemon.defineHyper Template.customerReturnRowDisplay,
 #  helpers:
 #    crossReturnAvailableQuantity: ->
 #      currentDetail = @; currentProductQuantity = 0
 #      currentParent = Session.get('currentReturnParent')
 #      if currentDetail and currentParent
-#        for importDetail in currentParent
-#          if importDetail.productUnit is currentDetail.productUnit
-#            currentProductQuantity += importDetail.basicQuantity
+#        for orderDetail in currentParent
+#          if orderDetail.productUnit is currentDetail.productUnit
+#            currentProductQuantity += orderDetail.basicQuantity
 #
-#            if importDetail.returnDetails?.length > 0
-#              (currentProductQuantity -= currentDetail.basicQuantity) for currentDetail in importDetail.returnDetails
+#            if orderDetail.returnDetails?.length > 0
+#              (currentProductQuantity -= currentDetail.basicQuantity) for currentDetail in orderDetail.returnDetails
 #
 #        crossAvailable = currentProductQuantity - currentDetail.basicQuantity
 #        if crossAvailable < 0
