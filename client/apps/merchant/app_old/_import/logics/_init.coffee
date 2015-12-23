@@ -9,7 +9,7 @@ scope.tabOptions =
   caption: 'importName'
   key: '_id'
   createAction  : -> Import.insert()
-  destroyAction : (instance) ->
+  destroyAction : (instance) -> #if instance then Import.findNotSubmitted().count() if instance.remove() else -1
     if instance
       instance.remove()
       Import.findNotSubmitted().count()

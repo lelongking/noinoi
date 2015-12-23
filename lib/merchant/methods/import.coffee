@@ -62,48 +62,48 @@ Meteor.methods
     providerFound = Schema.providers.findOne(importFound.provider)
     return {valid: false, error: 'provider not found!'} if !providerFound
 
-    transactionInsert =
-      transactionName : 'Phiếu Nhập'
-#      transactionCode :
-#      description     :
-      transactionType  : Enums.getValue('TransactionTypes', 'provider')
-      receivable       : true
-      isRoot           : true
-      owner            : providerFound._id
-      parent           : importFound._id
-      beforeDebtBalance: providerFound.totalCash
-      debtBalanceChange: importFound.finalPrice
-      paidBalanceChange: importFound.depositCash
-      latestDebtBalance: providerFound.totalCash + importFound.finalPrice - importFound.depositCash
+#    transactionInsert =
+#      transactionName : 'Phiếu Nhập'
+##      transactionCode :
+##      description     :
+#      transactionType  : Enums.getValue('TransactionTypes', 'provider')
+#      receivable       : true
+#      isRoot           : true
+#      owner            : providerFound._id
+#      parent           : importFound._id
+#      beforeDebtBalance: providerFound.totalCash
+#      debtBalanceChange: importFound.finalPrice
+#      paidBalanceChange: importFound.depositCash
+#      latestDebtBalance: providerFound.totalCash + importFound.finalPrice - importFound.depositCash
+#
+#    transactionInsert.dueDay = importFound.dueDay if importFound.dueDay
+#
+#    if importFound.depositCash >= importFound.finalPrice # phiếu nhập đã thanh toán hết cho NCC
+#      transactionInsert.owedCash = 0
+#      transactionInsert.status   = Enums.getValue('TransactionStatuses', 'closed')
+#    else
+#      transactionInsert.owedCash = importFound.finalPrice - importFound.depositCash
+#      transactionInsert.status   = Enums.getValue('TransactionStatuses', 'tracking')
+#
+#    if transactionId = Schema.transactions.insert(transactionInsert)
+#      providerUpdate =
+#        allowDelete : false
+#        paidCash    : providerFound.paidCash  + importFound.depositCash
+#        debtCash    : providerFound.debtCash  + importFound.finalPrice - importFound.depositCash
+#        totalCash   : providerFound.totalCash + importFound.finalPrice
+#      Schema.providers.update importFound.provider, $set: providerUpdate
 
-    transactionInsert.dueDay = importFound.dueDay if importFound.dueDay
-
-    if importFound.depositCash >= importFound.finalPrice # phiếu nhập đã thanh toán hết cho NCC
-      transactionInsert.owedCash = 0
-      transactionInsert.status   = Enums.getValue('TransactionStatuses', 'closed')
-    else
-      transactionInsert.owedCash = importFound.finalPrice - importFound.depositCash
-      transactionInsert.status   = Enums.getValue('TransactionStatuses', 'tracking')
-
-    if transactionId = Schema.transactions.insert(transactionInsert)
-      providerUpdate =
-        allowDelete : false
-        paidCash    : providerFound.paidCash  + importFound.depositCash
-        debtCash    : providerFound.debtCash  + importFound.finalPrice - importFound.depositCash
-        totalCash   : providerFound.totalCash + importFound.finalPrice
-      Schema.providers.update importFound.provider, $set: providerUpdate
-
-      importUpdate = $set:
-        importType         : Enums.getValue('ImportTypes', 'confirmedWaiting')
-        accounting         : user._id
-        accountingConfirm  : true
-        accountingConfirmAt: new Date()
-        transaction        : transactionId
-      Schema.imports.update importFound._id, importUpdate
+    importUpdate = $set:
+      importType         : Enums.getValue('ImportTypes', 'confirmedWaiting')
+      accounting         : user._id
+      accountingConfirm  : true
+      accountingConfirmAt: new Date()
+#      transaction        : transactionId
+    Schema.imports.update importFound._id, importUpdate
 
 
   importWarehouseConfirmed: (importId)->
-    user = Meteor.users.findOne(Meteor.userId())
+    user = Meteor.users.findOne({_id: Meteor.userId()})
     return {valid: false, error: 'user not found!'} if !user
 
     importQuery =
@@ -114,43 +114,50 @@ Meteor.methods
     importFound = Schema.imports.findOne importQuery
     return {valid: false, error: 'import not found!'} if !importFound
 
-    providerFound = Schema.providers.findOne(importFound.provider)
+    providerFound = Schema.providers.findOne({_id: importFound.provider})
     return {valid: false, error: 'provider not found!'} if !providerFound
 
-    merchantFound = Schema.merchants.findOne(user.profile?.merchant)
+    merchantFound = Schema.merchants.findOne({_id: user.profile?.merchant})
     return {valid: false, error: 'merchant not found!'} if !merchantFound
 
-    importUpdate = $set:
-      importType : Enums.getValue('ImportTypes', 'success')
-      successDate: new Date()
-      importCode : "#{Helpers.orderCodeCreate(providerFound.importBillNo)}/#{Helpers.orderCodeCreate(merchantFound.importBillNo)}"
+    for productId in _.uniq(_.pluck(importFound.details, 'product'))
+      productFound = Schema.products.findOne({_id: productId})
+      return {valid: false, error: 'product not found!'} if !productFound
 
+    #update quantity of product
     for detail, detailIndex in importFound.details
-      if product = Schema.products.findOne(detail.product)
-        productDetailIndex = 0; updateQuery = {$inc:{}}
-        for unit, index in product.units
-          if unit._id is detail.productUnit
-            updateQuery.$inc["units.#{index}.quality.availableQuantity"] = detail.basicQuantity
-            updateQuery.$inc["units.#{index}.quality.inStockQuantity"]   = detail.basicQuantity
-            updateQuery.$inc["units.#{index}.quality.importQuantity"]    = detail.basicQuantity
-            break
+      updateQuery =
+        $inc:
+          'merchantQuantities.0.availableQuantity' : detail.basicQuantity
+          'merchantQuantities.0.inStockQuantity'   : detail.basicQuantity
+          'merchantQuantities.0.importQuantity'    : detail.basicQuantity
+      if detail.expire
+        updateQuery.$set = lastExpire: detail.expire
+      Schema.products.update detail.product, updateQuery
 
-        updateQuery.$inc["merchantQuantities.#{productDetailIndex}.availableQuantity"] = detail.basicQuantity
-        updateQuery.$inc["merchantQuantities.#{productDetailIndex}.inStockQuantity"]   = detail.basicQuantity
-        updateQuery.$inc["merchantQuantities.#{productDetailIndex}.importQuantity"]    = detail.basicQuantity
-        updateQuery.$set = {lastExpire: detail.expire} if detail.expire
-        Schema.products.update detail.product, updateQuery
 
-      orderFounds = Schema.orders.find({
-        merchant                : Merchant.getId()
-        'detail.$.productUnit'  : detail.productUnit
-        'detail.$.importIsValid': {$ne: true}
-      }).fetch()
-
-      if orderFounds.length > 0
-      else
-        importUpdate.$set["details.#{detailIndex}.note"] = 'Nhập kho mới'
-
+    #update import
+    providerCode  = Helpers.orderCodeCreate(providerFound.importBillNo)
+    merchantCode = Helpers.orderCodeCreate(merchantFound.importBillNo)
+    importUpdate =
+      $set:
+        importType : Enums.getValue('ImportTypes', 'success')
+        successDate: new Date()
+        importCode : providerCode + '/' + merchantCode
     Schema.imports.update importFound._id, importUpdate
-    Schema.merchants.update(merchantFound._id, $inc:{importBill: 1, importBillNo: 1})
-    Schema.providers.update importFound.provider, {$set:{allowDelete: false}, $inc: {billNo: 1, importBillNo: 1}}
+
+    #update importBillNo of merchant
+    merchantUpdate =
+      $inc:
+        importBill  : 1
+        importBillNo: 1
+    Schema.merchants.update merchantFound._id, merchantUpdate
+
+    #update billNo of provider
+    providerUpdate =
+      $inc:
+        billNo      : 1
+        importBillNo: 1
+    if providerFound.allowDelete
+      providerUpdate.$set = allowDelete: false
+    Schema.providers.update importFound.provider, providerUpdate

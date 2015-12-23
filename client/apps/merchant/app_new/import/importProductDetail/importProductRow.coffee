@@ -7,8 +7,11 @@ Wings.defineHyper 'importProductRowEdit',
     @ui.$editExpireDate.inputmask("dd/mm/yyyy")
     @ui.$editImportQuantity.inputmask "numeric",
       {autoGroup: true, groupSeparator:",", radixPoint: ".", integerDigits:11, rightAlign: false}
+    @ui.$editProductPrice.inputmask "numeric",
+      {autoGroup: true, groupSeparator:",", radixPoint: ".", integerDigits:11, rightAlign: false}
 
     @ui.$editImportQuantity.val Template.currentData().quality
+    @ui.$editProductPrice.val Template.currentData().price
     @ui.$editExpireDate.val if Template.currentData().expire then moment(Template.currentData().expire).format('DDMMYYYY')
 
     if Template.currentData().expire
@@ -26,17 +29,23 @@ Wings.defineHyper 'importProductRowEdit',
         quality = Math.abs(quality)
         template.ui.$editImportQuantity.val(quality)
 
+      price = Number(template.ui.$editProductPrice.inputmask('unmaskedvalue'))
+      if price < 0
+        price = Math.abs(price)
+        template.ui.$editProductPrice.val(price)
+
       $expireDate = template.ui.$editExpireDate.inputmask('unmaskedvalue')
       isValidDate = $expireDate.length is 8 and moment($expireDate, 'DD/MM/YYYY').isValid()
       if isValidDate then expireDate = moment($expireDate, 'DD/MM/YYYY')._d else expireDate = undefined
 
 
       if event.which is 13
-        discountCash = undefined if discountCash is Template.currentData().price
         quality      = undefined if quality is Template.currentData().quality
+        price        = undefined if price is Template.currentData().price
+        discountCash = undefined if discountCash is Template.currentData().discountCash
 
-        if quality isnt undefined or discountCash isnt undefined or expireDate isnt undefined
-          scope.currentImport.editImportDetail(rowId, quality, expireDate, discountCash)
+        if quality isnt undefined or discountCash isnt undefined or price isnt undefined or expireDate isnt undefined
+          Template.parentData().editImportDetail(rowId, quality, expireDate, discountCash, price)
 
         if nextRow = details.getNextBy("_id", rowId)
           Session.set("editingId", nextRow._id)

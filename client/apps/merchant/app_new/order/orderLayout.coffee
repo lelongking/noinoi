@@ -22,7 +22,7 @@ Wings.defineApp 'orderLayout',
 
 
   helpers:
-    customerOrder: ->  Template.instance().currentOrder.get()
+    customerOrder: -> Template.instance().currentOrder.get()
 
     #header
     customerSelectOptions: -> customerSelectOptions

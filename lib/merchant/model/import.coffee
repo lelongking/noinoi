@@ -185,6 +185,7 @@ Schema.add 'imports', "Import", class Import
         productUnit = _.findWhere(product.units, {_id: detail.productUnit})
         return console.log('Khong tim thay ProductUnit') if !productUnit
 
+      console.log 'ok'
       if Schema.imports.update(self._id, $set:{importType : Enums.getValue('ImportTypes', 'staffConfirmed')})
         Meteor.call 'importAccountingConfirmed', self._id, (error, result) ->
           if result then console.log result
@@ -201,7 +202,7 @@ Schema.add 'imports', "Import", class Import
     newImport.importName  = Helpers.shortName2(importName) if importName
     newImport.importType  = -1 if importName and !providerId
     importId = Schema.imports.insert(newImport, callback)
-    if importId and providerId
+    if importId
       Meteor.users.update(Meteor.userId(), {$set: {'sessions.currentImport': importId}})
     return importId
 

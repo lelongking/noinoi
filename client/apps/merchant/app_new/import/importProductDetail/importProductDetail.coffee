@@ -23,12 +23,12 @@ Wings.defineHyper 'importProductDetail',
     Meteor.clearInterval(@timeInterval)
 
   events:
+    "click .deleteImportDetail": (event, template) -> scope.currentImport.removeImportDetail(@_id)
     "click .detail-row": (event, template) -> Session.set("editingId", @_id); event.stopPropagation()
     "keyup": (event, template) -> Session.set("editingId") if event.which is 27
-    "click .deleteImportDetail": (event, template) -> scope.currentImport.removeImportDetail(@_id)
     "keyup [name='importDescription']": (event, template)->
       Helpers.deferredAction ->
-        if currentImport = Session.get('currentImport')
+        if currentImport = Template.currentData()
           description = template.ui.$importDescription.val()
-          scope.currentImport.changeField('description', description)
+          currentImport.changeField('description', description)
       , "currentImportUpdateDescription", 1000

@@ -4,11 +4,11 @@ template(name="importProductRowEdit")
       |{{getProductName product}}
       .commands
         .lemon.rounded.tiny.btn.blue.animated.bounceIn.deleteImportDetail: span.icon-minus-4
-    td: input(name="editExpireDate" min="0")
-    td.number: input(name="editImportQuantity" min="0")
-    td(align="center") {{getProductUnitName productUnit}}
-    td.editable-field.number {{formatNumber price}}
-    td.note.number <b>{{formatNumber detailFinalPrice}}</b>
+    td.date.editable-field: input(name="editExpireDate" min="0")
+    td.number.editable-field: input(name="editImportQuantity" min="0")
+    td.date {{getProductUnitName productUnit}}
+    td.number.editable-field: input(name="editProductPrice" min="0")
+    td.number.note: b {{formatNumber detailFinalPrice}}
 
 template(name="importProductRowDisplay")
   tr.detail-row.click-enable
@@ -16,12 +16,12 @@ template(name="importProductRowDisplay")
       |{{getProductName product}}
       .commands
         .lemon.rounded.tiny.btn.blue.deleteImportDetail: span.icon-minus-4
-    td(align="center")
+    td.date
       if expire
         |{{momentFormat expire 'DD/MM/YYYY'}}
       else
         |Không
-    td.number.editable-field {{formatNumber quality}}
-    td(align="center") {{getProductUnitName productUnit}}
-    td.editable-field.number {{formatNumber price}}
+    td.number {{formatNumber quality}}
+    td.date {{getProductUnitName productUnit}}
+    td.number {{formatNumber price}}
     td.number <b>{{formatNumber detailFinalPrice}}</b>

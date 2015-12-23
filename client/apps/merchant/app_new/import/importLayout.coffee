@@ -3,9 +3,11 @@ scope = logics.import
 Wings.defineApp 'importLayout',
   created: ->
     self = this
+    self.currentImport = new ReactiveVar({})
     self.autorun ()->
       if Session.get('mySession')
         scope.currentImport = Schema.imports.findOne Session.get('mySession').currentImport
+        self.currentImport.set(scope.currentImport)
         Session.set 'currentImport', scope.currentImport
 
       newProviderId = Session.get('currentImport')?.provider
@@ -20,8 +22,8 @@ Wings.defineApp 'importLayout',
   rendered: -> scope.templateInstance = @
 
   helpers:
+    currentImport         : -> Template.instance().currentImport.get()
     tabOptions            : -> scope.tabOptions
-    currentImport         : -> Session.get('currentImport')
     providerSelectOptions : -> scope.providerSelectOptions
     depositOptions        : -> scope.depositOptions
     discountOptions       : -> scope.discountOptions
@@ -29,15 +31,6 @@ Wings.defineApp 'importLayout',
 
   events:
     "click .print-command": -> window.print()
-
-    "keyup input[name='searchFilter']": (event, template) ->
-      searchFilter  = template.ui.$searchFilter.val()
-      productSearch = Helpers.Searchify searchFilter
-      if event.which is 17 then console.log 'up' else UnitProductSearch.search productSearch
-
-    'click .addImportDetail': (event, template)->
-      scope.currentImport.addImportDetail(@_id) if @inventoryInitial
-      event.stopPropagation()
 
     'click .importSubmit': (event, template)->
       if currentImport = Session.get('currentImport')
