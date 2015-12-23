@@ -63,13 +63,15 @@ tabOptions =
   currentSource: 'currentImport'
   caption: 'importName'
   key: '_id'
-  createAction  : -> Import.insert()
-  destroyAction : (instance) -> #if instance then Import.findNotSubmitted().count() if instance.remove() else -1
-    if instance
-      instance.remove()
-      Import.findNotSubmitted().count()
-    else -1
-  navigateAction: (instance) -> Import.setSession(instance._id)
+  createAction  : ->
+    importId = Import.insert()
+    Import.setSession(importId)
+  destroyAction : (instance) ->
+    return -1 if !instance
+    instance.remove()
+    Import.findNotSubmitted().count()
+  navigateAction: (instance) ->
+    Import.setSession(instance._id)
 
 depositOptions =
   reactiveSetter: (val) -> scope.currentImport.changeField('depositCash', val)

@@ -357,10 +357,10 @@ Schema.add 'returns', "Return", class Return
       if ownerIsCustomer or ownerIsProvider
         insertOption.owner = ownerId
         if ownerIsCustomer
-          insertOption.returnType = Enums.getValue('OrderTypes', 'customer')
+          insertOption.returnType = Enums.getValue('ReturnTypes', 'customer')
           insertOption.returnName = Helpers.shortName2(ownerIsCustomer.name)
         else
-          insertOption.returnType = Enums.getValue('OrderTypes', 'provider')
+          insertOption.returnType = Enums.getValue('ReturnTypes', 'provider')
           insertOption.returnName = Helpers.shortName2(ownerIsProvider.name)
 
     Schema.returns.insert insertOption

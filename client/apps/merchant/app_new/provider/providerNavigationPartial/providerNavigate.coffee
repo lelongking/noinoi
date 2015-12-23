@@ -1,11 +1,14 @@
 Wings.defineApp 'providerNavigationPartial',
   events:
-    "click .customerToSales": (event, template) ->
-      if customer = Session.get("customerGroupCurrentCustomer")
-        Meteor.call 'customerToSales', customer, Session.get('myProfile'), (error, result) ->
-          if error then console.log error else FlowRouter.go('/sales')
+    "click .providerToImport": (event, template) ->
+      if providerId = Session.get('mySession').currentProvider
+        Meteor.call 'providerToImport', providerId, (error, result) ->
+          if error then console.log error else FlowRouter.go('import')
 
-    "click .customerToReturns": (event, template) ->
-      if customer = Session.get("customerGroupCurrentCustomer")
-        Meteor.call 'customerToReturns', customer, Session.get('myProfile'), (error, result) ->
-          if error then console.log error else FlowRouter.go('/customerReturn')
+    "click .providerToReturn": (event, template) ->
+      if providerId = Session.get('mySession').currentProvider
+        Meteor.call 'providerToReturn', providerId, (error, result) ->
+          if error then console.log error else FlowRouter.go('importReturn')
+
+    "click .providerPaid": (event, template) ->
+    "click .providerOldDebt": (event, template) ->

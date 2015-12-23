@@ -11,7 +11,7 @@ merchantProviderRouter.route '/',
     Session.set "currentAppInfo",
       name: "nhà cung cấp"
       navigationPartial:
-        template: "providerManagementNavigationPartial"
+        template: "providerNavigationPartial"
         data: {}
 
     BlazeLayout.render 'merchantLayout',

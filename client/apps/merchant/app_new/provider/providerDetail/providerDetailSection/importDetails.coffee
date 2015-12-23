@@ -10,6 +10,7 @@ Wings.defineWidget 'providerImportDetails',
       else if @model is 'returns'
         'Trả hàng phiếu: ' + @returnCode + if @description then " (#{@description})" else ''
 
+    productUnitPrice: -> @price * @conversion
   events:
     "click .deleteTransaction": (event, template) ->
       Meteor.call 'deleteTransaction', @_id

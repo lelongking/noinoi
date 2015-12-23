@@ -90,9 +90,15 @@ tabCustomerReturnOptions =
   currentSource: 'currentCustomerReturn'
   caption: 'returnName'
   key: '_id'
-  createAction  : -> Return.insert(Enums.getValue('OrderTypes', 'customer'))
-  destroyAction : (instance) -> if instance then instance.remove(); Return.findNotSubmitOf('customer').count() else -1
-  navigateAction: (instance) -> Return.setReturnSession(instance._id, 'customer')
+  createAction  : ->
+    returnId = Return.insert(Enums.getValue('OrderTypes', 'customer'))
+    Return.setReturnSession(returnId, 'customer')
+  destroyAction : (instance) ->
+    return -1 if !instance
+    instance.remove()
+    Return.findNotSubmitOf('customer').count()
+  navigateAction: (instance) ->
+    Return.setReturnSession(instance._id, 'customer')
 
 formatCustomerSearch = (item) -> item.name if item
 

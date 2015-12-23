@@ -15,7 +15,7 @@ template(name="providerImportDetails")
       td.first-column {{getProductName product}}
       td.number {{quality}}
       td(align="center") {{getProductUnitName productUnit}}
-      td.number {{formatNumber price}}
+      td.number {{formatNumber productUnitPrice}}
       td.last-column.number {{formatNumber totalPrice}}
 
   if discountCash

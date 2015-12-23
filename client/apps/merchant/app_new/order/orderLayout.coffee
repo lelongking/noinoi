@@ -52,9 +52,15 @@ tabOptions =
   currentSource: 'currentOrder'
   caption: 'orderName'
   key: '_id'
-  createAction  : -> Order.insert()
-  destroyAction : (instance) -> if instance then Order.findNotSubmitted().count() if instance.remove() else -1
-  navigateAction: (instance) -> Order.setSession(instance._id)
+  createAction  : ->
+    orderId = Order.insert()
+    Order.setSession(orderId)
+  destroyAction : (instance) ->
+    return -1 if !instance
+    instance.remove()
+    Order.findNotSubmitted().count()
+  navigateAction: (instance) ->
+    Order.setSession(instance._id)
 
 
 debtDateOptions =

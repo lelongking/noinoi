@@ -1,5 +1,31 @@
 Enums = Apps.Merchant.Enums
 Meteor.methods
+  providerToReturn: (providerId)->
+    try
+      user = Meteor.users.findOne(Meteor.userId())
+      throw {valid: false, error: 'user not found!'} if !user
+
+      provider = Schema.providers.findOne({_id: providerId, merchant: user.profile.merchant})
+      throw {valid: false, error: 'provider not found!'} if !provider
+
+      returnFound = Schema.returns.findOne({
+        creator     : user._id
+        owner       : provider._id
+        returnType  : Enums.getValue('ReturnTypes', 'provider')
+        returnStatus: Enums.getValue('ReturnStatus', 'initialize')
+        merchant    : user.profile.merchant
+      }, {sort: {'version.createdAt': -1}})
+
+      if returnFound
+        Return.setReturnSession(returnFound._id, 'provider')
+      else
+        returnType = Enums.getValue('ReturnTypes', 'provider')
+        if returnId = Return.insert(returnType, provider._id)
+          Return.setReturnSession(returnId, 'provider')
+
+    catch error
+      throw new Meteor.Error('providerToReturn', error)
+
   providerToImport: (providerId)->
     try
       user = Meteor.users.findOne(Meteor.userId())

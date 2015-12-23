@@ -3,9 +3,9 @@ Enums = Apps.Merchant.Enums
 
 Wings.defineApp 'importReturnLayout',
   helpers:
-    tabProviderReturnOptions : -> scope.tabProviderReturnOptions
-    providerSelectOptions    : -> scope.providerSelectOptions
-    importSelectOptions      : -> scope.importSelectOptions
+    tabProviderReturnOptions : -> tabProviderReturnOptions
+    providerSelectOptions    : -> providerSelectOptions
+    importSelectOptions      : -> importSelectOptions
 
 
     allowSuccessReturn: ->
@@ -95,16 +95,22 @@ formatProviderSearch = (item) ->
     name + desc
 
 
-scope.tabProviderReturnOptions =
+tabProviderReturnOptions =
   source: -> Return.findNotSubmitOf('provider')
   currentSource: 'currentProviderReturn'
   caption: 'returnName'
   key: '_id'
-  createAction  : -> Return.insert(Enums.getValue('ReturnTypes', 'provider'))
-  destroyAction : (instance) -> if instance then instance.remove(); Return.findNotSubmitOf('provider').count() else -1
-  navigateAction: (instance) -> Return.setReturnSession(instance._id, 'provider')
+  createAction  : ->
+    returnId = Return.insert(Enums.getValue('ReturnTypes', 'provider'))
+    Return.setReturnSession(returnId, 'provider')
+  destroyAction : (instance) ->
+    return -1 if !instance
+    instance.remove()
+    Return.findNotSubmitOf('provider').count()
+  navigateAction: (instance) ->
+    Return.setReturnSession(instance._id, 'provider')
 
-scope.providerSelectOptions =
+providerSelectOptions =
   query: (query) -> query.callback
     results: providerSearch(query)
     text: 'name'
@@ -117,7 +123,7 @@ scope.providerSelectOptions =
   changeAction: (e) -> scope.currentProviderReturn.selectOwner(e.added._id)
   reactiveValueGetter: -> Session.get('currentProviderReturn')?.owner ? 'skyReset'
 
-scope.importSelectOptions =
+importSelectOptions =
   query: (query) -> query.callback
     results: findImportByProvider(Session.get('currentProviderReturn')?.owner)
     text: '_id'
