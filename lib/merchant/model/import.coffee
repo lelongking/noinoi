@@ -32,7 +32,7 @@ simpleSchema.imports = new SimpleSchema
   'details.$.product'       : type: String
   'details.$.productUnit'   : type: String
 
-  'details.$.quality'               : {type: Number, min: 0}
+  'details.$.quality'       : {type: Number, min: 0}
   'details.$.price'         : {type: Number, min: 0}
   'details.$.discountCash'  : simpleSchema.DefaultNumber()
 
@@ -63,10 +63,10 @@ Schema.add 'imports', "Import", class Import
             optionUpdate.$set.importName = Helpers.shortName2(provider.name)
 
             for instance, index in @details
-              product = Schema.products.findOne(instance.product)
-              productPrice  = product.getPrice(instance.productUnit, provider._id, 'import')
-              totalPrice   += instance.quality * productPrice
-              discountCash += instance.quality * instance.discountCash
+              product       = Schema.products.findOne(instance.product)
+              productPrice  = product.getPrice(provider._id, 'import')
+              totalPrice   += instance.quality * instance.conversion * productPrice
+              discountCash += instance.quality * instance.conversion * instance.discountCash
               optionUpdate.$set["details.#{index}.price"] = productPrice
 
             optionUpdate.$set.totalPrice   = totalPrice

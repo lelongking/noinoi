@@ -40,8 +40,10 @@ Wings.defineHyper 'productSearch',
           if productGroup = _.findWhere(productGroups, {_id: product.productOfGroup ? product.group})
             productGroup.productListSearched.push(product)
       )
-      console.log productGroups
       productGroups
+
+
+    inStockQuantity : -> @merchantQuantities?[0].inStockQuantity ? 0
 
   events:
     "click .create-new-command": (event, template) ->
