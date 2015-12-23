@@ -8,20 +8,20 @@ Wings.defineHyper 'customerGroupCreate',
 #    codeDefault: ->
 
   events:
-    "click .cancelProductGroup": (event, template) ->
+    "click .cancelCustomerGroup": (event, template) ->
       FlowRouter.go('customerGroup')
 
-    "click .addProductGroup": (event, template) ->
-      addNewProductGroup(event, template)
+    "click .addCustomerGroup": (event, template) ->
+      addNewCustomerGroup(event, template)
 
     "blur [name='customerGroupName']": (event, template) ->
-      checkProductGroupName(event, template)
+      checkCustomerGroupName(event, template)
 
     "blur [name='customerGroupDescription']": (event, template) ->
-      checkProductGroupDescription(event, template)
+      checkCustomerGroupDescription(event, template)
 
 
-checkProductGroupName = (event, template, customerGroup) ->
+checkCustomerGroupName = (event, template, customerGroup) ->
   $customerGroupName = template.ui.$customerGroupName
   customerGroupName = $customerGroupName.val().replace(/^\s*/, "").replace(/\s*$/, "")
   if customerGroupName.length > 0
@@ -33,19 +33,19 @@ checkProductGroupName = (event, template, customerGroup) ->
     $customerGroupName.notify('tên không được để trống', {position: "right"})
     return false
 
-checkProductGroupDescription = (event, template, customerGroup) ->
+checkCustomerGroupDescription = (event, template, customerGroup) ->
   $customerGroupDescription = template.ui.$customerGroupDescription
   customerGroupDescription  = $customerGroupDescription.val().replace(/^\s*/, "").replace(/\s*$/, "")
   if customerGroupDescription.length > 0
     customerGroup.description = customerGroupDescription if customerGroup
   return true
 
-addNewProductGroup = (event, template, customerGroup = {}) ->
-  if checkProductGroupName(event, template, customerGroup)
-    if checkProductGroupDescription(event, template, customerGroup)
+addNewCustomerGroup = (event, template, customerGroup = {}) ->
+  if checkCustomerGroupName(event, template, customerGroup)
+    if checkCustomerGroupDescription(event, template, customerGroup)
       console.log customerGroup
-      newProductGroupId = Schema.customerGroups.insert customerGroup
-      if Match.test(newProductGroupId, String)
-        ProductGroup.setSessionProductGroup(newProductGroupId)
+      newCustomerGroupId = Schema.customerGroups.insert customerGroup
+      if Match.test(newCustomerGroupId, String)
+        CustomerGroup.setSessionCustomerGroup(newCustomerGroupId)
         FlowRouter.go('customerGroup')
         toastr["success"]("Tạo nhóm khách hàng thành công.")

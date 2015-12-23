@@ -32,8 +32,8 @@ Schema.add 'productGroups', "ProductGroup", class ProductGroup
       if user = Meteor.users.findOne(Meteor.userId())
         productList = []; productSelected = user.sessions.productSelected[@_id]
         for productId in productSelected
-          if productFound = Schema.products.findOne({_id: productId, group: @_id})
-            Schema.products.update(productFound._id, $set: {group: productGroupId})
+          if productFound = Schema.products.findOne({_id: productId, productOfGroup: @_id})
+            Schema.products.update(productFound._id, $set: {productOfGroup: productGroupId})
             productList.push(productFound._id)
 
 

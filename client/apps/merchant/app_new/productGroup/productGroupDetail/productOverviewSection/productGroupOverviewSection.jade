@@ -27,24 +27,24 @@ template(name="productGroupOverviewSection")
 
 
       .commands
-        .lemon.btn.rounded.red.icon-minus-4.deleteCustomerGroup(class="{{showDeleteCustomerGroup}}"
+        .lemon.btn.rounded.red.icon-minus-4.deleteProductGroup(class="{{showDeleteProductGroup}}"
         data-toggle="tooltip" data-container="body" data-placement="bottom" title="xóa")
 
-        .lemon.btn.rounded.lime.icon-ok-6.syncEditCustomerGroup(class="{{showSyncCustomerGroup}}"
+        .lemon.btn.rounded.lime.icon-ok-6.syncEditProductGroup(class="{{showSyncProductGroup}}"
         data-toggle="tooltip" data-container="body" data-placement="bottom" title="xác nhận")
 
-        .lemon.btn.rounded.peter-river.icon-reply-3.cancelEditCustomerGroup(class="{{isEditMode true}}"
+        .lemon.btn.rounded.peter-river.icon-reply-3.cancelEditProductGroup(class="{{isEditMode true}}"
         data-toggle="tooltip" data-container="body" data-placement="bottom" title="quay lại")
 
-        .lemon.btn.rounded.silver.icon-wrench-outline.unLockEditCustomer(class="{{isEditMode false}}"
+        .lemon.btn.rounded.silver.icon-wrench-outline.unLockEditProduct(class="{{isEditMode false}}"
         data-toggle="tooltip" data-container="body" data-placement="left" title="chỉnh sửa")
 
     //.panel-tab
     //  .panel-heading(style="padding-top: 6px; padding-bottom: 6px;")
     //    span.icon-down-open-3.showTab(style="cursor:pointer;") Chuyển nhóm
-    //    +iSelect(options=productGroupSelects class="field changeCustomer hidden")
+    //    +iSelect(options=productGroupSelects class="field changeProduct hidden")
 
 
     .panel-footer.has-details
       .editor-wrapper(style="width: 200px; padding-left: 5px;")
-        +iSelect(options=productGroupSelected class="field changeCustomer newComponent")
+        +iSelect(options=productGroupSelected class="field changeProduct newComponent")

@@ -4,21 +4,21 @@ scope = logics.customerManagement
 Wings.defineHyper 'customerGroupDetail',
   created: ->
     self = this
-    self.currentProductGroup = new ReactiveVar()
+    self.currentCustomerGroup = new ReactiveVar()
     self.autorun ()->
-      if currentProductGroupId = Session.get('mySession')?.currentProductGroup
-        customerGroup = Schema.customerGroups.findOne({_id: currentProductGroupId})
+      if currentCustomerGroupId = Session.get('mySession')?.currentCustomerGroup
+        customerGroup = Schema.customerGroups.findOne({_id: currentCustomerGroupId})
         customerGroup = Schema.customerGroups.findOne({isBase: true, merchant: Merchant.getId()}) unless customerGroup
 
         if customerGroup
           customerGroup.customerCount = if customerGroup.customerLists then customerGroup.customerLists.length else 0
-          self.currentProductGroup.set(customerGroup)
+          self.currentCustomerGroup.set(customerGroup)
           Session.set "customerSelectLists", Session.get('mySession').customerSelected?[customerGroup._id] ? []
 
   rendered: ->
 
   helpers:
-    currentProductGroup: -> Template.instance().currentProductGroup.get()
+    currentCustomerGroup: -> Template.instance().currentCustomerGroup.get()
 
   events:
     "keyup input[name='searchFilter']": (event, template) ->

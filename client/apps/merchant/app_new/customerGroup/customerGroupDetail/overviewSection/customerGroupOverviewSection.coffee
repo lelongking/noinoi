@@ -1,61 +1,61 @@
 scope = logics.customerGroup
-currentProductGroup = {}
+currentCustomerGroup = {}
 Wings.defineApp 'customerGroupOverviewSection',
   created: ->
 #    self = this
-#    self.newProductData = new ReactiveVar({})
+#    self.newCustomerData = new ReactiveVar({})
 #    self.autorun ()->
   rendered: ->
-    Session.set('customerGroupManagementIsShowProductDetail', false)
+    Session.set('customerGroupManagementIsShowCustomerDetail', false)
     Session.set("customerGroupManagementShowEditCommand", false)
     Session.set('customerGroupManagementIsEditMode', false)
 
 #    scope.overviewTemplateInstance = @
     @ui.$customerGroupName.autosizeInput({space: 10}) if @ui.$customerGroupName
-#    changeProductReadonly = if Session.get("customerSelectLists") then Session.get("customerSelectLists").length is 0 else true
-#    $(".changeProduct").select2("readonly", changeProductReadonly)
+#    changeCustomerReadonly = if Session.get("customerSelectLists") then Session.get("customerSelectLists").length is 0 else true
+#    $(".changeCustomer").select2("readonly", changeCustomerReadonly)
   destroyed: ->
 
 
   helpers:
     isShowTab: (text)->
-      if Session.equals("customerGroupManagementIsShowProductDetail", text) then '' else 'hidden'
+      if Session.equals("customerGroupManagementIsShowCustomerDetail", text) then '' else 'hidden'
 
     isEditMode: (text)->
       if Session.equals("customerGroupManagementIsEditMode", text) then '' else 'hidden'
 
-    showSyncProductGroup: ->
+    showSyncCustomerGroup: ->
       editCommand = Session.get("customerGroupManagementShowEditCommand")
       editMode = Session.get("customerGroupManagementIsEditMode")
       if editCommand and editMode then '' else 'hidden'
 
-    showDeleteProductGroup: ->
+    showDeleteCustomerGroup: ->
       editMode = Session.get("customerGroupManagementIsEditMode")
       if editMode and @allowDelete then '' else 'hidden'
 
     customerGroupSelected: ->
-      currentProductGroup = Template.currentData()
+      currentCustomerGroup = Template.currentData()
       customerGroupSelects
 
   events:
-    "click .deleteProductGroup": (event, template) ->
+    "click .deleteCustomerGroup": (event, template) ->
       console.log 'is delete'
 
-    "click .unLockEditProduct": (event, template) ->
-      clickShowProductGroupDetailTab(event, template)
+    "click .unLockEditCustomer": (event, template) ->
+      clickShowCustomerGroupDetailTab(event, template)
 
-    "click .syncEditProductGroup": (event, template) ->
-      editProductGroup(template)
+    "click .syncEditCustomerGroup": (event, template) ->
+      editCustomerGroup(template)
 
-    "click .cancelEditProductGroup": (event, template) ->
+    "click .cancelEditCustomerGroup": (event, template) ->
       Session.set('customerGroupManagementIsEditMode', false)
 
 
 
     "click span.hideTab": (event, template)->
-      Session.set('customerGroupManagementIsShowProductDetail', false)
+      Session.set('customerGroupManagementIsShowCustomerDetail', false)
     "click span.showTab": (event, template)->
-      clickShowProductGroupDetailTab(event, template)
+      clickShowCustomerGroupDetailTab(event, template)
 
 
 #
@@ -64,28 +64,28 @@ Wings.defineApp 'customerGroupOverviewSection',
 #        template.find('.avatarFile').click()
 #
 #    "change .avatarFile": (event, template) ->
-#      updateProductGroupChangeAvatar(event, template)
+#      updateCustomerGroupChangeAvatar(event, template)
 
 
 
     'input input.customerGroupEdit': (event, template) ->
-      checkAllowUpdateProductGroupOverview(template)
+      checkAllowUpdateCustomerGroupOverview(template)
 
     "keyup input.customerGroupEdit": (event, template) ->
       if event.which is 13 and template.data
-        editProductGroup(template)
+        editCustomerGroup(template)
       else if event.which is 27 and template.data
-        rollBackProductGroupData(event, template)
-      checkAllowUpdateProductGroupOverview(template)
+        rollBackCustomerGroupData(event, template)
+      checkAllowUpdateCustomerGroupOverview(template)
 
 
 
 #----------------------------------------------------------------------------------------------------------------------
-clickShowProductGroupDetailTab = (event, template)->
-  Session.set('customerGroupManagementIsShowProductDetail', true)
+clickShowCustomerGroupDetailTab = (event, template)->
+  Session.set('customerGroupManagementIsShowCustomerDetail', true)
   Session.set('customerGroupManagementIsEditMode', true)
 
-checkAllowUpdateProductGroupOverview = (template) ->
+checkAllowUpdateCustomerGroupOverview = (template) ->
   customerGroupData        = template.data
   customerGroupName        = template.ui.$customerGroupName.val().replace(/^\s*/, "").replace(/\s*$/, "")
   customerGroupDescription = template.ui.$customerGroupDescription.val().replace(/^\s*/, "").replace(/\s*$/, "")
@@ -95,7 +95,7 @@ checkAllowUpdateProductGroupOverview = (template) ->
       customerGroupDescription isnt (customerGroupData.description ? '')
 
 
-rollBackProductGroupData = (event, template)->
+rollBackCustomerGroupData = (event, template)->
   customerGroupData = template.data
   if $(event.currentTarget).attr('name') is 'customerGroupName'
     $(event.currentTarget).val(customerGroupData.name)
@@ -103,7 +103,7 @@ rollBackProductGroupData = (event, template)->
   else if $(event.currentTarget).attr('name') is 'customerGroupDescription'
     $(event.currentTarget).val(customerGroupData.description)
 
-updateProductGroupChangeAvatar = (event, template)->
+updateCustomerGroupChangeAvatar = (event, template)->
   if User.hasManagerRoles()
     files = event.target.files; customerGroup = Template.currentData()
     if files.length > 0 and customerGroup?._id
@@ -111,7 +111,7 @@ updateProductGroupChangeAvatar = (event, template)->
         Schema.customerGroups.update(customerGroup._id, {$set: {avatar: fileObj._id}})
         AvatarImages.findOne(customerGroup.avatar)?.remove()
 
-editProductGroup = (template) ->
+editCustomerGroup = (template) ->
   customerGroup  = template.data
   if customerGroup and Session.get("customerGroupManagementShowEditCommand")
     name        = template.ui.$customerGroupName.val().replace(/^\s*/, "").replace(/\s*$/, "")
@@ -131,7 +131,7 @@ editProductGroup = (template) ->
 customerGroupSelects =
   query: (query) -> query.callback
     results: Schema.customerGroups.find(
-      {$or: [{name: Helpers.BuildRegExp(query.term), _id: {$not: currentProductGroup._id }}]}
+      {$or: [{name: Helpers.BuildRegExp(query.term), _id: {$not: currentCustomerGroup._id }}]}
     ,
       {sort: {nameSearch: 1, name: 1}}
     ).fetch()
@@ -144,6 +144,6 @@ customerGroupSelects =
   changeAction: (e) ->
     if User.hasManagerRoles()
       Session.set("customerGroupSelectGroup", 'selectChange')
-      currentProductGroup.changeProductTo(e.added._id)
+      currentCustomerGroup.changeCustomerTo(e.added._id)
       Session.set("customerGroupSelectGroup", 'skyReset')
   reactiveValueGetter: -> 'skyReset' if Session.get("customerGroupSelectGroup")

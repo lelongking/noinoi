@@ -9,9 +9,9 @@ Wings.defineHyper 'customerGroupSearch',
 
   helpers:
     activeClass: ->
-      if @_id is Session.get('mySession')?.currentProductGroup then 'active' else ''
+      if @_id is Session.get('mySession')?.currentCustomerGroup then 'active' else ''
 
-    listProductGroups: ->
+    listCustomerGroups: ->
       selector = {}; options  = {sort: {isBase: 1, nameSearch: 1}}
       searchText = Template.instance().searchFilter.get()
 
@@ -31,14 +31,14 @@ Wings.defineHyper 'customerGroupSearch',
 
 
   events:
-    "click .caption.inner.toProduct": (event, template) ->
+    "click .caption.inner.toCustomer": (event, template) ->
       FlowRouter.go('customer')
 
     "click .create-new-command": (event, template) ->
       FlowRouter.go('createCustomerGroup')
 
     "click .list .doc-item": (event, template) ->
-      ProductGroup.setSessionProductGroup(@_id)
+      CustomerGroup.setSessionCustomerGroup(@_id)
 
     "keyup input[name='searchFilter']": (event, template) ->
       customerGroupSearchByInput(event, template)

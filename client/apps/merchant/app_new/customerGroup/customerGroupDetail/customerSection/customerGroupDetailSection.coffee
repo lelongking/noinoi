@@ -3,7 +3,7 @@ Enums = Apps.Merchant.Enums
 
 Wings.defineHyper 'customerGroupDetailSection',
   helpers:
-    isSearch: -> Session.get("customerGroupDetailSectionSearchProduct")
+    isSearch: -> Session.get("customerGroupDetailSectionSearchCustomer")
     selected: -> if _.contains(Session.get("customerSelectLists"), @_id) then 'selected' else ''
     totalCashByStaff: ->
       totalCash = 0
@@ -32,7 +32,7 @@ Wings.defineHyper 'customerGroupDetailSection',
       )
 #      scope.customerList = customerList
 
-      customerSearchText = Session.get('customerGroupDetailSectionProductSearchText')
+      customerSearchText = Session.get('customerGroupDetailSectionCustomerSearchText')
       if customerSearchText?.length > 1
         _.filter customerList, (customer) ->
           unsignedTerm = Helpers.RemoveVnSigns customerSearchText
@@ -43,31 +43,31 @@ Wings.defineHyper 'customerGroupDetailSection',
 
 
   events:
-    "click .searchProduct": (event, template) ->
-      isSearch = Session.get("customerGroupDetailSectionSearchProduct")
-      Session.set("customerGroupDetailSectionSearchProduct", !isSearch)
-      Session.set("customerGroupDetailSectionProductSearchText",'')
+    "click .searchCustomer": (event, template) ->
+      isSearch = Session.get("customerGroupDetailSectionSearchCustomer")
+      Session.set("customerGroupDetailSectionSearchCustomer", !isSearch)
+      Session.set("customerGroupDetailSectionCustomerSearchText",'')
 
-    "keyup input[name='searchProductFilter']": (event, template) ->
+    "keyup input[name='searchCustomerFilter']": (event, template) ->
       Helpers.deferredAction ->
-        searchFilter  = $("input[name='searchProductFilter']").val()
-        Session.set("customerGroupDetailSectionProductSearchText", searchFilter.replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,"").replace(/\s+/g," "))
-      , "customerGroupDetailSectionProductSearchText"
+        searchFilter  = $("input[name='searchCustomerFilter']").val()
+        Session.set("customerGroupDetailSectionCustomerSearchText", searchFilter.replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,"").replace(/\s+/g," "))
+      , "customerGroupDetailSectionCustomerSearchText"
       , 100
 
 
 
     "click .detail-row:not(.selected) td.command": (event, template) ->
-      template.data.selectedProduct(@_id)
+      template.data.selectedCustomer(@_id)
       event.stopPropagation()
 
     "click .detail-row.selected td.command": (event, template) ->
-      template.data.unSelectedProduct(@_id)
+      template.data.unSelectedCustomer(@_id)
       event.stopPropagation()
 
 
     "click .detail-row": (event, template) ->
       FlowRouter.go('customer')
       Session.set 'currentOrder', @
-      Product.setSession(@_id)
+      Customer.setSession(@_id)
 

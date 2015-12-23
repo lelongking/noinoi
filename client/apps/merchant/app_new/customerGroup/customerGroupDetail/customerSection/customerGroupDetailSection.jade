@@ -8,10 +8,10 @@ template(name="customerGroupDetailSection")
 
       table.lemon-grid: tr
         th(style="width:30px")
-          i.icon-search-8.searchProduct(style="color: #ABD4E3; font-size: 16px; cursor:pointer;")
+          i.icon-search-8.searchCustomer(style="color: #ABD4E3; font-size: 16px; cursor:pointer;")
         th(style="width:auto")
-          if getSession 'customerGroupDetailSectionSearchProduct'
-            input(name='searchProductFilter' type="text" placeholder="tìm khách hàng...")
+          if getSession 'customerGroupDetailSectionSearchCustomer'
+            input(name='searchCustomerFilter' type="text" placeholder="tìm khách hàng...")
           else
             |TÊN KHÁCH HÀNG
         th(style="width:110px; text-align:center") GD GẦN NHẤT
