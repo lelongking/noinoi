@@ -212,6 +212,7 @@ Schema.add 'returns', "Return", class Return
           #tim orderDetail
           if orderDetail.product is product
             availableReturnQuantity = quantities - takenReturnQuantity
+
             if orderDetail.basicQuantityAvailable < availableReturnQuantity
               returnQuantity       = orderDetail.basicQuantityAvailable
               takenReturnQuantity += orderDetail.basicQuantityAvailable
@@ -236,6 +237,7 @@ Schema.add 'returns', "Return", class Return
               #cap nhat importDetail cua orderDetail
               returnImportQuantities = returnQuantity - orderDetail.basicImportQuantityDebit
               takenImportQuantity = 0
+
               for detail, indexDetail in orderDetail.imports
                 break if takenImportQuantity is returnImportQuantities
 

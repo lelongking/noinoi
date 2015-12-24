@@ -1,8 +1,8 @@
 template(name="orderReturnLayout")
   #content.modern.sales-app
     .dual-content
-      +Template.dynamic(template='orderReturnProductSearch' data=customerOrderReturn)
-      +Template.dynamic(template='orderReturnDetail' data=customerOrderReturn)
+      +Template.dynamic(template='orderReturnProductSearch' data=orderReturnData)
+      +Template.dynamic(template='orderReturnDetail' data=orderReturnData)
 
 
   #footer.modern

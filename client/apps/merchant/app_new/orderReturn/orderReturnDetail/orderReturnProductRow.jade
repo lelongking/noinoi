@@ -6,22 +6,29 @@ template(name="orderReturnProductRowEdit")
     if discountPercent
       span.super.s7.color-lime GIẢM GIÁ {{round discountPercent}}%
 
-  tr.editors.dual-border(class="{{crossReturnAvailableQuantity.errorClass}}")
+  tr.editors.dual-border(class="{{errorClass}}")
     td.bill-name.has-commands
       |{{getProductName product}}
       .commands
         .lemon.rounded.tiny.btn.blue.animated.bounceIn.deleteReturnDetail: span.icon-minus-4
 
-    td.price: input.error-field(name="editPrice" min="0")
-
-    td.quality: input.error-field(name="editQuantity" min="0")
+    td.quality
+      input.error-field(name="editQuantity" min="0")
 
     td: span
       |{{getProductUnitName productUnit}}
       unless showConversion
-        span.super.s7.color-lime {{basicQuantity}} {{getProductBasicName productUnit}}
+        span.super.s7.color-lime {{conversion}} {{getProductBasicName productUnit}}
 
-    td.number.note <b>{{formatNumber calculateFinalPrice}}</b>
+    td.number: span
+      input.error-field(name="editPrice" min="0")
+      span.super.s7(style="width: 75px;text-align: left;") x{{basicQuantity}} {{getProductBasicName productUnit}}
+
+    td.number.note <b>{{formatNumber finalPrice}}</b>
+
+
+
+
 
 template(name="orderReturnProductRowDisplay")
   tr.detail-row.large-name: td(colspan="3")
@@ -31,22 +38,25 @@ template(name="orderReturnProductRowDisplay")
     if discountPercent
       span.super.s7.color-lime GIẢM GIÁ {{round discountPercent}}%
 
-  tr.detail-row.click-enable(class="{{crossReturnAvailableQuantity.errorClass}}")
+  tr.detail-row.click-enable(class="{{errorClass}}")
     td.bill-name.has-commands
       |{{getProductName product}}
       .commands
         .lemon.rounded.tiny.btn.blue.deleteReturnDetail: span.icon-minus-4
 
-    td.price.editable-field {{formatNumber price}}
-
     td.quality.editable-field.error-field: span
       |{{formatNumber quality}}
-      if crossReturnAvailableQuantity.invalid
-        span.super.s7.color-lime {{crossReturnAvailableQuantity.crossAvailable}}
+      if invalid
+        span.super.s7.color-lime {{crossAvailable}}
 
     td: span
       |{{getProductUnitName productUnit}}
       unless showConversion
-        span.super.s7.color-lime {{basicQuantity}} {{getProductBasicName productUnit}}
+        span.super.s7.color-lime {{conversion}} {{getProductBasicName productUnit}}
 
-    td.number.final-price <b>{{formatNumber calculateFinalPrice}}</b>
+    td.number: span
+      |{{formatNumber price}}
+      span.super.s7(style="width: 75px;text-align: left;") x{{basicQuantity}} {{getProductBasicName productUnit}}
+
+    td.number
+      b {{formatNumber finalPrice}}

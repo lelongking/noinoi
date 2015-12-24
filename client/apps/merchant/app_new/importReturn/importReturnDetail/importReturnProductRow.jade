@@ -5,7 +5,8 @@ template(name="importReturnProductRowEdit")
       .commands
         .lemon.rounded.tiny.btn.blue.animated.bounceIn.deleteReturnDetail: span.icon-minus-4
 
-    td.quality: input.error-field(name="editQuantity" min="0")
+    td.quality
+      input.error-field(name="editQuantity" min="0")
 
     td: span
       |{{getProductUnitName productUnit}}
@@ -15,7 +16,15 @@ template(name="importReturnProductRowEdit")
     td.number: span
       input.error-field(name="editPrice" min="0")
       span.super.s7(style="width: 75px;text-align: left;") x{{basicQuantity}} {{getProductBasicName productUnit}}
-    td.number.note <b>{{formatNumber finalPrice}}</b>
+
+
+    td.number.note
+      b {{formatNumber finalPrice}}
+
+
+
+
+
 
 template(name="importReturnProductRowDisplay")
   tr.detail-row.click-enable(class="{{errorClass}}")
@@ -37,4 +46,6 @@ template(name="importReturnProductRowDisplay")
     td.number: span
       |{{formatNumber price}}
       span.super.s7(style="width: 75px;text-align: left;") x{{basicQuantity}} {{getProductBasicName productUnit}}
-    td.number.final-price <b>{{formatNumber finalPrice}}</b>
+
+    td.number
+      b {{formatNumber finalPrice}}

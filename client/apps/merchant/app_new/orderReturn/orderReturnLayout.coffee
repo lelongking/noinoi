@@ -3,6 +3,8 @@ Enums = Apps.Merchant.Enums
 Wings.defineApp 'orderReturnLayout',
   created: ->
     self = this
+    self.orderReturn = new ReactiveVar({})
+    self.returnParent = new ReactiveVar({})
     self.autorun ()->
       if Session.get('mySession')
         scope.currentCustomerReturn = Schema.returns.findOne(Session.get('mySession').currentCustomerReturn)
@@ -15,7 +17,13 @@ Wings.defineApp 'orderReturnLayout',
           for detail in scope.currentCustomerReturn.details
             detail.returnQuantities = productQuantities[detail.product]
 
+        self.orderReturn.set(scope.currentCustomerReturn)
         Session.set 'currentCustomerReturn', scope.currentCustomerReturn
+
+        parent = parent = Schema.orders.findOne(scope.currentCustomerReturn.parent)
+        Session.set 'currentReturnParent', parent?.details
+        self.returnParent.set(parent)
+
 
       #readonly 2 Select Khach Hang va Phieu Ban
       if customerReturn = Session.get('currentCustomerReturn')
@@ -37,6 +45,10 @@ Wings.defineApp 'orderReturnLayout',
 
 
   helpers:
+    orderReturnData: ->
+      orderReturn: Template.instance().orderReturn.get()
+      returnParent: Template.instance().returnParent.get()
+
     tabCustomerReturnOptions : -> tabCustomerReturnOptions
     customerSelectOptions    : -> customerSelectOptions
     orderSelectOptions       : -> orderSelectOptions
@@ -49,6 +61,8 @@ Wings.defineApp 'orderReturnLayout',
 
       if currentReturnDetails?.length > 0 and currentParentDetails?.length > 0
         for returnDetail in currentReturnDetails
+
+
           for parentDetail in currentParentDetails
             if parentDetail.product is returnDetail.product
               currentProductQuantity = parentDetail.availableBasicQuantity - returnDetail.returnQuantities
