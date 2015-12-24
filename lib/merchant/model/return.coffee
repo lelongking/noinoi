@@ -317,15 +317,15 @@ Schema.add 'returns', "Return", class Return
         return console.log('ReturnDetail Khong Chinh Xac.') unless findProductUnit
         return console.log('So luong tra qua lon') if (currentProductQuantity - returnDetail.basicQuantity) < 0
 
-      if transactionId = createTransactionByProvider(currentReturn)
-        Schema.products.update(product._id, product.updateOption) for product in productUpdateList
-        Schema.imports.update @parent, importUpdateOption
-        Schema.returns.update @_id, $set:{
-          returnStatus: Enums.getValue('ReturnStatus', 'success')
-          transaction : transactionId
-          staffConfirm: Meteor.userId()
-          successDate : new Date()
-        }
+#      if transactionId = createTransactionByProvider(currentReturn)
+      Schema.products.update(product._id, product.updateOption) for product in productUpdateList
+      Schema.imports.update @parent, importUpdateOption
+      Schema.returns.update @_id, $set:{
+        returnStatus: Enums.getValue('ReturnStatus', 'success')
+#        transaction : transactionId
+        staffConfirm: Meteor.userId()
+        successDate : new Date()
+      }
 
 
   @insert: (returnType = Enums.getValue('ReturnTypes', 'customer'), ownerId = undefined, parentId = undefined)->
@@ -385,7 +385,7 @@ Schema.add 'returns', "Return", class Return
 recalculationReturn = (returnId) ->
   if returnFound = Schema.returns.findOne(returnId)
     totalPrice = 0; discountCash = returnFound.discountCash
-    (totalPrice += detail.quality * detail.price) for detail in returnFound.details
+    (totalPrice += detail.basicQuantity * detail.price) for detail in returnFound.details
     discountCash = totalPrice if returnFound.discountCash > totalPrice
     Schema.returns.update returnFound._id, $set:{
       totalPrice  : totalPrice
@@ -395,28 +395,11 @@ recalculationReturn = (returnId) ->
 
 updateProductQuery = (returnDetail, returnType)->
   detailIndex = 0; productUpdate = {$inc:{}}
-  product = Schema.products.findOne({'units._id': returnDetail.productUnit})
-
   if returnType is Enums.getValue('ReturnTypes', 'provider')
-    for unit, index in product.units
-      if unit._id is returnDetail.productUnit
-        productUpdate.$inc["units.#{index}.quality.inStockQuantity"]      = -returnDetail.basicQuantity
-        productUpdate.$inc["units.#{index}.quality.availableQuantity"]    = -returnDetail.basicQuantity
-        productUpdate.$inc["units.#{index}.quality.returnImportQuantity"] = returnDetail.basicQuantity
-        break
-
     productUpdate.$inc["merchantQuantities.#{detailIndex}.inStockQuantity"]      = -returnDetail.basicQuantity
     productUpdate.$inc["merchantQuantities.#{detailIndex}.availableQuantity"]    = -returnDetail.basicQuantity
     productUpdate.$inc["merchantQuantities.#{detailIndex}.returnImportQuantity"] = returnDetail.basicQuantity
-
   else if returnType is Enums.getValue('ReturnTypes', 'customer')
-    for unit, index in product.units
-      if unit._id is returnDetail.productUnit
-        productUpdate.$inc["units.#{index}.quality.inStockQuantity"]    = returnDetail.basicQuantity
-        productUpdate.$inc["units.#{index}.quality.returnSaleQuantity"] = returnDetail.basicQuantity
-        productUpdate.$inc["units.#{index}.quality.availableQuantity"]  = returnDetail.basicQuantity
-        break
-
     productUpdate.$inc["merchantQuantities.#{detailIndex}.inStockQuantity"]    = returnDetail.basicQuantity
     productUpdate.$inc["merchantQuantities.#{detailIndex}.returnSaleQuantity"] = returnDetail.basicQuantity
     productUpdate.$inc["merchantQuantities.#{detailIndex}.availableQuantity"]  = returnDetail.basicQuantity

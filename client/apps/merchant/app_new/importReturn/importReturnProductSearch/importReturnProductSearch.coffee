@@ -31,6 +31,6 @@ Wings.defineApp 'importReturnProductSearch',
 #      if event.which is 17 then console.log 'up' else UnitProductSearch.search productSearch
 
     'click .addReturnDetail': (event, template)->
-      console.log @
-      scope.currentProviderReturn.addReturnDetail(@_id, @productUnit, 1, @price)
+      currentImportReturn = Template.currentData().importReturn
+      currentImportReturn.addReturnDetail(@_id, @productUnit, 1, @price)
       event.stopPropagation()

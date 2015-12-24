@@ -1,19 +1,19 @@
 template(name="importReturnLayout")
   #content.modern
     .dual-content
-      +Template.dynamic(template='importReturnProductSearch' data=customerImportReturn)
-      +Template.dynamic(template='importReturnDetail' data=customerImportReturn)
+      +Template.dynamic(template='importReturnProductSearch' data=importReturnData)
+      +Template.dynamic(template='importReturnDetail' data=importReturnData)
 
 
   #footer.modern
     .editor-wrapper.dual-spacer
     .editor-row
       .editor-wrapper(style="width: 200px")
-        span.ilabel.optional khách hàng
+        span.ilabel.optional nhà cung cấp
         +iSelect(options=providerSelectOptions class="field providerSelect")
 
       .editor-wrapper(style="width: 200px")
-        span.ilabel.optional phiếu bán
+        span.ilabel.optional phiếu nhập kho
         +iSelect(options=importSelectOptions class="field importSelect")
 
       .editor-wrapper.pull-right

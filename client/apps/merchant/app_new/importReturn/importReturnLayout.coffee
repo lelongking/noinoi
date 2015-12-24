@@ -2,7 +2,46 @@ scope = logics.providerReturn = {}
 Enums = Apps.Merchant.Enums
 
 Wings.defineApp 'importReturnLayout',
+  created: ->
+    self = this
+    self.importReturn = new ReactiveVar({})
+    self.returnParent = new ReactiveVar({})
+    self.autorun ()->
+      if Session.get('mySession')
+        scope.currentProviderReturn = Schema.returns.findOne(Session.get('mySession').currentProviderReturn)
+        Session.set 'currentProviderReturn', scope.currentProviderReturn
+        self.importReturn.set(scope.currentProviderReturn)
+
+
+        parent = Schema.imports.findOne(scope.currentProviderReturn?.parent)
+        Session.set 'currentReturnParent', parent?.details
+        self.returnParent.set(parent)
+
+
+      #readonly 2 Select Khach Hang va Phieu Ban
+      if providerReturn = Session.get('currentProviderReturn')
+        $(".providerSelect").select2("readonly", false)
+        $(".importSelect").select2("readonly", if providerReturn.owner then false else true)
+      else
+        $(".providerSelect").select2("readonly", true)
+        $(".importSelect").select2("readonly", true)
+#        ProviderSearch.search('')
+#        UnitProductSearch.search('')
+#
+  rendered: ->
+    if providerReturn = Session.get('currentProviderReturn')
+      $(".providerSelect").select2("readonly", false)
+      $(".importSelect").select2("readonly", if providerReturn.owner then false else true)
+    else
+      $(".providerSelect").select2("readonly", true)
+      $(".importSelect").select2("readonly", true)
+
+
   helpers:
+    importReturnData: ->
+      importReturn: Template.instance().importReturn.get()
+      returnParent: Template.instance().returnParent.get()
+
     tabProviderReturnOptions : -> tabProviderReturnOptions
     providerSelectOptions    : -> providerSelectOptions
     importSelectOptions      : -> importSelectOptions
@@ -25,48 +64,22 @@ Wings.defineApp 'importReturnLayout',
       else
         return 'disabled'
 
+  events:
+    "click .returnSubmit": (event, template) ->
+      if currentReturn = Session.get('currentProviderReturn')
+        providerReturnLists = Return.findNotSubmitOf('provider').fetch()
+        nextRow = providerReturnLists.getNextBy("_id", currentReturn._id)
+        previousRow = providerReturnLists.getPreviousBy("_id", currentReturn._id)
 
+        if nextRow = providerReturnLists.getNextBy("_id", currentReturn._id)
+          Return.setReturnSession(nextRow._id, 'provider')
+        else if previousRow = providerReturnLists.getPreviousBy("_id", currentReturn._id)
+          Return.setReturnSession(previousRow._id, 'provider')
+        else
+          returnId = Return.insert(Enums.getValue('ReturnTypes', 'provider'))
+          Return.setReturnSession(returnId, 'provider')
 
-
-
-  created: ->
-    self = this
-    self.autorun ()->
-      if Session.get('mySession')
-        scope.currentProviderReturn = Schema.returns.findOne(Session.get('mySession').currentProviderReturn)
-        Session.set 'currentProviderReturn', scope.currentProviderReturn
-
-      #readonly 2 Select Khach Hang va Phieu Ban
-#      if providerReturn = Session.get('currentProviderReturn')
-#        $(".providerSelect").select2("readonly", false)
-#        $(".importSelect").select2("readonly", if providerReturn.owner then false else true)
-#      else
-#        $(".providerSelect").select2("readonly", true)
-#        $(".importSelect").select2("readonly", true)
-#        ProviderSearch.search('')
-#        UnitProductSearch.search('')
-#
-  rendered: ->
-    if providerReturn = Session.get('currentProviderReturn')
-      $(".providerSelect").select2("readonly", false)
-      $(".importSelect").select2("readonly", if providerReturn.owner then false else true)
-    else
-      $(".providerSelect").select2("readonly", true)
-      $(".importSelect").select2("readonly", true)
-#
-#
-#  events:
-#    "click .returnSubmit": (event, template) ->
-#      if currentReturn = Session.get('currentProviderReturn')
-#        providerReturnLists = Return.findNotSubmitOf('provider').fetch()
-#        if nextRow = providerReturnLists.getNextBy("_id", currentReturn._id)
-#          Return.setReturnSession(nextRow._id, 'provider')
-#        else if previousRow = providerReturnLists.getPreviousBy("_id", currentReturn._id)
-#          Return.setReturnSession(previousRow._id, 'provider')
-#        else
-#          Return.setReturnSession(Return.insert(Enums.getValue('OrderTypes', 'provider')), 'provider')
-#
-#        scope.currentProviderReturn.submitProviderReturn()
+        scope.currentProviderReturn.submitProviderReturn()
 
 
 providerSearch = (query) ->
@@ -115,8 +128,8 @@ providerSelectOptions =
     results: providerSearch(query)
     text: 'name'
   initSelection: (element, callback) -> callback Schema.providers.findOne(scope.currentProviderReturn.owner)
-  formatSelection: formatProviderSearch
-  formatResult: formatProviderSearch
+  formatSelection: (item) -> "#{item.name}" if item
+  formatResult: (item) -> "#{item.name}" if item
   id: '_id'
   placeholder: 'CHỌN NHÀ CUNG CẤP'
   readonly: -> true
@@ -131,7 +144,7 @@ importSelectOptions =
   formatSelection: (item) -> "#{item.importCode}" if item
   formatResult: (item) -> "#{item.importCode}" if item
   id: '_id'
-  placeholder: 'CHỌN PHIẾU NHẬP'
+  placeholder: 'CHỌN PHIẾU'
   minimumResultsForSearch: -1
   readonly: -> true
   changeAction: (e) -> scope.currentProviderReturn.selectParent(e.added._id)
