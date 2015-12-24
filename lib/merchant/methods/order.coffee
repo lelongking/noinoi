@@ -135,35 +135,42 @@ updateSubtractQuantityInImport = (orderFound, orderDetail, detailIndex, combined
           takenQuantity = importDetail.basicQuantityAvailable
 #          orderDetailNote = "hết hàng, phiếu #{currentImport.importCode}"
 
-        updateImport = $inc:{}
-        updateImport.$inc["details.#{index}.basicOrderQuantity"]     = takenQuantity
-        updateImport.$inc["details.#{index}.basicQuantityAvailable"] = -takenQuantity
-        Schema.imports.update currentImport._id, updateImport
+        if takenQuantity > 0
+          console.log 'basicQuantity', orderDetail.basicQuantity
+          console.log 'transactionQuantity', transactionQuantity
+          console.log 'basicQuantityAvailable', importDetail.basicQuantityAvailable
+          console.log 'importDetail', orderDetail
 
-        updateOrderQuery = {$push:{}, $inc:{}}
-        importDetailOfOrder =
-          _id         : currentImport._id
-          detailId    : importDetail._id
-          product     : importDetail.product
-          productUnit : importDetail.productUnit
-          provider    : currentImport.provider
-          price       : importDetail.price
-          conversion  : importDetail.conversion
-          quality     : takenQuantity/importDetail.conversion
-#          note        : orderDetailNote
-          createdAt   : new Date()
-          basicQuantity          : takenQuantity
-          basicQuantityReturn    : 0
-          basicQuantityAvailable : takenQuantity
+          updateOrderQuery = {$push:{}, $inc:{}}
+          importDetailOfOrder =
+            _id         : currentImport._id
+            detailId    : importDetail._id
+            product     : importDetail.product
+            productUnit : orderDetail.productUnit
+            provider    : currentImport.provider
+            price       : orderDetail.price
+            conversion  : orderDetail.conversion
+            quality     : takenQuantity/orderDetail.conversion
+  #          note        : orderDetailNote
+            createdAt   : new Date()
+            basicQuantity          : takenQuantity
+            basicQuantityReturn    : 0
+            basicQuantityAvailable : takenQuantity
 
-        updateOrderQuery.$push["details.#{detailIndex}.imports"]                = importDetailOfOrder
-        updateOrderQuery.$inc["details.#{detailIndex}.basicImportQuantity"]      = takenQuantity
-        updateOrderQuery.$inc["details.#{detailIndex}.basicImportQuantityDebit"] = -takenQuantity
+          updateOrderQuery.$push["details.#{detailIndex}.imports"]                 = importDetailOfOrder
+          updateOrderQuery.$inc["details.#{detailIndex}.basicImportQuantity"]      = takenQuantity
+          updateOrderQuery.$inc["details.#{detailIndex}.basicImportQuantityDebit"] = -takenQuantity
 
-        if transactionQuantity is orderDetail.basicQuantity
-          updateOrderQuery.$set = {}
-          updateOrderQuery.$set["details.#{detailIndex}.importIsValid"] = true
-        Schema.orders.update(orderFound._id, updateOrderQuery)
+          if transactionQuantity is orderDetail.basicQuantity
+            updateOrderQuery.$set = {}
+            updateOrderQuery.$set["details.#{detailIndex}.importIsValid"] = true
+          console.log 'updateOrderQuery'
+          console.log updateOrderQuery
+          if Schema.orders.update(orderFound._id, updateOrderQuery)
+            updateImport = $inc:{}
+            updateImport.$inc["details.#{index}.basicOrderQuantity"]     = takenQuantity
+            updateImport.$inc["details.#{index}.basicQuantityAvailable"] = -takenQuantity
+            Schema.imports.update currentImport._id, updateImport
 
         transactionQuantity += takenQuantity
         break if transactionQuantity is orderDetail.basicQuantity
@@ -355,6 +362,7 @@ Meteor.methods
       accounting         : Meteor.userId()
       accountingConfirmAt: new Date()
     Schema.orders.update orderFound._id, orderUpdate
+
     if Schema.customers.update(orderFound.buyer, $addToSet:{orderWaiting: orderFound._id})
       buyer = Schema.customers.findOne(orderFound.buyer)
       optionNewOrder =
@@ -490,8 +498,8 @@ Meteor.methods
       customerFound = Schema.customers.findOne(orderFound.buyer)
       return {valid: false, error: 'customer not found!'} unless customerFound
 
-      transactionId = createTransaction(customerFound, orderFound)
-      return {valid: false, error: 'customer not found!'} unless transactionId
+#      transactionId = createTransaction(customerFound, orderFound)
+#      return {valid: false, error: 'customer not found!'} unless transactionId
 
       for orderDetail, detailIndex in orderFound.details
         if product = Schema.products.findOne({'units._id': orderDetail.productUnit})
@@ -503,7 +511,7 @@ Meteor.methods
 
       updateOrderQuery = $set:
         orderStatus : Enums.getValue('OrderStatus', 'finish')
-        transaction : transactionId
+#        transaction : transactionId
         successDate : new Date()
 #        orderCode   :"#{Helpers.orderCodeCreate(customerFound.saleBillNo)}/#{Helpers.orderCodeCreate(merchantFound.saleBillNo)}"
 

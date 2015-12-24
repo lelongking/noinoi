@@ -111,7 +111,7 @@ Apps.Merchant.Enums.PaymentMethods = [
   display: 'TIỀN MẶT'
 ,
   _id    : 1
-  value  : 'debt'
+  value  : 'debit'
   display: 'GHI NỢ'
 ]
 

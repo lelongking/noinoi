@@ -73,13 +73,23 @@ Wings.defineHyper 'orderProductDetail',
   destroyed : -> Meteor.clearInterval(@timeInterval)
 
   events:
-    "click .detail-row": (event, template) -> Session.set("editingId", @_id); event.stopPropagation()
-    "keyup": (event, template) -> Session.set("editingId") if event.which is 27
-    "click .deleteOrderDetail": (event, template) -> scope.currentOrder.removeDetail(@_id)
+    "click .detail-row": (event, template) ->
+      Session.set("editingId", @_id)
+      event.stopPropagation()
+
+    "keyup": (event, template) ->
+      if event.which is 27
+        Session.set("editingId")
+
+    "click .deleteOrderDetail": (event, template) ->
+      currentOrder = Template.currentData()
+      currentOrder.removeDetail(@_id)
+
     "input [name='orderDescription']": (event, template) ->
+      currentOrder = Template.currentData()
       Helpers.deferredAction ->
         description = template.ui.$orderDescription.val()
-        scope.currentOrder.changeDescription(description)
+        currentOrder.changeDescription(description)
       , "currentSaleUpdateDescription", 1000
 
 

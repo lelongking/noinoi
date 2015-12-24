@@ -120,8 +120,8 @@ Schema.add 'orders', "Order", class Order
         for instance, index in @details
           product = Schema.products.findOne(instance.product)
           productPrice  = product.getPrice(customer._id, 'sale')
-          totalPrice   += instance.quality * productPrice
-          discountCash += instance.quality * instance.discountCash
+          totalPrice   += instance.basicQuantity * productPrice
+          discountCash += instance.basicQuantity * instance.discountCash
           predicate.$set["details.#{index}.price"] = productPrice
 
         predicate.$set.totalPrice   = totalPrice
@@ -140,11 +140,28 @@ Schema.add 'orders', "Order", class Order
 
     doc.changePaymentMethod = (paymentMethodId)->
       return console.log('Order da xac nhan') unless _.contains(statusCantEdit, doc.orderStatus)
-      option = $set:{'paymentMethod': paymentMethodId}
-      option.$set['depositCash'] =
-        if option.$set['paymentMethod'] is 0 then @finalPrice
-        else if option.$set['paymentMethod'] is 1 then 0
-      Schema.orders.update @_id, option
+      predicate = $set:{'paymentMethod': paymentMethodId, discountCash: 0}
+
+      priceType =
+        if paymentMethodId is 0 then 'sale'
+        else if paymentMethodId is 1 then 'debit'
+
+      totalPrice = 0
+      for instance, index in @details
+        product = Schema.products.findOne(instance.product)
+        productPrice  = product.getPrice(doc.buyer, priceType)
+        totalPrice   += instance.basicQuantity * productPrice
+        predicate.$set["details.#{index}.price"] = productPrice
+        predicate.$set["details.#{index}.discountCash"] = 0
+
+      predicate.$set.totalPrice = totalPrice
+      predicate.$set.finalPrice = totalPrice
+
+      predicate.$set['depositCash'] =
+        if paymentMethodId is 0 then totalPrice
+        else if paymentMethodId is 1 then 0
+
+      Schema.orders.update @_id, predicate
 
     doc.changeDepositCash = (depositCash, callback) ->
       return console.log('Order da xac nhan') unless _.contains(statusCantEdit, doc.orderStatus)
@@ -278,6 +295,10 @@ Schema.add 'orders', "Order", class Order
         if User.hasManagerRoles
           Meteor.call 'orderAccountConfirm', orderId, (error, result) ->
             Meteor.call 'orderExportConfirm', orderId, (error, result) ->
+              if doc.paymentsDelivery is Enums.getValue('DeliveryTypes', 'direct')
+                Meteor.call 'orderSuccessConfirm', orderId, (error, result) ->
+                  Meteor.call 'orderFinishConfirm', orderId, (error, result) ->
+
 
 
     doc.addDelivery = (option, callback) ->

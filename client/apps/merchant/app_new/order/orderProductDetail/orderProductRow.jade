@@ -17,7 +17,7 @@ template(name="orderProductRowEdit")
       |{{unitName}}
       unless isBase
         span.super.s7.color-lime {{formatNumber basicQuantity}} {{basicName}}
-    td.number.price.editable-field {{formatNumber price}}
+    td.price: input(name="editPrice" min="0" max="30")
     td.bill-discount: input(name="editDiscountCash" min="0" max="30")
     td.number.final-price <b>{{formatNumber finalPrice}}</b>
 

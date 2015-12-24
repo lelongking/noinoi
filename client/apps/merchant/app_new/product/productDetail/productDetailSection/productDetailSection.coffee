@@ -90,11 +90,15 @@ lemon.defineHyper Template.productDetailSection,
             for detail in item.details
               if detail.product is product._id
                 owner = Schema.customers.findOne(item.owner)
-                owner = Schema.providers.findOne(item.owner) unless owner
+                detail.activity  = 'Trả Hàng Bán'
+
+                unless owner
+                  owner = Schema.providers.findOne(item.owner)
+                  detail.activity  = 'Trả Hàng Nhập'
+
                 detail.ownerName = owner?.name ? 'Error Not Find Name'
                 detail.billNo    = item.returnCode
                 detail.createdAt = item.successDate
-                detail.activity  = 'Trả Hàng'
                 combined.push(detail)
         )
 

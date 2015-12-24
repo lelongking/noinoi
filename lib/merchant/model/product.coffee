@@ -86,6 +86,11 @@ findPrice = (priceBookId, priceBookList, priceType = 'sale') ->
       return priceBook.salePrice if priceBook._id is priceBookId
     return undefined
 
+  else if priceType is 'debit'
+    for priceBook in priceBookList
+      return priceBook.saleDebtPrice if priceBook._id is priceBookId
+    return undefined
+
   else if priceType is 'import'
     for priceBook in priceBookList
       return priceBook.importPrice if priceBook._id is priceBookId
@@ -111,19 +116,19 @@ Schema.add 'products', "Product", class Product
 
     doc.getPrice = (ownerId, priceType = 'sale') ->
       priceFound = undefined; merchantId = Merchant.getId()
+      priceBookBasic = Schema.priceBooks.findOne({priceBookType: 0, merchant: merchantId})
       if ownerId is undefined
-        if priceBookBasic = Schema.priceBooks.findOne({priceBookType: 0, merchant: merchantId})
-          priceFound = findPrice(priceBookBasic._id, doc.priceBooks, priceType) ? 0
+        priceFound = findPrice(priceBookBasic._id, doc.priceBooks, priceType) ? 0 if priceBookBasic
 
       else
-        if priceType is 'sale'
+        if priceType is 'sale' or priceType is 'debit'
           buyer = Schema.customers.findOne({_id: ownerId, merchant: merchantId})
           if buyer
             priceBookOfBuyer = PriceBook.findOneByUnitAndBuyer(buyer._id, merchantId)
             priceBookOfBuyerGroup = PriceBook.findOneByUnitAndBuyerGroup(buyer.group, merchantId)
             priceFound = findPrice(priceBookOfBuyer._id, doc.priceBooks, priceType) if priceBookOfBuyer
             priceFound = findPrice(priceBookOfBuyerGroup._id, doc.priceBooks, priceType) if priceBookOfBuyerGroup and priceFound is undefined
-          priceFound = findPrice(Session.get('priceBookBasic')._id, doc.priceBooks, priceType) if priceFound is undefined
+          priceFound = findPrice(priceBookBasic._id, doc.priceBooks, priceType) if priceFound is undefined
 
         else if priceType is 'import'
           provider = Schema.providers.findOne({_id: ownerId, merchant: Session.get('merchant')._id})
@@ -132,7 +137,7 @@ Schema.add 'products', "Product", class Product
             priceBookOfProviderGroup = PriceBook.findOneByUnitAndProviderGroup(provider.group, merchantId)
             priceFound = findPrice(priceBookOfProvider._id, doc.priceBooks, priceType) if priceBookOfProvider
             priceFound = findPrice(priceBookOfProviderGroup._id, doc.priceBooks, priceType) if priceBookOfProviderGroup and priceFound is undefined
-          priceFound = findPrice(Session.get('priceBookBasic')._id, doc.priceBooks, priceType) if priceFound is undefined
+          priceFound = findPrice(priceBookBasic._id, doc.priceBooks, priceType) if priceFound is undefined
       return priceFound
 
     doc.unitCreate = (name, conversion = 1)->

@@ -34,8 +34,13 @@ Wings.defineApp 'orderDetailLayout',
       scope.currentBillHistory.addDetail(@_id); event.stopPropagation() if User.hasManagerRoles()
 
     "click .accountingConfirm": (event, template) ->
-      Meteor.call 'orderAccountConfirm', scope.currentBillHistory._id, (error, result) ->
-        Meteor.call 'orderExportConfirm', scope.currentBillHistory._id, (error, result) ->
+      order = scope.currentBillHistory
+      Meteor.call 'orderAccountConfirm', order._id, (error, result) ->
+        Meteor.call 'orderExportConfirm', order._id, (error, result) ->
+          if order.paymentsDelivery is Enums.getValue('DeliveryTypes', 'direct')
+            Meteor.call 'orderSuccessConfirm', order._id, (error, result) ->
+              Meteor.call 'orderFinishConfirm', order._id, (error, result) ->
+
           Session.set("currentBillHistory")
           Session.set("editingId")
           FlowRouter.go 'billManager'
