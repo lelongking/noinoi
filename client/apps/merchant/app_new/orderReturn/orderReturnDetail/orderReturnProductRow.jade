@@ -18,11 +18,11 @@ template(name="orderReturnProductRowEdit")
     td: span
       |{{getProductUnitName productUnit}}
       unless showConversion
-        span.super.s7.color-lime {{conversion}} {{getProductBasicName productUnit}}
+        span.super.s7.color-lime {{basicQuantity}} {{getProductBasicName productUnit}}
 
     td.number: span
       input.error-field(name="editPrice" min="0")
-      span.super.s7(style="width: 75px;text-align: left;") x{{basicQuantity}} {{getProductBasicName productUnit}}
+      //span.super.s7(style="width: 75px;text-align: left;") x{{basicQuantity}} {{getProductBasicName productUnit}}
 
     td.number.note <b>{{formatNumber finalPrice}}</b>
 
@@ -52,11 +52,11 @@ template(name="orderReturnProductRowDisplay")
     td: span
       |{{getProductUnitName productUnit}}
       unless showConversion
-        span.super.s7.color-lime {{conversion}} {{getProductBasicName productUnit}}
+        span.super.s7.color-lime {{basicQuantity}} {{getProductBasicName productUnit}}
 
     td.number: span
       |{{formatNumber price}}
-      span.super.s7(style="width: 75px;text-align: left;") x{{basicQuantity}} {{getProductBasicName productUnit}}
+      //span.super.s7(style="width: 75px;text-align: left;") x{{basicQuantity}} {{getProductBasicName productUnit}}
 
     td.number
       b {{formatNumber finalPrice}}

@@ -142,22 +142,22 @@ updateSubtractQuantityInImport = (orderFound, orderDetail, detailIndex, combined
           console.log 'importDetail', orderDetail
 
           updateOrderQuery = {$push:{}, $inc:{}}
-          importDetailOfOrder =
-            _id         : currentImport._id
-            detailId    : importDetail._id
-            product     : importDetail.product
-            productUnit : orderDetail.productUnit
-            provider    : currentImport.provider
-            price       : orderDetail.price
-            conversion  : orderDetail.conversion
-            quality     : takenQuantity/orderDetail.conversion
-  #          note        : orderDetailNote
-            createdAt   : new Date()
-            basicQuantity          : takenQuantity
-            basicQuantityReturn    : 0
-            basicQuantityAvailable : takenQuantity
+#          importDetailOfOrder =
+#            _id         : currentImport._id
+#            detailId    : importDetail._id
+#            product     : importDetail.product
+#            productUnit : orderDetail.productUnit
+#            provider    : currentImport.provider
+#            price       : orderDetail.price
+#            conversion  : orderDetail.conversion
+#            quality     : takenQuantity/orderDetail.conversion
+#  #          note        : orderDetailNote
+#            createdAt   : new Date()
+#            basicQuantity          : takenQuantity
+#            basicQuantityReturn    : 0
+#            basicQuantityAvailable : takenQuantity
 
-          updateOrderQuery.$push["details.#{detailIndex}.imports"]                 = importDetailOfOrder
+#          updateOrderQuery.$push["details.#{detailIndex}.imports"]                 = importDetailOfOrder
           updateOrderQuery.$inc["details.#{detailIndex}.basicImportQuantity"]      = takenQuantity
           updateOrderQuery.$inc["details.#{detailIndex}.basicImportQuantityDebit"] = -takenQuantity
 
@@ -505,9 +505,9 @@ Meteor.methods
         if product = Schema.products.findOne({'units._id': orderDetail.productUnit})
           updateSubtractQuantityInProductUnit(product, orderDetail)
 
-          if product.inventoryInitial
-            combinedImports = findAllImport(orderDetail.product)
-            updateSubtractQuantityInImport(orderFound, orderDetail, detailIndex, combinedImports)
+#          if product.inventoryInitial
+#            combinedImports = findAllImport(orderDetail.product)
+#            updateSubtractQuantityInImport(orderFound, orderDetail, detailIndex, combinedImports)
 
       updateOrderQuery = $set:
         orderStatus : Enums.getValue('OrderStatus', 'finish')

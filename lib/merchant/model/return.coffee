@@ -272,27 +272,27 @@ Schema.add 'returns', "Return", class Return
                         console.log('Import Detail Error, ko du so luong'); return
 
 
-      if transactionId = createTransactionByCustomer(currentReturn)
-        for productId, quantities of productReturnQuantities
-          productUpdate =
-            $inc:
-              'merchantQuantities.0.inStockQuantity'    : quantities
-              'merchantQuantities.0.returnSaleQuantity' : quantities
-              'merchantQuantities.0.availableQuantity'  : quantities
-          Schema.products.update productId, productUpdate
+#      if transactionId = createTransactionByCustomer(currentReturn)
+      for productId, quantities of productReturnQuantities
+        productUpdate =
+          $inc:
+            'merchantQuantities.0.inStockQuantity'    : quantities
+            'merchantQuantities.0.returnSaleQuantity' : quantities
+            'merchantQuantities.0.availableQuantity'  : quantities
+        Schema.products.update productId, productUpdate
 
-        for importId, importUpdate of importUpdateOption
-          Schema.imports.update importId, importUpdate
+#      for importId, importUpdate of importUpdateOption
+#        Schema.imports.update importId, importUpdate
 
-        orderUpdateOption.$set = {allowDelete: false}
-        Schema.orders.update @parent, orderUpdateOption
+      orderUpdateOption.$set = {allowDelete: false}
+      Schema.orders.update @parent, orderUpdateOption
 
-        Schema.returns.update @_id, $set:{
-          returnStatus: Enums.getValue('ReturnStatus', 'success')
-          transaction : transactionId
-          staffConfirm: Meteor.userId()
-          successDate : new Date()
-        }
+      Schema.returns.update @_id, $set:{
+        returnStatus: Enums.getValue('ReturnStatus', 'success')
+#          transaction : transactionId
+        staffConfirm: Meteor.userId()
+        successDate : new Date()
+      }
 
     doc.deleteCustomerReturn = ->
 
