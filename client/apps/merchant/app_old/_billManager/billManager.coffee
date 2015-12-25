@@ -49,7 +49,8 @@ Wings.defineApp 'billManager',
         Schema.orders.find(gridOrderQuery)
 
   events:
-    "click .caption.inner": (event, template) ->
+    "click .toOrderManager": (event, template) -> FlowRouter.go 'orderManager'
+    "click .group-wrapper .caption.inner.advanced": (event, template) ->
       Session.set("currentBillHistory", @)
       FlowRouter.go 'billDetail'
 

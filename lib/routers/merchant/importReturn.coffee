@@ -12,7 +12,7 @@ merchantImportReturnRouter.route '/',
     Session.set "currentAppInfo",
       name: "trả hàng nhập"
       navigationPartial:
-        template: ""
+        template: "importReturnNavigationPartial"
         data: {}
 
     BlazeLayout.render 'merchantLayout',

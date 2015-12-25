@@ -12,7 +12,7 @@ merchantProductRouter.route '/',
     Session.set "currentAppInfo",
       name: "sản phẩm"
       navigationPartial:
-        template: ""
+        template: "productManagementNavigationPartial"
         data: {}
 
     BlazeLayout.render 'merchantLayout',

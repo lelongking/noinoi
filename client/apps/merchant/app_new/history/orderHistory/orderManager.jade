@@ -2,6 +2,20 @@ template(name="orderManager")
   #content.modern
     .dual-content
       .dual-addon
+        .group-nav
+          .caption.inner.toHistoryOrder.active
+            span.avatar.letter {{getPublishedCount 'orderManagers'}}
+            span.text.uppercase BÁN HÀNG
+          .caption.inner.toHistoryOrderReturn
+            span.avatar.letter {{getPublishedCount 'customerReturnHistories'}}
+            span.text.uppercase TRẢ HÀNG BÁN
+          .caption.inner.toHistoryImport
+            span.avatar.letter {{getPublishedCount 'imports'}}
+            span.text.uppercase NHẬP KHO
+          .caption.inner.toHistoryImportReturn
+            span.avatar.letter {{getPublishedCount 'providerReturnHistories'}}
+            span.text.uppercase TRẢ HÀNG NHẬP
+
         .search-filter.icon-search-8
           input(name='searchFilter' type="text" placeholder="tìm đơn hàng..." value="{{productTextSearch}}")
 

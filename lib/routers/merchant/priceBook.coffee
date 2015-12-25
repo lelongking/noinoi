@@ -16,7 +16,7 @@ merchantPriceBookRouter.route '/',
     Session.set "currentAppInfo",
       name: "bảng giá"
       navigationPartial:
-        template: ""
+        template: "priceBookNavigationPartial"
         data: {}
 
     BlazeLayout.render 'merchantLayout',

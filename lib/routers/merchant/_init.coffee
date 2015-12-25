@@ -144,7 +144,7 @@ metroHome.transactionApp =
   appName      : 'transaction'
   appColor     : 'alizarin'
   appCount     : ''
-  appSize      : ''
+  appSize      : 'double'
   appClass     : ''
   appIcon      : ''
 
@@ -353,6 +353,21 @@ metroHome.programManagerApp =
   isCanvas     : false
   canvasClass  : ''
 
+
+metroHome.programManagerAppa =
+  appName      : 'saleProgram'
+  appColor     : 'green-sea'
+  appCount     : ''
+  appSize      : ''
+  appClass     : ''
+  appIcon      : ''
+
+  description  : ''
+  caption      : 'Mùa Vụ'
+  captionClass : 'bottom right'
+
+  isCanvas     : false
+  canvasClass  : ''
 metroHome.basicReportApp =
   appName      : 'basicReport'
   appColor     : 'magenta'
@@ -383,8 +398,6 @@ setups.metroHome.metroData = [
 ,
   classGroup: 'tile-group-2'
   dataGroup: [
-    setups.metroHome.customerGroupApp
-  ,
     setups.metroHome.transactionApp
   ,
     setups.metroHome.orderApp
@@ -395,9 +408,9 @@ setups.metroHome.metroData = [
   ,
     setups.metroHome.warehouseApp
   ,
-    setups.metroHome.productGroupApp
-  ,
     setups.metroHome.priceBookApp
+  ,
+    setups.metroHome.programManagerApp
   ]
 ,
   classGroup: 'tile-group-2'
@@ -414,7 +427,7 @@ setups.metroHome.metroData = [
   ,
     setups.metroHome.basicHistoryApp
   ,
-    setups.metroHome.programManagerApp
+    setups.metroHome.programManagerAppa
   ,
     setups.metroHome.basicReportApp
   ]

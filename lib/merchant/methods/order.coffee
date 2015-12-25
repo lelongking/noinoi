@@ -202,6 +202,32 @@ Meteor.methods
     catch error
       throw new Meteor.Error('customerToOrder', error)
 
+  customerToReturn: (customerId)->
+    try
+      user = Meteor.users.findOne(Meteor.userId())
+      throw {valid: false, error: 'user not found!'} if !user
+
+      customer = Schema.customers.findOne({_id: customerId, merchant: user.profile.merchant})
+      throw {valid: false, error: 'customer not found!'} unless customer
+
+      returnFound = Schema.returns.findOne({
+        creator     : user._id
+        owner       : customer._id
+        returnType  : Enums.getValue('ReturnTypes', 'customer')
+        returnStatus: Enums.getValue('ReturnStatus', 'initialize')
+        merchant    : user.profile.merchant
+      }, {sort: {'version.createdAt': -1}})
+
+      if returnFound
+        Return.setReturnSession(returnFound._id, 'customer')
+      else
+        returnType = Enums.getValue('ReturnTypes', 'customer')
+        if returnId = Return.insert(returnType, customer._id)
+          Return.setReturnSession(returnId, 'customer')
+
+    catch error
+      throw new Meteor.Error('customerToReturn', error)
+
   deleteOrder: (orderId)->
     user = Meteor.users.findOne(Meteor.userId())
     return {valid: false, error: 'user not found!'} unless user

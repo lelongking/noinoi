@@ -1,6 +1,19 @@
 scope = logics.orderManager
 Enums = Apps.Merchant.Enums
 Wings.defineApp 'orderManager',
+  created: ->
+    self = this
+    self.autorun ()->
+      if Session.get('mySession')
+        orderQuery = {_id: Session.get('mySession').currentOrderBill}
+        orderQuery.seller = Meteor.userId() unless User.hasManagerRoles()
+        scope.currentOrderBill = Schema.orders.findOne orderQuery
+        Session.set 'currentOrderBill', scope.currentOrderBill
+
+  rendered: ->
+  destroyed: ->
+
+
   helpers:
     details: ->
       details = []
@@ -19,20 +32,15 @@ Wings.defineApp 'orderManager',
           details.push({createdAt: key, data: value, totalCash: totalCash})
       details
 
-  created: ->
-    self = this
-    self.autorun ()->
-      if Session.get('mySession')
-        orderQuery = {_id: Session.get('mySession').currentOrderBill}
-        orderQuery.seller = Meteor.userId() unless User.hasManagerRoles()
-        scope.currentOrderBill = Schema.orders.findOne orderQuery
-        Session.set 'currentOrderBill', scope.currentOrderBill
-
-  rendered: ->
-  destroyed: ->
-#    $(document).off("keypress")
-
   events:
-    "click .caption.inner": (event, template) ->
+    "click .toHistoryOrder": (event, template) -> FlowRouter.go 'orderHistory'
+    "click .toHistoryOrderReturn": (event, template) -> FlowRouter.go 'orderReturnHistory'
+    "click .toHistoryImport": (event, template) -> FlowRouter.go 'importHistory'
+    "click .toHistoryImportReturn": (event, template) -> FlowRouter.go 'importReturnHistory'
+
+
+
+
+    "click .group-wrapper .caption.inner": (event, template) ->
       Meteor.users.update(userId, {$set: {'sessions.currentOrderBill': @_id}}) if userId = Meteor.userId()
 

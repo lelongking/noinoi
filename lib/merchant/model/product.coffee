@@ -18,6 +18,7 @@ merchantQuantity = new SimpleSchema
 
   availableQuantity     : type: Number, defaultValue: 0
   orderQuantity         : type: Number, defaultValue: 0
+  inOderQuantity        : type: Number, defaultValue: 0
   inStockQuantity       : type: Number, defaultValue: 0
 
   saleQuantity          : type: Number, defaultValue: 0

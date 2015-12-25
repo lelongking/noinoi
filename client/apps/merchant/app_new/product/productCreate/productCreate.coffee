@@ -1,5 +1,6 @@
 numericOption = {autoGroup: true, groupSeparator:",", radixPoint: ".", suffix: " VNĐ", integerDigits:10, rightAlign: true}
 numericOptionNotSuffix = {autoGroup: true, groupSeparator:",", radixPoint: ".", integerDigits:3, rightAlign: true}
+Enums = Apps.Merchant.Enums
 
 Wings.defineHyper 'productCreate',
   created: ->
@@ -309,11 +310,13 @@ addNewProduct = (event, template, product = {}) ->
         barcodeEx  = if productUnitData.barcodeEx.length > 0 then productUnitData.barcodeEx else Wings.Helper.GenerateBarcode()
 
         productUnitEx =
-          _id        : Random.id()
-          name       : unitNameEx
-          barcode    : barcodeEx
-          conversion : productUnitData.conversion
-          isBase     : false
+          _id             : Random.id()
+          name            : unitNameEx
+          barcode         : barcodeEx
+          conversion      : productUnitData.conversion
+          isBase          : false
+          status          : Enums.getValue('ProductStatuses', 'confirmed')
+          inventoryInitial: true
         product.units.push productUnitEx
 
       product.priceBooks = [{
@@ -333,6 +336,9 @@ addNewProduct = (event, template, product = {}) ->
         merchantId       : merchantId
         lowNormsQuantity : productUnitData.lowNorms
       product.merchantQuantities.push merchantQuantity
+
+
+
 
       console.log product
       newProductId = Schema.products.insert product

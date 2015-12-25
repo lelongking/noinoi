@@ -87,14 +87,28 @@ template(name="productDetailSection")
 
 
     .panel-footer
-      unless inventoryInitial
-        .right-float
-          span.s5.note <b>TỔNG BÁN</b>/ ĐẶT HÀNG:
-          span.s3 <b>{{formatNumber saleQuantity}}</b>
-          span.s5 /{{formatNumber inOderQuantity}} <b>{{unitName}}</b>
+      .summary-row
+        .summary-wrapper(style="width: 100px"): span.s5 {{formatNumber importQuantity}} <b>{{unitName}}</b>
+        .summary-wrapper(style="width: 200px"): span.s5 Tổng nhập :
+      .summary-row
+        .summary-wrapper(style="width: 100px"): span.s5 {{formatNumber saleQuantity}} <b>{{unitName}}</b>
+        .summary-wrapper(style="width: 200px"): span.s5 Tổng bán :
+      .summary-row
+        .summary-wrapper(style="width: 100px"): span.s5 {{formatNumber orderQuantity}} <b>{{unitName}}</b>
+        .summary-wrapper(style="width: 200px"): span.s5 Đang giao :
+      .summary-row
+        .summary-wrapper(style="width: 100px"): span.s5 {{formatNumber inStockQuantity}} <b>{{unitName}}</b>
+        .summary-wrapper(style="width: 200px"): span.s5 Tồn kho :
 
-      else
-        .right-float
-          span.s5.note <b>TỔNG TỒN</b>/ TỔNG NHẬP:
-          span.s3 <b>{{formatNumber inStockQuantity}}</b>
-          span.s5 /{{formatNumber importQuantity}} <b>{{unitName}}</b>
+
+      //unless inventoryInitial
+      //  .right-float
+      //    span.s5.note <b>TỔNG BÁN</b>/ ĐẶT HÀNG:
+      //    span.s3 <b>{{formatNumber saleQuantity}}</b>
+      //    span.s5 /{{formatNumber inOderQuantity}} <b>{{unitName}}</b>
+      //
+      //else
+      //  .right-float
+      //    span.s5.note <b>TỔNG TỒN</b>/ TỔNG NHẬP:
+      //    span.s3 <b>{{formatNumber inStockQuantity}}</b>
+      //    span.s5 /{{formatNumber importQuantity}} <b>{{unitName}}</b>

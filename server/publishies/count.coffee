@@ -14,7 +14,21 @@ Meteor.publish null, ->
   Counts.publish @, 'customerGroups', Schema.customerGroups.find({merchant: merchantId})
 
 
-  Counts.publish @, 'deliveries', Schema.orders.find({orderType:2, 'delivery.status': {$in: [1,2,3,4]}, merchant: merchantId})
+  gridOrderQuery =
+    merchant: merchantId
+    orderType: {$in:[
+      Enums.getValue('OrderTypes', 'tracking')
+      Enums.getValue('OrderTypes', 'success')
+      Enums.getValue('OrderTypes', 'fail')
+    ]}
+    orderStatus: {$in:[
+      Enums.getValue('OrderStatus', 'accountingConfirm')
+      Enums.getValue('OrderStatus', 'exportConfirm')
+      Enums.getValue('OrderStatus', 'success')
+      Enums.getValue('OrderStatus', 'fail')
+      Enums.getValue('OrderStatus', 'importConfirm')
+    ]}
+  Counts.publish @, 'deliveries', Schema.orders.find(gridOrderQuery)
 
   Counts.publish @, 'providers', Schema.providers.find({merchant: merchantId})
   Counts.publish @, 'providerReturns', Schema.returns.find({returnType: 1, merchant: merchantId})

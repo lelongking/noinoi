@@ -103,7 +103,7 @@ template(name="productOverviewSection")
             span.editable.dashed.pull-right.editCash {{formatNumber debtSalePriceEx}} VNĐ
             span.editable.dashed.pull-right.editCash {{formatNumber importPriceEx}} VNĐ
             span.editable.dashed.pull-right.editCash(class="{{isEditMode false}}") {{barcodeEx}}
-            span.editable.dashed.editCash(class="{{isEditMode false}}") {{unitNameEx}} = {{formatNumber conversion}} {{unitName}}
+            span.editable.dashed.editCash(class="{{isEditMode false}}") {{unitNameEx}} ({{formatNumber conversion}} {{unitName}})
 
 
             input.input-field.pull-right.editCash(class="{{isEditMode true}}" name="barcodeEx" style="text-align: right;")

@@ -1,0 +1,38 @@
+template(name="importReturnHistory")
+  #content.modern.sales-app
+    .dual-content
+      .dual-addon
+        .group-nav
+          .caption.inner.toHistoryOrder
+            span.avatar.letter {{getPublishedCount 'orderManagers'}}
+            span.text.uppercase BÁN HÀNG
+          .caption.inner.toHistoryOrderReturn
+            span.avatar.letter {{getPublishedCount 'customerReturnHistories'}}
+            span.text.uppercase TRẢ HÀNG BÁN
+          .caption.inner.toHistoryImport
+            span.avatar.letter {{getPublishedCount 'imports'}}
+            span.text.uppercase NHẬP KHO
+          .caption.inner.toHistoryImportReturn.active
+            span.avatar.letter {{getPublishedCount 'providerReturnHistories'}}
+            span.text.uppercase TRẢ HÀNG NHẬP
+
+        .search-filter.icon-search-8
+          input(name='searchFilter' type="text" placeholder="tìm đơn hàng..." value="{{productTextSearch}}")
+
+        .nano: .nano-content(style="margin-bottom: 35px;")
+          each details
+            .group-wrapper
+              .caption.group {{createdAt}}
+                each data
+                  .caption.inner.advanced.product-selection(class="{{activeClass 'currentProviderReturnHistory'}}")
+                    +avatarImageComponent(avatar=avatarUrl alias=returnName)
+                    span.text {{returnName}}
+                      .commands {{momentFormat successDate 'DD/MM/YYYY'}}
+                    span.left-info {{returnCode}}
+                    span.right-info {{formatNumber finalPrice}} VND
+
+
+      .dual-detail-wrapper
+        .dual-detail
+          .nano: .nano-content
+            +providerReturnHistoryDetailSection sessionGet 'currentProviderReturnHistory'

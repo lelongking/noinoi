@@ -2,6 +2,15 @@ template(name="billManager")
   #content.modern.sales-app
     .dual-content
       .dual-addon
+        .group-nav
+          .caption.inner.active
+            span.avatar.letter {{getPublishedCount 'deliveries'}}
+            span.text.uppercase TÌNH TRẠNG PHIẾU
+          .caption.inner.toOrderManager
+            span.avatar.letter {{getPublishedCount 'orderManagers'}}
+            span.text.uppercase PHIẾU HOÀN THÀNH
+
+
         .search-filter.icon-search-8
           input(name='searchFilter' type="text")
 

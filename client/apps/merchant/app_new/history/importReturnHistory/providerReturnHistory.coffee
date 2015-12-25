@@ -1,7 +1,7 @@
 scope = logics.providerReturnHistory
 Enums = Apps.Merchant.Enums
 
-lemon.defineApp Template.providerReturnHistory,
+Wings.defineApp 'importReturnHistory',
   helpers:
     details: ->
       details = []
@@ -23,6 +23,11 @@ lemon.defineApp Template.providerReturnHistory,
   destroyed: ->
 
   events:
-    "click .caption.inner": (event, template) ->
+    "click .toHistoryOrder": (event, template) -> FlowRouter.go 'orderHistory'
+    "click .toHistoryOrderReturn": (event, template) -> FlowRouter.go 'orderReturnHistory'
+    "click .toHistoryImport": (event, template) -> FlowRouter.go 'importHistory'
+    "click .toHistoryImportReturn": (event, template) -> FlowRouter.go 'importReturnHistory'
+
+    "click .group-wrapper .caption.inner": (event, template) ->
       Meteor.users.update(userId, {$set: {'sessions.currentProviderReturnHistory': @_id}}) if userId = Meteor.userId()
 

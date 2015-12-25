@@ -23,7 +23,7 @@ Wings.defineApp 'staffManagement',
       if staffId = Session.get("mySession")?.currentStaff
         scope.currentStaff = Meteor.users.findOne(staffId)
         Session.set("staffManagementCurrentStaff", scope.currentStaff)
-        Session.set "customerOfStaffSelectLists", Session.get('mySession').customerOfStaffSelected[staffId] ? []
+        Session.set "customerOfStaffSelectLists", Session.get('mySession').customerOfStaffSelected?[staffId] ? []
 
       if staff = Session.get('staffManagementCurrentStaff')
         $(".roleSelect").select2("readonly", unless staff.creator then true else false)

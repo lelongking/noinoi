@@ -24,6 +24,11 @@ lemon.defineApp Template.orderReturnHistory,
   destroyed: ->
 
   events:
-    "click .caption.inner": (event, template) ->
+    "click .toHistoryOrder": (event, template) -> FlowRouter.go 'orderHistory'
+    "click .toHistoryOrderReturn": (event, template) -> FlowRouter.go 'orderReturnHistory'
+    "click .toHistoryImport": (event, template) -> FlowRouter.go 'importHistory'
+    "click .toHistoryImportReturn": (event, template) -> FlowRouter.go 'importReturnHistory'
+
+    "click .group-wrapper .caption.inner": (event, template) ->
       Meteor.users.update(userId, {$set: {'sessions.currentCustomerReturnHistory': @_id}}) if userId = Meteor.userId()
 
