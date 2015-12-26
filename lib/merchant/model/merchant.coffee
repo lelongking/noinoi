@@ -19,6 +19,13 @@ simpleSchema.merchants = new SimpleSchema
   "branches.$.phone"       : type: String, optional: true
   "branches.$.createdAt"   : simpleSchema.DefaultCreatedAt
 
+
+  interestRates           : type: Object, optional: true
+  "interestRates.initial" : type: Number, decimal: true , defaultValue: 0
+  "interestRates.sale"   : type: Number, decimal: true , defaultValue: 0
+  "interestRates.loan"    : type: Number, decimal: true , defaultValue: 0
+
+
   summaries                        : type: Object
   "summaries.lastProductCode"      : type: Number   , defaultValue: 0
   "summaries.listProductCodes"     : type: [String] , defaultValue: []

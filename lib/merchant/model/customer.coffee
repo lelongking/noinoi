@@ -25,6 +25,30 @@ simpleSchema.customers = new SimpleSchema
   returnSaleCash   : type: Number, optional: true #số tiền trả hàng phát sinh trong kỳ
 
 
+  initialInterestRate : type: Number, optional: true, decimal: true
+  interestRateSale    : type: Number, optional: true, decimal: true
+  interestRateLoan    : type: Number, optional: true, decimal: true
+
+  initialAmount       : type: Number, optional: true #no ban dau
+  saleAmount          : type: Number, optional: true #ban hang
+  returnAmount        : type: Number, optional: true #tra hàng(tru va ban hang)
+  loanAmount          : type: Number, optional: true #no cho vay(muon)
+  debtAmount          : type: Number, optional: true #no trả hàng(tra hang lay tien mat)
+  paidAmount          : type: Number, optional: true #no đã trả(khách hàng tra tien)
+  interestAmount      : type: Number, optional: true #no cho vay(tien lai)
+
+
+
+#----Detailed Interest--------------------------------
+  debtDetails               : type: Object, optional: true
+  'debtDetails.parent'      : type: String, optional: true
+  'debtDetails.detailId'    : type: String, optional: true
+  'debtDetails.debtType'    : type: Number, optional: true
+  'debtDetails.amount'      : type: Number, optional: true
+  'debtDetails.interestRate': type: Number, optional: true, decimal: true
+  'debtDetails.startDate'   : type: Date  , optional: true
+  'debtDetails.endDate'     : type: Date  , optional: true
+
 #----Detailed information--------------------------------
   deliveryCompany        : type: String, optional: true
   deliveryAddress        : type: String, optional: true

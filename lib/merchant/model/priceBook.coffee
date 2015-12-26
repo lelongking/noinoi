@@ -80,7 +80,10 @@ Schema.add 'priceBooks', "PriceBook", class PriceBook
 
         if priceBookDetail
           Schema.products.update product._id, $pull: {priceBooks: priceBookDetail}
-          Schema.priceBooks.update @_id, $pull: {products:product._id}
+
+          priceBookUpdate = $pull: {products: product._id}
+          priceBookUpdate.$set = {allowDelete: true} if doc.isBase is false and @products.length <= 1
+          Schema.priceBooks.update @_id, priceBookUpdate
 
     doc.selectedPriceProduct = (productId)-> #ok
       if userId = Meteor.userId()

@@ -35,7 +35,7 @@ Wings.defineApp 'priceBookOverviewSection',
 
   events:
     "click .deletePriceBook": (event, template) ->
-      console.log 'is delete'
+      @remove() if @allowDelete is true and @isBase is false
 
     "click .unLockEditPriceBook": (event, template) ->
       Session.set('priceBookIsEditMode', true)

@@ -41,6 +41,15 @@ setCustomerGroupDefault = (user, customer)->
     merchantId = user.profile.merchant
     groupBasic = Schema.customerGroups.findOne({merchant: merchantId, isBase: true})
     customer.customerOfGroup = groupBasic._id if groupBasic
+#
+#
+#Schema.customers.before.find (userId, selector, options)->
+#  console.log 'before'
+#  console.log userId, selector, options
+#
+#Schema.customers.after.find (userId, selector, options, cursor)->
+#  console.log 'after'
+#  console.log cursor.collection
 
 
 Schema.customers.before.insert (userId, customer)->

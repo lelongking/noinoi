@@ -18,6 +18,22 @@ Apps.Merchant.Enums.GenderTypes = [
   _id: true
   display: 'NAM'
 ]
+
+#----------Interest---------->
+Apps.Merchant.Enums.InterestTypes = [
+  _id    : 0
+  value  : 'initial'
+  display: 'Đầu Kỳ'
+,
+  _id    : 1
+  value  : 'loan'
+  display: 'Vay Tiền'
+,
+  _id    : 2
+  value  : 'sale'
+  display: 'Mua Hàng'
+]
+
 #----------Group---------->
 Apps.Merchant.Enums.GroupTypes = [
   _id    : 0
@@ -216,28 +232,36 @@ Apps.Merchant.Enums.TransactionGroups = [
 ]
 Apps.Merchant.Enums.TransactionTypes = [
   _id    : 0
-  value  : 'requiredCash'
-  display: 'Phải Thu'
-,
-  _id    : 1
-  value  : 'beginCash'
-  display: 'Đầu Kỳ'
-,
-  _id    : 2
-  value  : 'incurredCash'
-  display: 'Phát Sinh Khác'
-,
-  _id    : 3
-  value  : 'saleCash'
+  value  : 'saleAmount'
   display: 'Bán Hàng'
 ,
-  _id    : 4
-  value  : 'importCash'
+  _id    : 1
+  value  : 'importAmount'
   display: 'Nhập Hàng'
 ,
+  _id    : 2
+  value  : 'returnSaleAmount'
+  display: 'Trả Hàng Bán'
+,
+  _id    : 3
+  value  : 'returnImportAmount'
+  display: 'Trả Hàng Nhập'
+,
+  _id    : 4
+  value  : 'customerLoanAmount'
+  display: 'Khách Hàng Vay'
+,
   _id    : 5
-  value  : 'returnCash'
-  display: 'Trả Hàng'
+  value  : 'providerLoanAmount'
+  display: 'NCC Vay'
+,
+  _id    : 6
+  value  : 'customerPaidAmount'
+  display: 'Khách Hàng Trả'
+,
+  _id    : 7
+  value  : 'providerPaidAmount'
+  display: 'NCC Trả'
 ]
 
 Apps.Merchant.Enums.TransactionStatuses = [

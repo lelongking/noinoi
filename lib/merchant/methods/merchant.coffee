@@ -42,6 +42,9 @@ Meteor.methods
     Schema.merchants.update(Merchant.getId(), $set:{importBill: providerCount})
 
   trackingProduct: (toDate = new Date()) ->
+
+
+  trackingProduct: (toDate = new Date()) ->
     countNewProduct          = 0
     countNotInventoryProduct = 0
     countUpperGapProduct     = 0

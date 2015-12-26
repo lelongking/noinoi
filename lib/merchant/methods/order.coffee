@@ -178,6 +178,10 @@ updateSubtractQuantityInImport = (orderFound, orderDetail, detailIndex, combined
 
 
 Meteor.methods
+  testMethods: ->
+    if Meteor.isClient
+      console.log 'isClient'
+
   customerToOrder: (customerId)->
     try
       user = Meteor.users.findOne(Meteor.userId())

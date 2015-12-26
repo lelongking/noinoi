@@ -1,24 +1,131 @@
 template(name="transaction")
   #header
-    unless isShowHistory
-      .editor-row
-        .editor-wrapper(style="width: 150px")
-          //span.ilabel.optional Thu - Chi của :
-          +iSelect(options=typeSelectOptions class="field")
+    .editor-row
+      .editor-wrapper(style="width: 260px ;border-right: solid 1px #cfcfcf;")
+        span.ilabel.optional Áp dụng:
+        +iSelect(options=typeSelectOptions class="field")
 
-        .editor-wrapper(style="width: 300px")
-          span.ilabel.optional Tên KH hoặc NCC :
-          +iSelect(options=ownerSelectOptions class="field")
+      .editor-wrapper(style="width: 300px")
+        span.ilabel.optional Tên KH hoặc NCC :
+        +iSelect(options=ownerSelectOptions class="field")
 
-        .editor-wrapper(style="width: 250px")
-          span.ilabel.optional Loại phiếu:
-          +iSelect(options=customerIncomeOrCostSelectOptions class="field")
+      .editor-wrapper(style="width: 250px")
+        span.ilabel.optional Loại phiếu:
+        +iSelect(options=customerIncomeOrCostSelectOptions class="field")
 
-        .editor-wrapper.pull-right
-          button.flat.btn.lime.createTransaction(class="{{getSession 'transactionCreateNewIsDisabled'}}") XÁC NHẬN
+      .editor-wrapper.pull-right
+        button.flat.btn.lime.createTransaction(class="{{getSession 'transactionCreateNewIsDisabled'}}") XÁC NHẬN
 
 
-  #content
+  #content.modern
     .dual-content
-      .dual-detail-wrapper
-        .nano: .nano-content: +Template.dynamic(template=transaction.content data=transaction.data)
+      with currentData
+        .dual-addon
+          .group-nav
+            .caption.inner.toInterest(class="{{isActive 'interest'}}")
+              span.avatar.letter
+              span.text.uppercase LÃI SUẤT
+            .caption.inner.toLoan(class="{{isActive 'loan'}}")
+              span.avatar.letter
+              span.text.uppercase NHẬP NỢ
+            .caption.inner.toPaid(class="{{isActive 'paid'}}")
+              span.avatar.letter
+              span.text.uppercase TRẢ TIỀN
+
+        .dual-detail-wrapper
+          .dual-detail
+            .nano: .nano-content
+
+              if isShowDetail 'interest'
+                +interestRateManager
+
+              if isShowDetail 'loan'
+                +editInitialInterest
+                +createLoanTransaction
+
+              //if isShowDetail 'paid'
+              //  +createpaidTransaction
+
+
+
+
+
+
+
+template(name="interestRateManager")
+  .section.top.panel.panel-default.options-section
+    .panel-heading
+      span.icon-contacts mặc đinh lãi suất
+    .panel-body
+      .collapsible-row
+        .description Lãi suất nợ đầu kỳ
+        input.input-field(name="interestRateInitial" placeholder='Lãi suất nợ đầu kỳ'
+        style="font-weight: bolder; color: #7ac5f9;")
+
+      .collapsible-row
+        .description Lãi suất nợ vay tiền
+        input.input-field(name="interestRateLoan" placeholder='Lãi suất nợ vay tiền'
+        style="font-weight: bolder; color: #7ac5f9;")
+
+      .collapsible-row
+        .description Lãi suất nợ mua hàng
+        input.input-field(name="interestRateSale" placeholder='Lãi suất nợ mua hàng'
+        style="font-weight: bolder; color: #7ac5f9;")
+
+template(name="editInitialInterest")
+  .section.top.panel.panel-default.options-section
+    .panel-heading
+      span.icon-contacts nợ đầu kỳ
+      .commands
+        .lemon.btn.lime.icon-ok-6.addCustomer Lưu
+        .lemon.btn.red.icon-cancel-7.cancelCustomer Hủy
+
+    .panel-body
+      .collapsible-row
+        .description(style="width:100px") Nợ đầu kỳ
+        input.input-field(name="initialAmount" placeholder="Nhập nợ"
+        style="width:100px; font-weight: bolder; color: #7ac5f9;" tabindex="1")
+
+        .description(style="width:100px") Lãi suất
+        input.input-field(name="initialInterestRate" placeholder="Nhập lãi suất"
+        style="width:100px; font-weight: bolder; color: #7ac5f9;" tabindex="2")
+
+        .description(style="width:100px") Ngày nợ
+        input.input-field(name="dateDebit" binding="datePicker" todayHighlight="true" maxlength="20"
+        style="width:100px; font-weight: bolder; color: #7ac5f9;" tabindex="3")
+
+template(name="createLoanTransaction")
+  .section.panel.panel-default.printable-area
+    .panel-heading
+      .hide-on-print(style="position: relative;")
+        span <b>{{timeHM}}<sup>{{timeS}}</sup></b>, ngày <b>{{timeDMY}}</b> <b>{{fullDay}}</b>
+        span(style="position: absolute; right: 0px;") PHIẾU VAY TIỀN
+
+    .panel-body
+      table.lemon-grid
+        tr
+          th(style="width:auto")
+          th(style="width:250px")
+          th(style="width:300px")
+
+
+        tr.editors(style="{{showTransaction}}")
+          td(colspan="2"): input.transaction-field(type="text" size="10"  name='transactionDescription' placeholder="ghi chú thu chi")
+          td: input.transaction-field.number(type="text" size="10"  name='transactionAmount' placeholder="số tiền")
+
+        tr
+          td.date: span NGƯỜI NHẬN
+          td.number: span.s5 Khách Hàng:
+          td.number: span.s4 Nguyễn Hồng Kỳ
+        tr
+          td.date
+          td.number: span.s5 Nợ Hiện Tại:
+          td.number: span.s4 <b>500.000</b> VNĐ
+        tr
+          td.date:  span.s6.note (<i>Chữ ký và Họ Tên</i>)
+          td.number: span.s5 Nợ Vay Tiền:
+          td.number: span.s4 <b>100.000</b> VNĐ
+        tr
+          td.date
+          td.number: span.s5 Tổng Nợ:
+          td.number(style="border-top: solid 1px #d7d7d7"): span.s4 <b>600.000</b> VNĐ
