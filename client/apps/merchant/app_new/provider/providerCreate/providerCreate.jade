@@ -19,18 +19,14 @@ template(name="providerCreate")
             .description Địa chỉ
             input.input-field.newProviderOption(name="providerAddress" placeholder="Nhập địa chỉ")
           .collapsible-row
+            .description Người đại diện
+            input.input-field.newProviderOption(name="providerRepresentative" placeholder="Người đại diện")
+          .collapsible-row
             .description Nợ đầu kỳ
             input.input-field.newProviderOption(name="providerDebit" placeholder="Nhập nợ đầu kỳ" value="0")
           .collapsible-row
             .description Mã nhà cung cấp
             input.input-field.newProviderOption(name="providerCode" placeholder="{{codeDefault}}")
-          //.collapsible-row
-          //  .description Giới tính
-          //  input.input-field.newProviderOption(name="genderSwitch" type="checkbox" checked)
-          //.collapsible-row
-          //  .description Sinh nhật
-          //  input.input-field.newProviderOption(name="dateOfBirth"
-          //  binding="datePicker" todayHighlight="true" maxlength="20" tabindex="4")
           .collapsible-row
             .description Ghi chú
             input.input-field.newProviderOption(name="providerDescription" placeholder="Ghi thêm thông tin" value=""

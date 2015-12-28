@@ -93,7 +93,7 @@ template(name="customerManagementSalesHistorySection")
           td(colspan="1"): .lemon.btn.lime.icon-money.pull-right.createTransaction(
           class="{{isNotDisabled 'allowCreateTransactionOfCustomer'}}") {{transactionStatus}}
 
-    with currentCustomer
+    with amountDetails
       +panelFooter_salesHistory
 
 
@@ -111,25 +111,17 @@ template(name="panelFooter_salesHistory")
 
       tr
         td
-        td.number Nợ Đầu Kỳ :
-        td.number <b>{{formatNumber totalPaidCash}}</b> VND
+        td.number Tiền nợ :
+        td.number <b>{{formatNumber debitCash}}</b> VND
       tr
         td
-        td.number Nợ Tiền Vay :
-        td.number <b>{{formatNumber totalPaidCash}}</b> VND
+        td.number Tiền lãi :
+        td.number <b>{{formatNumber interestCash}}</b> VND
       tr
         td
-        td.number Nợ Mua Hàng :
-        td.number <b>{{formatNumber totalPaidCash}}</b> VND
+        td.number Thanh toán :
+        td.number <b>{{formatNumber paidCash}}</b> VND
       tr
         td
-        td.number Nợ Lãi Suất :
-        td.number <b>{{formatNumber totalPaidCash}}</b> VND
-      tr
-        td
-        td.number Nợ Đã Trả :
-        td.number <b>{{formatNumber totalPaidCash}}</b> VND
-      tr
-        td
-        td.number: b Tổng Nợ :
+        td.number: b Tổng nợ :
         td.number: b {{formatNumber totalCash}} VND

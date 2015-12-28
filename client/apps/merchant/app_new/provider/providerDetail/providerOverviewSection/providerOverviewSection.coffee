@@ -117,6 +117,8 @@ rollBackProviderData = (event, template)->
     $(event.currentTarget).datepicker('setDate', providerData.dateOfBirth)
   else if $(event.currentTarget).attr('name') is 'providerDescription'
     $(event.currentTarget).val(providerData.description)
+  else if $(event.currentTarget).attr('name') is 'providerRepresentative'
+    $(event.currentTarget).val(providerData.representative)
 
 updateProviderChangeAvatar = (event, template)->
   if User.hasManagerRoles()
@@ -131,18 +133,20 @@ editProvider = (template) ->
   summaries = Session.get('merchant')?.summaries
   listCodes = summaries.listProviderCodes ? []
   if provider and Template.instance().isShowEditCommand.get()
-    name        = template.ui.$providerName.val().replace(/^\s*/, "").replace(/\s*$/, "")
-    phone       = template.ui.$providerPhone.val().replace(/^\s*/, "").replace(/\s*$/, "")
-    code        = template.ui.$providerCode.val().replace(/^\s*/, "").replace(/\s*$/, "")
-    address     = template.ui.$providerAddress.val().replace(/^\s*/, "").replace(/\s*$/, "")
-    description = template.ui.$providerDescription.val().replace(/^\s*/, "").replace(/\s*$/, "")
+    name            = template.ui.$providerName.val().replace(/^\s*/, "").replace(/\s*$/, "")
+    phone           = template.ui.$providerPhone.val().replace(/^\s*/, "").replace(/\s*$/, "")
+    code            = template.ui.$providerCode.val().replace(/^\s*/, "").replace(/\s*$/, "")
+    address         = template.ui.$providerAddress.val().replace(/^\s*/, "").replace(/\s*$/, "")
+    representative  = template.ui.$providerRepresentative.val().replace(/^\s*/, "").replace(/\s*$/, "")
+    description     = template.ui.$providerDescription.val().replace(/^\s*/, "").replace(/\s*$/, "")
 
     editOptions = {}
-    editOptions.name        = name if name isnt provider.name
-    editOptions.phone       = phone if phone isnt provider.phone
-    editOptions.code        = code if code isnt provider.code
-    editOptions.address     = address if address isnt provider.address
-    editOptions.description = description if description isnt provider.description
+    editOptions.name            = name if name isnt provider.name
+    editOptions.phone           = phone if phone isnt provider.phone
+    editOptions.code            = code if code isnt provider.code
+    editOptions.address         = address if address isnt provider.address
+    editOptions.description     = description if description isnt provider.description
+    editOptions.representative  = representative if representative isnt provider.representative
 
 
     if editOptions.name isnt undefined  and editOptions.name.length is 0

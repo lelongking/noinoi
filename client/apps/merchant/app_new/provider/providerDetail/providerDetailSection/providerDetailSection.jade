@@ -69,15 +69,15 @@ template(name="providerDetailSection")
 
         tr
           td
-          td Phát sinh trong kỳ:
+          td Nợ nhập hàng:
           td.number <b>{{formatNumber totalDebtCash}}</b> VND
 
         tr
           td
-          td Thu nợ trong kỳ:
+          td Thanh toán:
           td.number <b>{{formatNumber totalPaidCash}}</b> VND
 
         tr
           td
-          td Nợ cuối kỳ:
-          td.number <b>{{formatNumber totalCash}}</b> VND
+          td.number: b Tổng nợ :
+          td.number: b {{formatNumber totalCash}} VND

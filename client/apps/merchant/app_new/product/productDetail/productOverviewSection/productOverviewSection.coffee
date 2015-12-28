@@ -9,6 +9,10 @@ Wings.defineHyper 'productOverviewSection',
     quantities    = currentData.merchantQuantities[0]
     priceBook     = currentData.priceBooks[0]
 
+    console.log currentData
+    console.log productUnit
+    console.log productUnitEx
+
     self = this
     self.productUnitData = new ReactiveVar({
       isInventory: 'active'

@@ -54,6 +54,12 @@ template(name="providerOverviewSection")
           name="providerCode" placeholder="{{getString code}}")
 
         .collapsible-row
+          .description Người đại diện
+          span.editable.dashed(class="{{isEditMode false}}") {{getString representative}}
+          input.input-field.providerEdit(class="{{isEditMode true}}" value="{{representative}}"
+          name="providerRepresentative" placeholder="Tên người đại diện")
+
+        .collapsible-row
           .description Ghi chú
           span.editable.dashed(class="{{isEditMode false}}") {{getString description}}
           input.input-field.providerEdit(class="{{isEditMode true}}" value="{{description}}"

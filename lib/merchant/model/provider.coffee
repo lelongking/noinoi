@@ -12,7 +12,7 @@ simpleSchema.providers = new SimpleSchema
 
   address        : simpleSchema.OptionalString
   billNo         : type: Number, defaultValue: 0
-  representative : simpleSchema.OptionalString
+  representative : simpleSchema.OptionalString #nguoi dai dien
   manufacturer   : simpleSchema.OptionalString
 
   saleBillNo        : type: Number, defaultValue: 0 #số phiếu bán

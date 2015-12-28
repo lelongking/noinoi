@@ -92,6 +92,10 @@ addNewProvider = (event, template, provider = {}) ->
       providerDescription  = $providerDescription.val().replace(/^\s*/, "").replace(/\s*$/, "")
       provider.description = providerDescription if providerDescription
 
+      $providerRepresentative = template.ui.$providerRepresentative
+      providerRepresentative  = $providerRepresentative.val().replace(/^\s*/, "").replace(/\s*$/, "")
+      provider.representative = providerRepresentative if providerRepresentative
+
       newProviderId = Schema.providers.insert provider
       if Match.test(newProviderId, String)
         Provider.selectProvider(newProviderId)
