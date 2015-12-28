@@ -11,7 +11,7 @@
 #    app: "staffManagement"
 #  ]
 #
-#  transactionTypeSelecta:
+#  transactionTypeSelect:
 #    query: (query) -> query.callback
 #      results: _.filter(Enums.TransactionGroups, (num) -> return num unless num._id is 2)
 #      text: '_id'
@@ -36,19 +36,6 @@
 #  transactionOwnerSelect:
 #    query: (query) -> query.callback
 #      results: ownerSearch(query.term)
-##      results: ->
-##        transactionManagement = Session.get('transactionManagement')
-##        return [] unless transactionManagement
-##
-##        selector = merchant: Merchant.getId(); options = {sort: {nameSearch: 1}}
-##        if(query.term)
-##          regExp = Helpers.BuildRegExp(query.term);
-##          selector = {$or: [
-##            {nameSearch: regExp, merchant: Merchant.getId()}
-##          ]}
-##        scope.customerList = Schema.customers.find(selector, options).fetch()
-##        scope.customerList
-#
 #      text: 'name'
 #    initSelection: (element, callback) -> callback findTransactionOwner(Session.get('transactionManagement')?.data.owner)
 #    formatSelection: (item) -> "#{item.name}" if item

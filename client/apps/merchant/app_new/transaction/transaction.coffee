@@ -1,6 +1,48 @@
 Enums = Apps.Merchant.Enums
 scope = logics.transactionManagement
 
+
+customerList = {}
+ownerSearch = (textSearch) ->
+  selector = merchant: Merchant.getId(); options = {sort: {nameSearch: 1}}
+  if(textSearch)
+    regExp = Helpers.BuildRegExp(textSearch);
+    selector = {$or: [
+      {nameSearch: regExp, merchant: Merchant.getId()}
+    ]}
+  customerList = Schema.customers.find(selector, options).fetch()
+  customerList
+
+findTransactionGroup = (transactionGroup) ->
+  _.findWhere(Enums.TransactionGroups, {_id: transactionGroup})
+
+findTransactionReceivable = (receivable) ->
+  _.findWhere(Enums.TransactionCustomerIncomeOrCost, {_id: receivable})
+
+findTransactionOwner = (ownerId)->
+  _.findWhere(customerList, {_id: ownerId})
+
+transactionOwnerSelect =
+  query: (query) -> query.callback
+    results: ownerSearch(query.term)
+    text: 'name'
+  initSelection: (element, callback) -> callback findTransactionOwner(Session.get('transactionManagement')?.data.owner)
+  formatSelection: (item) -> "#{item.name}" if item
+  formatResult: (item) -> "#{item.name}" if item
+  id: '_id'
+  placeholder: 'Chọn KH hoặc NCC'
+  changeAction: (e) ->
+    if e.added
+      transactionManagement = Session.get('transactionManagement')
+      newTransaction = transactionManagement.data
+      newTransaction.owner = e.added._id
+      Session.set('transactionCustomerOwner', e.added)
+      Session.set('transactionManagement', transactionManagement)
+  reactiveValueGetter: -> Session.get('transactionManagement')?.data.owner ? 'skyReset'
+
+
+
+
 Wings.defineApp 'transaction',
   created: ->
     self = this
@@ -39,8 +81,6 @@ Wings.defineApp 'transaction',
 
     Session.set('transactionManagement', transactionManagement)
 
-
-
   rendered: ->
 
   destroyed: ->
@@ -55,10 +95,7 @@ Wings.defineApp 'transaction',
 
     isShowDetail: (transaction)-> if @active is transaction then true else false
 
-
-    typeSelectOptions: scope.transactionTypeSelect
-    ownerSelectOptions: scope.transactionOwnerSelect
-    customerIncomeOrCostSelectOptions: scope.transactionOwnerIncomeOrCostSelect
+    ownerSelectOptions: transactionOwnerSelect
 
 
   events:
@@ -106,111 +143,4 @@ Wings.defineApp 'transaction',
       Session.set('transactionManagement', transactionData)
 
 
-transactionOwnerSelect:
-  query: (query) -> query.callback
-    results: ownerSearch(query.term)
-    text: 'name'
-  initSelection: (element, callback) -> callback findTransactionOwner(Session.get('transactionManagement')?.data.owner)
-  formatSelection: (item) -> "#{item.name}" if item
-  formatResult: (item) -> "#{item.name}" if item
-  id: '_id'
-  placeholder: 'Chọn KH hoặc NCC'
-  changeAction: (e) ->
-    if e.added
-      transactionManagement = Session.get('transactionManagement')
-      newTransaction = transactionManagement.data
-      newTransaction.owner = e.added._id
-      Session.set('transactionManagement', transactionManagement)
-  reactiveValueGetter: -> Session.get('transactionManagement')?.data.owner ? 'skyReset'
 
-
-
-customerList = {}
-ownerSearch = (textSearch) ->
-  transaction = Session.get('transactionDetail')
-  return [] unless transaction
-
-  selector = merchant: Merchant.getId(); options = {sort: {nameSearch: 1}}
-  if(textSearch)
-    regExp = Helpers.BuildRegExp(textSearch);
-    selector = {$or: [
-      {nameSearch: regExp, merchant: Merchant.getId()}
-    ]}
-  customerList = Schema.customers.find(selector, options).fetch()
-  customerList
-
-findTransactionGroup = (transactionGroup) ->
-  _.findWhere(Enums.TransactionGroups, {_id: transactionGroup})
-
-findTransactionReceivable = (receivable) ->
-  _.findWhere(Enums.TransactionCustomerIncomeOrCost, {_id: receivable})
-
-findTransactionOwner = (ownerId)->
-  _.findWhere(customerList, {_id: ownerId})
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-numericOption = {autoGroup: true, groupSeparator:",", radixPoint: ".", suffix: "%/tháng", integerDigits:4, rightAlign: false}
-Wings.defineHyper 'interestRateManager',
-  created: ->
-
-  rendered: ->
-    self = this
-    self.ui.$interestRateInitial.inputmask "decimal", numericOption
-    self.ui.$interestRateInitial.val 2
-
-    self.ui.$interestRateLoan.inputmask "decimal", numericOption
-    self.ui.$interestRateLoan.val 2
-
-    self.ui.$interestRateSale.inputmask "decimal", numericOption
-    self.ui.$interestRateSale.val 2
-
-Wings.defineHyper 'editInitialInterest',
-  created: ->
-
-  rendered: ->
-    self = this
-    self.ui.$initialAmount.inputmask "integer", {autoGroup: true, groupSeparator:",", radixPoint: ".", suffix: "", integerDigits: 11, rightAlign: false}
-    self.ui.$initialAmount.val 50000
-
-    self.ui.$initialInterestRate.inputmask "decimal", {autoGroup: true, groupSeparator:",", radixPoint: ".", suffix: "%/tháng", integerDigits:4, rightAlign: false}
-    self.ui.$initialInterestRate.val 2
-
-    dateOfBirth = moment().format("DD/MM/YYYY")
-    @datePicker.$dateDebit.datepicker('setDate', dateOfBirth)

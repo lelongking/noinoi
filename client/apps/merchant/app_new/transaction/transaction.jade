@@ -1,0 +1,56 @@
+template(name="transaction")
+  #header
+    .editor-row
+      .editor-wrapper(style="width: 260px ;border-right: solid 1px #cfcfcf;")
+      //  span.ilabel.optional Áp dụng:
+      //  +iSelect(options=typeSelectOptions class="field")
+
+      .editor-wrapper(style="width: 300px")
+        span.ilabel.optional Tên KH hoặc NCC :
+        +iSelect(options=ownerSelectOptions class="field")
+
+      //.editor-wrapper(style="width: 250px")
+      //  span.ilabel.optional Loại phiếu:
+      //  +iSelect(options=customerIncomeOrCostSelectOptions class="field")
+
+      .editor-wrapper.pull-right
+        button.flat.btn.lime.createTransaction(class="{{getSession 'transactionCreateNewIsDisabled'}}") XÁC NHẬN
+
+
+  #content.modern
+    .dual-content
+      with currentData
+        .dual-addon
+          .group-nav
+            .caption.inner.toInterest(class="{{isActive 'interest'}}")
+              span.avatar.letter
+              span.text.uppercase LÃI SUẤT
+            .caption.inner.toLoan(class="{{isActive 'loan'}}")
+              span.avatar.letter
+              span.text.uppercase NHẬP NỢ
+            .caption.inner.toPaid(class="{{isActive 'paid'}}")
+              span.avatar.letter
+              span.text.uppercase TRẢ TIỀN
+
+        .dual-detail-wrapper
+          .dual-detail
+            .nano: .nano-content
+
+              if isShowDetail 'interest'
+                +interestRateManager
+
+              if isShowDetail 'loan'
+                +editInitialInterest
+                +createLoanTransaction
+
+              //if isShowDetail 'paid'
+              //  +createpaidTransaction
+
+
+
+
+
+
+
+
+

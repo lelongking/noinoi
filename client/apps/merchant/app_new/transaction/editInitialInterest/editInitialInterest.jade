@@ -1,0 +1,19 @@
+template(name="editInitialInterest")
+  .section.top.panel.panel-default.options-section
+    .panel-heading
+      span.icon-contacts nợ đầu kỳ
+
+    .panel-body
+      .collapsible-row
+        .description(style="width:100px") Nợ đầu kỳ :
+        input.input-field(style="width:100px; font-weight: bolder; color: #7ac5f9;"
+        name="initialAmount" tabindex="1")
+
+        .description(style="width:85px") Lãi suất :
+        input.input-field(style="width:50px; font-weight: bolder; color: #7ac5f9;"
+        name="initialInterestRate" tabindex="2")
+        .description(style="width:100px; padding-left: 5px;"): b %/tháng
+
+        .description(style="width:100px") Ngày nợ :
+        input.input-field(name="dateDebit" binding="datePicker" todayHighlight="true" maxlength="20"
+        style="width:100px; font-weight: bolder; color: #7ac5f9;" tabindex="3")

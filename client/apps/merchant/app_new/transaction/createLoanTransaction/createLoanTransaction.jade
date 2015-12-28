@@ -1,0 +1,31 @@
+template(name="createLoanTransaction")
+  .section.panel.panel-default.printable-area
+    .panel-heading
+      .hide-on-print(style="position: relative;")
+        span <b>{{timeHM}}<sup>{{timeS}}</sup></b>, ngày <b>{{timeDMY}}</b> <b>{{fullDay}}</b>
+        span(style="position: absolute; right: 0px;") PHIẾU VAY TIỀN
+    .panel-body
+      table.lemon-grid
+        tr
+          th(style="width:auto")
+          th(style="width:250px")
+          th(style="width:300px")
+        tr.editors(style="{{showTransaction}}")
+          td(colspan="2"): input.transaction-field(type="text" size="10"  name='transactionDescription' placeholder="ghi chú thu chi")
+          td: input.transaction-field.number(type="text" size="10"  name='transactionAmount' placeholder="số tiền")
+        tr
+          td.date: span NGƯỜI NHẬN
+          td.number: span.s5 Khách Hàng:
+          td.number: span.s4 Nguyễn Hồng Kỳ
+        tr
+          td.date
+          td.number: span.s5 Nợ Hiện Tại:
+          td.number: span.s4 <b>500.000</b> VNĐ
+        tr
+          td.date:  span.s6.note (<i>Chữ ký và Họ Tên</i>)
+          td.number: span.s5 Nợ Vay Tiền:
+          td.number: span.s4 <b>100.000</b> VNĐ
+        tr
+          td.date
+          td.number: span.s5 Tổng Nợ:
+          td.number(style="border-top: solid 1px #d7d7d7"): span.s4 <b>600.000</b> VNĐ

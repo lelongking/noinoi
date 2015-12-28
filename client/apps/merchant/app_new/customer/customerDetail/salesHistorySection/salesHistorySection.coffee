@@ -38,11 +38,13 @@ lemon.defineHyper Template.customerManagementSalesHistorySection,
 
     amountDetails: ->
       currentCustomer = Template.currentData()
-      debitCash    = currentCustomer.initialAmount + currentCustomer.loanAmount
-      saleCash     = currentCustomer.saleAmount + currentCustomer.debtAmount - currentCustomer.returnAmount
-      interestCash = 0
-      paidCash     = currentCustomer.paidAmount
 
+      debitCash    = (currentCustomer.initialAmount ? 0) + (currentCustomer.loanAmount ? 0)
+      saleCash     = (currentCustomer.saleAmount ? 0) + (currentCustomer.debtAmount ? 0) - (currentCustomer.returnAmount ? 0)
+      interestCash = 0
+      paidCash     = (currentCustomer.paidAmount ? 0)
+
+      console.log debitCash
       debitCash   : debitCash + saleCash
       interestCash: interestCash
       paidCash    : paidCash

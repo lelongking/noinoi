@@ -94,7 +94,7 @@ template(name="customerManagementSalesHistorySection")
           class="{{isNotDisabled 'allowCreateTransactionOfCustomer'}}") {{transactionStatus}}
 
     with amountDetails
-      +panelFooter_salesHistory
+      +panelFooter_salesHistory(this)
 
 
 

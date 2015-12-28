@@ -25,11 +25,10 @@ simpleSchema.customers = new SimpleSchema
   returnSaleCash   : type: Number, optional: true #số tiền trả hàng phát sinh trong kỳ
 
 
-  initialInterestRate : type: Number, optional: true, decimal: true
-  interestRateSale    : type: Number, optional: true, decimal: true
-  interestRateLoan    : type: Number, optional: true, decimal: true
-
   initialAmount       : type: Number, optional: true #no ban dau
+  initialInterestRate : type: Number, optional: true, decimal: true
+  initialStartDate    : type: Date, optional: true
+
   saleAmount          : type: Number, optional: true #ban hang
   returnAmount        : type: Number, optional: true #tra hàng(tru va ban hang)
   loanAmount          : type: Number, optional: true #no cho vay(muon)
@@ -41,6 +40,7 @@ simpleSchema.customers = new SimpleSchema
 
 #----Detailed Interest--------------------------------
   debtDetails               : type: Object, optional: true
+  'debtDetails.seasonId'    : type: String, optional: true
   'debtDetails.parent'      : type: String, optional: true
   'debtDetails.detailId'    : type: String, optional: true
   'debtDetails.debtType'    : type: Number, optional: true
