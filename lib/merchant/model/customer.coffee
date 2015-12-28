@@ -32,7 +32,7 @@ simpleSchema.customers = new SimpleSchema
   saleAmount          : type: Number, optional: true #ban hang
   returnAmount        : type: Number, optional: true #tra hàng(tru va ban hang)
   loanAmount          : type: Number, optional: true #no cho vay(muon)
-  debtAmount          : type: Number, optional: true #no trả hàng(tra hang lay tien mat)
+  returnPaidAmount    : type: Number, optional: true #no trả hàng(tra hang lay tien mat)
   paidAmount          : type: Number, optional: true #no đã trả(khách hàng tra tien)
   interestAmount      : type: Number, optional: true #no cho vay(tien lai)
 

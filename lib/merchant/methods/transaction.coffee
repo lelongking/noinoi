@@ -12,65 +12,80 @@ findTransactionParent = (transaction)->
 Meteor.methods
   addCustomer:(name, description) -> Schema.customers.insert({name: name})
 
-  createTransaction: (ownerId, money, name = null, description = null, transactionGroup = Enums.getValue('TransactionGroups', 'provider'), receivable = undefined)->
-    console.log ownerId, money, name, description, transactionGroup, receivable
+  createTransaction: (ownerId, transactionType, balanceChange, name = null, description = null)->
+    console.log transactionType, ownerId, balanceChange, name, description
+
+    balanceChange = Math.abs(balanceChange)
+    isCustomer = _.contains([
+      Enums.getValue('TransactionGroups', 'saleAmount')
+      Enums.getValue('TransactionGroups', 'returnSaleAmount')
+      Enums.getValue('TransactionGroups', 'customerLoanAmount')
+      Enums.getValue('TransactionGroups', 'customerPaidAmount')
+      Enums.getValue('TransactionGroups', 'returnCustomerPaidAmount')
+
+    ], transactionType)
+
+    isProvider = _.contains([
+      Enums.getValue('TransactionGroups', 'importAmount')
+      Enums.getValue('TransactionGroups', 'returnImportAmount')
+      Enums.getValue('TransactionGroups', 'providerLoanAmount')
+      Enums.getValue('TransactionGroups', 'providerPaidAmount')
+      Enums.getValue('TransactionGroups', 'returnProviderPaidAmount')
+    ], transactionType) if !isCustomer
 
 
-    if transactionGroup is Enums.getValue('TransactionGroups', 'provider')
-      owner = Schema.providers.findOne(ownerId)
-    #    else if transactionType is Enums.getValue('TransactionGroups', 'customer')
-    #      owner = Schema.customers.findOne(ownerId)
+    if isCustomer
+      owner = Schema.customer.findOne({_id: ownerId})
+    else if isProvider
+      owner = Schema.providers.findOne({_id: ownerId})
 
-    if owner
-      transaction = Schema.transactions.findOne({owner: owner._id}, {sort: {'version.createdAt': -1}})
-
-      ownerUpdate = $set: {allowDelete : false}, $inc:{}
-      ownerUpdate.$inc.totalCash = if receivable then money else -money
-      if transaction # tao phieu tra tien, no cu. ko co tao phieu ban voi tra hang
-        ownerUpdate.$inc.paidCash  = if receivable then 0 else money
-        ownerUpdate.$inc.loanCash  = if receivable then money else 0
-      else #Nhap ton dau ky
-        ownerUpdate.$inc.beginCash = if receivable then money else -money
-
+    if owner and balanceChange > 0
+      oldTransaction = Schema.transactions.findOne({owner: owner._id}, {sort: {'version.createdAt': -1}})
       transactionInsert =
-#      transactionCode :
-        transactionGroup  : transactionGroup
-        transactionType : Enums.getValue('TransactionTypes', 'incurredCash')
-        owner             : owner._id
-        receivable        : receivable
-        beforeDebtBalance : owner.totalCash
-        owedCash          : money
-        status            : Enums.getValue('TransactionStatuses', if receivable then 'tracking' else 'closed')
+        balanceType    : transactionType
+        balanceChange  : balanceChange
 
       transactionInsert.transactionName = name if name
       transactionInsert.description = description if description
-      transactionInsert.parent = transaction.parent if transaction?.parent
-      transactionInsert.isBeginCash = if transaction then false else true
+      transactionInsert.parent = oldTransaction.parent if oldTransaction?.parent
+      transactionInsert.isBeginCash = if oldTransaction then false else true
       transactionInsert.isUseCode = !transactionInsert.isBeginCash
 
-      if transactionGroup is Enums.getValue('TransactionGroups', 'provider')
-        transactionInsert.transactionName   = if receivable then 'Phiếu Thu' else 'Phiếu Chi'
-        unless description
-          transactionInsert.description     = if receivable then 'Nợ tiền' else 'Trả tiền'
-        transactionInsert.debtBalanceChange = if receivable then money else 0
-        transactionInsert.paidBalanceChange = if receivable then 0 else money
+      debitCash = (owner.interestAmount ? 0) + (owner.saleAmount ? 0) + (owner.loanAmount ? 0) + (owner.returnPaidAmount ? 0)
+      paidCash  = (owner.returnAmount ? 0) + (owner.paidAmount ? 0)
+      transactionInsert.balanceBefore = debitCash - paidCash
+      transactionInsert.balanceLatest = transactionInsert.balanceBefore
 
-      #      else if transactionType is Enums.getValue('TransactionTypes', 'customer')
-      #        transactionInsert.transactionName   = if receivable then 'Phiếu Chi' else 'Phiếu Thu'
-      #        unless description
-      #          transactionInsert.description     = if receivable then 'Nợ tiền' else 'Trả tiền'
-      #        transactionInsert.debtBalanceChange = if receivable then money else 0
-      #        transactionInsert.paidBalanceChange = if receivable then 0 else money
+      ownerUpdate = $set: {allowDelete : false}
+      if isCustomer
+        if transactionType is Enums.getValue('TransactionGroups', 'saleAmount')
+          ownerUpdate.$inc = {saleAmount : balanceChange}
+          transactionInsert.balanceLatest += balanceChange
+        else if transactionType is Enums.getValue('TransactionGroups', 'customerLoanAmount')
+          ownerUpdate.$inc = {loanAmount : balanceChange}
+          transactionInsert.balanceLatest += balanceChange
+        else if transactionType is Enums.getValue('TransactionGroups', 'returnCustomerPaidAmount')
+          ownerUpdate.$inc = {returnPaidAmount : balanceChange}
+          transactionInsert.balanceLatest += balanceChange
 
-      latestDebtBalance = transactionInsert.beforeDebtBalance + ownerUpdate.$inc.totalCash
-      transactionInsert.latestDebtBalance = latestDebtBalance
+        else if transactionType is Enums.getValue('TransactionGroups', 'customerPaidAmount')
+          ownerUpdate.$inc = {paidAmount : balanceChange}
+          transactionInsert.balanceLatest += -balanceChange
+        else if transactionType is Enums.getValue('TransactionGroups', 'returnSaleAmount')
+          ownerUpdate.$inc = {returnAmount : balanceChange}
+          transactionInsert.balanceLatest += -balanceChange
+
+      else if isProvider
+
+
 
       if Schema.transactions.insert(transactionInsert)
-        if transactionGroup is Enums.getValue('TransactionGroups', 'provider')
+        if isCustomer
+          Schema.customers.update owner._id, ownerUpdate
+        else if isProvider
           Schema.providers.update owner._id, ownerUpdate
-#        else if transactionType is Enums.getValue('TransactionGroups', 'customer')
-#          Schema.customers.update owner._id, ownerUpdate
-#          Schema.customerGroups.update owner.group, $inc:{totalCash: ownerUpdate.$inc.totalCash} if owner.group
+
+
 
   createNewTransaction: (transactionGroup, transactionType, receivable, ownerId, money, description = null)->
 #    console.log ownerId, money, description, transactionType, receivable

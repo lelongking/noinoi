@@ -8,9 +8,9 @@ Wings.defineHyper 'editInitialInterest',
     $initialAmount.inputmask "integer", integerOption
     $initialAmount.val 0
 
-    decimal = {autoGroup: true, groupSeparator:",", radixPoint: ".", integerDigits:4}
+    decimalOption        = {autoGroup: true, groupSeparator:",", radixPoint: ".", integerDigits:4}
     $initialInterestRate = self.ui.$initialInterestRate
-    $initialInterestRate.inputmask "decimal", decimal
+    $initialInterestRate.inputmask "decimal", decimalOption
     $initialInterestRate.val 0
 
 

@@ -2,9 +2,9 @@ Enums = Apps.Merchant.Enums
 
 simpleSchema.transactions = new SimpleSchema
   name        : type: String, defaultValue: 'ĐƠN HÀNG'
-  code        : type: String, optional: true
-  owner       : type: String, optional: true
-  parent      : type: String, optional: true
+  code        : type: String, optional: true, index: 1
+  owner       : type: String, optional: true, index: 1
+  parent      : type: String, optional: true, index: 1
   description : type: String, optional: true
 
   isBeginCash : type: Boolean , defaultValue: false # transaction la no dau ky
