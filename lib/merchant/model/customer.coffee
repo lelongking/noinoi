@@ -110,8 +110,12 @@ Schema.add 'customers', "Customer", class Customer
     doc.beginCash     = -> (@debtBeginCash ? 0) - (@paidBeginCash ? 0)
     doc.incurredCash  = -> (@debtIncurredCash ? 0) - (@paidIncurredCash ? 0)
     doc.saleCash      = -> (@debtSaleCash ? 0) - (@paidSaleCash ? 0) - (@returnSaleCash ? 0)
-    doc.totalPaidCash = -> (@paidRequiredCash ? 0) + (@paidBeginCash ? 0) + (@paidSaleCash ? 0)
-    doc.totalCash     = -> @requiredCash() + @beginCash() + @incurredCash() + @saleCash()
+
+
+    debitCash = (doc.interestAmount ? 0) + (doc.saleAmount ? 0) + (doc.loanAmount ? 0) + (doc.returnPaidAmount ? 0)
+    paidCash  = (doc.returnAmount ? 0) + (doc.paidAmount ? 0)
+    doc.totalDebtCash = debitCash - paidCash
+    doc.totalCash     = debitCash - paidCash + (doc.initialAmount ? 0)
 
     doc.remove = ->
       if @allowDelete and Schema.customers.remove(@_id)

@@ -272,27 +272,27 @@ Schema.add 'returns', "Return", class Return
                         console.log('Import Detail Error, ko du so luong'); return
 
 
-#      if transactionId = createTransactionByCustomer(currentReturn)
-      for productId, quantities of productReturnQuantities
-        productUpdate =
-          $inc:
-            'merchantQuantities.0.inStockQuantity'    : quantities
-            'merchantQuantities.0.returnSaleQuantity' : quantities
-            'merchantQuantities.0.availableQuantity'  : quantities
-        Schema.products.update productId, productUpdate
+      if transactionId = createTransactionByCustomer(currentReturn)
+        for productId, quantities of productReturnQuantities
+          productUpdate =
+            $inc:
+              'merchantQuantities.0.inStockQuantity'    : quantities
+              'merchantQuantities.0.returnSaleQuantity' : quantities
+              'merchantQuantities.0.availableQuantity'  : quantities
+          Schema.products.update productId, productUpdate
 
-#      for importId, importUpdate of importUpdateOption
-#        Schema.imports.update importId, importUpdate
+  #      for importId, importUpdate of importUpdateOption
+  #        Schema.imports.update importId, importUpdate
 
-      orderUpdateOption.$set = {allowDelete: false}
-      Schema.orders.update @parent, orderUpdateOption
+        orderUpdateOption.$set = {allowDelete: false}
+        Schema.orders.update @parent, orderUpdateOption
 
-      Schema.returns.update @_id, $set:{
-        returnStatus: Enums.getValue('ReturnStatus', 'success')
-#          transaction : transactionId
-        staffConfirm: Meteor.userId()
-        successDate : new Date()
-      }
+        Schema.returns.update @_id, $set:{
+          returnStatus: Enums.getValue('ReturnStatus', 'success')
+          transaction : transactionId
+          staffConfirm: Meteor.userId()
+          successDate : new Date()
+        }
 
     doc.deleteCustomerReturn = ->
 
@@ -409,29 +409,44 @@ updateProductQuery = (returnDetail, returnType)->
   return {_id: returnDetail.product, updateOption: productUpdate}
 
 createTransactionByCustomer = (currentReturn)->
-  if customer = Schema.customers.findOne(currentReturn.owner)
-    transactionInsert =
-      transactionName : 'Phiếu Trả Hàng'
-  #      transactionCode :
-  #    description      : 'Phiếu Bán'
-      transactionType  : Enums.getValue('TransactionTypes', 'return')
-      receivable       : false #khach hang da tra
-      owner            : customer._id
-      isRoot           : true
-      parent           : currentReturn._id
-      beforeDebtBalance: customer.totalCash
-      debtBalanceChange: currentReturn.depositCash
-      paidBalanceChange: currentReturn.finalPrice
-      latestDebtBalance: customer.totalCash - currentReturn.finalPrice - currentReturn.depositCash
+  if customer = Schema.customers.findOne({_id: currentReturn.owner})
+    createTransactionOfSaleReturn =
+      name         :  'Phiếu Trả Hàng'
+      balanceType  : Enums.getValue('TransactionTypes', 'returnSaleAmount')
+      receivable   : false
+      isRoot       : true
+      owner        : customer._id
+      parent       : currentReturn._id
+      isUseCode    : false
+      isPaidDirect : false
+      balanceBefore: customer.totalDebtCash
+      balanceChange: currentReturn.finalPrice
+      balanceLatest: customer.totalDebtCash - currentReturn.finalPrice
 
-    transactionInsert.dueDay    = currentReturn.dueDay if currentReturn.dueDay
-    transactionInsert.owedCash  = currentReturn.finalPrice + currentReturn.depositCash
-    transactionInsert.status    = Enums.getValue('TransactionStatuses', 'tracking')
+    if transactionSaleReturnId = Schema.transactions.insert(createTransactionOfSaleReturn)
+      if currentReturn.depositCash > 0
+        createTransactionOfDepositReturnSale =
+          name         : 'Phiếu Chi Tiền'
+          description  : 'Chi tiền mặt cho phiếu: ' + order.code
+          balanceType  : Enums.getValue('TransactionTypes', 'customerPaidAmount')
+          receivable   : false
+          isRoot       : false
+          owner        : customer._id
+          parent       : currentReturn._id
+          isUseCode    : true
+          isPaidDirect : true
+          balanceBefore: customer.totalDebtCash - currentReturn.finalPrice
+          balanceChange: currentReturn.depositCash
+          balanceLatest: customer.totalDebtCash - currentReturn.finalPrice + currentReturn.depositCash
+        Schema.transactions.insert(createTransactionOfDepositReturnSale)
 
-    if transactionId = Schema.transactions.insert(transactionInsert)
-      Schema.customers.update customer._id, $inc: {returnCash: currentReturn.finalPrice, totalCash : -currentReturn.finalPrice}
-      Schema.customerGroups.update customer.group, $inc:{totalCash: -currentReturn.finalPrice} if customer.group
-    return transactionId
+      customerUpdate =
+        returnAmount     : currentReturn.finalPrice
+        returnPaidAmount : currentReturn.depositCash
+
+      Schema.customers.update customer._id, $inc: customerUpdate
+      Schema.customerGroups.update customer.group, $inc:{totalDebtCash: -currentReturn.finalPrice} if customer.group
+    return transactionSaleReturnId
 
 createTransactionByProvider = (currentReturn)->
   if provider = Schema.providers.findOne(currentReturn.owner)
@@ -444,10 +459,10 @@ createTransactionByProvider = (currentReturn)->
       owner            : provider._id
       isRoot           : true
       parent           : currentReturn._id
-      beforeDebtBalance: provider.totalCash
+      beforeDebtBalance: provider.totalDebtCash
       debtBalanceChange: currentReturn.depositCash
       paidBalanceChange: currentReturn.finalPrice
-      latestDebtBalance: provider.totalCash - currentReturn.finalPrice - currentReturn.depositCash
+      latestDebtBalance: provider.totalDebtCash - currentReturn.finalPrice - currentReturn.depositCash
 
     transactionInsert.dueDay    = currentReturn.dueDay if currentReturn.dueDay
     transactionInsert.owedCash  = currentReturn.finalPrice + currentReturn.depositCash
@@ -456,6 +471,6 @@ createTransactionByProvider = (currentReturn)->
     if transactionId = Schema.transactions.insert(transactionInsert)
       Schema.providers.update provider._id, $inc: {
         returnCash: currentReturn.finalPrice
-        totalCash : -currentReturn.finalPrice
+        totalDebtCash : -currentReturn.finalPrice
       }
     return transactionId

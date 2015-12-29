@@ -56,8 +56,8 @@ createTransaction = (customer, order)->
 
   if transactionSaleId = Schema.transactions.insert(createTransactionOfSale)
     if order.depositCash > 0 #co tra tien
-      createTransactionOfSale =
-        name         : 'Phiếu Trả Tiền'
+      createTransactionOfDepositSale =
+        name         : 'Phiếu Thu Tiền'
         description  : 'Thanh toán phiếu: ' + order.code
         balanceType  : Enums.getValue('TransactionTypes', 'customerPaidAmount')
         receivable   : false
@@ -70,7 +70,7 @@ createTransaction = (customer, order)->
         balanceChange: order.depositCash
         balanceLatest: debitCash - paidCash + order.finalPrice - order.depositCash
 
-      Schema.transactions.insert(createTransactionOfSale)
+      Schema.transactions.insert(createTransactionOfDepositSale)
 
     customerUpdate =
       paidAmount  : order.depositCash
