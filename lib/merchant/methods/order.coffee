@@ -37,43 +37,49 @@ subtractQuantityOnSales = (importDetails, saleDetail) ->
   return transactionQuantity == saleDetail.basicQuantity
 
 createTransaction = (customer, order)->
-  transactionInsert =
-    transactionName : 'Phiếu Bán'
-#      transactionCode :
-#    description      : 'Phiếu Bán'
-    transactionType  : Enums.getValue('TransactionTypes', 'customer')
-    receivable       : true
-    isRoot           : true
-    owner            : customer._id
-    parent           : order._id
-    isUseCode        : order.depositCash > 0
-    beforeDebtBalance: customer.totalCash
-    debtBalanceChange: order.finalPrice
-    paidBalanceChange: order.depositCash
-    latestDebtBalance: customer.totalCash + order.finalPrice - order.depositCash
+  debitCash = (customer.interestAmount ? 0) + (customer.saleAmount ? 0) + (customer.loanAmount ? 0) + (customer.returnPaidAmount ? 0)
+  paidCash  = (customer.returnAmount ? 0) + (customer.paidAmount ? 0)
+
+  createTransactionOfSale =
+    name         : 'Phiếu Bán'
+    balanceType  : Enums.getValue('TransactionTypes', 'saleAmount')
+    receivable   : true
+    isRoot       : true
+    owner        : customer._id
+    parent       : order._id
+    isUseCode    : false
+    isPaidDirect : false
+    balanceBefore: debitCash - paidCash
+    balanceChange: order.finalPrice
+    balanceLatest: debitCash - paidCash + order.finalPrice
 
 
-  transactionInsert.dueDay    = order.dueDay if order.dueDay
-  transactionInsert.owedCash  = Math.abs(order.finalPrice - order.depositCash)
+  if transactionSaleId = Schema.transactions.insert(createTransactionOfSale)
+    if order.depositCash > 0 #co tra tien
+      createTransactionOfSale =
+        name         : 'Phiếu Trả Tiền'
+        description  : 'Thanh toán phiếu: ' + order.code
+        balanceType  : Enums.getValue('TransactionTypes', 'customerPaidAmount')
+        receivable   : false
+        isRoot       : false
+        owner        : customer._id
+        parent       : order._id
+        isUseCode    : true
+        isPaidDirect : true
+        balanceBefore: debitCash - paidCash + order.finalPrice
+        balanceChange: order.depositCash
+        balanceLatest: debitCash - paidCash + order.finalPrice - order.depositCash
 
-  if order.depositCash >= order.finalPrice # phiếu nhập đã thanh toán hết cho NCC
-    transactionInsert.status = Enums.getValue('TransactionStatuses', 'closed')
-  else
-    transactionInsert.status = Enums.getValue('TransactionStatuses', 'tracking')
+      Schema.transactions.insert(createTransactionOfSale)
 
-  if transactionInsert.isUseCode
-    console.log 'insertCode'
-
-  if transactionId = Schema.transactions.insert(transactionInsert)
     customerUpdate =
-      paidCash    : order.depositCash
-      debtCash    : order.finalPrice
-      totalCash   : order.finalPrice - order.depositCash
+      paidAmount  : order.depositCash
+      saleAmount  : order.finalPrice
 
     Schema.customers.update order.buyer, { $inc: customerUpdate, $set: {allowDelete : false} }
-    Schema.customerGroups.update order.group, $inc:{totalCash: customerUpdate.totalCash} if customer.group
+    Schema.customerGroups.update order.group, $inc:{totalCash: order.finalPrice - order.depositCash} if customer.group
 
-  return transactionId
+  return transactionSaleId
 
 updateSubtractQuantityInProductUnit = (product, orderDetail) ->
   detailIndex = 0; updateProductQuery = {$inc:{}}
@@ -528,8 +534,8 @@ Meteor.methods
       customerFound = Schema.customers.findOne(orderFound.buyer)
       return {valid: false, error: 'customer not found!'} unless customerFound
 
-#      transactionId = createTransaction(customerFound, orderFound)
-#      return {valid: false, error: 'customer not found!'} unless transactionId
+      transactionId = createTransaction(customerFound, orderFound)
+      return {valid: false, error: 'customer not found!'} unless transactionId
 
       for orderDetail, detailIndex in orderFound.details
         if product = Schema.products.findOne({'units._id': orderDetail.productUnit})
@@ -541,7 +547,7 @@ Meteor.methods
 
       updateOrderQuery = $set:
         orderStatus : Enums.getValue('OrderStatus', 'finish')
-#        transaction : transactionId
+        transaction : transactionId
         successDate : new Date()
 #        orderCode   :"#{Helpers.orderCodeCreate(customerFound.saleBillNo)}/#{Helpers.orderCodeCreate(merchantFound.saleBillNo)}"
 

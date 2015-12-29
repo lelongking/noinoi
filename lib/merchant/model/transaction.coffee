@@ -7,10 +7,11 @@ simpleSchema.transactions = new SimpleSchema
   parent      : type: String, optional: true, index: 1
   description : type: String, optional: true
 
-  receivable  : type: Boolean , defaultValue: true # transaction la no dau ky
+  receivable  : type: Boolean , defaultValue: true #
   isBeginCash : type: Boolean , defaultValue: false # transaction la no dau ky
   isUseCode   : type: Boolean , defaultValue: false # transaction co Ma Phieu
   isRoot      : type: Boolean , defaultValue: false # transaction cua order hoac import or return
+  isPaidDirect: type: Boolean , defaultValue: false # transaction cua order hoac import or return
 
   balanceType   : type: Number, defaultValue: Enums.getValue('TransactionTypes', 'saleAmount')
   balanceBefore : type: Number, defaultValue: 0

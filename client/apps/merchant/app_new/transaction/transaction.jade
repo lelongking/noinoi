@@ -38,9 +38,9 @@ template(name="transaction")
 
               if isShowDetail 'interest'
                 +interestRateManager
-
-              if isShowDetail 'loan'
-                +editInitialInterest
+              else
+                if isShowDetail 'loan'
+                  +editInitialInterest
                 +createLoanTransaction(currentCustomer)
 
               //if isShowDetail 'paid'

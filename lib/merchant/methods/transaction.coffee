@@ -83,11 +83,12 @@ Meteor.methods
 
       console.log transactionInsert
 
-      if Schema.transactions.insert(transactionInsert)
+      if transactionId = Schema.transactions.insert(transactionInsert)
         if isCustomer
           Schema.customers.update owner._id, ownerUpdate
         else if isProvider
           Schema.providers.update owner._id, ownerUpdate
+      transactionId
 
 
 # chi xoa transaction no dau ky, voi phieu tra tien, no cu, ko xoa dc phieu ban hang va tra hang

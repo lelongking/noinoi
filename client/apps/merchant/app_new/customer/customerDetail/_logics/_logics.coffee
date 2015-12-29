@@ -4,7 +4,16 @@ scope = logics.customerManagement
 scope.customerLists = []
 
 scope.resetShowEditCommand = -> Session.set "customerManagementShowEditCommand"
-scope.transactionFind = (parentId)-> Schema.transactions.find({parent: parentId}, {sort: {'version.createdAt': 1}})
+scope.transactionFind = (parentId)->
+  Schema.transactions.find({
+      parent: parentId
+      isPaidDirect: {$ne: true}
+    },
+    {
+      sort: {'version.createdAt': 1}
+    })
+
+
 scope.findOldDebtCustomer = ->
   if customer = Template.currentData()
     transaction = Schema.transactions.find({owner: customer._id, parent:{$exists: false}}, {sort: {'version.createdAt': 1}})
@@ -19,7 +28,7 @@ scope.findOldDebtCustomer = ->
 
 scope.findAllOrders = ()->
   if customer = Template.currentData()
-    beforeDebtCash = (customer.debtRequiredCash ? 0) + (customer.debtBeginCash ? 0)
+    beforeDebtCash = (customer.initialAmount ? 0)
     orders = Schema.orders.find({
       buyer      : customer._id
       orderType  : Enums.getValue('OrderTypes', 'success')
@@ -28,9 +37,14 @@ scope.findAllOrders = ()->
       (item) ->
         item.transactions = scope.transactionFind(item._id).map(
           (transaction) ->
-            transaction.hasDebitBegin = (transaction.initialAmount ? 0) > 0
+            transaction.hasDebitBegin = (beforeDebtCash ? 0) > 0
             transaction.sumBeforeBalance = beforeDebtCash + transaction.balanceBefore
-            transaction.sumLatestBalance = beforeDebtCash + transaction.balanceLatest
+            if transaction.isRoot
+              transaction.receivable       = false if (balanceChange = item.finalPrice - item.depositCash) < 0
+              transaction.balanceChange    = Math.abs(balanceChange)
+              transaction.sumLatestBalance = transaction.sumBeforeBalance + balanceChange
+            else
+              transaction.sumLatestBalance = beforeDebtCash + transaction.balanceLatest
             transaction
         )
         item.transactions[item.transactions.length-1].isLastTransaction = true if item.transactions.length > 0

@@ -23,31 +23,34 @@ template(name="customerManagementSaleDetails")
         td.last-column.number {{formatNumber totalPrice}}
 
 
-  //if discountCash
-  //  tr.detail-row
-  //    td.number(colspan="4"): span Tổng phiếu :
-  //    td.number.receive.border-top: span.s5 <b>{{formatNumber totalPrice}}</b>
-  //
-  //  tr.detail-row
-  //    td.number(colspan="4"): span Chiết khấu :
-  //    td.number.paid: span.s5 <b>{{formatNumber discountCash}}</b>
-  //
-  //  if depositCash
-  //    tr.detail-row
-  //      td.number(colspan="4"): span Thanh toán :
-  //      td.number.paid: span.s5 <b>{{formatNumber depositCash}}</b>
-  //
-  //
-  //else
-  //  if depositCash
-  //    tr.detail-row
-  //      td.number(colspan="4"): span Tổng phiếu :
-  //      td.number.receive.border-top: span.s5 <b>{{formatNumber totalPrice}}</b>
-  //
-  //    tr.detail-row
-  //      td.number(colspan="4"): span Thanh toán :
-  //      td.number.paid: span.s5 <b>{{formatNumber depositCash}}</b>
+  if discountCash
+    tr.detail-row
+      td.number(colspan="4"): span Tổng phiếu :
+      td.number.receive: span.s5 <b>{{formatNumber totalPrice}}</b>
 
+    if depositCash
+      tr.detail-row
+        td.number(colspan="4"): span Chiết khấu :
+        td.number.paid: span.s5 <b>{{formatNumber discountCash}}</b>
+
+      tr.detail-row
+        td.number(colspan="4"): span Thanh toán :
+        td.number.paid.border-bottom: span.s5 <b>{{formatNumber depositCash}}</b>
+
+    else
+      tr.detail-row
+        td.number(colspan="4"): span Chiết khấu :
+        td.number.paid.border-bottom: span.s5 <b>{{formatNumber discountCash}}</b>
+
+  else
+    if depositCash
+      tr.detail-row
+        td.number(colspan="4"): span Tổng phiếu :
+        td.number.receive: span.s5 <b>{{formatNumber totalPrice}}</b>
+
+      tr.detail-row
+        td.number(colspan="4"): span Thanh toán :
+        td.number.paid.border-bottom: span.s5 <b>{{formatNumber depositCash}}</b>
 
 
   each transactions
