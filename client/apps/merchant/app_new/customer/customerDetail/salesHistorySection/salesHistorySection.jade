@@ -31,35 +31,17 @@ template(name="customerManagementSalesHistorySection")
           th(style="width:150px")
 
 
-        if hasDebitBegin
-          tr.header-row
-            td.has-commands(colspan="5")
-              | &nbsp;
-              .bill-header <b>Nợ tồn mùa trước</b>
-          tr
+        tr.header-row
+          td.has-commands(colspan="5")
+            | &nbsp;
+            .bill-header <b>Nợ tồn mùa trước</b>
+        tr
 
-          if debtRequiredCash
-            tr.paid-row.top.receive(style="border-bottom: none;")
-              td.has-commands(colspan="3")
-                .bill-header Nợ Phải Thu
-              td.number(colspan="2")
-                span.s5: b {{formatNumber debtRequiredCash}}
-
-          if debtBeginCash
-            tr.paid-row.top.receive(style="border-bottom: none;")
-              td.has-commands(colspan="3")
-                .bill-header Nợ Đầu Kỳ
-              td.number
-                if debtRequiredCash
-                  span.s5.gray.icon-feather-1: b {{formatNumber debtRequiredCash}}
-              td.number
-                span.s5: b {{formatNumber debtBeginCash}}
-
-            if debtRequiredCash
-              tr.detail-row
-                td.number(colspan="3")
-                td.number.border-top(colspan="2")
-                  span.s5: b {{formatNumber sumRequiredAndBeginDebtCash}}
+        tr.paid-row.top.receive(style="border-bottom: none;")
+          td.has-commands(colspan="3")
+            .bill-header Nợ Đầu Kỳ
+          td.number(colspan="2")
+            span.s5: b {{formatNumber initialAmount}}
 
         each oldDebts
           tr.paid-row.top(class="{{transactionClass}}" style="border-bottom: none;")

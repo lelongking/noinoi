@@ -7,6 +7,7 @@ simpleSchema.transactions = new SimpleSchema
   parent      : type: String, optional: true, index: 1
   description : type: String, optional: true
 
+  receivable  : type: Boolean , defaultValue: true # transaction la no dau ky
   isBeginCash : type: Boolean , defaultValue: false # transaction la no dau ky
   isUseCode   : type: Boolean , defaultValue: false # transaction co Ma Phieu
   isRoot      : type: Boolean , defaultValue: false # transaction cua order hoac import or return

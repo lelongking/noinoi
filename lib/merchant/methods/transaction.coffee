@@ -16,32 +16,31 @@ Meteor.methods
     console.log transactionType, ownerId, balanceChange, name, description
 
     balanceChange = Math.abs(balanceChange)
-    isCustomer = _.contains([
-      Enums.getValue('TransactionGroups', 'saleAmount')
-      Enums.getValue('TransactionGroups', 'returnSaleAmount')
-      Enums.getValue('TransactionGroups', 'customerLoanAmount')
-      Enums.getValue('TransactionGroups', 'customerPaidAmount')
-      Enums.getValue('TransactionGroups', 'returnCustomerPaidAmount')
+    isCustomer = if transactionType is Enums.getValue('TransactionTypes', 'saleAmount') or
+      transactionType is Enums.getValue('TransactionTypes', 'returnSaleAmount') or
+      transactionType is Enums.getValue('TransactionTypes', 'customerLoanAmount') or
+      transactionType is Enums.getValue('TransactionTypes', 'customerPaidAmount') or
+      transactionType is Enums.getValue('TransactionTypes', 'returnCustomerPaidAmount')
+        true
 
-    ], transactionType)
+    isProvider = if transactionType is Enums.getValue('TransactionTypes', 'importAmount') or
+      transactionType is Enums.getValue('TransactionTypes', 'returnImportAmount') or
+      transactionType is Enums.getValue('TransactionTypes', 'providerLoanAmount') or
+      transactionType is Enums.getValue('TransactionTypes', 'providerPaidAmount') or
+      transactionType is Enums.getValue('TransactionTypes', 'returnProviderPaidAmount')
+        true
 
-    isProvider = _.contains([
-      Enums.getValue('TransactionGroups', 'importAmount')
-      Enums.getValue('TransactionGroups', 'returnImportAmount')
-      Enums.getValue('TransactionGroups', 'providerLoanAmount')
-      Enums.getValue('TransactionGroups', 'providerPaidAmount')
-      Enums.getValue('TransactionGroups', 'returnProviderPaidAmount')
-    ], transactionType) if !isCustomer
-
+    console.log isCustomer, isProvider
 
     if isCustomer
-      owner = Schema.customer.findOne({_id: ownerId})
+      owner = Schema.customers.findOne({_id: ownerId})
     else if isProvider
       owner = Schema.providers.findOne({_id: ownerId})
 
     if owner and balanceChange > 0
       oldTransaction = Schema.transactions.findOne({owner: owner._id}, {sort: {'version.createdAt': -1}})
       transactionInsert =
+        owner          : ownerId
         balanceType    : transactionType
         balanceChange  : balanceChange
 
@@ -58,32 +57,155 @@ Meteor.methods
 
       ownerUpdate = $set: {allowDelete : false}
       if isCustomer
-        if transactionType is Enums.getValue('TransactionGroups', 'saleAmount')
+        if transactionType is Enums.getValue('TransactionTypes', 'saleAmount')
           ownerUpdate.$inc = {saleAmount : balanceChange}
           transactionInsert.balanceLatest += balanceChange
-        else if transactionType is Enums.getValue('TransactionGroups', 'customerLoanAmount')
+        else if transactionType is Enums.getValue('TransactionTypes', 'customerLoanAmount')
           ownerUpdate.$inc = {loanAmount : balanceChange}
           transactionInsert.balanceLatest += balanceChange
-        else if transactionType is Enums.getValue('TransactionGroups', 'returnCustomerPaidAmount')
+          transactionInsert.receivable     = true
+        else if transactionType is Enums.getValue('TransactionTypes', 'returnCustomerPaidAmount')
           ownerUpdate.$inc = {returnPaidAmount : balanceChange}
           transactionInsert.balanceLatest += balanceChange
+          transactionInsert.receivable     = true
 
-        else if transactionType is Enums.getValue('TransactionGroups', 'customerPaidAmount')
+        else if transactionType is Enums.getValue('TransactionTypes', 'customerPaidAmount')
           ownerUpdate.$inc = {paidAmount : balanceChange}
           transactionInsert.balanceLatest += -balanceChange
-        else if transactionType is Enums.getValue('TransactionGroups', 'returnSaleAmount')
+          transactionInsert.receivable     = false
+        else if transactionType is Enums.getValue('TransactionTypes', 'returnSaleAmount')
           ownerUpdate.$inc = {returnAmount : balanceChange}
           transactionInsert.balanceLatest += -balanceChange
+          transactionInsert.receivable     = false
 
-      else if isProvider
+#      else if isProvider
 
 
+      console.log transactionInsert
 
       if Schema.transactions.insert(transactionInsert)
         if isCustomer
           Schema.customers.update owner._id, ownerUpdate
         else if isProvider
           Schema.providers.update owner._id, ownerUpdate
+
+
+# chi xoa transaction no dau ky, voi phieu tra tien, no cu, ko xoa dc phieu ban hang va tra hang
+  deleteTransaction: (transactionId) ->
+    if transaction = Schema.transactions.findOne({_id: transactionId})
+      if Schema.transactions.remove(transaction._id)
+        if transaction.parent
+          beforeTransactionQuery =
+            owner              : transaction.owner
+            isRoot             : true
+            'version.createdAt': {$lt: transaction.version.createdAt}
+          findBeforeTransaction = Schema.transactions.findOne(beforeTransactionQuery)
+
+        latestDebtBalance = 0; beforeDebtBalance = transaction.balanceBefore
+        transactionQuery  = {owner: transaction.owner, 'version.createdAt': {$gt: transaction.version.createdAt}}
+        Schema.transactions.find(transactionQuery, {sort: {'version.createdAt': 1}}).forEach(
+          (item) ->
+            if item.balanceType is Enums.getValue('TransactionTypes', 'saleAmount')
+              latestDebtBalance += item.balanceChange
+            else if item.balanceType is Enums.getValue('TransactionTypes', 'customerLoanAmount')
+              latestDebtBalance += item.balanceChange
+            else if item.balanceType is Enums.getValue('TransactionTypes', 'returnCustomerPaidAmount')
+              latestDebtBalance += item.balanceChange
+
+            else if item.balanceType is Enums.getValue('TransactionTypes', 'returnSaleAmount')
+              latestDebtBalance += -item.balanceChange
+            else if item.balanceType is Enums.getValue('TransactionTypes', 'customerPaidAmount')
+              latestDebtBalance += -item.balanceChange
+
+
+            else if item.balanceType is Enums.getValue('TransactionTypes', 'importAmount')
+              latestDebtBalance += item.balanceChange
+            else if item.balanceType is Enums.getValue('TransactionTypes', 'providerLoanAmount')
+              latestDebtBalance += item.balanceChange
+            else if item.balanceType is Enums.getValue('TransactionTypes', 'returnProviderPaidAmount')
+              latestDebtBalance += item.balanceChange
+
+            else if item.balanceType is Enums.getValue('TransactionTypes', 'providerPaidAmount')
+              latestDebtBalance += -item.balanceChange
+            else if item.balanceType is Enums.getValue('TransactionTypes', 'returnImportAmount')
+              latestDebtBalance += -item.balanceChange
+
+            transactionUpdate = $set:{balanceBefore: beforeDebtBalance, balanceLatest: latestDebtBalance}
+            if transaction.parent and transaction.isRoot and transaction.parent is item.parent
+              if findBeforeTransaction
+                transactionUpdate.$set.parent = findBeforeTransaction.parent
+              else
+                transactionUpdate.$unset = {parent: ""}
+
+            Schema.transactions.update item._id, transactionUpdate
+            beforeDebtBalance = latestDebtBalance
+        )
+
+
+
+        updateOwner = $set: {allowDelete: Schema.transactions.find({owner: transaction.owner}).count() is 0}
+        if transaction.balanceType is Enums.getValue('TransactionTypes', 'saleAmount')
+          updateOwner.$inc = saleAmount: -transaction.balanceChange
+          isCustomer = true
+        else if transaction.balanceType is Enums.getValue('TransactionTypes', 'customerLoanAmount')
+          updateOwner.$inc = loanAmount: -transaction.balanceChange
+          isCustomer = true
+        else if transaction.balanceType is Enums.getValue('TransactionTypes', 'returnCustomerPaidAmount')
+          updateOwner.$inc = returnPaidAmount: -transaction.balanceChange
+          isCustomer = true
+
+        else if transaction.balanceType is Enums.getValue('TransactionTypes', 'returnSaleAmount')
+          updateOwner.$inc = returnAmount: -transaction.balanceChange
+          isCustomer = true
+        else if transaction.balanceType is Enums.getValue('TransactionTypes', 'customerPaidAmount')
+          updateOwner.$inc = paidAmount: -transaction.balanceChange
+          isCustomer = true
+
+
+        else if transaction.balanceType is Enums.getValue('TransactionTypes', 'importAmount')
+          updateOwner.$inc = importAmount: -transaction.balanceChange
+          isProvider = true
+        else if transaction.balanceType is Enums.getValue('TransactionTypes', 'providerLoanAmount')
+          updateOwner.$inc = loanAmount: -transaction.balanceChange
+          isProvider = true
+        else if transaction.balanceType is Enums.getValue('TransactionTypes', 'returnProviderPaidAmount')
+          updateOwner.$inc = returnPaidAmount: -transaction.balanceChange
+          isProvider = true
+
+        else if transaction.balanceType is Enums.getValue('TransactionTypes', 'providerPaidAmount')
+          updateOwner.$inc = paidAmount: -transaction.balanceChange
+          isProvider = true
+        else if transaction.balanceType is Enums.getValue('TransactionTypes', 'returnImportAmount')
+          updateOwner.$inc = returnAmount: -transaction.balanceChange
+          isProvider = true
+
+        if isCustomer
+          Schema.customers.update(transaction.owner, updateOwner)
+        else if isProvider
+          Schema.providers.update(transaction.owner, updateOwner)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -189,63 +311,3 @@ Meteor.methods
 
 
 
-# chi xoa transaction no dau ky, voi phieu tra tien, no cu, ko xoa dc phieu ban hang va tra hang
-  deleteTransaction: (transactionId) ->
-    if transaction = Schema.transactions.findOne({_id: transactionId, transactionGroup: Enums.getValue('TransactionGroups', 'provider')})
-      if Schema.transactions.remove(transaction._id)
-        if transaction.parent
-          beforeTransactionQuery =
-            owner              : transaction.owner
-            isRoot             : true
-            'version.createdAt': {$lt: transaction.version.createdAt}
-          findBeforeTransaction = Schema.transactions.findOne(beforeTransactionQuery)
-
-        latestDebtBalance = 0; beforeDebtBalance = transaction.beforeDebtBalance
-        transactionQuery  = {owner: transaction.owner, 'version.createdAt': {$gt: transaction.version.createdAt}}
-        Schema.transactions.find(transactionQuery, {sort: {'version.createdAt': 1}}).forEach(
-          (item) ->
-            if item.transactionGroup is Enums.getValue('TransactionGroups', 'provider')
-              latestDebtBalance = beforeDebtBalance + item.debtBalanceChange - item.paidBalanceChange
-            #            else if item.transactionGroup is Enums.getValue('TransactionGroups', 'customer')
-            #              latestDebtBalance = beforeDebtBalance + item.debtBalanceChange - item.paidBalanceChange
-
-            transactionUpdate = $set:{beforeDebtBalance: beforeDebtBalance, latestDebtBalance: latestDebtBalance}
-            if transaction.parent and transaction.isRoot and transaction.parent is item.parent
-              if findBeforeTransaction
-                transactionUpdate.$set.parent = findBeforeTransaction.parent
-              else
-                transactionUpdate.$unset = {parent: ""}
-
-            Schema.transactions.update item._id, transactionUpdate
-            beforeDebtBalance = latestDebtBalance
-        )
-
-        updateAllowDelete = {allowDelete: false}
-        updateAllowDelete.allowDelete = true if Schema.transactions.find({owner: transaction.owner}).count() is 0
-
-        if transaction.transactionGroup is Enums.getValue('TransactionGroups', 'provider')
-          if transaction.isBeginCash #no ton day ky
-            updateOwner =
-              beginCash  : transaction.paidBalanceChange - transaction.debtBalanceChange
-              totalCash  : transaction.paidBalanceChange - transaction.debtBalanceChange
-          else
-            updateOwner =
-              paidCash   : -transaction.paidBalanceChange
-              loanCash   : -transaction.debtBalanceChange
-              totalCash  : transaction.paidBalanceChange - transaction.debtBalanceChange
-          Schema.providers.update(transaction.owner, {$inc: updateOwner, $set: updateAllowDelete})
-
-#        else if transaction.transactionGroup is Enums.getValue('TransactionGroups', 'customer')
-#          if transaction.isBeginCash #no ton day ky
-#            updateOwner =
-#              beginCash  : transaction.paidBalanceChange - transaction.debtBalanceChange
-#              totalCash  : transaction.paidBalanceChange - transaction.debtBalanceChange
-#          else
-#            updateOwner =
-#              paidCash   : -transaction.paidBalanceChange
-#              loanCash   : -transaction.debtBalanceChange
-#              totalCash  : transaction.paidBalanceChange - transaction.debtBalanceChange
-#          Schema.customers.update(transaction.owner, {$inc: updateOwner, $set: updateAllowDelete})
-#
-#          if customer = Schema.customers.findOne(transaction.owner)
-#            Schema.customerGroups.update customer.group, $inc:{totalCash: updateOwner.totalCash} if customer.group

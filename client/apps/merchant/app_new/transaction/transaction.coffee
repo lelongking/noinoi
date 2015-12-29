@@ -26,19 +26,17 @@ transactionOwnerSelect =
   query: (query) -> query.callback
     results: ownerSearch(query.term)
     text: 'name'
-  initSelection: (element, callback) -> callback findTransactionOwner(Session.get('transactionManagement')?.data.owner)
+  initSelection: (element, callback) -> callback findTransactionOwner(Session.get('transactionDetail')?.owner)
   formatSelection: (item) -> "#{item.name}" if item
   formatResult: (item) -> "#{item.name}" if item
   id: '_id'
   placeholder: 'Chọn KH hoặc NCC'
   changeAction: (e) ->
     if e.added
-      transactionManagement = Session.get('transactionManagement')
-      newTransaction = transactionManagement.data
-      newTransaction.owner = e.added._id
-      Session.set('transactionCustomerOwner', e.added)
-      Session.set('transactionManagement', transactionManagement)
-  reactiveValueGetter: -> Session.get('transactionManagement')?.data.owner ? 'skyReset'
+      transactionDetail = Session.get('transactionDetail')
+      transactionDetail.owner = e.added._id
+      Session.set('transactionDetail', transactionDetail)
+  reactiveValueGetter: -> Session.get('transactionDetail')?.owner ? 'skyReset'
 
 
 
@@ -49,37 +47,28 @@ Wings.defineApp 'transaction',
     self.autorun ()->
       transaction = Session.get('transactionDetail')
       if transaction?.owner
-        owner = Schema.customers.findOne(transaction.owner)
-        owner.requiredCash = (owner.debtRequiredCash ? 0) - (owner.paidRequiredCash ? 0)
-        owner.beginCash    = (owner.debtBeginCash ? 0) - (owner.paidBeginCash ? 0)
-        owner.saleCash     = (owner.debtSaleCash ? 0) - (owner.paidSaleCash ? 0) - (owner.returnSaleCash ? 0)
-        owner.incurredCash = (owner.debtIncurredCash ? 0) - (owner.paidIncurredCash ? 0)
-        owner.totalCash    = owner.requiredCash + owner.beginCash + owner.saleCash + owner.incurredCash
+        owner = Schema.customers.findOne({_id: transaction.owner}) ? {}
+
+        owner.debitCash  = (owner.initialAmount ? 0) + (owner.saleAmount ? 0) + (owner.loanAmount ? 0) + (owner.returnPaidAmount ? 0) - (owner.returnAmount ? 0) - (owner.paidAmount ? 0)
+        owner.amountCash = Math.abs(transaction.amount)
+        if transaction.transactionType is Enums.getValue('TransactionTypes', 'customerLoanAmount')
+          owner.totalCash = owner.debitCash + owner.amountCash
+        else if transaction.transactionType is Enums.getValue('TransactionTypes', 'customerPaidAmount')
+          owner.totalCash = owner.debitCash - owner.amountCash
+
         Session.set('transactionOwner', owner)
       else
         Session.set('transactionOwner')
 
     Session.set('transactionDetail',
-      transactionGroup: Enums.getValue('TransactionGroups', 'customer')
-      transactionType: Enums.getValue('TransactionTypes', 'saleCash')
-      incomeOrCost: Enums.getValue('TransactionCustomerIncomeOrCost', 'saleCash')
-      receivable: false
-      amount: 0
-      description: ''
-    )
-
-    transactionManagement =
-      content: 'createTransactionSection'
       active: 'interest'
-      data:
-        transactionGroup: Enums.getValue('TransactionGroups', 'customer')
-        transactionType: Enums.getValue('TransactionTypes', 'saleCash')
-        incomeOrCost: Enums.getValue('TransactionCustomerIncomeOrCost', 'saleCash')
-        receivable: false
-        amount: 0
-        description: ''
-
-    Session.set('transactionManagement', transactionManagement)
+      transactionType: Enums.getValue('TransactionTypes', 'customerLoanAmount')
+      name: undefined
+      amount: 0
+      description: undefined
+      interestRate: 0
+      owner: undefined
+    )
 
   rendered: ->
 
@@ -90,57 +79,51 @@ Wings.defineApp 'transaction',
 
 
   helpers:
-    currentData: -> Session.get('transactionManagement')
+    currentData: -> Session.get('transactionDetail')
     isActive: (transaction)-> if @active is transaction then 'active' else ''
 
     isShowDetail: (transaction)-> if @active is transaction then true else false
 
     ownerSelectOptions: transactionOwnerSelect
-
+    currentCustomer: -> Session.get('transactionOwner')
 
   events:
     "click .createTransaction":  (event, template) ->
-      $payDescription = template.ui.$transactionDescription
-      $payAmount      = template.ui.$transactionAmount
-      transaction     = Session.get('transactionDetail')
+      transaction = Session.get('transactionDetail')
+      if transaction.transactionType isnt undefined and transaction.owner and transaction.amount > 0
+        Meteor.call(
+          'createTransaction'
+          transaction.owner
+          transaction.transactionType
+          transaction.amount
+          'createNewTransaction'
+          transaction.description
+          (error, result) -> console.log error, result
+        )
 
-      if transaction.transactionType isnt undefined and
-        transaction.receivable isnt undefined and
-        transaction.owner and
-        transaction.amount > 0 and
-        transaction.description.length > 0
-
-          Meteor.call(
-            'createNewTransaction'
-            Enums.getValue('TransactionGroups', 'customer')
-            transaction.transactionType
-            transaction.receivable
-
-            transaction.owner
-            transaction.amount
-            transaction.description
-            (error, result) -> console.log error, result
-          )
-
-          $payDescription.val(''); $payAmount.val('')
-          transaction.amount = 0
-          Session.set('transactionDetail', transaction)
+        $("[name=transactionAmount]").val('')
+        $("[name=transactionDescription]").val('')
+        transaction.amount = 0
+        transaction.description = ''
+        Session.set('transactionDetail', transaction)
 
     "click .group-nav .caption.toInterest":  (event, template) ->
-      transactionData = Session.get('transactionManagement')
+      transactionData = Session.get('transactionDetail')
       transactionData.active = 'interest'
-      Session.set('transactionManagement', transactionData)
+      Session.set('transactionDetail', transactionData)
 
     "click .group-nav .caption.toLoan":  (event, template) ->
-      transactionData = Session.get('transactionManagement')
+      transactionData = Session.get('transactionDetail')
       transactionData.active = 'loan'
-      Session.set('transactionManagement', transactionData)
+      transactionData.transactionType = Enums.getValue('TransactionTypes', 'customerLoanAmount')
+      Session.set('transactionDetail', transactionData)
 
 
     "click .group-nav .caption.toPaid":  (event, template) ->
-      transactionData = Session.get('transactionManagement')
+      transactionData = Session.get('transactionDetail')
       transactionData.active = 'paid'
-      Session.set('transactionManagement', transactionData)
+      transactionData.transactionType = Enums.getValue('TransactionTypes', 'customerPaidAmount')
+      Session.set('transactionDetail', transactionData)
 
 
 

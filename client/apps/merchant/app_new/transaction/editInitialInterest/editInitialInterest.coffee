@@ -15,7 +15,7 @@ Wings.defineHyper 'editInitialInterest',
 
 
     self.autorun ()->
-      if customer = Session.get('transactionCustomerOwner')
+      if customer = Session.get('transactionOwner')
         initialAmountValue = parseInt($initialAmount.inputmask('unmaskedvalue'))
         if initialAmountValue isnt (customer.initialAmount ? 0)
           $initialAmount.val (customer.initialAmount ? 0)
@@ -32,7 +32,7 @@ Wings.defineHyper 'editInitialInterest',
 
   events:
     "keyup .input-field":  (event, template) ->
-      if customer = Session.get('transactionCustomerOwner')
+      if customer = Session.get('transactionOwner')
         if event.target.name is 'initialAmount'
           initialAmount = parseInt(template.ui.$initialAmount.inputmask('unmaskedvalue'))
           if initialAmount isnt (customer.initialAmount ? 0)
@@ -44,7 +44,7 @@ Wings.defineHyper 'editInitialInterest',
             Schema.customers.update customer._id, $set:{initialInterestRate: initialInterestRate}
 
     "change [name='dateDebit']": (event, template) ->
-      if customer = Session.get('transactionCustomerOwner')
+      if customer = Session.get('transactionOwner')
         Helpers.deferredAction ->
           initialStartDate = template.datePicker.$dateDebit.datepicker().data().datepicker.dates[0]
           if initialStartDate?.toDateString() isnt (customer.initialStartDate?.toDateString() ? undefined)

@@ -28,7 +28,7 @@ scope.findAllOrders = ()->
       (item) ->
         item.transactions = scope.transactionFind(item._id).map(
           (transaction) ->
-            transaction.hasDebitBegin = beforeDebtCash > 0
+            transaction.hasDebitBegin = (transaction.initialAmount ? 0) > 0
             transaction.sumBeforeBalance = beforeDebtCash + transaction.balanceBefore
             transaction.sumLatestBalance = beforeDebtCash + transaction.balanceLatest
             transaction

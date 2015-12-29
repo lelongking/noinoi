@@ -11,25 +11,19 @@ lemon.defineHyper Template.customerManagementSalesHistorySection,
 
     hasOldDebts: -> logics.customerManagement.findOldDebtCustomer(Template.currentData()).length > 0
 
-    hasDebitBegin: ->
-      if @model is "customers"
-        (@debtRequiredCash ? 0) + (@debtBeginCash ? 0) isnt 0
-      else if Template.parentData()?.model is "customers"
-        (Template.parentData().debtRequiredCash ? 0) + (Template.parentData().debtBeginCash ? 0) + (@balanceBefore ? 0) isnt 0
-
 
 
     sumBeforeBalance: ->
-      (Template.parentData().debtRequiredCash ? 0) + (Template.parentData().debtBeginCash ? 0) + @balanceBefore ? 0
+      (Template.parentData().initialAmount ? 0) + @balanceBefore ? 0
 
     sumLatestBalance: ->
-      (Template.parentData().debtRequiredCash ? 0) + (Template.parentData().debtBeginCash ? 0) + @balanceLatest ? 0
+      (Template.parentData().initialAmount ? 0) + @balanceLatest ? 0
 
     sumRequiredAndBeginDebtCash: ->
       if @model is "customers"
-        (@debtRequiredCash ? 0) + (@debtBeginCash ? 0)
+        (@initialAmount ? 0)
       else if Template.parentData()?.model is "customers"
-        (Template.parentData().debtRequiredCash ? 0) + (Template.parentData().debtBeginCash ? 0)
+        (Template.parentData().initialAmount ? 0)
 
 
     transactionDescription: -> if Session.get("customerManagementOldDebt") then 'ghi chú nợ tiền' else 'ghi chú trả tiền'
@@ -60,7 +54,7 @@ lemon.defineHyper Template.customerManagementSalesHistorySection,
       scope.checkAllowCreateAndCreateTransaction(event, template)
 
     "click .deleteTransaction": (event, template) ->
-      Meteor.call 'deleteNewTransaction', @_id
+      Meteor.call 'deleteTransaction', @_id
       event.stopPropagation()
 
     "click .createTransaction": (event, template) ->
