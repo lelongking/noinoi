@@ -1,4 +1,54 @@
 Enums = Apps.Merchant.Enums
+
+
+createTransaction = (provider, importData)->
+  debitCash = (provider.interestAmount ? 0) + (provider.saleAmount ? 0) + (provider.loanAmount ? 0) + (provider.returnPaidAmount ? 0)
+  paidCash  = (provider.returnAmount ? 0) + (provider.paidAmount ? 0)
+
+  createTransactionOfImport =
+    name         : 'Phiếu Bán'
+    balanceType  : Enums.getValue('TransactionTypes', 'importAmount')
+    receivable   : true
+    isRoot       : true
+    owner        : provider._id
+    parent       : importData._id
+    isUseCode    : false
+    isPaidDirect : false
+    balanceBefore: debitCash - paidCash
+    balanceChange: importData.finalPrice
+    balanceLatest: debitCash - paidCash + importData.finalPrice
+
+
+  if transactionImportId = Schema.transactions.insert(createTransactionOfImport)
+    if importData.depositCash > 0 #co tra tien
+      createTransactionOfDepositImport =
+        name         : 'Phiếu Thu Tiền'
+        description  : 'Thanh toán phiếu: ' + importData.importCode
+        balanceType  : Enums.getValue('TransactionTypes', 'providerPaidAmount')
+        receivable   : false
+        isRoot       : false
+        owner        : provider._id
+        parent       : importData._id
+        isUseCode    : true
+        isPaidDirect : true
+        balanceBefore: debitCash - paidCash + importData.finalPrice
+        balanceChange: importData.depositCash
+        balanceLatest: debitCash - paidCash + importData.finalPrice - importData.depositCash
+
+      Schema.transactions.insert(createTransactionOfDepositImport)
+
+    providerUpdate =
+      paidAmount   : importData.depositCash
+      importAmount : importData.finalPrice
+
+    Schema.providers.update importData.provider, { $inc: providerUpdate, $set: {allowDelete : false} }
+
+  return transactionImportId
+
+
+
+
+
 Meteor.methods
   providerToReturn: (providerId)->
     try
@@ -88,43 +138,15 @@ Meteor.methods
     providerFound = Schema.providers.findOne(importFound.provider)
     return {valid: false, error: 'provider not found!'} if !providerFound
 
-#    transactionInsert =
-#      transactionName : 'Phiếu Nhập'
-##      transactionCode :
-##      description     :
-#      transactionType  : Enums.getValue('TransactionTypes', 'provider')
-#      receivable       : true
-#      isRoot           : true
-#      owner            : providerFound._id
-#      parent           : importFound._id
-#      beforeDebtBalance: providerFound.totalCash
-#      debtBalanceChange: importFound.finalPrice
-#      paidBalanceChange: importFound.depositCash
-#      latestDebtBalance: providerFound.totalCash + importFound.finalPrice - importFound.depositCash
-#
-#    transactionInsert.dueDay = importFound.dueDay if importFound.dueDay
-#
-#    if importFound.depositCash >= importFound.finalPrice # phiếu nhập đã thanh toán hết cho NCC
-#      transactionInsert.owedCash = 0
-#      transactionInsert.status   = Enums.getValue('TransactionStatuses', 'closed')
-#    else
-#      transactionInsert.owedCash = importFound.finalPrice - importFound.depositCash
-#      transactionInsert.status   = Enums.getValue('TransactionStatuses', 'tracking')
-#
-#    if transactionId = Schema.transactions.insert(transactionInsert)
-#      providerUpdate =
-#        allowDelete : false
-#        paidCash    : providerFound.paidCash  + importFound.depositCash
-#        debtCash    : providerFound.debtCash  + importFound.finalPrice - importFound.depositCash
-#        totalCash   : providerFound.totalCash + importFound.finalPrice
-#      Schema.providers.update importFound.provider, $set: providerUpdate
+    transactionId = createTransaction(providerFound, importFound)
+    return {valid: false, error: 'customer not found!'} unless transactionId
 
     importUpdate = $set:
       importType         : Enums.getValue('ImportTypes', 'confirmedWaiting')
       accounting         : user._id
       accountingConfirm  : true
       accountingConfirmAt: new Date()
-#      transaction        : transactionId
+      transaction        : transactionId
     Schema.imports.update importFound._id, importUpdate
 
 

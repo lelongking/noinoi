@@ -58,7 +58,7 @@ createTransaction = (customer, order)->
     if order.depositCash > 0 #co tra tien
       createTransactionOfDepositSale =
         name         : 'Phiếu Thu Tiền'
-        description  : 'Thanh toán phiếu: ' + order.code
+        description  : 'Thanh toán phiếu: ' + order.orderCode
         balanceType  : Enums.getValue('TransactionTypes', 'customerPaidAmount')
         receivable   : false
         isRoot       : false

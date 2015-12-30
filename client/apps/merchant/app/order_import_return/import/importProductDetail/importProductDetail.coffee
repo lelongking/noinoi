@@ -1,5 +1,4 @@
 setTime = -> Session.set('realtime-now', new Date())
-scope = logics.import
 
 Wings.defineHyper 'importProductDetail',
   helpers:

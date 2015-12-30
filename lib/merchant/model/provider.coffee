@@ -55,14 +55,14 @@ Schema.add 'providers', "Provider", class Provider
     doc.remove    = -> Schema.providers.remove(@_id) if @allowDelete
 
     debitCash    = (doc.initialAmount ? 0) + (doc.loanAmount ? 0)
-    saleCash     = (doc.saleAmount ? 0) + (doc.returnPaidAmount ? 0) - (doc.returnAmount ? 0)
+    importCash     = (doc.importAmount ? 0) + (doc.returnPaidAmount ? 0) - (doc.returnAmount ? 0)
     interestCash = (doc.interestAmount ? 0)
     paidCash     = (doc.paidAmount ? 0)
 
-    doc.debitCash    = debitCash + saleCash
+    doc.debitCash    = debitCash + importCash
     doc.interestCash = interestCash
     doc.paidCash     = paidCash
-    doc.totalCash    = debitCash + saleCash + interestCash - paidCash
+    doc.totalCash    = debitCash + importCash + interestCash - paidCash
 
 
   @insert: (name, description, callback) ->

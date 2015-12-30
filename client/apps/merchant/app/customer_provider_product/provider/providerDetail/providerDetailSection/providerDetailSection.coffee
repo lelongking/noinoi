@@ -4,7 +4,7 @@ Enums = Apps.Merchant.Enums
 
 Wings.defineHyper 'providerDetailSection',
   rendered: ->
-    @ui.$payImportAmount.inputmask("numeric", numericOption)
+#    @ui.$payImportAmount.inputmask("numeric", numericOption)
 
   helpers:
     allImports: ->
@@ -59,12 +59,24 @@ transactionFind = (parentId)->
 
 findAllImport = (currentProvider)->
   if currentProvider
+    beforeDebtCash = (currentProvider.initialAmount ? 0)
     imports = Schema.imports.find({
       provider  : currentProvider._id
       importType: Enums.getValue('ImportTypes', 'success')
     }).map(
       (item) ->
-        item.transactions = transactionFind(item._id).fetch()
+        item.transactions = transactionFind(item._id).map(
+          (transaction) ->
+            transaction.hasDebitBegin = (beforeDebtCash ? 0) > 0
+            transaction.sumBeforeBalance = beforeDebtCash + transaction.balanceBefore
+            if transaction.isRoot
+              transaction.receivable       = true if (balanceChange = item.finalPrice - item.depositCash) > 0
+              transaction.balanceChange    = Math.abs(balanceChange)
+              transaction.sumLatestBalance = transaction.sumBeforeBalance + balanceChange
+            else
+              transaction.sumLatestBalance = beforeDebtCash + transaction.balanceLatest
+            transaction
+        )
         item.transactions[item.transactions.length-1].isLastTransaction = true if item.transactions.length > 0
         item
     )
@@ -75,7 +87,19 @@ findAllImport = (currentProvider)->
       returnStatus: Enums.getValue('ReturnStatus', 'success')
     }).map(
       (item) ->
-        item.transactions = transactionFind(item._id).fetch()
+        item.transactions = transactionFind(item._id).map(
+          (transaction) ->
+            transaction.hasDebitBegin = beforeDebtCash > 0
+            transaction.sumBeforeBalance = beforeDebtCash + transaction.balanceBefore
+            if transaction.isRoot
+              transaction.receivable       = true if (balanceChange = -item.finalPrice + item.depositCash) > 0
+              transaction.balanceChange    = Math.abs(balanceChange)
+              transaction.sumLatestBalance = transaction.sumBeforeBalance + balanceChange
+            else
+              transaction.sumLatestBalance = beforeDebtCash + transaction.balanceLatest
+
+            transaction
+        )
         item.transactions[item.transactions.length-1].isLastTransaction = true if item.transactions.length > 0
         item
     )

@@ -1,5 +1,4 @@
-scope = logics.import
-
+scope = logics.import = {}
 Wings.defineApp 'importLayout',
   created: ->
     self = this
@@ -19,7 +18,7 @@ Wings.defineApp 'importLayout',
 
     UnitProductSearch.search('')
 
-  rendered: -> scope.templateInstance = @
+  rendered: ->
 
   helpers:
     currentImport         : -> Template.instance().currentImport.get()

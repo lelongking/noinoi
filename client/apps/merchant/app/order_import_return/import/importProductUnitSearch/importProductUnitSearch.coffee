@@ -1,6 +1,4 @@
 Enums = Apps.Merchant.Enums
-scope = logics.sales = {}
-
 Wings.defineApp 'importProductUnitSearch',
   created: ->
     self = this
@@ -8,6 +6,8 @@ Wings.defineApp 'importProductUnitSearch',
     UnitProductSearch.search('')
 
   rendered: ->
+    UnitProductSearch.search('')
+
   destroyed: ->
 
 #  helpers:

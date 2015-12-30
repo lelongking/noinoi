@@ -1,4 +1,3 @@
-scope = logics.import
 Wings.defineHyper 'importProductRowEdit',
   helpers:
     detailFinalPrice: -> @quality * @conversion * (@price - @discountCash)
