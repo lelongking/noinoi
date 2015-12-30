@@ -59,8 +59,8 @@ template(name="providerImportDetails")
     style="background-color: {{isColor}}; border-bottom: none;")
       td.has-commands(colspan="3")
         span {{description}}
-          if isDelete
-            .commands: .icon-minus-4.lemon.rounded.tiny.btn.red.deleteTransaction
+          //if isDelete
+          //  .commands: .icon-minus-4.lemon.rounded.tiny.btn.red.deleteTransaction
       td.number(style="color: #666;")
         if sumBeforeBalance
           span.icon-feather-1.s5 <b>{{formatNumber sumBeforeBalance}}</b>

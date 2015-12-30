@@ -293,6 +293,9 @@ addNewProduct = (event, template, product = {}) ->
       productDescription  = $productDescription.val().replace(/^\s*/, "").replace(/\s*$/, "")
       product.description = productDescription if productDescription
 
+      product.status           = Enums.getValue('ProductStatuses', 'confirmed')
+      product.inventoryInitial = true
+
       product.units = []
 
       unitName = if productUnitData.unitName.length > 0 then productUnitData.unitName else 'Chai'
@@ -315,8 +318,6 @@ addNewProduct = (event, template, product = {}) ->
           barcode         : barcodeEx
           conversion      : productUnitData.conversion
           isBase          : false
-          status          : Enums.getValue('ProductStatuses', 'confirmed')
-          inventoryInitial: true
         product.units.push productUnitEx
 
       product.priceBooks = [{
