@@ -319,15 +319,15 @@ Schema.add 'returns', "Return", class Return
         return console.log('ReturnDetail Khong Chinh Xac.') unless findProductUnit
         return console.log('So luong tra qua lon') if (currentProductQuantity - returnDetail.basicQuantity) < 0
 
-#      if transactionId = createTransactionByProvider(currentReturn)
-      Schema.products.update(product._id, product.updateOption) for product in productUpdateList
-      Schema.imports.update @parent, importUpdateOption
-      Schema.returns.update @_id, $set:{
-        returnStatus: Enums.getValue('ReturnStatus', 'success')
-#        transaction : transactionId
-        staffConfirm: Meteor.userId()
-        successDate : new Date()
-      }
+      if transactionId = createTransactionByProvider(currentReturn)
+        Schema.products.update(product._id, product.updateOption) for product in productUpdateList
+        Schema.imports.update @parent, importUpdateOption
+        Schema.returns.update @_id, $set:{
+          returnStatus: Enums.getValue('ReturnStatus', 'success')
+          transaction : transactionId
+          staffConfirm: Meteor.userId()
+          successDate : new Date()
+        }
 
 
   @insert: (returnType = Enums.getValue('ReturnTypes', 'customer'), ownerId = undefined, parentId = undefined)->
@@ -427,7 +427,7 @@ createTransactionByCustomer = (currentReturn)->
       if currentReturn.depositCash > 0
         createTransactionOfDepositReturnSale =
           name         : 'Phiếu Chi Tiền'
-          description  : 'Chi tiền mặt cho phiếu: ' + order.code
+          description  : 'Chi tiền mặt cho phiếu: ' + currentReturn.returnCode
           balanceType  : Enums.getValue('TransactionTypes', 'customerPaidAmount')
           receivable   : false
           isRoot       : false
@@ -450,27 +450,40 @@ createTransactionByCustomer = (currentReturn)->
 
 createTransactionByProvider = (currentReturn)->
   if provider = Schema.providers.findOne(currentReturn.owner)
-    transactionInsert =
-      transactionName : 'Phiếu Trả Hàng'
-  #      transactionCode :
-  #    description      : 'Phiếu Bán'
-      transactionType  : Enums.getValue('TransactionTypes', 'return')
-      receivable       : false #nha cung cap da tra
-      owner            : provider._id
-      isRoot           : true
-      parent           : currentReturn._id
-      beforeDebtBalance: provider.debitCash
-      debtBalanceChange: currentReturn.depositCash
-      paidBalanceChange: currentReturn.finalPrice
-      latestDebtBalance: provider.debitCash - currentReturn.finalPrice - currentReturn.depositCash
+    createTransactionOfImportReturn =
+      name         :  'Phiếu Trả Hàng'
+      balanceType  : Enums.getValue('TransactionTypes', 'returnImportAmount')
+      receivable   : false
+      isRoot       : true
+      owner        : provider._id
+      parent       : currentReturn._id
+      isUseCode    : false
+      isPaidDirect : false
+      balanceBefore: provider.debitCash
+      balanceChange: currentReturn.finalPrice
+      balanceLatest: provider.debitCash - currentReturn.finalPrice
 
-    transactionInsert.dueDay    = currentReturn.dueDay if currentReturn.dueDay
-    transactionInsert.owedCash  = currentReturn.finalPrice + currentReturn.depositCash
-    transactionInsert.status    = Enums.getValue('TransactionStatuses', 'tracking')
+    if transactionImportReturnId = Schema.transactions.insert(createTransactionOfImportReturn)
+      if currentReturn.depositCash > 0
+        createTransactionOfDepositReturnImport =
+          name         : 'Phiếu Chi Tiền'
+          description  : 'Chi tiền mặt cho phiếu: ' + currentReturn.returnCode
+          balanceType  : Enums.getValue('TransactionTypes', 'providerPaidAmount')
+          receivable   : false
+          isRoot       : false
+          owner        : provider._id
+          parent       : currentReturn._id
+          isUseCode    : true
+          isPaidDirect : true
+          balanceBefore: provider.debitCash - currentReturn.finalPrice
+          balanceChange: currentReturn.depositCash
+          balanceLatest: provider.debitCash - currentReturn.finalPrice + currentReturn.depositCash
+        Schema.transactions.insert(createTransactionOfDepositReturnImport)
 
-    if transactionId = Schema.transactions.insert(transactionInsert)
-      Schema.providers.update provider._id, $inc: {
-        returnCash: currentReturn.finalPrice
-        debitCash : -currentReturn.finalPrice
-      }
-    return transactionId
+      providerUpdate =
+        returnAmount     : currentReturn.finalPrice
+        returnPaidAmount : currentReturn.depositCash
+
+      Schema.providers.update provider._id, $inc: providerUpdate
+
+    return transactionImportReturnId

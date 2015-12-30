@@ -107,15 +107,12 @@ Schema.add 'customers', "Customer", class Customer
     doc.avatarUrl = -> if @avatar then AvatarImages.findOne(@avatar)?.url() else undefined
 
 
-    debitCash    = (doc.initialAmount ? 0) + (doc.loanAmount ? 0)
-    saleCash     = (doc.saleAmount ? 0) + (doc.returnPaidAmount ? 0) - (doc.returnAmount ? 0)
-    interestCash = (doc.interestAmount ? 0)
-    paidCash     = (doc.paidAmount ? 0)
-
-    doc.debitCash    = debitCash + saleCash
-    doc.interestCash = interestCash
-    doc.paidCash     = paidCash
-    doc.totalCash    = debitCash + saleCash - paidCash + interestCash
+    saleCash         = (doc.saleAmount ? 0) + (doc.returnPaidAmount ? 0) - (doc.returnAmount ? 0)
+    doc.debitCash      = saleCash + (doc.loanAmount ? 0)
+    doc.interestCash   = (doc.interestAmount ? 0)
+    doc.paidCash       = (doc.paidAmount ? 0)
+    doc.totalDebitCash = (doc.initialAmount ? 0) + doc.debitCash
+    doc.totalCash      = doc.totalDebitCash + doc.interestCash - doc.paidCash
 
     doc.remove = ->
       if @allowDelete and Schema.customers.remove(@_id)

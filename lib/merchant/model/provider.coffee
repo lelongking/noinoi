@@ -54,15 +54,12 @@ Schema.add 'providers', "Provider", class Provider
     doc.avatarUrl = -> if doc.avatar then AvatarImages.findOne(doc.avatar)?.url() else undefined
     doc.remove    = -> Schema.providers.remove(@_id) if @allowDelete
 
-    debitCash    = (doc.initialAmount ? 0) + (doc.loanAmount ? 0)
-    importCash     = (doc.importAmount ? 0) + (doc.returnPaidAmount ? 0) - (doc.returnAmount ? 0)
-    interestCash = (doc.interestAmount ? 0)
-    paidCash     = (doc.paidAmount ? 0)
-
-    doc.debitCash    = debitCash + importCash
-    doc.interestCash = interestCash
-    doc.paidCash     = paidCash
-    doc.totalCash    = debitCash + importCash + interestCash - paidCash
+    importCash         = (doc.importAmount ? 0) + (doc.returnPaidAmount ? 0) - (doc.returnAmount ? 0)
+    doc.debitCash      = importCash + (doc.loanAmount ? 0)
+    doc.interestCash   = (doc.interestAmount ? 0)
+    doc.paidCash       = (doc.paidAmount ? 0)
+    doc.totalDebitCash = (doc.initialAmount ? 0) + doc.debitCash
+    doc.totalCash      = doc.totalDebitCash + doc.interestCash - doc.paidCash
 
 
   @insert: (name, description, callback) ->
