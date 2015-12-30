@@ -1,0 +1,107 @@
+template(name="customerManagementSalesHistorySection")
+  .section.panel.panel-default.printable-area
+    .panel-heading
+      .show-on-print
+        +merchantPrintingHeader
+        .printing-info: .document-name {{name}}
+
+      .show-on-print
+        table.lemon-grid: tr
+          th(style="width:auto") SẢN PHẨM
+          th(style="width:50px") SL
+          th.date(style="width:100px") ĐƠN VỊ TÍNH
+          th.number(style="width:120px") ĐƠN GIÁ
+          th.number(style="width:150px") THÀNH TIỀN
+
+      .hide-on-print
+        table.lemon-grid: tr
+          th(style="width:auto") SẢN PHẨM
+          th(style="width:50px") SL
+          th(style="width:100px") ĐƠN VỊ
+          th.number(style="width:120px") ĐƠN GIÁ
+          th.number(style="width:140px") THÀNH TIỀN
+
+    .panel-body.debt-details
+      table#exportData.lemon-grid.safe
+        tr
+          th(style="width:auto")
+          th(style="width:50px")
+          th(style="width:100px")
+          th(style="width:120px")
+          th(style="width:150px")
+
+
+        if initialAmount
+          tr.header-row
+            td.has-commands(colspan="5")
+              | &nbsp;
+              .bill-header <b>Nợ tồn đầu kỳ</b>
+          tr(style="background-color: {{isColor}};")
+
+          tr.paid-row.top.receive(style="border-bottom: none;")
+            td.has-commands(colspan="4"): .bill-header Nợ Đầu Kỳ
+            td.number: span.s5: b {{formatNumber initialAmount}}
+
+
+        each oldDebts
+          tr.paid-row.top(class="{{transactionClass}}" style="border-bottom: none;")
+            td.has-commands(colspan="3")
+              .bill-header {{description}}
+              if isDelete
+                .commands: .lemon.rounded.tiny.btn.red.icon-minus-4.deleteTransaction
+
+            td.number
+              if sumBeforeBalance
+                span.s5.gray.icon-feather-1: b {{formatNumber sumBeforeBalance}}
+
+            td.number
+              span.s5: b {{formatNumber balanceChange}}
+
+          if sumBeforeBalance
+            tr.detail-row
+              td.number(colspan="3")
+              td.number.border-top(colspan="2")
+                span.s5: b {{formatNumber sumLatestBalance}}
+
+
+        each allSales
+          +customerManagementSaleDetails this
+
+
+        //tr.editors(style="{{showTransaction}}")
+        //  td(colspan="1"): input.transaction-field(type="text" size="10"
+        //  name='paySaleDescription' placeholder="{{transactionDescription}}")
+        //
+        //  td(colspan="3"): input.transaction-field.number(type="text" size="10"
+        //  name='paySaleAmount' placeholder="số tiền")
+        //
+        //  td(colspan="1"): .lemon.btn.lime.icon-money.pull-right.createTransaction(
+        //  class="{{isNotDisabled 'allowCreateTransactionOfCustomer'}}") {{transactionStatus}}
+
+    .panel-footer
+      table.lemon-grid
+        tr
+          th(style="width:auto")
+          th(style="width:80px")
+          th(style="width:5px")
+          th(style="width:155px")
+        tr
+          td
+          td Tiền nợ
+          td.number :
+          td.number <b>{{formatNumber debitCash}}</b> VND
+        tr
+          td
+          td Tiền lãi
+          td.number :
+          td.number <b>{{formatNumber interestCash}}</b> VND
+        tr
+          td
+          td Thanh toán
+          td.number :
+          td.number <b>{{formatNumber paidCash}}</b> VND
+        tr
+          td
+          td: b Tổng nợ
+          td.number: b :
+          td.number: b {{formatNumber totalCash}} VND

@@ -11,7 +11,7 @@
 #    app: "staffManagement"
 #  ]
 #
-#  transactionTypeSelecta:
+#  transactionTypeSelect:
 #    query: (query) -> query.callback
 #      results: _.filter(Enums.TransactionGroups, (num) -> return num unless num._id is 2)
 #      text: '_id'

@@ -11,6 +11,19 @@ Wings.defineWidget 'providerImportDetails',
         'Trả hàng phiếu: ' + @returnCode + if @description then " (#{@description})" else ''
 
     productUnitPrice: -> @price * @conversion
+
+    detail: ->
+      detail = @
+      detail.totalPrice = detail.basicQuantity * detail.price
+
+      if product = Schema.products.findOne({'units._id': detail.productUnit})
+        productUnit = _.findWhere(product.units, {_id: detail.productUnit})
+        detail.productName     = product.name
+        detail.basicUnitName   = product.unitName()
+        detail.productUnitName = productUnit.name
+
+      detail
+
   events:
     "click .deleteTransaction": (event, template) ->
       Meteor.call 'deleteTransaction', @_id

@@ -20,18 +20,16 @@ simpleSchema.providers = new SimpleSchema
   returnBillNo      : type: Number, defaultValue: 0 #số phiếu tra hang
   transactionBillNo : type: Number, defaultValue: 0 #số phiếu thu chi
 
-  debtRequiredCash : type: Number, defaultValue: 0 #số nợ bắt buộc phải thu
-  paidRequiredCash : type: Number, defaultValue: 0 #số nợ bắt buộc đã trả
+  initialAmount       : type: Number, optional: true #no ban dau
+  initialInterestRate : type: Number, optional: true, decimal: true
+  initialStartDate    : type: Date, optional: true
 
-  debtBeginCash    : type: Number, defaultValue: 0 #số nợ đầu kỳ phải thu
-  paidBeginCash    : type: Number, defaultValue: 0 #số nợ đầu kỳ đã trả
-
-  debtIncurredCash : type: Number, defaultValue: 0 #chi phí phát sinh cộng
-  paidIncurredCash : type: Number, defaultValue: 0 #chi phí phát sinh trừ
-
-  debtSaleCash     : type: Number, defaultValue: 0 #số tiền bán hàng phát sinh trong kỳ
-  paidSaleCash     : type: Number, defaultValue: 0 #số tiền đã trả phát sinh trong kỳ
-  returnSaleCash   : type: Number, defaultValue: 0 #số tiền trả hàng phát sinh trong kỳ
+  importAmount      : type: Number, optional: true
+  returnAmount      : type: Number, optional: true
+  loanAmount        : type: Number, optional: true
+  returnPaidAmount  : type: Number, optional: true
+  paidAmount        : type: Number, optional: true
+  interestAmount    : type: Number, optional: true
 
   merchant    : simpleSchema.DefaultMerchant
   allowDelete : simpleSchema.DefaultBoolean()
@@ -56,12 +54,15 @@ Schema.add 'providers', "Provider", class Provider
     doc.avatarUrl = -> if doc.avatar then AvatarImages.findOne(doc.avatar)?.url() else undefined
     doc.remove    = -> Schema.providers.remove(@_id) if @allowDelete
 
-    doc.requiredCash  = -> (@debtRequiredCash ? 0) - (@paidRequiredCash ? 0)
-    doc.beginCash     = -> (@debtBeginCash ? 0) - (@paidBeginCash ? 0)
-    doc.incurredCash  = -> (@debtIncurredCash ? 0) - (@paidIncurredCash ? 0)
-    doc.saleCash      = -> (@debtSaleCash ? 0) - (@paidSaleCash ? 0) - (@returnSaleCash ? 0)
-    doc.totalCash     = -> @requiredCash() + @beginCash() + @incurredCash() + @saleCash()
-    doc.totalPaidCash = -> (@paidRequiredCash ? 0) + (@paidBeginCash ? 0) + (@paidSaleCash ? 0)
+    debitCash    = (doc.initialAmount ? 0) + (doc.loanAmount ? 0)
+    saleCash     = (doc.saleAmount ? 0) + (doc.returnPaidAmount ? 0) - (doc.returnAmount ? 0)
+    interestCash = (doc.interestAmount ? 0)
+    paidCash     = (doc.paidAmount ? 0)
+
+    doc.debitCash    = debitCash + saleCash
+    doc.interestCash = interestCash
+    doc.paidCash     = paidCash
+    doc.totalCash    = debitCash + saleCash + interestCash - paidCash
 
 
   @insert: (name, description, callback) ->

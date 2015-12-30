@@ -419,9 +419,9 @@ createTransactionByCustomer = (currentReturn)->
       parent       : currentReturn._id
       isUseCode    : false
       isPaidDirect : false
-      balanceBefore: customer.totalDebtCash
+      balanceBefore: customer.debitCash
       balanceChange: currentReturn.finalPrice
-      balanceLatest: customer.totalDebtCash - currentReturn.finalPrice
+      balanceLatest: customer.debitCash - currentReturn.finalPrice
 
     if transactionSaleReturnId = Schema.transactions.insert(createTransactionOfSaleReturn)
       if currentReturn.depositCash > 0
@@ -435,9 +435,9 @@ createTransactionByCustomer = (currentReturn)->
           parent       : currentReturn._id
           isUseCode    : true
           isPaidDirect : true
-          balanceBefore: customer.totalDebtCash - currentReturn.finalPrice
+          balanceBefore: customer.debitCash - currentReturn.finalPrice
           balanceChange: currentReturn.depositCash
-          balanceLatest: customer.totalDebtCash - currentReturn.finalPrice + currentReturn.depositCash
+          balanceLatest: customer.debitCash - currentReturn.finalPrice + currentReturn.depositCash
         Schema.transactions.insert(createTransactionOfDepositReturnSale)
 
       customerUpdate =
@@ -445,7 +445,7 @@ createTransactionByCustomer = (currentReturn)->
         returnPaidAmount : currentReturn.depositCash
 
       Schema.customers.update customer._id, $inc: customerUpdate
-      Schema.customerGroups.update customer.group, $inc:{totalDebtCash: -currentReturn.finalPrice} if customer.group
+      Schema.customerGroups.update customer.group, $inc:{debitCash: -currentReturn.finalPrice} if customer.group
     return transactionSaleReturnId
 
 createTransactionByProvider = (currentReturn)->
@@ -459,10 +459,10 @@ createTransactionByProvider = (currentReturn)->
       owner            : provider._id
       isRoot           : true
       parent           : currentReturn._id
-      beforeDebtBalance: provider.totalDebtCash
+      beforeDebtBalance: provider.debitCash
       debtBalanceChange: currentReturn.depositCash
       paidBalanceChange: currentReturn.finalPrice
-      latestDebtBalance: provider.totalDebtCash - currentReturn.finalPrice - currentReturn.depositCash
+      latestDebtBalance: provider.debitCash - currentReturn.finalPrice - currentReturn.depositCash
 
     transactionInsert.dueDay    = currentReturn.dueDay if currentReturn.dueDay
     transactionInsert.owedCash  = currentReturn.finalPrice + currentReturn.depositCash
@@ -471,6 +471,6 @@ createTransactionByProvider = (currentReturn)->
     if transactionId = Schema.transactions.insert(transactionInsert)
       Schema.providers.update provider._id, $inc: {
         returnCash: currentReturn.finalPrice
-        totalDebtCash : -currentReturn.finalPrice
+        debitCash : -currentReturn.finalPrice
       }
     return transactionId

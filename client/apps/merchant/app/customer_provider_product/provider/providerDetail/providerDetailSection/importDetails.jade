@@ -11,51 +11,67 @@ template(name="providerImportDetails")
   tr(style="background-color: {{isColor}};")
 
   each details
-    tr.detail-row(style="background-color: {{isColor}};")
-      td.first-column {{getProductName product}}
-      td.number {{quality}}
-      td(align="center") {{getProductUnitName productUnit}}
-      td.number {{formatNumber productUnitPrice}}
-      td.last-column.number {{formatNumber totalPrice}}
+    with detail
+      tr.detail-row(style="background-color: {{isColor}};")
+        td.first-column {{productName}}
+        td {{quality}}
+        td: span
+          | {{productUnitName}}
+          unless isBase
+            span.super.s7.color-lime {{formatNumber basicQuantity}} {{basicUnitName}}
+        td.number {{formatNumber productUnitPrice}}
+        td.last-column.number {{formatNumber totalPrice}}
 
   if discountCash
     tr.detail-row(style="background-color: {{isColor}};")
       td.number(colspan="4"): span Tổng phiếu :
       td.number.receive.border-top: span.s5 <b>{{formatNumber totalPrice}}</b>
-    tr.detail-row(style="background-color: {{isColor}};")
-      td.number(colspan="4"): span Chiết khấu :
-      td.number.paid: span.s5 <b>{{formatNumber discountCash}}</b>
+
     if depositCash
       tr.detail-row(style="background-color: {{isColor}};")
+        td.number(colspan="4"): span Chiết khấu :
+        td.number.paid: span.s5 <b>{{formatNumber discountCash}}</b>
+
+      tr.detail-row(style="background-color: {{isColor}};")
         td.number(colspan="4"): span Thanh toán :
-        td.number.paid: span.s5 <b>{{formatNumber depositCash}}</b>
+        td.number.paid.border-bottom: span.s5 <b>{{formatNumber depositCash}}</b>
+
+    else
+      tr.detail-row(style="background-color: {{isColor}};")
+        td.number(colspan="4"): span Chiết khấu :
+        td.number.paid.border-bottom: span.s5 <b>{{formatNumber discountCash}}</b>
+
   else
     if depositCash
       tr.detail-row(style="background-color: {{isColor}};")
         td.number(colspan="4"): span Tổng phiếu :
         td.number.receive.border-top: span.s5 <b>{{formatNumber totalPrice}}</b>
+
       tr.detail-row(style="background-color: {{isColor}};")
         td.number(colspan="4"): span Thanh toán :
         td.number.paid: span.s5 <b>{{formatNumber depositCash}}</b>
 
-  each transactions
-    tr.paid-row.top(class="{{transactionClass}}" style="background-color: {{isColor}}; ; border-bottom: none;")
-      td.has-commands
-        span {{description}}
-        if allowDelete
-          if isManager
-            if isDelete
-              .commands: .lemon.rounded.tiny.btn.red.deleteTransaction: span.icon-minus-4
-      td.number(colspan="2")
-      td.number.border-top(style="color: #666;")
-        if showBeforeDebtBalance
-          span.icon-feather-1.s5 <b>{{formatNumberBeforeDebtBalance}}</b>
-      td.number.border-top: span.s5 <b>{{formatNumber owedCash}}</b>
 
-    if isLastTransaction
+
+
+  each transactions
+    tr.paid-row.top(class="{{transactionClass}}"
+    style="background-color: {{isColor}}; border-bottom: none;")
+      td.has-commands(colspan="3")
+        span {{description}}
+          if isDelete
+            .commands: .icon-minus-4.lemon.rounded.tiny.btn.red.deleteTransaction
+      td.number(style="color: #666;")
+        if sumBeforeBalance
+          span.icon-feather-1.s5 <b>{{formatNumber sumBeforeBalance}}</b>
+      td.number
+        span.s5 <b>{{formatNumber balanceChange}}</b>
+
+
+    if sumBeforeBalance
       tr.detail-row(style="background-color: {{isColor}};")
         td.number(colspan="3")
         td.number.border-top
-        td.number.border-top: span.s5 <b>{{formatNumber latestDebtBalance}}</b>
+        td.number.border-top: span.s5 <b>{{formatNumber sumLatestBalance}}</b>
 
   tr.detail-row(style="background-color: #EFEFF4;"): td(colspan="5")

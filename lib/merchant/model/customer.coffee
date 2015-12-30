@@ -106,16 +106,16 @@ Schema.add 'customers', "Customer", class Customer
     doc.hasAvatar = -> if @avatar then '' else 'missing'
     doc.avatarUrl = -> if @avatar then AvatarImages.findOne(@avatar)?.url() else undefined
 
-    doc.requiredCash  = -> (@debtRequiredCash ? 0) - (@paidRequiredCash ? 0)
-    doc.beginCash     = -> (@debtBeginCash ? 0) - (@paidBeginCash ? 0)
-    doc.incurredCash  = -> (@debtIncurredCash ? 0) - (@paidIncurredCash ? 0)
-    doc.saleCash      = -> (@debtSaleCash ? 0) - (@paidSaleCash ? 0) - (@returnSaleCash ? 0)
 
+    debitCash    = (doc.initialAmount ? 0) + (doc.loanAmount ? 0)
+    saleCash     = (doc.saleAmount ? 0) + (doc.returnPaidAmount ? 0) - (doc.returnAmount ? 0)
+    interestCash = (doc.interestAmount ? 0)
+    paidCash     = (doc.paidAmount ? 0)
 
-    debitCash = (doc.interestAmount ? 0) + (doc.saleAmount ? 0) + (doc.loanAmount ? 0) + (doc.returnPaidAmount ? 0)
-    paidCash  = (doc.returnAmount ? 0) + (doc.paidAmount ? 0)
-    doc.totalDebtCash = debitCash - paidCash
-    doc.totalCash     = debitCash - paidCash + (doc.initialAmount ? 0)
+    doc.debitCash    = debitCash + saleCash
+    doc.interestCash = interestCash
+    doc.paidCash     = paidCash
+    doc.totalCash    = debitCash + saleCash - paidCash + interestCash
 
     doc.remove = ->
       if @allowDelete and Schema.customers.remove(@_id)
@@ -123,52 +123,52 @@ Schema.add 'customers', "Customer", class Customer
         @setCustomerSession(randomGetCustomerId)
 
 
-    doc.calculateBalance = ->
-      customerUpdate = {paidCash: 0, returnCash: 0, totalCash: 0, loanCash: 0, beginCash: 0, debtCash: 0}
-      Schema.transactions.find({owner: @_id}).forEach(
-        (transaction) ->
-          console.log transaction
-          if transaction.transactionType is Enums.getValue('TransactionTypes', 'customer')
-            if transaction.parent
-              customerUpdate.beginCash  += 0
-              customerUpdate.debtCash   += transaction.debtBalanceChange
-              customerUpdate.loanCash   += 0
-              customerUpdate.paidCash   += transaction.paidBalanceChange
-              customerUpdate.returnCash += 0
+#    doc.calculateBalance = ->
+#      customerUpdate = {paidCash: 0, returnCash: 0, totalCash: 0, loanCash: 0, beginCash: 0, debtCash: 0}
+#      Schema.transactions.find({owner: @_id}).forEach(
+#        (transaction) ->
+#          console.log transaction
+#          if transaction.transactionType is Enums.getValue('TransactionTypes', 'customer')
+#            if transaction.parent
+#              customerUpdate.beginCash  += 0
+#              customerUpdate.debtCash   += transaction.debtBalanceChange
+#              customerUpdate.loanCash   += 0
+#              customerUpdate.paidCash   += transaction.paidBalanceChange
+#              customerUpdate.returnCash += 0
+#
+#            else
+#              customerUpdate.beginCash  += transaction.debtBalanceChange - transaction.paidBalanceChange
+#              customerUpdate.debtCash   += 0
+#              customerUpdate.loanCash   += 0
+#              customerUpdate.paidCash   += 0
+#              customerUpdate.returnCash += 0
+#
+#          if transaction.transactionType is Enums.getValue('TransactionTypes', 'return')
+#            customerUpdate.beginCash  += 0
+#            customerUpdate.debtCash   += 0
+#            customerUpdate.loanCash   += 0
+#            customerUpdate.paidCash   += 0
+#            customerUpdate.returnCash += transaction.paidBalanceChange
+#      )
+#      customerUpdate.totalCash = customerUpdate.beginCash + customerUpdate.debtCash + customerUpdate.loanCash - customerUpdate.paidCash - customerUpdate.returnCash
+#      console.log customerUpdate
+#      Schema.customers.update @_id, $set: customerUpdate
 
-            else
-              customerUpdate.beginCash  += transaction.debtBalanceChange - transaction.paidBalanceChange
-              customerUpdate.debtCash   += 0
-              customerUpdate.loanCash   += 0
-              customerUpdate.paidCash   += 0
-              customerUpdate.returnCash += 0
-
-          if transaction.transactionType is Enums.getValue('TransactionTypes', 'return')
-            customerUpdate.beginCash  += 0
-            customerUpdate.debtCash   += 0
-            customerUpdate.loanCash   += 0
-            customerUpdate.paidCash   += 0
-            customerUpdate.returnCash += transaction.paidBalanceChange
-      )
-      customerUpdate.totalCash = customerUpdate.beginCash + customerUpdate.debtCash + customerUpdate.loanCash - customerUpdate.paidCash - customerUpdate.returnCash
-      console.log customerUpdate
-      Schema.customers.update @_id, $set: customerUpdate
-
-  @calculate: ->
-    Schema.customers.find({}).forEach(
-      (customer) ->
-        Schema.customers.update customer._id,
-          $set:
-            debtRequiredCash: 0
-            paidRequiredCash: 0
-            debtBeginCash   : 0
-            paidBeginCash   : 0
-            debtIncurredCash: 0
-            paidIncurredCash: 0
-            debtSaleCash    : 0
-            paidSaleCash    : 0
-            returnSaleCash  : 0
-    )
+#  @calculate: ->
+#    Schema.customers.find({}).forEach(
+#      (customer) ->
+#        Schema.customers.update customer._id,
+#          $set:
+#            debtRequiredCash: 0
+#            paidRequiredCash: 0
+#            debtBeginCash   : 0
+#            paidBeginCash   : 0
+#            debtIncurredCash: 0
+#            paidIncurredCash: 0
+#            debtSaleCash    : 0
+#            paidSaleCash    : 0
+#            returnSaleCash  : 0
+#    )
 
   @insert: (name, description) ->
     insertOption = {name: name}
