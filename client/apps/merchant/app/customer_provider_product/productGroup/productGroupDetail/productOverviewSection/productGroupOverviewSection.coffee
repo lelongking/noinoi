@@ -33,7 +33,7 @@ Wings.defineApp 'productGroupOverviewSection',
       editMode = Session.get("productGroupManagementIsEditMode")
       if editMode and @allowDelete then '' else 'hidden'
 
-    productGroupSelected: ->
+    changeProductGroupSelected: ->
       currentProductGroup = Template.currentData()
       productGroupSelects
 

@@ -12,16 +12,16 @@ template(name="productCreate")
           .panel-body
             .collapsible-row
               .description Tên sản phẩm
-              input.input-field.newProductOption(name="productName" placeholder="Nhập tên sản phẩm")
+              input.input-field(name="productName" placeholder="Nhập tên sản phẩm")
             .collapsible-row
               .description Mã sản phẩm
-              input.input-field.newProductOption(name="productCode" placeholder="{{codeDefault}}")
+              input.input-field(name="productCode" placeholder="{{codeDefault}}")
+            .collapsible-row
+              .description Ghi chú
+              input.input-field(name="productDescription" placeholder="Ghi chú")
             .collapsible-row
               .description Nhóm sản phẩm
-              input.input-field.newProductOption(name="productDescription" placeholder="Ghi chú")
-            //.collapsible-row
-            //  .description Nhóm sản phẩm
-            //  input.input-field.newProductOption(name="productDebit" placeholder="Nhập nợ đầu kỳ" value="0")
+              +iSelect(options=productGroupSelected class="field")
 
 
         //.section.top.panel.panel-default.new-options-section

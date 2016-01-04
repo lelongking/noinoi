@@ -64,6 +64,8 @@ Wings.defineHyper 'productCreate',
     productUnit: ->
       Template.instance().productUnitData.get()
 
+    productGroupSelected: -> productGroupSelect
+
   events:
     "click .cancelProduct": (event, template) ->
       FlowRouter.go('product')
@@ -231,6 +233,22 @@ Wings.defineHyper 'productCreate',
         template.ui.$importQuality.blur()
 
 
+productGroupSelect =
+  query: (query) -> query.callback
+    results: Schema.productGroups.find(
+      {$or: [{name: Helpers.BuildRegExp(query.term)}, {nameSearch: Helpers.BuildRegExp(query.term)}]}
+    ,
+      {sort: {nameSearch: 1, name: 1}}
+    ).fetch()
+    text: 'name'
+  initSelection: (element, callback) -> callback Session.get("productCreateSelectedGroup") ? 'skyReset'
+  formatSelection: (item) -> "#{item.name}" if item
+  formatResult: (item) -> "#{item.name}" if item
+  id: '_id'
+  placeholder: 'Chọn nhóm'
+  changeAction: (e) -> Session.set("productCreateSelectedGroup", e.added)
+  reactiveValueGetter: -> Session.get("productCreateSelectedGroup") ? 'skyReset'
+
 
 
 
@@ -293,8 +311,10 @@ addNewProduct = (event, template, product = {}) ->
       productDescription  = $productDescription.val().replace(/^\s*/, "").replace(/\s*$/, "")
       product.description = productDescription if productDescription
 
-      product.status           = Enums.getValue('ProductStatuses', 'confirmed')
-      product.inventoryInitial = true
+      selectGroupId = Session.get("productCreateSelectedGroup")?._id
+      product.productOfGroup = selectGroupId if selectGroupId
+
+      product.status = Enums.getValue('ProductStatuses', 'confirmed')
 
       product.units = []
 
@@ -339,12 +359,17 @@ addNewProduct = (event, template, product = {}) ->
       product.merchantQuantities.push merchantQuantity
 
 
-
+      importQuality = parseInt(template.ui.$importQuality.inputmask('unmaskedvalue'))
 
       console.log product
       newProductId = Schema.products.insert product
 
       if Schema.products.findOne(newProductId)
+        if importQuality isnt NaN
+          importDetail = {quantity: importQuality, product: newProductId}
+          Meteor.call 'productInventory', newProductId, importDetail, (error, result) -> console.log error, result
+
+
         Meteor.users.update(Meteor.userId(), {$set: {'sessions.currentProduct': newProductId}})
         FlowRouter.go('product')
         toastr["success"]("Tạo sản phẩm thành công.")

@@ -11,23 +11,30 @@ template(name="providerCreate")
         .panel-body
           .collapsible-row
             .description Tên nhà cung cấp
-            input.input-field.newProviderOption(name="providerName" placeholder="Nhập nhà cung cấp")
+            input.input-field(name="providerName" placeholder="Nhập nhà cung cấp")
           .collapsible-row
             .description Điện thoại
-            input.input-field.newProviderOption(name="providerPhone" placeholder="Nhập số điện thoại")
+            input.input-field(name="providerPhone" placeholder="Nhập số điện thoại")
           .collapsible-row
             .description Địa chỉ
-            input.input-field.newProviderOption(name="providerAddress" placeholder="Nhập địa chỉ")
+            input.input-field(name="providerAddress" placeholder="Nhập địa chỉ")
           .collapsible-row
             .description Người đại diện
-            input.input-field.newProviderOption(name="providerRepresentative" placeholder="Người đại diện")
-          .collapsible-row
-            .description Nợ đầu kỳ
-            input.input-field.newProviderOption(name="providerDebit" placeholder="Nhập nợ đầu kỳ" value="0")
+            input.input-field(name="providerRepresentative" placeholder="Người đại diện")
           .collapsible-row
             .description Mã nhà cung cấp
-            input.input-field.newProviderOption(name="providerCode" placeholder="{{codeDefault}}")
+            input.input-field(name="providerCode" placeholder="{{codeDefault}}")
+          .collapsible-row
+            .description Nợ đầu kỳ
+            input.input-field(name="providerDebit" placeholder="Nhập nợ đầu kỳ")
+          .collapsible-row
+            .description Lãi suất
+            input.input-field(name="providerInterestRate" placeholder="Nhập lãi suất của nợ đầu kỳ")
+          .collapsible-row
+            .description Ngày nợ :
+            input.input-field(name="providerDebitDate" placeholder="Nhập ngày nợ đầu kỳ"
+            binding="datePicker" todayHighlight="true")
           .collapsible-row
             .description Ghi chú
-            input.input-field.newProviderOption(name="providerDescription" placeholder="Ghi thêm thông tin" value=""
+            input.input-field(name="providerDescription" placeholder="Ghi thêm thông tin"
             style="width: 70%;")

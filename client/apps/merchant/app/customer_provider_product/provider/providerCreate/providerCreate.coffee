@@ -1,13 +1,14 @@
 Wings.defineHyper 'providerCreate',
   created: ->
-    console.log 'created providerCreate'
-    self = this
-    self.newProviderData = new ReactiveVar({})
-
   rendered: ->
-    console.log 'render --------------- providerCreate'
-#    @ui.$genderSwitch.bootstrapSwitch('onText', 'Nam')
-#    @ui.$genderSwitch.bootstrapSwitch('offText', 'Nữ')
+    self = this
+    integerOption  = {autoGroup: true, groupSeparator:",", radixPoint: ".", rightAlign: false, suffix: " VNĐ", integerDigits: 11}
+    $providerDebit = self.ui.$providerDebit
+    $providerDebit.inputmask "integer", integerOption
+
+    decimalOption  = {autoGroup: true, groupSeparator:",", radixPoint: ".", rightAlign: false, suffix: " %/tháng", integerDigits:4}
+    $providerInterestRate = self.ui.$providerInterestRate
+    $providerInterestRate.inputmask "decimal", decimalOption
 
   helpers:
     codeDefault: ->
@@ -26,28 +27,8 @@ Wings.defineHyper 'providerCreate',
     "blur [name='providerName']": (event, template) ->
       checkProviderName(event, template)
 
-#    "blur [name='providerPhone']": (event, template) ->
-#      checkProviderPhone(event, template)
-
     "blur [name='providerCode']": (event, template) ->
       checkProviderCode(event, template)
-
-
-
-#checkProviderPhone = (event, template, provider) ->
-#  $providerPhone     = template.ui.$providerPhone
-#  providerPhone      = $providerPhone.val().replace(/^\s*/, "").replace(/\s*$/, "")
-#  listProviderPhones = Session.get('merchant')?.summaries?.listProviderPhones ? []
-#  if providerPhone.length > 0
-#    if _.indexOf(listProviderPhones, $providerPhone.val()) > -1
-#      $providerPhone.addClass('error')
-#      $providerPhone.notify('số điện thoại đã bị sử dụng', {position: "right"})
-#      return false
-#    else
-#      provider.phone = providerPhone if provider
-#  else
-#    $providerPhone.removeClass('error')
-#    $providerPhone.val('')
 
 
 checkProviderName = (event, template, provider) ->
@@ -95,6 +76,19 @@ addNewProvider = (event, template, provider = {}) ->
       $providerRepresentative = template.ui.$providerRepresentative
       providerRepresentative  = $providerRepresentative.val().replace(/^\s*/, "").replace(/\s*$/, "")
       provider.representative = providerRepresentative if providerRepresentative
+
+
+      initialInterestRate = parseInt(template.ui.$providerInterestRate.inputmask('unmaskedvalue'))
+      provider.initialInterestRate = initialInterestRate if initialInterestRate isnt NaN
+
+      initialStartDate  = template.datePicker.$providerDebitDate.datepicker().data().datepicker.dates.get()
+      provider.initialStartDate = initialStartDate if initialStartDate
+
+      initialAmount = parseInt(template.ui.$providerDebit.inputmask('unmaskedvalue'))
+      if initialAmount isnt NaN
+        provider.initialAmount       = initialAmount
+        provider.initialInterestRate = 0 if !provider.initialInterestRate
+        provider.initialStartDate    = new Date() if !provider.initialStartDate
 
       newProviderId = Schema.providers.insert provider
       if Match.test(newProviderId, String)
