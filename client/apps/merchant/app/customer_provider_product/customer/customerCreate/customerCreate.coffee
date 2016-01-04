@@ -1,13 +1,25 @@
 Wings.defineHyper 'customerCreate',
   created: ->
-    console.log 'created customerCreate'
-    self = this
-    self.newCustomerData = new ReactiveVar({})
+    Session.set("customerCreateSelectedGroup", 'skyReset')
 
   rendered: ->
-    console.log 'render --------------- customerCreate'
-    @ui.$genderSwitch.bootstrapSwitch('onText', 'Nam')
-    @ui.$genderSwitch.bootstrapSwitch('offText', 'Nữ')
+    self = this
+    integerOption  = {autoGroup: true, groupSeparator:",", radixPoint: ".", rightAlign: false, suffix: " VNĐ", integerDigits: 11}
+    $customerInitialDebit = self.ui.$customerInitialDebit
+    $customerInitialDebit.inputmask "integer", integerOption
+
+    decimalOption  = {autoGroup: true, groupSeparator:",", radixPoint: ".", rightAlign: false, suffix: " %/tháng", integerDigits:4}
+    $customerInitialInterestRate = self.ui.$customerInitialInterestRate
+    $customerInitialInterestRate.inputmask "decimal", decimalOption
+
+
+    self.ui.$genderSwitch.bootstrapSwitch('onText', 'Nam')
+    self.ui.$genderSwitch.bootstrapSwitch('offText', 'Nữ')
+
+
+  destroyed: ->
+    Session.set("customerCreateSelectedGroup")
+
 
   helpers:
     codeDefault: ->
@@ -15,6 +27,8 @@ Wings.defineHyper 'customerCreate',
       lastCode          = merchantSummaries.lastCustomerCode ? 0
       listCustomerCodes = merchantSummaries.listCustomerCodes ? []
       Wings.Helper.checkAndGenerateCode(lastCode, listCustomerCodes)
+
+    customerGroupSelect: -> customerCreateSelectGroup
 
   events:
     "click .cancelCustomer": (event, template) ->
@@ -33,7 +47,21 @@ Wings.defineHyper 'customerCreate',
       checkCustomerCode(event, template)
 
 
-
+customerCreateSelectGroup =
+  query: (query) -> query.callback
+    results: Schema.customerGroups.find(
+      {$or: [{name: Helpers.BuildRegExp(query.term), _id: {$not: 'asda' }}]}
+    ,
+      {sort: {nameSearch: 1, name: 1}}
+    ).fetch()
+    text: 'name'
+  initSelection: (element, callback) -> callback Session.get("customerCreateSelectedGroup") ? 'skyReset'
+  formatSelection: (item) -> "#{item.name}" if item
+  formatResult: (item) -> "#{item.name}" if item
+  id: '_id'
+  placeholder: 'Chọn nhóm'
+  changeAction: (e) -> Session.set("customerCreateSelectedGroup", e.added)
+  reactiveValueGetter: -> Session.get("customerCreateSelectedGroup") ? 'skyReset'
 
 
 
@@ -59,6 +87,7 @@ checkCustomerPhone = (event, template, customer) ->
       return false
     else
       customer.phone = customerPhone if customer
+      $customerPhone.removeClass('error')
   else
     $customerPhone.removeClass('error')
     $customerPhone.val('')
@@ -75,6 +104,7 @@ checkCustomerCode = (event, template, customer) ->
       return
     else
       customer.code = customerCode if customer
+      $customerCode.removeClass('error')
   else
     $customerCode.removeClass('error')
     $customerCode.val('')
@@ -96,6 +126,23 @@ addNewCustomer = (event, template, customer = {}) ->
         $customerDescription = template.ui.$customerDescription
         customerDescription  = $customerDescription.val().replace(/^\s*/, "").replace(/\s*$/, "")
         customer.profiles.description = customerDescription if customerDescription.length > 0
+
+        selectGroupId = Session.get("customerCreateSelectedGroup")?._id
+        customer.customerOfGroup = selectGroupId if selectGroupId
+
+        initialInterestRate = parseInt(template.ui.$customerInitialInterestRate.inputmask('unmaskedvalue'))
+        customer.initialInterestRate = initialInterestRate if initialInterestRate isnt NaN
+
+        initialStartDate  = template.datePicker.$dateDebit.datepicker().data().datepicker.dates.get()
+        customer.initialStartDate = initialStartDate if initialStartDate
+
+        initialAmount = parseInt(template.ui.$customerInitialDebit.inputmask('unmaskedvalue'))
+        if initialAmount isnt NaN
+          customer.initialAmount       = initialAmount
+          customer.initialInterestRate = 0 if !customer.initialInterestRate
+          customer.initialStartDate    = new Date() if !customer.initialStartDate
+
+
 
         newCustomerId = Schema.customers.insert customer
         if Match.test(newCustomerId, String)

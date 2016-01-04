@@ -12,29 +12,46 @@ template(name="customerCreate")
           .collapsible-row
             .description Tên khách hàng
             input.input-field.newCustomerOption(name="customerName" placeholder="Nhập tên khách hàng")
+
           .collapsible-row
             .description Điện thoại
             input.input-field.newCustomerOption(name="customerPhone" placeholder="Nhập số điện thoại")
+
           .collapsible-row
             .description Địa chỉ
             input.input-field.newCustomerOption(name="customerAddress" placeholder="Nhập địa chỉ")
+
           .collapsible-row
             .description Nợ đầu kỳ
-            input.input-field.newCustomerOption(name="customerDebit" placeholder="Nhập nợ đầu kỳ" value="0")
+            input.input-field.newCustomerOption(name="customerInitialDebit" placeholder="Nhập nợ đầu kỳ")
+
+          .collapsible-row
+            .description Lãi suất
+            input.input-field(name="customerInitialInterestRate" placeholder="Nhập lãi suất của nợ đầu kỳ")
+
+          .collapsible-row
+            .description Ngày nợ :
+            input.input-field(name="dateDebit" placeholder="Nhập ngày nợ đầu kỳ"
+            binding="datePicker" todayHighlight="true")
+
           .collapsible-row
             .description Mã khách hàng
             input.input-field.newCustomerOption(name="customerCode" placeholder="{{codeDefault}}")
-          //.collapsible-row
-          //  .description Nhóm khách hàng
-          //  input.input-field.newCustomerOption(name="customerGroup" placeholder="Chưa cập nhật" value="")
+
+          .collapsible-row
+            .description Nhóm khách hàng
+            +iSelect(options=customerGroupSelect class="field")
+
           .collapsible-row
             .description Giới tính
             input.input-field.newCustomerOption(name="genderSwitch" type="checkbox" checked)
+
           .collapsible-row
             .description Sinh nhật
-            input.input-field.newCustomerOption(name="dateOfBirth"
-            binding="datePicker" todayHighlight="true" maxlength="20" tabindex="4")
+            input.input-field.newCustomerOption(name="dateOfBirth" placeholder="Nhập ngày sinh nhật"
+            binding="datePicker" todayHighlight="true")
+
           .collapsible-row
             .description Ghi chú
-            input.input-field.newCustomerOption(name="customerDescription" placeholder="Ghi thêm thông tin" value=""
+            input.input-field.newCustomerOption(name="customerDescription" placeholder="Ghi thêm thông tin"
             style="width: 70%;")

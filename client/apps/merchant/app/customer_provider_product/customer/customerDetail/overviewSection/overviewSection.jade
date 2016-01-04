@@ -53,9 +53,9 @@ template(name="customerManagementOverviewSection")
           input.input-field.customerEdit(class="{{isEditMode true}}" value="{{code}}"
           name="customerCode" placeholder="{{getString code}}")
 
-        //.collapsible-row
-        //  .description Nhóm khách hàng
-        //  input.input-field.customerEdit(name="address" value="" placeholder="Chưa cập nhật")
+        .collapsible-row
+          .description Nhóm khách hàng
+          +iSelect(options=customerGroupSelected class="field changeCustomerGroup")
 
         .collapsible-row
           .description Giới tính

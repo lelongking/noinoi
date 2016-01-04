@@ -24,10 +24,11 @@ Wings.defineHyper 'customerGroupDetailSection',
             orderStatus : Enums.getValue('OrderStatus', 'finish')
           })
           if order
+            item.latestOrderCode        = order.orderCode
             item.latestTradingDay       = order.successDate
             item.latestTradingTotalCash = accounting.formatNumber(order.finalPrice) + ' VND'
 
-          item.debtTotalCash = accounting.formatNumber(item.debtCash + item.loanCash) + ' VND'
+          item.debtTotalCash = accounting.formatNumber(item.totalCash) + ' VND'
           item
       )
 #      scope.customerList = customerList

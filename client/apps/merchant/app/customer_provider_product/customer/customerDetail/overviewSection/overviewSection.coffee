@@ -1,18 +1,27 @@
 scope = {}
 Wings.defineHyper 'customerManagementOverviewSection',
   created: ->
-#    self = this
-#    self.newCustomerData = new ReactiveVar({})
-#    self.autorun ()->
+    self = this
+    self.autorun ()->
+
   rendered: ->
     Session.set('customerManagementIsShowCustomerDetail', false)
     Session.set("customerManagementShowEditCommand", false)
     Session.set('customerManagementIsEditMode', false)
+    console.log Template.currentData()
+    console.log Template.parentData()
+    console.log Template.instance()
 
     scope.overviewTemplateInstance = @
     @ui.$customerName.autosizeInput({space: 10}) if @ui.$customerName
     @ui.$genderSwitch.bootstrapSwitch('onText', 'Nam')
     @ui.$genderSwitch.bootstrapSwitch('offText', 'Nữ')
+
+    if Session.get("customerManagementShowEditCommand")
+      $(".changeCustomerGroup").select2("readonly", false)
+    else
+      $(".changeCustomerGroup").select2("readonly", true)
+
   destroyed: ->
 
 
@@ -38,6 +47,8 @@ Wings.defineHyper 'customerManagementOverviewSection',
       ,50 if scope.overviewTemplateInstance?.ui.$customerName?
       @name
 
+    customerGroupSelected: -> customerGroupSelects
+
   events:
     "click .customerDelete": (event, template) ->
       console.log 'is delete'
@@ -48,6 +59,7 @@ Wings.defineHyper 'customerManagementOverviewSection',
       clickShowCustomerDetailTab(event, template)
       Session.set('customerManagementIsEditMode', true)
       template.ui.$genderSwitch.bootstrapSwitch('disabled', !Session.get('customerManagementIsEditMode'))
+      $(".changeCustomerGroup").select2("readonly", false)
 
     "click .syncCustomerEdit": (event, template) ->
       editCustomer(template)
@@ -88,17 +100,56 @@ Wings.defineHyper 'customerManagementOverviewSection',
       checkAllowUpdateOverview(template)
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+customerGroupSelects =
+  query: (query) -> query.callback
+    results: Schema.customerGroups.find(
+      {$or: [{name: Helpers.BuildRegExp(query.term), _id: {$not: 'asda' }}]}
+    ,
+      {sort: {nameSearch: 1, name: 1}}
+    ).fetch()
+    text: 'name'
+  initSelection: (element, callback) -> callback Session.get("customerCreateSelectedGroup") ? 'skyReset'
+  formatSelection: (item) -> "#{item.name}" if item
+  formatResult: (item) -> "#{item.name}" if item
+  id: '_id'
+  placeholder: 'Chọn nhóm'
+  changeAction: (e) ->
+    Session.set("customerCreateSelectedGroup", e.added)
+    Session.set("customerManagementShowEditCommand", true)
+  reactiveValueGetter: -> Session.get("customerCreateSelectedGroup") ? 'skyReset'
+
+
 #----------------------------------------------------------------------------------------------------------------------
 clickShowCustomerDetailTab = (event, template)->
+  customer = template.data
   if template.ui.$genderSwitch
     template.ui.$genderSwitch.bootstrapSwitch('disabled', false)
-    template.ui.$genderSwitch.bootstrapSwitch('state', template.data.profiles.gender)
+    template.ui.$genderSwitch.bootstrapSwitch('state', customer.profiles.gender)
     template.ui.$genderSwitch.bootstrapSwitch('disabled', !Session.get('customerManagementIsEditMode'))
 
   if template.datePicker
-    dateOfBirth = moment(template.data.profiles.dateOfBirth).format("DD/MM/YYYY")
+    dateOfBirth = moment(customer.profiles.dateOfBirth).format("DD/MM/YYYY")
     template.datePicker.$dateOfBirth.datepicker('setDate', dateOfBirth)
   Session.set('customerManagementIsShowCustomerDetail', true)
+
+  if customer.customerOfGroup
+    Session.set("customerCreateSelectedGroup", Schema.customerGroups.findOne({_id: customer.customerOfGroup}))
 
 checkAllowUpdateOverview = (template) ->
   customerData        = template.data
@@ -109,6 +160,7 @@ checkAllowUpdateOverview = (template) ->
   customerDescription = template.ui.$customerDescription.val().replace(/^\s*/, "").replace(/\s*$/, "")
   customerGender      = template.ui.$genderSwitch.bootstrapSwitch('state')
   customerDateOfBirth = template.datePicker.$dateOfBirth.datepicker().data().datepicker.dates.get().toString()
+  customerOfGroup     = Session.get("customerCreateSelectedGroup")?._id
 
   Session.set "customerManagementShowEditCommand",
     customerName isnt customerData.name or
@@ -116,6 +168,7 @@ checkAllowUpdateOverview = (template) ->
       customerPhone isnt (customerData.phone ? '') or
       customerGender isnt (customerData.profiles.gender ? '') or
       customerAddress isnt (customerData.address ? '') or
+      customerOfGroup isnt (customerData.customerOfGroup ? '') or
       customerDateOfBirth isnt (customerData.profiles.dateOfBirth ? '') or
       customerDescription isnt (customerData.profiles.description ? '')
 
@@ -150,21 +203,24 @@ editCustomer = (template) ->
   customer   = template.data
   summaries = Session.get('merchant')?.summaries
   if customer and Session.get("customerManagementShowEditCommand")
-    name        = template.ui.$customerName.val().replace(/^\s*/, "").replace(/\s*$/, "")
-    phone       = template.ui.$customerPhone.val().replace(/^\s*/, "").replace(/\s*$/, "")
-    code        = template.ui.$customerCode.val().replace(/^\s*/, "").replace(/\s*$/, "")
-    address     = template.ui.$customerAddress.val().replace(/^\s*/, "").replace(/\s*$/, "")
-    description = template.ui.$customerDescription.val().replace(/^\s*/, "").replace(/\s*$/, "")
-    gender      = template.ui.$genderSwitch.bootstrapSwitch('state')
-    dateOfBirth = template.datePicker.$dateOfBirth.datepicker().data().datepicker.dates.get().toString()
+    name            = template.ui.$customerName.val().replace(/^\s*/, "").replace(/\s*$/, "")
+    phone           = template.ui.$customerPhone.val().replace(/^\s*/, "").replace(/\s*$/, "")
+    code            = template.ui.$customerCode.val().replace(/^\s*/, "").replace(/\s*$/, "")
+    address         = template.ui.$customerAddress.val().replace(/^\s*/, "").replace(/\s*$/, "")
+    description     = template.ui.$customerDescription.val().replace(/^\s*/, "").replace(/\s*$/, "")
+    gender          = template.ui.$genderSwitch.bootstrapSwitch('state')
+    dateOfBirth     = template.datePicker.$dateOfBirth.datepicker().data().datepicker.dates.get().toString()
+    customerOfGroup = Session.get("customerCreateSelectedGroup")?._id
+
     listPhones  = summaries.listCustomerPhones ? []
     listCodes   = summaries.listCustomerCodes ? []
 
     editOptions = {}
-    editOptions.name    = name if name isnt customer.name
-    editOptions.phone   = phone if phone isnt customer.phone
-    editOptions.code    = code if code isnt customer.code
-    editOptions.address = address if address isnt customer.address
+    editOptions.name            = name if name isnt customer.name
+    editOptions.phone           = phone if phone isnt customer.phone
+    editOptions.code            = code if code isnt customer.code
+    editOptions.address         = address if address isnt customer.address
+    editOptions.customerOfGroup = customerOfGroup if customerOfGroup isnt customer.customerOfGroup
     editOptions['profiles.description'] = description if description isnt customer.profiles.description
     editOptions['profiles.gender'     ] = gender if gender isnt customer.profiles.gender
     editOptions['profiles.dateOfBirth'] = dateOfBirth if dateOfBirth isnt customer.profiles.dateOfBirth
@@ -186,9 +242,28 @@ editCustomer = (template) ->
 
 
     if _.keys(editOptions).length > 0
-      Schema.customers.update customer._id, {$set: editOptions}, (error, result) -> if error then console.log error
+      Schema.customers.update customer._id, {$set: editOptions}, (error, result) ->
+        if error then console.log error
+        else
+
+          if customer.customerOfGroup isnt customerOfGroup
+            groupFrom = Schema.customerGroups.findOne({_id: customer.customerOfGroup})
+            groupTo   = Schema.customerGroups.findOne({_id: customerOfGroup})
+
+            updateGroupFrom = $pullAll:{customerLists: [customer._id]}
+            updateGroupFrom.$set = {allowDelete: true}
+            Schema.customerGroups.update groupFrom._id, updateGroupFrom
+
+            updateGroupTo = $set:{allowDelete: false}, $addToSet:{customerLists: customer._id}
+            Schema.customerGroups.update groupTo._id, updateGroupTo
+
+
+
+
       Session.set("customerManagementShowEditCommand", false)
       Session.set('customerManagementIsEditMode', false)
+      template.ui.$genderSwitch.bootstrapSwitch('disabled', true)
+      $(".changeCustomerGroup").select2("readonly", true)
       toastr["success"]("Cập nhật khách hàng thành công.")
 
 
