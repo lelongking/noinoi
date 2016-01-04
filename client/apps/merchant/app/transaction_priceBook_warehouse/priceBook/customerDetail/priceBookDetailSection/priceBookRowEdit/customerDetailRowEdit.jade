@@ -4,6 +4,5 @@ template(name="priceBookCustomerDetailRowEdit")
       td.command
     td.first-column {{productName}}
     td.date {{productUnitName}}
-    td.number {{formatNumber basicSale}} VNĐ
-    td.number {{formatNumber saleDiscount}} VNĐ
     td.number: input(name="editSaleQuantity" min="0")
+    td.number: input(name="editSaleDebtQuantity" min="0")

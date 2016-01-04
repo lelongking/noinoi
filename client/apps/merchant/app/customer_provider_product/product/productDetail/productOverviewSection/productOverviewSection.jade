@@ -44,21 +44,21 @@ template(name="productOverviewSection")
 
       with productUnitDetail
         .panel-body(class="{{isShowTab true}} ")
-          .collapsible-row(class="{{isEditMode false}}")
+          .collapsible-row(class="{{isShowInventory true}}")
             .description Tồn kho đầu kỳ
-            span.editable.dashed Chưa tồn kho đầu kỳ
-          .collapsible-row(class="{{isEditMode false}}")
-            .description Định mức tồn kho
-            span.editable.dashed {{formatNumber lowNorms}} Chai
+            span.editable.dashed {{importQuality}}
 
-
-          .collapsible-row.full-width.pull-right(class="{{isEditMode true}}")
+          .collapsible-row.full-width.pull-right(class="{{isShowInventory false}}")
             .description Tồn kho đầu kỳ
             .description.editCash(style="width: 20%; min-width: 200px; height: 40px; padding-left: 15px;"): .input-group
               input.form-control.input-field.full-width(name="importQuality")
               span.input-group-addon {{unitName}}
             span.editable.pull-right Chưa nhập tồn kho lúc này
             i.icon-ok-6.pull-right.inventory(class="{{isInventory}}")
+
+          .collapsible-row(class="{{isEditMode false}}")
+            .description Định mức tồn kho
+            span.editable.dashed {{formatNumber lowNorms}} {{unitName}}
 
           .collapsible-row.full-width.pull-right(class="{{isEditMode true}}" style="margin-bottom: 0px;")
             .description Định mức tồn kho

@@ -53,7 +53,10 @@ Wings.defineHyper 'productSearch',
       FlowRouter.go('productGroup')
 
     "click .list .doc-item": (event, template) ->
-      Product.setSession(@_id) if @?._id
+      if @?._id
+        Product.setSession(@_id)
+        Session.set('productManagementIsEditMode', false)
+        Session.set('productManagementIsShowProductDetail', false)
 
     "keyup input[name='searchFilter']": (event, template) ->
       productSearchByInput(event, template, Template.instance())

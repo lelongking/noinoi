@@ -195,6 +195,12 @@ Schema.add 'products', "Product", class Product
             unitUpdateQuery.$set["#{priceBookQuery}.basicSale"] = option.salePrice
             unitUpdateQuery.$set["#{priceBookQuery}.salePrice"] = option.salePrice
 
+        if updateInstance.isBase and option.saleDebtPrice and option.saleDebtPrice >= 0
+          for priceBook, priceBookIndex in doc.priceBooks
+            priceBookQuery = "priceBooks.#{priceBookIndex}"
+            unitUpdateQuery.$set["#{priceBookQuery}.basicSaleDebt"] = option.saleDebtPrice
+            unitUpdateQuery.$set["#{priceBookQuery}.saleDebtPrice"] = option.saleDebtPrice
+
 
         Schema.products.update(@_id, unitUpdateQuery) unless _.isEmpty(unitUpdateQuery.$set)
 
