@@ -84,3 +84,4 @@ selectCustomer = (event, template, customer)->
     Meteor.users.update(userId, {$set: {'sessions.currentCustomer': customer._id}})
     Session.set('customerManagementIsShowCustomerDetail', false)
     Session.set('customerManagementIsEditMode', false)
+    Session.set("customerManagementShowEditCommand", false)

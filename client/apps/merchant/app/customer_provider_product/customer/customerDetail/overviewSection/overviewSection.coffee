@@ -60,6 +60,7 @@ Wings.defineHyper 'customerManagementOverviewSection',
       Session.set('customerManagementIsEditMode', true)
       template.ui.$genderSwitch.bootstrapSwitch('disabled', !Session.get('customerManagementIsEditMode'))
       $(".changeCustomerGroup").select2("readonly", false)
+      checkAllowUpdateOverview(template)
 
     "click .syncCustomerEdit": (event, template) ->
       editCustomer(template)
@@ -144,7 +145,7 @@ clickShowCustomerDetailTab = (event, template)->
     template.ui.$genderSwitch.bootstrapSwitch('disabled', !Session.get('customerManagementIsEditMode'))
 
   if template.datePicker
-    dateOfBirth = moment(customer.profiles.dateOfBirth).format("DD/MM/YYYY")
+    dateOfBirth = if customer.profiles.dateOfBirth then moment(customer.profiles.dateOfBirth).format("DD/MM/YYYY") else ''
     template.datePicker.$dateOfBirth.datepicker('setDate', dateOfBirth)
   Session.set('customerManagementIsShowCustomerDetail', true)
 
@@ -159,7 +160,8 @@ checkAllowUpdateOverview = (template) ->
   customerAddress     = template.ui.$customerAddress.val().replace(/^\s*/, "").replace(/\s*$/, "")
   customerDescription = template.ui.$customerDescription.val().replace(/^\s*/, "").replace(/\s*$/, "")
   customerGender      = template.ui.$genderSwitch.bootstrapSwitch('state')
-  customerDateOfBirth = template.datePicker.$dateOfBirth.datepicker().data().datepicker.dates.get().toString()
+  customerDateOfBirth = template.datePicker.$dateOfBirth.datepicker().data().datepicker.dates.get()
+  customerDateOfBirth = moment(customerDateOfBirth).format("DD/MM/YYYY") if customerDateOfBirth
   customerOfGroup     = Session.get("customerCreateSelectedGroup")?._id
 
   Session.set "customerManagementShowEditCommand",
@@ -169,7 +171,12 @@ checkAllowUpdateOverview = (template) ->
       customerGender isnt (customerData.profiles.gender ? '') or
       customerAddress isnt (customerData.address ? '') or
       customerOfGroup isnt (customerData.customerOfGroup ? '') or
-      customerDateOfBirth isnt (customerData.profiles.dateOfBirth ? '') or
+      customerDateOfBirth isnt (
+        if customerData.profiles.dateOfBirth
+          moment(customerData.profiles.dateOfBirth).format("DD/MM/YYYY")
+        else
+         undefined
+      ) or
       customerDescription isnt (customerData.profiles.description ? '')
 
 

@@ -131,17 +131,17 @@ addNewCustomer = (event, template, customer = {}) ->
         customer.customerOfGroup = selectGroupId if selectGroupId
 
         initialInterestRate = parseInt(template.ui.$customerInitialInterestRate.inputmask('unmaskedvalue'))
-        customer.initialInterestRate = initialInterestRate if initialInterestRate isnt NaN
+        customer.initialInterestRate = initialInterestRate if !isNaN(initialInterestRate)
 
         initialStartDate  = template.datePicker.$dateDebit.datepicker().data().datepicker.dates.get()
-        customer.initialStartDate = initialStartDate if initialStartDate
+        customer.initialStartDate = initialStartDate if initialStartDate isnt undefined
 
         initialAmount = parseInt(template.ui.$customerInitialDebit.inputmask('unmaskedvalue'))
-        if initialAmount isnt NaN
+
+        if !isNaN(initialAmount)
           customer.initialAmount       = initialAmount
           customer.initialInterestRate = 0 if !customer.initialInterestRate
           customer.initialStartDate    = new Date() if !customer.initialStartDate
-
 
 
         newCustomerId = Schema.customers.insert customer
