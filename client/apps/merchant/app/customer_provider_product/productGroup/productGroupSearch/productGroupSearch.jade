@@ -12,7 +12,7 @@ template(name="productGroupSearch")
       input(name='searchFilter' type="text" placeholder="tìm nhóm sản phẩm...")
       .icon-user-add-1.create-new-command(data-toggle="tooltip" data-container="body" data-placement="right" title="Tạo mới")
 
-    .nano: .nano-content(style="margin-bottom: 35px;")
+    .nano: .nano-content(style="margin-bottom: 120px;")
       .list
         .caption-item: b DANH SÁCH NHÓM
 
@@ -22,7 +22,6 @@ template(name="productGroupSearch")
             style="background-image:url('')") {{aliasLetter firstName}}
             .doc-info
               .title {{name}}
-              //.price-stamp {{productCount}} khách hàng
 
             .price-stamp
               b {{productCount}}

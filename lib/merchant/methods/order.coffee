@@ -349,10 +349,12 @@ Meteor.methods
     merchantBillNo = Helpers.orderCodeCreate(merchant.saleBillNo ? '00')
 
     orderUpdate = $set:
-      orderType      : Enums.getValue('OrderTypes', 'tracking')
-      orderStatus    : Enums.getValue('OrderStatus', 'sellerConfirm')
-      sellerConfirmAt: new Date()
-      orderCode      : customerBillNo + '/' + merchantBillNo
+      orderType        : Enums.getValue('OrderTypes', 'tracking')
+      orderStatus      : Enums.getValue('OrderStatus', 'sellerConfirm')
+      sellerConfirmAt  : new Date()
+      billNoOfBuyer    : customerBillNo
+      billNoOfMerchant : merchantBillNo
+      orderCode        : customerBillNo + '/' + merchantBillNo
     console.log orderUpdate
 
     if Schema.orders.update(orderFound._id, orderUpdate)

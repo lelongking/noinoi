@@ -19,7 +19,8 @@ Meteor.methods
     if importFound?.details.length > 0
       updateImportInventory =
         $set:
-          importType: Enums.getValue('ImportTypes', 'inventorySuccess')
+          importType     : Enums.getValue('ImportTypes', 'inventorySuccess')
+          importInventory: inventoryQuantities
         $inc:
           'details.0.basicOrderQuantity'     : product.merchantQuantities[0].saleQuantity
           'details.0.basicQuantityAvailable' : -product.merchantQuantities[0].saleQuantity

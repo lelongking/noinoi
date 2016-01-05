@@ -12,11 +12,11 @@ template(name="productGroupOverviewSection")
         name="productGroupName" value="{{name}}")
         //span.blured-color ({{productCount}} sản phẩm)
 
-      .sub1
-        span.editable.dashed(data-toggle="tooltip" data-container="body" data-placement="right"
-        title="tổng nợ") {{getString totalCash '0'}} VNĐ
+      //.sub1
+      //  span.editable.dashed(data-toggle="tooltip" data-container="body" data-placement="right"
+      //  title="tổng nợ") {{getString totalCash '0'}} VNĐ
 
-      .sub2
+      .sub1
         span.editable.dashed(data-toggle="tooltip" data-container="body" data-placement="right"
         class="{{isEditMode false}}" title="ghi chú" style="{{colorIsUndefined description}}") {{getString description 'ghi chú'}}
 

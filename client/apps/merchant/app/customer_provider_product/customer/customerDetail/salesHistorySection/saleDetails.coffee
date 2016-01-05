@@ -10,9 +10,9 @@ Wings.defineWidget 'customerManagementSaleDetails',
 
     billNo: ->
       if @model is 'orders'
-        'Số phiếu: ' + @orderCode + if @description then " (#{@description})" else ''
+        'Phiếu ' + @orderCode + if @description then " (#{@description})" else ''
       else if @model is 'returns'
-        'Trả hàng phiếu: ' + @returnCode + if @description then " (#{@description})" else ''
+        'Trả hàng theo phiếu ' + @returnCode + if @description then " (#{@description})" else ''
 
     detail: ->
       detail = @
