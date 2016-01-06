@@ -52,7 +52,7 @@ createTransaction = (customer, order)->
     balanceBefore: debitCash - paidCash
     balanceChange: order.finalPrice
     balanceLatest: debitCash - paidCash + order.finalPrice
-
+  createTransactionOfSale.description = order.description if order.description
 
   if transactionSaleId = Schema.transactions.insert(createTransactionOfSale)
     if order.depositCash > 0 #co tra tien

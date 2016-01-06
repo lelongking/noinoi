@@ -2,9 +2,9 @@ template(name="orderProductUnitSearch")
   .dual-addon
     .search-filter.icon-search-8
       input(name='searchFilter' type="text" placeholder="tìm sản phẩm..." value="{{productTextSearch}}")
+      .icon-user-add-1.create-new-command(data-toggle="tooltip" data-container="body" data-placement="right" title="Tạo mới")
 
-
-    .nano: .nano-content(style="margin-bottom: 35px;")
+    .nano: .nano-content(style="margin-bottom: 34px;")
       .group-wrapper
         each unitProductSearches
           if status

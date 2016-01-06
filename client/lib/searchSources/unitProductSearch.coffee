@@ -6,9 +6,14 @@
   selector = {status: 1}; options = {sort: {name: 1}, limit: 200}
   if(searchText)
     regExp = Helpers.BuildRegExp(searchText);
-    selector = {$or: [
-      {name: regExp, status: 1}
-    ]}
+    selector =
+      $and: [
+        merchant : merchantId ? Merchant.getId()
+        status   : 1
+      ,
+        $or: [{name: regExp}, {nameSearch: regExp}]
+      ]
+
   productLists = []
   for product in Schema.products.find(selector, options).fetch()
     quality = product.merchantQuantities[0].availableQuantity

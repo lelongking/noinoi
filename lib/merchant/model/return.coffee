@@ -111,7 +111,7 @@ Schema.add 'returns', "Return", class Return
       if parent
         Schema.returns.update @_id, $set:{
           parent      : parent._id
-          returnCode  : parent.orderCode ? parent.importCode
+          returnCode  : (parent.billNoOfBuyer ? parent.orderCode) ? (parent.billNoOfProvider ? parent.importCode)
           discountCash: 0
           depositCash : 0
           totalPrice  : 0
@@ -462,6 +462,8 @@ createTransactionByProvider = (currentReturn)->
       balanceBefore: provider.debitCash
       balanceChange: currentReturn.finalPrice
       balanceLatest: provider.debitCash - currentReturn.finalPrice
+
+    createTransactionOfImportReturn.description = currentReturn.description if currentReturn.description
 
     if transactionImportReturnId = Schema.transactions.insert(createTransactionOfImportReturn)
       if currentReturn.depositCash > 0

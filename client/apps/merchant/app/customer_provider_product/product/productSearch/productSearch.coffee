@@ -25,7 +25,13 @@ Wings.defineHyper 'productSearch',
       selector = {};
       if searchText = Template.instance().searchFilter.get()
         regExp = Helpers.BuildRegExp(searchText);
-        selector = {$or: [{code: regExp, merchant: merchantId}, {nameSearch: regExp, merchant: merchantId}]}
+        selector =
+          $and: [
+            merchant : merchantId
+          ,
+            $or: [{code: regExp}, {name: regExp}, {nameSearch: regExp}]
+          ]
+
 
 #      if Session.get('myProfile')?.roles is 'seller'
 #        addProductIds = {$in: Session.get('myProfile').products}

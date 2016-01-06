@@ -1,3 +1,12 @@
+customerCalculateTotalCash = (customer) ->
+  saleCash                = (customer.saleAmount ? 0) + (customer.returnPaidAmount ? 0) - (customer.returnAmount ? 0)
+  customer.debitCash      = saleCash + (customer.loanAmount ? 0)
+  customer.interestCash   = (customer.interestAmount ? 0)
+  customer.paidCash       = (customer.paidAmount ? 0)
+  customer.totalDebitCash = (customer.initialAmount ? 0) + customer.debitCash
+  customer.totalCash      = customer.totalDebitCash + customer.interestCash - customer.paidCash
+  customer
+
 #----------Before-Insert---------------------------------------------------------------------------------------------
 generateCustomerCode = (user, customer, summaries)->
   lastCustomerCode  = summaries.lastCustomerCode ? 0
@@ -61,6 +70,7 @@ Schema.customers.before.insert (userId, customer)->
   generateCustomerInit(user, customer, splitName)
   generateCustomerInitCash(customer)
   generateOrderStatus(customer)
+  customer = customerCalculateTotalCash(customer)
   setCustomerGroupDefault(user, customer)
 
 
@@ -78,15 +88,7 @@ addCustomerInCustomerGroup = (userId, customer) ->
       $addToSet:
         customerLists: customer._id
       $inc:
-        debtRequiredCash: customer.debtRequiredCash
-        paidRequiredCash: customer.paidRequiredCash
-        debtBeginCash   : customer.debtBeginCash
-        paidBeginCash   : customer.paidBeginCash
-        debtIncurredCash: customer.debtIncurredCash
-        paidIncurredCash: customer.paidIncurredCash
-        debtSaleCash    : customer.debtSaleCash
-        paidSaleCash    : customer.paidSaleCash
-        returnSaleCash  : customer.returnSaleCash
+        totalCash: customer.totalCash
     Schema.customerGroups.direct.update(customer.customerOfGroup, customerGroupUpdate)
 
 addCustomerCodeInMerchantSummary = (userId, customer) ->
@@ -97,6 +99,7 @@ addCustomerCodeInMerchantSummary = (userId, customer) ->
 
 
 Schema.customers.after.insert (userId, customer) ->
+  customer = customerCalculateTotalCash(customer)
   addCustomerInCustomerGroup(userId, customer)
   addCustomerCodeInMerchantSummary(userId, customer)
 
@@ -128,6 +131,7 @@ updateIsNameChangedOfCustomer = (userId, customer, fieldNames, modifier, options
           modifier.$set.lastName  = splitName.lastName
 
 Schema.customers.before.update (userId, customer, fieldNames, modifier, options) ->
+  customer = customerCalculateTotalCash(customer)
   updateIsNameChangedOfCustomer(userId, customer, fieldNames, modifier, options)
 
 
@@ -141,42 +145,26 @@ Schema.customers.before.update (userId, customer, fieldNames, modifier, options)
 
 
 #----------After-Update-------------------------------------------------------------------------------------------------
-updateCashOfCustomerGroup = (userId, oldCustomer, newCustomer, fieldNames, modifier, options) ->
-  updateOption = $inc:{}
-
-  fieldLists = [
-      'debtRequiredCash'
-      'paidRequiredCash'
-      'debtBeginCash'
-      'paidBeginCash'
-      'debtIncurredCash'
-      'paidIncurredCash'
-      'debtSaleCash'
-      'paidSaleCash'
-      'returnSaleCash'
-    ]
-
-  for fieldName in fieldLists
-    if oldCustomer[fieldName] isnt newCustomer[fieldName]
-      updateOption.$inc[fieldName] = newCustomer[fieldName] - oldCustomer[fieldName]
-
-  if !_.isEmpty(updateOption.$inc)
-    Schema.customerGroups.direct.update oldCustomer.customerOfGroup, updateOption
-
 updateCustomerGroup = (userId, oldCustomer, newCustomer, fieldNames, modifier, options) ->
+
+  updateOption =
+    $inc:
+      totalCash: newCustomer.totalCash - oldCustomer.totalCash
+
+  console.log 'caculator update', updateOption.$inc.totalCash is 0
+  console.log updateOption, newCustomer.totalCash, oldCustomer.totalCash
+
+  if updateOption.$inc.totalCash isnt 0
+    console.log oldCustomer.customerOfGroup
+    console.log Schema.customerGroups.direct.update(oldCustomer.customerOfGroup, updateOption)
+
+updateCashOfCustomerGroup = (userId, oldCustomer, newCustomer, fieldNames, modifier, options) ->
   updateOldCustomerGroup =
     $pull:
       customerLists: oldCustomer.customerOfGroup
     $inc:
-      debtRequiredCash: -oldCustomer.debtRequiredCash
-      paidRequiredCash: -oldCustomer.paidRequiredCash
-      debtBeginCash   : -oldCustomer.debtBeginCash
-      paidBeginCash   : -oldCustomer.paidBeginCash
-      debtIncurredCash: -oldCustomer.debtIncurredCash
-      paidIncurredCash: -oldCustomer.paidIncurredCash
-      debtSaleCash    : -oldCustomer.debtSaleCash
-      paidSaleCash    : -oldCustomer.paidSaleCash
-      returnSaleCash  : -oldCustomer.returnSaleCash
+      totalCash: -oldCustomer.totalCash
+  console.log updateOldCustomerGroup
   Schema.customerGroups.direct.update oldCustomer.customerOfGroup, updateOldCustomerGroup
 
 
@@ -184,15 +172,8 @@ updateCustomerGroup = (userId, oldCustomer, newCustomer, fieldNames, modifier, o
     $addToSet:
       customerLists: newCustomer.customerOfGroup
     $inc:
-      debtRequiredCash: newCustomer.debtRequiredCash
-      paidRequiredCash: newCustomer.paidRequiredCash
-      debtBeginCash   : newCustomer.debtBeginCash
-      paidBeginCash   : newCustomer.paidBeginCash
-      debtIncurredCash: newCustomer.debtIncurredCash
-      paidIncurredCash: newCustomer.paidIncurredCash
-      debtSaleCash    : newCustomer.debtSaleCash
-      paidSaleCash    : newCustomer.paidSaleCash
-      returnSaleCash  : newCustomer.returnSaleCash
+      totalCash: newCustomer.totalCash
+  console.log updateNewCustomerGroup
   Schema.customerGroups.direct.update newCustomer.customerOfGroup, updateNewCustomerGroup
 
 updateCustomerCodeInMerchantSummary = (userId, oldCustomer, newCustomer) ->
@@ -200,17 +181,23 @@ updateCustomerCodeInMerchantSummary = (userId, oldCustomer, newCustomer) ->
     Schema.merchants.direct.update customer.merchant, $pull: {'summaries.listCustomerCodes': oldCustomer.code}
     Schema.merchants.direct.update customer.merchant, $addToSet: {'summaries.listCustomerCodes': newCustomer.code}
 
+
+
 Schema.customers.after.update (userId, newCustomer, fieldNames, modifier, options) ->
-  oldCustomer = @previous
-  isChangeCustomerGroup = oldCustomer.customerOfGroup isnt newCustomer.customerOfGroup
-
-  if isChangeCustomerGroup
-    updateCashOfCustomerGroup(userId, oldCustomer, newCustomer, fieldNames, modifier, options)
-  else
-    updateCustomerGroup(userId, oldCustomer, newCustomer, fieldNames, modifier, options)
+  if Meteor.isServer
+    oldCustomer = @previous
+    isChangeCustomerGroup = oldCustomer.customerOfGroup isnt newCustomer.customerOfGroup
+    oldCustomer = customerCalculateTotalCash(oldCustomer)
+    newCustomer = customerCalculateTotalCash(newCustomer)
 
 
-  updateCustomerCodeInMerchantSummary(userId, oldCustomer, newCustomer)
+    if isChangeCustomerGroup
+  #    updateCashOfCustomerGroup(userId, oldCustomer, newCustomer, fieldNames, modifier, options)
+    else
+      updateCustomerGroup(userId, oldCustomer, newCustomer, fieldNames, modifier, options)
+
+
+    updateCustomerCodeInMerchantSummary(userId, oldCustomer, newCustomer)
 
 
 
@@ -238,15 +225,7 @@ removeCashOfCustomerCash = (userId, customer)->
       $pull:
         customerLists: customer._id
       $inc:
-        debtRequiredCash: -customer.debtRequiredCash
-        paidRequiredCash: -customer.paidRequiredCash
-        debtBeginCash   : -customer.debtBeginCash
-        paidBeginCash   : -customer.paidBeginCash
-        debtIncurredCash: -customer.debtIncurredCash
-        paidIncurredCash: -customer.paidIncurredCash
-        debtSaleCash    : -customer.debtSaleCash
-        paidSaleCash    : -customer.paidSaleCash
-        returnSaleCash  : -customer.returnSaleCash
+        totalCash: -customer.totalCash
     Schema.customerGroups.direct.update(customer.customerOfGroup, customerGroupUpdate)
 
 removeCustomerCodeAndPhoneInMerchantSummary = (userId, customer)->

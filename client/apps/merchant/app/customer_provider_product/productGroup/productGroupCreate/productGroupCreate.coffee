@@ -1,8 +1,10 @@
 Wings.defineHyper 'productGroupCreate',
   created: ->
-    self = this
+
 
   rendered: ->
+    self = this
+    self.ui.$productGroupName.select()
 
 #  helpers:
 #    codeDefault: ->

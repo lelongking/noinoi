@@ -44,6 +44,9 @@ Wings.defineApp 'orderLayout',
 
     "click .finish": (event, template)->
       currentOrder.orderConfirm()
+      currentRouter = FlowRouter.current()
+      if currentRouter.oldRoute and currentRouter.oldRoute.name is 'customer'
+        FlowRouter.go('customer')
 
 
 

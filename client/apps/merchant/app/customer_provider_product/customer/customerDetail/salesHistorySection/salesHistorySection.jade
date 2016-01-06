@@ -35,13 +35,15 @@ template(name="customerManagementSalesHistorySection")
           tr.header-row
             td.has-commands(colspan="5")
               | &nbsp;
-              .bill-header <b>Nợ tồn đầu kỳ</b>
+              .bill-header: b {{momentFormat initialStartDate "DD/MM/YYYY"}}
           tr(style="background-color: {{isColor}};")
 
           tr.paid-row.top.receive(style="border-bottom: none;")
-            td.has-commands(colspan="4"): .bill-header Nợ Đầu Kỳ
+            td.has-commands(colspan="4"): .bill-header NỢ ĐẦU KỲ
             td.number: span.s5: b {{formatNumber initialAmount}}
 
+          tr.detail-row(style="background-color: #EFEFF4;")
+            td(colspan="5" style="padding-top: 2px !important; padding-bottom: 2px !important;")
 
         each oldDebts
           tr.paid-row.top(class="{{transactionClass}}" style="border-bottom: none;")

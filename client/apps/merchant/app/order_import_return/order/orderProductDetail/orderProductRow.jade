@@ -1,12 +1,4 @@
 template(name="orderProductRowEdit")
-  tr.detail-row.large-name: td(colspan="3")
-    span {{getProductName product}}
-    //if product.basicUnit
-    //  span ({{product.basicUnit}})
-    if discountPercent
-      span.super.s7.color-lime GIẢM GIÁ {{round discountPercent}}%
-
-
   tr.editors.dual-border(class="{{errorClass}}")
     td.bill-name.has-commands
       |{{productName}}
@@ -22,12 +14,6 @@ template(name="orderProductRowEdit")
     td.number.final-price <b>{{formatNumber finalPrice}}</b>
 
 template(name="orderProductRowDisplay")
-  tr.detail-row.large-name: td(colspan="3")
-    span {{getProductName product}}
-    //if discountCash
-    //   span.super.s7.color-lime GIẢM GIÁ {{round discountPercent}}%
-
-
   tr.detail-row.click-enable(class="{{errorClass}}")
     td.bill-name.has-commands
       |{{productName}}

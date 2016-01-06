@@ -8,11 +8,11 @@ template(name="customerManagementSaleDetails")
       //.commands
       //  if showDeleteSales
       //    .lemon.rounded.tiny.btn.red.deleteSales: span.icon-minus-4
-  tr(style="background-color: {{isColor}};")
+  tr(style="{{isColor}};")
 
   each details
     with detail
-      tr.detail-row(style="background-color: {{isColor}};")
+      tr.detail-row(style="{{isColor}};")
         td.first-column {{productName}}
         td {{quality}}
         td: span
@@ -24,31 +24,31 @@ template(name="customerManagementSaleDetails")
 
 
   if discountCash
-    tr.detail-row(style="background-color: {{isColor}};")
+    tr.detail-row(style="{{isColor}};")
       td.number(colspan="4"): span Tổng phiếu :
       td.number.receive: span.s5 <b>{{formatNumber totalPrice}}</b>
 
     if depositCash
-      tr.detail-row(style="background-color: {{isColor}};")
+      tr.detail-row(style="{{isColor}};")
         td.number(colspan="4"): span Chiết khấu :
         td.number.paid: span.s5 <b>{{formatNumber discountCash}}</b>
 
-      tr.detail-row(style="background-color: {{isColor}};")
+      tr.detail-row(style="{{isColor}};")
         td.number(colspan="4"): span Thanh toán :
         td.number.paid.border-bottom: span.s5 <b>{{formatNumber depositCash}}</b>
 
     else
-      tr.detail-row(style="background-color: {{isColor}};")
+      tr.detail-row(style="{{isColor}};")
         td.number(colspan="4"): span Chiết khấu :
         td.number.paid.border-bottom: span.s5 <b>{{formatNumber discountCash}}</b>
 
   else
     if depositCash
-      tr.detail-row(style="background-color: {{isColor}};")
+      tr.detail-row(style="{{isColor}};")
         td.number(colspan="4"): span Tổng phiếu :
         td.number.receive: span.s5 <b>{{formatNumber totalPrice}}</b>
 
-      tr.detail-row(style="background-color: {{isColor}};")
+      tr.detail-row(style="{{isColor}};")
         td.number(colspan="4"): span Thanh toán :
         td.number.paid.border-bottom: span.s5 <b>{{formatNumber depositCash}}</b>
 
@@ -59,9 +59,13 @@ template(name="customerManagementSaleDetails")
   each transactions
     if balanceChange
       tr.paid-row.top(class="{{transactionClass}}"
-      style="background-color: {{isColor}}; border-bottom: none;")
+      style="{{isColor}}; border-bottom: none;")
         td.has-commands(colspan="3")
-          span {{description}}
+          if isRoot
+            span(style="color: #666; font-style: italic !important;") {{description}}
+          else
+            span {{description}}
+
           if isDelete
             .commands: .icon-minus-4.lemon.rounded.tiny.btn.red.deleteTransaction
         td.number(style="color: #666;")
@@ -72,9 +76,10 @@ template(name="customerManagementSaleDetails")
 
 
     if sumBeforeBalance
-      tr.detail-row(style="background-color: {{isColor}};")
+      tr.detail-row(style="{{isColor}};")
         td.number(colspan="3")
         td.number.border-top
         td.number.border-top: span.s5 <b>{{formatNumber sumLatestBalance}}</b>
 
-  tr.detail-row(style="background-color: #EFEFF4;"): td(colspan="5")
+  tr.detail-row(style="background-color: #EFEFF4;")
+    td(colspan="5" style="padding-top: 2px !important; padding-bottom: 2px !important;")

@@ -2,7 +2,7 @@ template(name="customerGroupOverviewSection")
   .section.top.panel.panel-default
     input.hidden.avatarFile(type="file")
     .panel-heading
-      +avatarImageComponent(avatar=avatarUrl alias=firstName)
+      +avatarImageComponent(avatar=avatarUrl alias=name)
       .caption
         span.editable.dashed(data-toggle="tooltip" data-container="body" data-placement="right"
         class="{{isEditMode false}}" title="tên nhóm khách hàng") {{name}}

@@ -10,6 +10,7 @@ Wings.defineHyper 'customerGroupDetail',
         customerGroup = Schema.customerGroups.findOne({_id: currentCustomerGroupId})
         customerGroup = Schema.customerGroups.findOne({isBase: true, merchant: Merchant.getId()}) unless customerGroup
 
+        scope.customerGroup = customerGroup
         if customerGroup
           customerGroup.customerCount = if customerGroup.customerLists then customerGroup.customerLists.length else 0
           self.currentCustomerGroup.set(customerGroup)

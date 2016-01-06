@@ -1,8 +1,9 @@
 Wings.defineHyper 'customerGroupCreate',
   created: ->
-    self = this
 
   rendered: ->
+    self = this
+    self.ui.$customerGroupName.select()
 
 #  helpers:
 #    codeDefault: ->

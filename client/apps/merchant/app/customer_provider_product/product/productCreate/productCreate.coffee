@@ -51,7 +51,7 @@ Wings.defineHyper 'productCreate',
     self.ui.$barcodeEx.val productUnit.barcodeEx
 
 
-
+    self.ui.$productName.select()
 
 
   helpers:
@@ -68,7 +68,12 @@ Wings.defineHyper 'productCreate',
 
   events:
     "click .cancelProduct": (event, template) ->
-      FlowRouter.go('product')
+      currentRouter = FlowRouter.current()
+      console.log FlowRouter.current()
+      if currentRouter.oldRoute and currentRouter.oldRoute.name is 'order'
+        FlowRouter.go('order')
+      else
+        FlowRouter.go('product')
 
     "click .addProduct": (event, template) ->
       addNewProduct(event, template)
@@ -371,6 +376,11 @@ addNewProduct = (event, template, product = {}) ->
 
 
         Meteor.users.update(Meteor.userId(), {$set: {'sessions.currentProduct': newProductId}})
-        FlowRouter.go('product')
+
+        currentRouter = FlowRouter.current()
+        if currentRouter.oldRoute and currentRouter.oldRoute.name is 'order'
+          FlowRouter.go('order')
+        else
+          FlowRouter.go('product')
         toastr["success"]("Tạo sản phẩm thành công.")
 

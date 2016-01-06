@@ -11,58 +11,67 @@ Meteor.methods
     inventoryQuantities = -product.merchantQuantities[0].availableQuantity
     inventoryQuantities += inventoryDetail.quantity if inventoryDetail.quantity > 0
 
-    importId = Import.insert(null,'Tồn kho đầu kỳ', null)
-    if importFound = Schema.imports.findOne(importId)
-      importFound.addImportDetail(product.basicUnitId(), inventoryQuantities, inventoryDetail.expireDay)
+    if inventoryQuantities > 0
+      importId = Import.insert(null,'Tồn kho đầu kỳ', null)
+      if importFound = Schema.imports.findOne(importId)
+        importFound.addImportDetail(product.basicUnitId(), inventoryQuantities, inventoryDetail.expireDay)
 
-    importFound = Schema.imports.findOne(importId)
-    if importFound?.details.length > 0
-      updateImportInventory =
-        $set:
-          importType     : Enums.getValue('ImportTypes', 'inventorySuccess')
-          importInventory: inventoryQuantities
-        $inc:
-          'details.0.basicOrderQuantity'     : product.merchantQuantities[0].saleQuantity
-          'details.0.basicQuantityAvailable' : -product.merchantQuantities[0].saleQuantity
-
-      if Schema.imports.update(importId, updateImportInventory)
-        updateQuery =
+      importFound = Schema.imports.findOne({_id:importId})
+      if importFound?.details.length > 0
+        updateImportInventory =
           $set:
-            inventoryInitial: true
-            allowDelete     : false
-            status          : Enums.getValue('ProductStatuses', 'confirmed')
+            importType     : Enums.getValue('ImportTypes', 'inventorySuccess')
           $inc:
-            'merchantQuantities.0.availableQuantity' : inventoryQuantities
-            'merchantQuantities.0.inStockQuantity'   : inventoryQuantities
-            'merchantQuantities.0.importQuantity'    : inventoryQuantities
-        Schema.products.update(product._id, updateQuery)
+            'details.0.basicOrderQuantity'     : product.merchantQuantities[0].saleQuantity
+            'details.0.basicQuantityAvailable' : -product.merchantQuantities[0].saleQuantity
 
-        importDetail = importFound.details[0]
-        Schema.orders.find({'details.product': product._id}).forEach(
-          (order)->
-            updateOrderQuery = {$push:{}, $inc:{}}
+        if Schema.imports.update(importId, updateImportInventory)
+          updateQuery =
+            $set:
+              inventoryInitial: true
+              allowDelete     : false
+              status          : Enums.getValue('ProductStatuses', 'confirmed')
+              importInventory : inventoryQuantities
+            $inc:
+              'merchantQuantities.0.availableQuantity' : inventoryQuantities
+              'merchantQuantities.0.inStockQuantity'   : inventoryQuantities
+              'merchantQuantities.0.importQuantity'    : inventoryQuantities
+          Schema.products.update(product._id, updateQuery)
 
-            for detail, detailIndex in order.details
-              if detail.product is product._id
-                updateOrderQuery.$set = {}
-                updateOrderQuery.$set["details.#{detailIndex}.importIsValid"] = true
+          importDetail = importFound.details[0]
+          Schema.orders.find({'details.product': product._id}).forEach(
+            (order)->
+              updateOrderQuery = {$push:{}, $inc:{}}
 
-                importDetailOfOrder =
-                  _id         : importFound._id
-                  detailId    : importDetail._id
-                  product     : importDetail.product
-                  productUnit : importDetail.productUnit
-                  price       : importDetail.price
-                  conversion  : importDetail.conversion
-                  quality     : detail.basicQuantity/importDetail.conversion
-                  createdAt   : new Date()
-                  basicQuantity          : detail.basicQuantity
-                  basicQuantityReturn    : 0
-                  basicQuantityAvailable : detail.basicQuantity
+              for detail, detailIndex in order.details
+                if detail.product is product._id
+                  updateOrderQuery.$set = {}
+                  updateOrderQuery.$set["details.#{detailIndex}.importIsValid"] = true
 
-                updateOrderQuery.$push["details.#{detailIndex}.imports"]                 = importDetailOfOrder
-                updateOrderQuery.$inc["details.#{detailIndex}.basicImportQuantity"]      = detail.basicQuantity
-                updateOrderQuery.$inc["details.#{detailIndex}.basicImportQuantityDebit"] = -detail.basicQuantity
+                  importDetailOfOrder =
+                    _id         : importFound._id
+                    detailId    : importDetail._id
+                    product     : importDetail.product
+                    productUnit : importDetail.productUnit
+                    price       : importDetail.price
+                    conversion  : importDetail.conversion
+                    quality     : detail.basicQuantity/importDetail.conversion
+                    createdAt   : new Date()
+                    basicQuantity          : detail.basicQuantity
+                    basicQuantityReturn    : 0
+                    basicQuantityAvailable : detail.basicQuantity
 
-            Schema.orders.update(order._id, updateOrderQuery)
-        )
+                  updateOrderQuery.$push["details.#{detailIndex}.imports"]                 = importDetailOfOrder
+                  updateOrderQuery.$inc["details.#{detailIndex}.basicImportQuantity"]      = detail.basicQuantity
+                  updateOrderQuery.$inc["details.#{detailIndex}.basicImportQuantityDebit"] = -detail.basicQuantity
+
+              Schema.orders.update(order._id, updateOrderQuery)
+          )
+    else
+      Schema.products.update(product._id,
+        $set:
+          inventoryInitial: true
+          allowDelete     : true
+          status          : Enums.getValue('ProductStatuses', 'confirmed')
+          importInventory : 0
+      )

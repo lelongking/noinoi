@@ -10,6 +10,9 @@ Wings.defineHyper 'providerCreate',
     $providerInterestRate = self.ui.$providerInterestRate
     $providerInterestRate.inputmask "decimal", decimalOption
 
+    self.ui.$providerName.select()
+
+
   helpers:
     codeDefault: ->
       merchantSummaries = Session.get('merchant')?.summaries ? {}
@@ -79,13 +82,13 @@ addNewProvider = (event, template, provider = {}) ->
 
 
       initialInterestRate = parseInt(template.ui.$providerInterestRate.inputmask('unmaskedvalue'))
-      provider.initialInterestRate = initialInterestRate if initialInterestRate isnt NaN
+      provider.initialInterestRate = initialInterestRate if !isNaN(initialInterestRate)
 
       initialStartDate  = template.datePicker.$providerDebitDate.datepicker().data().datepicker.dates.get()
-      provider.initialStartDate = initialStartDate if initialStartDate
+      provider.initialStartDate = initialStartDate if initialStartDate isnt undefined
 
       initialAmount = parseInt(template.ui.$providerDebit.inputmask('unmaskedvalue'))
-      if initialAmount isnt NaN
+      if !isNaN(initialAmount)
         provider.initialAmount       = initialAmount
         provider.initialInterestRate = 0 if !provider.initialInterestRate
         provider.initialStartDate    = new Date() if !provider.initialStartDate

@@ -17,12 +17,12 @@ Wings.defineApp 'orderReturnLayout',
           for detail in scope.currentCustomerReturn.details
             detail.returnQuantities = productQuantities[detail.product]
 
-        self.orderReturn.set(scope.currentCustomerReturn)
-        Session.set 'currentCustomerReturn', scope.currentCustomerReturn
+          self.orderReturn.set(scope.currentCustomerReturn)
+          Session.set 'currentCustomerReturn', scope.currentCustomerReturn
 
-        parent = parent = Schema.orders.findOne(scope.currentCustomerReturn.parent)
-        Session.set 'currentReturnParent', parent?.details
-        self.returnParent.set(parent)
+          parent = parent = Schema.orders.findOne(scope.currentCustomerReturn.parent)
+          Session.set 'currentReturnParent', parent?.details
+          self.returnParent.set(parent)
 
 
       #readonly 2 Select Khach Hang va Phieu Ban
@@ -121,9 +121,13 @@ customerSearch = (query) ->
   selector = {merchant: Merchant.getId(), saleBillNo: {$gt: 0}}; options = {sort: {nameSearch: 1}}
   if(query.term)
     regExp = Helpers.BuildRegExp(query.term);
-    selector = {$or: [
-      {nameSearch: regExp, merchant: Merchant.getId(), saleBillNo: {$gt: 0}}
-    ]}
+    selector =
+      $and: [
+        merchant  : merchantId ? Merchant.getId()
+        saleBillNo: {$gt: 0}
+      ,
+        $or: [{name: regExp}, {nameSearch: regExp}]
+      ]
   Schema.customers.find(selector, options).fetch()
 
 customerSelectOptions =

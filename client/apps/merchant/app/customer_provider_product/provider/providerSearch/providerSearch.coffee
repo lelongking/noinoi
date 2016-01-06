@@ -14,9 +14,12 @@ Wings.defineHyper 'providerSearch',
 
       if(searchText)
         regExp = Helpers.BuildRegExp(searchText);
-        selector = {$or: [
-          {nameSearch: regExp}
-        ]}
+        selector =
+          $and: [
+            merchant : merchantId ? Merchant.getId()
+          ,
+            $or: [{name: regExp}, {nameSearch: regExp}]
+          ]
       Schema.providers.find(selector, options).fetch()
 
 

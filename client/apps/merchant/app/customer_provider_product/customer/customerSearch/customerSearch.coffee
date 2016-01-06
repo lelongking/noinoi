@@ -33,7 +33,12 @@ Wings.defineHyper 'customerSearch',
       selector = {};
       if searchText = Template.instance().searchFilter.get()
         regExp = Helpers.BuildRegExp(searchText);
-        selector = {$or: [{customerCode: regExp, merchant: merchantId}, {nameSearch: regExp, merchant: merchantId}]}
+        selector =
+          $and: [
+            merchant : merchantId
+          ,
+            $or: [{customerCode: regExp}, {name: regExp}, {nameSearch: regExp}]
+          ]
 
       if Session.get('myProfile')?.roles is 'seller'
         addCustomerIds = {$in: Session.get('myProfile').customers}
@@ -43,7 +48,7 @@ Wings.defineHyper 'customerSearch',
         else
           selector._id = addCustomerIds
       scope.customerLists = []
-      Schema.customers.find(selector, {sort: {firstName:1 ,nameSearch: 1}}).forEach(
+      Schema.customers.find(selector, {sort: {nameSearch: 1}}).forEach(
         (customer) ->
           if customerGroup = _.findWhere(customerGroups, {_id: customer.customerOfGroup ? customer.group})
             customerGroup.customerListSearched.push(customer)

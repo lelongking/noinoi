@@ -2,7 +2,7 @@ template(name="priceBookOverviewSection")
   .section.top.panel.panel-default
     input.hidden.avatarFile(type="file")
     .panel-heading
-      +avatarImageComponent(avatar=avatarUrl alias=firstName)
+      +avatarImageComponent(avatar=avatarUrl alias=name)
 
       .caption(data-toggle="tooltip" data-container="body" data-placement="right" title="tên bản giá")
         span.editable.dashed(class="{{isEditMode false}}") {{name}}

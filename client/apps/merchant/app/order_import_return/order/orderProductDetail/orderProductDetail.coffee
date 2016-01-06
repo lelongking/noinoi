@@ -40,7 +40,8 @@ Wings.defineHyper 'orderProductDetail',
       for key, value of productList
         if product = Schema.products.findOne(key)
           availableQuantity = product.merchantQuantities[0].availableQuantity ? 0
-          (saleQuantity  = 0 unless saleQuantity; saleQuantity += item.basicQuantity) for item in value
+          saleQuantity = 0
+          saleQuantity += item.basicQuantity for item in value
 
           for detail in value
             item = @details[detail.index]

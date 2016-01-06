@@ -189,9 +189,11 @@ Meteor.methods
     merchantCode = Helpers.orderCodeCreate(merchantFound.importBillNo)
     importUpdate =
       $set:
-        importType : Enums.getValue('ImportTypes', 'success')
-        successDate: new Date()
-        importCode : providerCode + '/' + merchantCode
+        importType        : Enums.getValue('ImportTypes', 'success')
+        successDate       : new Date()
+        importCode        : providerCode + '/' + merchantCode
+        billNoOfProvider  : providerCode
+        billNoOfMerchant  : merchantCode
     Schema.imports.update importFound._id, importUpdate
 
     #update importBillNo of merchant

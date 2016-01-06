@@ -86,9 +86,13 @@ providerSearch = (query) ->
   selector = {merchant: Merchant.getId(), billNo: {$gt: 0}}; options = {sort: {nameSearch: 1}}
   if(query.term)
     regExp = Helpers.BuildRegExp(query.term);
-    selector = {$or: [
-      {nameSearch: regExp, merchant: Merchant.getId(), billNo: {$gt: 0}}
-    ]}
+    selector =
+      $and: [
+        merchant : merchantId ? Merchant.getId()
+        billNo   : {$gt: 0}
+      ,
+        $or: [{name: regExp}, {nameSearch: regExp}]
+      ]
   Schema.providers.find(selector, options).fetch()
 
 findImportByProvider = (providerId) ->

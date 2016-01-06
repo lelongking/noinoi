@@ -53,6 +53,9 @@ Wings.defineApp 'orderProductUnitSearch',
 
 
   events:
+    "click .create-new-command": (event, template) ->
+      FlowRouter.go('createProduct')
+
     "click .print-command": (event, template) -> window.print()
     "keyup input[name='searchFilter']": (event, template) ->
       searchFilter  = template.ui.$searchFilter.val()

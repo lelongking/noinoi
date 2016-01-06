@@ -33,6 +33,8 @@ template(name="providerDetailSection")
             td.has-commands(colspan="4"): .bill-header Nợ Đầu Kỳ
             td.number: span.s5: b {{formatNumber initialAmount}}
 
+          tr.detail-row(style="background-color: #EFEFF4;")
+            td(colspan="5" style="padding-top: 2px !important; padding-bottom: 2px !important;")
 
           each oldDebts
             tr.paid-row.top(class="{{transactionClass}}" style="border-bottom: none;")

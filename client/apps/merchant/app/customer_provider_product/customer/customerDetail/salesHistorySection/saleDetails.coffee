@@ -1,6 +1,6 @@
 Wings.defineWidget 'customerManagementSaleDetails',
   helpers:
-    isColor: -> '#fff'
+    isColor: -> 'background-color: #fff'
     isBase: -> @conversion is 1
     isDelete: -> false #moment().diff(@version.createdAt ? new Date(), 'days') < 1
 #    allowDelete: ->
@@ -10,9 +10,9 @@ Wings.defineWidget 'customerManagementSaleDetails',
 
     billNo: ->
       if @model is 'orders'
-        'Phiếu ' + @orderCode + if @description then " (#{@description})" else ''
+        'Phiếu ' + @billNoOfBuyer #+ if @description then " (#{@description})" else ''
       else if @model is 'returns'
-        'Trả hàng theo phiếu ' + @returnCode + if @description then " (#{@description})" else ''
+        'Trả hàng theo phiếu ' + @returnCode #+ if @description then " (#{@description})" else ''
 
     detail: ->
       detail = @

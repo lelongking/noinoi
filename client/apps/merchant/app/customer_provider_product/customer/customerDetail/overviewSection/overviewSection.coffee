@@ -22,6 +22,8 @@ Wings.defineHyper 'customerManagementOverviewSection',
     else
       $(".changeCustomerGroup").select2("readonly", true)
 
+    @ui.$customerName.select()
+
   destroyed: ->
 
 
@@ -70,6 +72,7 @@ Wings.defineHyper 'customerManagementOverviewSection',
       template.ui.$genderSwitch.bootstrapSwitch('disabled', !Session.get('customerManagementIsEditMode'))
       dateOfBirth = moment(template.data.profiles.dateOfBirth).format("DD/MM/YYYY")
       template.datePicker.$dateOfBirth.datepicker('setDate', dateOfBirth)
+      $(".changeCustomerGroup").select2("readonly", true)
 
 
 
@@ -88,7 +91,8 @@ Wings.defineHyper 'customerManagementOverviewSection',
     "change .avatarFile": (event, template) ->
       updateChangeAvatar(event, template)
 
-
+    "change [name='dateOfBirth']": (event, template) ->
+      checkAllowUpdateOverview(template)
 
     'input input.customerEdit, switchChange.bootstrapSwitch input[name="genderSwitch"]': (event, template) ->
       checkAllowUpdateOverview(template)
@@ -133,6 +137,7 @@ customerGroupSelects =
   changeAction: (e) ->
     Session.set("customerCreateSelectedGroup", e.added)
     Session.set("customerManagementShowEditCommand", true)
+    checkAllowUpdateOverview(template)
   reactiveValueGetter: -> Session.get("customerCreateSelectedGroup") ? 'skyReset'
 
 

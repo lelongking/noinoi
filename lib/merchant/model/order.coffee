@@ -14,8 +14,8 @@ simpleSchema.orders = new SimpleSchema
 
   orderType        : type: Number, defaultValue: Enums.getValue('OrderTypes', 'initialize')
   orderStatus      : type: Number, defaultValue: Enums.getValue('OrderStatus', 'initialize')
-  paymentMethod    : type: Number, defaultValue: Enums.getValue('PaymentMethods', 'direct')
-  paymentsDelivery : type: Number, defaultValue: Enums.getValue('DeliveryTypes', 'direct')
+  paymentMethod    : type: Number, defaultValue: Enums.getValue('PaymentMethods', 'debit')
+  paymentsDelivery : type: Number, defaultValue: Enums.getValue('DeliveryTypes', 'delivery')
 
   buyer       : type: String, optional: true
   dueDay      : type: Number, optional: true
@@ -194,7 +194,7 @@ Schema.add 'orders', "Order", class Order
       finalPrice: totalPrice - @discountCash
 
 
-    doc.addDetail = (productUnitId, quality = 1) ->
+    doc.addDetail = (productUnitId, quality = 1, priceType = 'debit') ->
       return console.log('Order da xac nhan') unless _.contains(statusCantEdit,doc.orderStatus)
 
       product = Schema.products.findOne({'units._id': productUnitId})
@@ -203,7 +203,7 @@ Schema.add 'orders', "Order", class Order
       productUnit = _.findWhere(product.units, {_id: productUnitId})
       return console.log('Khong tim thay ProductUnit') if !productUnit
 
-      price = product.getPrice(@buyer, 'sale')
+      price = product.getPrice(@buyer, priceType)
       return console.log('Price not found..') if price is undefined
 
       return console.log("Price invalid (#{price})") if price < 0

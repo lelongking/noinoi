@@ -5,7 +5,10 @@ simpleSchema.imports = new SimpleSchema
   dueDay     : type: Number, defaultValue: 90
   provider   : simpleSchema.OptionalString
   description: simpleSchema.OptionalString
-  importCode : simpleSchema.OptionalString
+
+  importCode       : simpleSchema.OptionalString
+  billNoOfProvider : type: String, optional: true
+  billNoOfMerchant : type: String, optional: true
 
 
   accounting          : type: String  , optional: true

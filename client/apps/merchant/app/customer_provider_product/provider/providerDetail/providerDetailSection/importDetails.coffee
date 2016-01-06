@@ -6,9 +6,9 @@ Wings.defineWidget 'providerImportDetails',
     allowDelete: -> @_id isnt Template.parentData().transaction
     billNo: ->
       if @model is 'imports'
-        'Số phiếu: ' + @importCode + if @description then " (#{@description})" else ''
+        'Phiếu ' + @billNoOfProvider #+ if @description then " (#{@description})" else ''
       else if @model is 'returns'
-        'Trả hàng phiếu: ' + @returnCode + if @description then " (#{@description})" else ''
+        'Trả hàng theo phiếu ' + @returnCode #+ if @description then " (#{@description})" else ''
 
     productUnitPrice: -> @price * @conversion
 

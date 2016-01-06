@@ -22,7 +22,7 @@ template(name="customerSearch")
             each customerListSearched
               .doc-item(class="{{activeClass}}")
                 .avatar-wrapper: .avatar-image(class="{{hasAvatar}}"
-                style="background-image:url('{{avatarUrl}}')") {{aliasLetter this.firstName}}
+                style="background-image:url('{{avatarUrl}}')") {{aliasLetter this.lastName}}
 
                 .doc-info
                   .title {{name}}

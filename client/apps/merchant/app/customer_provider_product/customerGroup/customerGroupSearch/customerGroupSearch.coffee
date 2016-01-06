@@ -17,9 +17,13 @@ Wings.defineHyper 'customerGroupSearch',
 
       if(searchText)
         regExp = Helpers.BuildRegExp(searchText);
-        selector = {$or: [
-          {nameSearch: regExp}
-        ]}
+        selector =
+          $and: [
+            merchant : Merchant.getId()
+          ,
+            $or: [{name: regExp} , {nameSearch: regExp}]
+          ]
+
 
 #      unless User.hasManagerRoles()
 #        if searchText

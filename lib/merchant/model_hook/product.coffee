@@ -47,9 +47,10 @@ addProductCodeInMerchantSummary = (userId, product) ->
 
 
 Schema.products.after.insert (userId, product) ->
-  addProductInProductGroup(userId, product)
-  addProductCodeInMerchantSummary(userId, product)
-  PriceBook.addProduct(product._id)
+  if Schema.products.findOne({_id: product._id})
+    addProductInProductGroup(userId, product)
+    addProductCodeInMerchantSummary(userId, product)
+    PriceBook.addProduct(product._id)
 
 
 

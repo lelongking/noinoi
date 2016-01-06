@@ -43,6 +43,7 @@ scope.findAllOrders = ()->
               transaction.receivable       = true if (balanceChange = item.finalPrice - item.depositCash) > 0
               transaction.balanceChange    = Math.abs(balanceChange)
               transaction.sumLatestBalance = transaction.sumBeforeBalance + balanceChange
+              transaction.description      = '(' + transaction.description + ')' if transaction.description
             else
               transaction.sumLatestBalance = beforeDebtCash + transaction.balanceLatest
             transaction
@@ -65,6 +66,7 @@ scope.findAllOrders = ()->
               transaction.receivable       = true if (balanceChange = -item.finalPrice + item.depositCash) > 0
               transaction.balanceChange    = Math.abs(balanceChange)
               transaction.sumLatestBalance = transaction.sumBeforeBalance + balanceChange
+              transaction.description      = '(' + transaction.description + ')' if transaction.description
             else
               transaction.sumLatestBalance = beforeDebtCash + transaction.balanceLatest
 

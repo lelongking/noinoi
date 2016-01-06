@@ -20,7 +20,7 @@ template(name="warehouseDetail")
                 tr
                   th(style="width:40px")
                   th(style="width:auto")
-                  th(style="width:40px")
+                  th(style="width:50px")
                   th(style="width:35px")
                   th(style="width:60px")
                   th(style="width:35px")
@@ -34,7 +34,7 @@ template(name="warehouseDetail")
                   tr.detail-row
                     td {{count}}
                     td.first-column {{name}}
-                    td.number: input.number.upperGap(type="text" size="10" name="{{_id}}" placeholder="số tiền" value="{{normsQuantity}}")
+                    td.number: input.number.upperGap(type="text" size="10" name="{{_id}}" placeholder="số tiền" value="{{normsQuantity}}" style="background-color: transparent;")
                     td(style="padding-left: 5px;") {{unitName}}
                     td.number {{allQuantity}}
                     td(style="padding-left: 5px;") {{unitName}}
@@ -46,7 +46,7 @@ template(name="warehouseDetail")
                     tr.detail-row
                       td {{count}}
                       td.first-column {{name}}
-                      td.number: input.number.upperGap(type="text" size="10" name="{{_id}}" placeholder="số tiền" value="{{normsQuantity}}")
+                      td.number: input.number.upperGap(type="text" size="10" name="{{_id}}" placeholder="số tiền" value="{{normsQuantity}}" style="background-color: transparent;")
                       td(style="padding-left: 5px;") {{unitName}}
                       td.number {{allQuantity}}
                       td(style="padding-left: 5px;") {{unitName}}

@@ -2,29 +2,30 @@ template(name="customerManagementOverviewSection")
   .section.top.panel.panel-default
     input.hidden.avatarFile(type="file")
     .panel-heading
-      +avatarImageComponent(avatar=avatarUrl alias=firstName)
-      .caption
-        span.editable.dashed(data-toggle="tooltip" data-container="body" data-placement="right" maxlength="50"
-        class="{{isEditMode false}}" name="customerName" placeholder="tên khách hàng" title="tên khách hàng") {{name}}
+      +avatarImageComponent(avatar=avatarUrl alias=name)
+      .caption(data-toggle="tooltip" data-container="body" data-placement="right" title="tên khách hàng")
+        span.editable.dashed(style="{{colorIsUndefined name}}"
+        class="{{isEditMode false}}") {{name}}
 
-        input.editable.dashed.customerEdit(data-toggle="tooltip" data-container="body" data-placement="right" maxlength="50" size="20"
-        class="{{isEditMode true}}" name="customerName" placeholder="tên khách hàng" title="tên khách hàng" value="{{name}}")
+        input.editable.dashed.customerEdit(maxlength="50" size="20" placeholder="tên khách hàng"
+        class="{{isEditMode true}}" name="customerName" value="{{name}}")
+
         //if description
         //  span.blured-color ({{description}})
 
-      .sub1
-        span.editable.dashed(data-toggle="tooltip" data-container="body" data-placement="right" maxlength="15" size="10"
-        class="{{isEditMode false}}" name="customerPhone" title="điện thoại" style="{{colorIsUndefined phone}}") {{getString phone 'điện thoại'}}
+      .sub1(data-toggle="tooltip" data-container="body" data-placement="right" title="điện thoại")
+        span.editable.dashed(style="{{colorIsUndefined phone}}"
+        class="{{isEditMode false}}") {{getString phone 'điện thoại'}}
 
-        input.editable.dashed.customerEdit(data-toggle="tooltip" data-container="body" data-placement="right" maxlength="15" size="10"
-        class="{{isEditMode true}}" name="customerPhone" placeholder="điện thoại" title="điện thoại" value="{{phone}}")
+        input.editable.dashed.customerEdit(maxlength="15" size="10" placeholder="điện thoại"
+        class="{{isEditMode true}}" name="customerPhone" value="{{phone}}")
 
-      .sub2
-        span.editable.dashed(data-toggle="tooltip" data-container="body" data-placement="right" maxlength="20" size="25"
-        class="{{isEditMode false}}" name="customerAddress" title="địa chỉ" style="{{colorIsUndefined address}}") {{getString address 'địa chỉ'}}
+      .sub2(data-toggle="tooltip" data-container="body" data-placement="right" title="địa chỉ")
+        span.editable.dashed(style="{{colorIsUndefined address}}"
+        class="{{isEditMode false}}") {{getString address 'địa chỉ'}}
 
-        input.editable.dashed.customerEdit(data-toggle="tooltip" data-container="body" data-placement="right" maxlength="100" size="25"
-        class="{{isEditMode true}}" name="customerAddress" placeholder="địa chỉ" title="địa chỉ" value="{{address}}" )
+        input.editable.dashed.customerEdit(maxlength="100" size="25" placeholder="địa chỉ"
+        class="{{isEditMode true}}" name="customerAddress" value="{{address}}" )
 
 
 
@@ -70,6 +71,6 @@ template(name="customerManagementOverviewSection")
 
         .collapsible-row
           .description Ghi chú
-          span.editable.dashed(class="{{isEditMode false}}") {{getString profiles.description}}
+          span.editable.dashed(class="{{isEditMode false}}") {{getString profiles.description ''}}
           input.input-field.customerEdit(class="{{isEditMode true}}" value="{{profiles.description}}"
           name="customerDescription" placeholder="Ghi thêm thông tin")

@@ -45,6 +45,7 @@ Wings.defineHyper 'productOverviewSection',
 
     if self.ui.$importQuality
       self.ui.$importQuality.inputmask "integer", {autoGroup: true, groupSeparator:",", radixPoint: ".", integerDigits:11, rightAlign: true}
+      self.ui.$importQuality.val productUnit.inventoryQuality
 
 
 
@@ -112,6 +113,7 @@ Wings.defineHyper 'productOverviewSection',
           instance.ui.$debtSalePrice.val productUnitData.debtSalePrice
           instance.ui.$importPrice.val productUnitData.importPrice
           instance.ui.$conversion.val productUnitData.conversion
+          instance.ui.$importQuality.val productUnitData.inventoryQuality
 
       productUnitData
 
@@ -297,7 +299,7 @@ Wings.defineHyper 'productOverviewSection',
           importPrice = productUnit.rollBackImportPrice
           $importPrice.val productUnit.rollBackImportPrice
 
-        if productUnit.importPrice isnt "importPrice"
+        if productUnit.importPrice isnt importPrice
           productUnit.importPrice = importPrice
           productUnit.importPriceEx = productUnit.importPrice * productUnit.conversion
           productUnitData.set(productUnit)
@@ -307,13 +309,23 @@ Wings.defineHyper 'productOverviewSection',
       else if event.target.name is "importQuality"
         $importQuality  = template.ui.$importQuality
         importQuality   = Math.abs(Helpers.Number($importQuality.inputmask('unmaskedvalue')))
-        if productUnit.importQuality isnt importQuality
-          productUnit.importQuality = importQuality
+
+        if event.which is 27
+          $importQuality.val ''
+          productUnit.inventoryQuality = ''
+
+        if productUnit.inventoryQuality isnt importQuality
+          productUnit.inventoryQuality = importQuality
           productUnitData.set(productUnit)
+          Session.set "productManagementShowEditCommand", true
 
       else if event.target.name is "lowNorms"
         $lowNorms  = template.ui.$lowNorms
         lowNorms = Math.abs(Helpers.Number($lowNorms.inputmask('unmaskedvalue')))
+
+        if event.which is 27
+          lowNorms = productUnit.rollLowNorms
+          $lowNorms.val productUnit.rollLowNorms
 
         if productUnit.lowNorms isnt lowNorms
           productUnit.lowNorms = lowNorms
@@ -362,14 +374,17 @@ generateProductUnitData = (currentData)->
     rollBackDirectSalePrice   : priceBook.basicSale
     rollBackDebtSalePrice     : priceBook.basicSaleDebt
     rollBackImportPrice       : priceBook.basicImport
+    rollLowNorms              : quantities.lowNormsQuantity
 
   console.log currentData.inventoryInitial
   if currentData.inventoryInitial
-    productUnitData.isInventory   = ''
-    productUnitData.importQuality = accounting.formatNumber(currentData.importInventory ? 0) + ' ' + productUnitData.unitName
+    productUnitData.isInventory       = ''
+    productUnitData.inventoryQuality  = currentData.importInventory ? 0
+    productUnitData.importQuality     = accounting.formatNumber(currentData.importInventory ? 0) + ' ' + productUnitData.unitName
   else
-    productUnitData.isInventory   = 'active'
-    productUnitData.importQuality = 'Chưa tồn kho đầu kỳ'
+    productUnitData.isInventory       = 'active'
+    productUnitData.inventoryQuality  = ''
+    productUnitData.importQuality     = 'Chưa tồn kho đầu kỳ'
 
   productUnitData
 
@@ -378,6 +393,7 @@ productOverviewCheckAllowUpdate = (template) ->
   productUnit   = productData.units[0]
   productUnitEx = productData.units[1] ? productData.units[0]
   priceBook     = productData.priceBooks[0]
+  quantities    = productData.merchantQuantities[0]
 
   productName        = template.ui.$productName.val().replace(/^\s*/, "").replace(/\s*$/, "")
   productCode        = template.ui.$productCode.val().replace(/^\s*/, "").replace(/\s*$/, "")
@@ -392,7 +408,8 @@ productOverviewCheckAllowUpdate = (template) ->
   productDebtSalePrice = parseInt(template.ui.$debtSalePrice.inputmask('unmaskedvalue'))
   productImportPrice = parseInt(template.ui.$importPrice.inputmask('unmaskedvalue'))
   productConversion = parseInt(template.ui.$conversion.inputmask('unmaskedvalue'))
-
+  inventoryQuality = parseInt(template.ui.$importQuality.inputmask('unmaskedvalue'))
+  productLowNorms  =  parseInt(template.ui.$lowNorms.inputmask('unmaskedvalue'))
 
 
 
@@ -406,6 +423,8 @@ productOverviewCheckAllowUpdate = (template) ->
       productDirectSalePrice isnt (priceBook.basicSale ? '') or
       productDebtSalePrice isnt (priceBook.basicSaleDebt ? '') or
       productImportPrice isnt (priceBook.basicImport ? '') or
+      productLowNorms isnt (quantities.lowNormsQuantity ? '') or
+      (if productData.inventoryInitial then false else !isNaN(inventoryQuality)) or
 
       productUnitName isnt (productUnit.name ? '') or
       productBarcode isnt (productUnit.barcode ? '') or

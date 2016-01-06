@@ -3,8 +3,8 @@ template(name="providerImportDetails")
     td.has-commands(colspan="5" style="border-left: solid 2px #f39c12")
       | &nbsp;
       .bill-header(style="background-color: #f39c12;") <b>{{momentFormat successDate "DD/MM/YYYY"}}</b>
-      .bill-header.hide-on-print(style="background-color: {{isColor}}; left: 90px; color: #7ac5f9") {{billNo}}
-      .bill-header.show-on-print(style="background-color: {{isColor}}; left: 120px; color: #7ac5f9") {{billNo}}
+      .bill-header.hide-on-print(style="background-color: {{isColor}}; left: 90px; color: #7ac5f9")  <b><i>{{billNo}}</i></b>
+      .bill-header.show-on-print(style="background-color: {{isColor}}; left: 120px; color: #7ac5f9") <b><i>{{billNo}}</i></b>
       //.commands
       //  if showDeleteImport
       //    .lemon.rounded.tiny.btn.red.deleteImport: span.icon-minus-4
@@ -58,7 +58,11 @@ template(name="providerImportDetails")
     tr.paid-row.top(class="{{transactionClass}}"
     style="background-color: {{isColor}}; border-bottom: none;")
       td.has-commands(colspan="3")
-        span {{description}}
+        if isRoot
+          span(style="color: #666; font-style: italic !important;") {{description}}
+        else
+          span {{description}}
+
           //if isDelete
           //  .commands: .icon-minus-4.lemon.rounded.tiny.btn.red.deleteTransaction
       td.number(style="color: #666;")
@@ -74,4 +78,5 @@ template(name="providerImportDetails")
         td.number.border-top
         td.number.border-top: span.s5 <b>{{formatNumber sumLatestBalance}}</b>
 
-  tr.detail-row(style="background-color: #EFEFF4;"): td(colspan="5")
+  tr.detail-row(style="background-color: #EFEFF4;")
+    td(colspan="5" style="padding-top: 2px !important; padding-bottom: 2px !important;")

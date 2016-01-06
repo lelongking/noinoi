@@ -89,16 +89,20 @@ template(name="productDetailSection")
     .panel-footer
       .summary-row
         .summary-wrapper(style="width: 100px"): span.s5 {{formatNumber importQuantity}} <b>{{unitName}}</b>
-        .summary-wrapper(style="width: 200px"): span.s5 Tổng nhập :
+        .summary-wrapper(style="width: 5px"): span.s5 :
+        .summary-wrapper(style="width: 80px; text-align: left;"): span.s5 Tổng nhập
       .summary-row
         .summary-wrapper(style="width: 100px"): span.s5 {{formatNumber saleQuantity}} <b>{{unitName}}</b>
-        .summary-wrapper(style="width: 200px"): span.s5 Tổng bán :
+        .summary-wrapper(style="width: 5px"): span.s5 :
+        .summary-wrapper(style="width: 80px; text-align: left;"): span.s5 Tổng bán
       .summary-row
         .summary-wrapper(style="width: 100px"): span.s5 {{formatNumber orderQuantity}} <b>{{unitName}}</b>
-        .summary-wrapper(style="width: 200px"): span.s5 Đang giao :
+        .summary-wrapper(style="width: 5px"): span.s5 :
+        .summary-wrapper(style="width: 80px; text-align: left;"): span.s5 Đang giao
       .summary-row
         .summary-wrapper(style="width: 100px"): span.s5 {{formatNumber inStockQuantity}} <b>{{unitName}}</b>
-        .summary-wrapper(style="width: 200px"): span.s5 Tồn kho :
+        .summary-wrapper(style="width: 5px"): span.s5 :
+        .summary-wrapper(style="width: 80px; text-align: left;"): span.s5 Tồn kho
 
 
       //unless inventoryInitial

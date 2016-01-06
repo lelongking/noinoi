@@ -11,7 +11,7 @@ merchantImportRouter.route '/',
     Session.set "currentAppInfo",
       name: "nhập kho"
       navigationPartial:
-        template: ""
+        template: "importNavigationPartial"
         data: {}
 
     BlazeLayout.render 'merchantLayout',

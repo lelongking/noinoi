@@ -16,6 +16,7 @@ Wings.defineHyper 'customerCreate',
     self.ui.$genderSwitch.bootstrapSwitch('onText', 'Nam')
     self.ui.$genderSwitch.bootstrapSwitch('offText', 'Nữ')
 
+    self.ui.$customerName.select()
 
   destroyed: ->
     Session.set("customerCreateSelectedGroup")

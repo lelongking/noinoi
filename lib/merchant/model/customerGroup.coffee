@@ -45,8 +45,8 @@ Schema.add 'customerGroups', "CustomerGroup", class CustomerGroup
 
     doc.reCalculateTotalCash = ->
       totalCash = 0
-      Schema.customers.find({group: @_id}).forEach((customer) -> totalCash += (customer.debtCash + customer.loanCash))
-      Schema.customerGroups.update @_id, $set:{totalCash: totalCash}
+      Schema.customers.find({customerOfGroup: doc._id}).forEach((customer) -> totalCash += customer.totalCash)
+      Schema.customerGroups.update(doc._id, $set:{totalCash: totalCash})
 
     doc.remove = ->
       if @allowDelete
@@ -56,9 +56,10 @@ Schema.add 'customerGroups', "CustomerGroup", class CustomerGroup
 
     doc.changeCustomerTo = (customerGroupId) ->
       if user = Meteor.users.findOne(Meteor.userId())
-        customerList = []; customerSelected = user.sessions.customerSelected[@_id]
+        customerList = []; customerSelected = user.sessions.customerSelected[@_id]; totalCash = 0
         for customerId in customerSelected
           if customerFound = Schema.customers.findOne({_id: customerId, customerOfGroup: @_id})
+            totalCash += customerFound.totalCash
             Schema.customers.update(customerFound._id, $set: {customerOfGroup: customerGroupId})
             customerList.push(customerFound._id)
 
@@ -66,11 +67,11 @@ Schema.add 'customerGroups', "CustomerGroup", class CustomerGroup
         updateGroupFrom = $pullAll:{customerLists: customerSelected}
         customerNotExistedCount = (_.difference(@customerLists, customerSelected)).length
         updateGroupFrom.$set = {allowDelete: true} if customerNotExistedCount is 0 and @isBase is false
-#        updateGroupFrom.$inc = {totalCash: -(customerFound.debtCash + customerFound.loanCash)}
+        updateGroupFrom.$inc = {totalCash: -totalCash}
         Schema.customerGroups.update @_id, updateGroupFrom
 
         updateGroupTo = $set:{allowDelete: false}, $addToSet:{customerLists: {$each: customerList}}
-#        updateGroupTo.$inc = {totalCash: customerFound.debtCash + customerFound.loanCash}
+        updateGroupTo.$inc = {totalCash: totalCash}
         Schema.customerGroups.update customerGroupId, updateGroupTo
 
         userUpdate = $set:{}; userUpdate.$set["sessions.customerSelected.#{@_id}"] = []
@@ -85,18 +86,6 @@ Schema.add 'customerGroups', "CustomerGroup", class CustomerGroup
       if userId = Meteor.userId()
         userUpdate = $pull:{}; userUpdate.$pull["sessions.customerSelected.#{@_id}"] = customerId
         Meteor.users.update(userId, userUpdate)
-
-    doc.reCalculateTotalCash = ->
-      totalCash = 0
-      Schema.customers.find({group: @_id}).forEach(
-        (customer) ->
-          totalCash +=
-            (customer.debtRequiredCash ? 0) - (customer.paidRequiredCash ? 0) +
-              (customer.debtBeginCash ? 0) - (customer.paidBeginCash ? 0) +
-              (customer.debtIncurredCash ? 0) - (customer.paidIncurredCash ? 0) +
-              (customer.debtSaleCash ? 0) - (customer.paidSaleCash ? 0) - (customer.returnSaleCash ? 0)
-      )
-      Schema.customerGroups.update @_id, $set:{totalCash: totalCash}
 
   @insert: (name, description)->
     return false if !name
