@@ -46,6 +46,9 @@ Routers.loggedInRouter =
   FlowRouter.group
     name: "loggedIn"
     triggersEnter: [ (context, redirect, stop) ->
+      $(".tooltip").remove()
+      Helpers.arrangeAppLayout()
+
       unless Meteor.loggingIn() or Meteor.userId()
         route = FlowRouter.current()
         unless route.route.name is 'login'

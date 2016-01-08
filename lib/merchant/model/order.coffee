@@ -15,7 +15,7 @@ simpleSchema.orders = new SimpleSchema
   orderType        : type: Number, defaultValue: Enums.getValue('OrderTypes', 'initialize')
   orderStatus      : type: Number, defaultValue: Enums.getValue('OrderStatus', 'initialize')
   paymentMethod    : type: Number, defaultValue: Enums.getValue('PaymentMethods', 'debit')
-  paymentsDelivery : type: Number, defaultValue: Enums.getValue('DeliveryTypes', 'delivery')
+  paymentsDelivery : type: Number, defaultValue: Enums.getValue('DeliveryTypes', 'direct')
 
   buyer       : type: String, optional: true
   dueDay      : type: Number, optional: true

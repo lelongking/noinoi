@@ -161,8 +161,8 @@ orderSelectOptions =
     results: findOrderByCustomer(Session.get('currentCustomerReturn')?.owner)
     text: '_id'
   initSelection: (element, callback) -> callback Schema.orders.findOne(scope.currentCustomerReturn?.parent)
-  formatSelection: (item) -> "#{item.orderCode}" if item
-  formatResult: (item) -> "#{item.orderCode}" if item
+  formatSelection: (item) -> "#{item.billNoOfBuyer}" if item
+  formatResult: (item) -> "#{item.billNoOfBuyer}" if item
   id: '_id'
   placeholder: 'CHỌN PHIẾU BÁN'
   minimumResultsForSearch: -1

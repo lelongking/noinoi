@@ -1,11 +1,4 @@
 template(name="orderReturnProductRowEdit")
-  tr.detail-row.large-name: td(colspan="3")
-    span {{getProductName product}}
-    //if product.basicUnit
-    //  span ({{product.basicUnit}})
-    if discountPercent
-      span.super.s7.color-lime GIẢM GIÁ {{round discountPercent}}%
-
   tr.editors.dual-border(class="{{errorClass}}")
     td.bill-name.has-commands
       |{{getProductName product}}
@@ -31,13 +24,6 @@ template(name="orderReturnProductRowEdit")
 
 
 template(name="orderReturnProductRowDisplay")
-  tr.detail-row.large-name: td(colspan="3")
-    span {{getProductName product}}
-    //if product.basicUnit
-    //   span ({{product.basicUnit}})
-    if discountPercent
-      span.super.s7.color-lime GIẢM GIÁ {{round discountPercent}}%
-
   tr.detail-row.click-enable(class="{{errorClass}}")
     td.bill-name.has-commands
       |{{getProductName product}}

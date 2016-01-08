@@ -145,8 +145,8 @@ importSelectOptions =
     results: findImportByProvider(Session.get('currentProviderReturn')?.owner)
     text: '_id'
   initSelection: (element, callback) -> callback Schema.imports.findOne(scope.currentProviderReturn?.parent)
-  formatSelection: (item) -> "#{item.importCode}" if item
-  formatResult: (item) -> "#{item.importCode}" if item
+  formatSelection: (item) -> "#{item.billNoOfProvider}" if item
+  formatResult: (item) -> "#{item.billNoOfProvider}" if item
   id: '_id'
   placeholder: 'CHỌN PHIẾU'
   minimumResultsForSearch: -1

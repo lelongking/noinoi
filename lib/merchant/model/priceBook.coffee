@@ -11,7 +11,7 @@ simpleSchema.priceBooks = new SimpleSchema
   parentPriceBook : type: String   ,optional: true
 
   merchant    : simpleSchema.DefaultMerchant
-  allowDelete : simpleSchema.DefaultBoolean()
+  allowDelete : simpleSchema.DefaultBoolean(false)
   creator     : simpleSchema.DefaultCreator('creator')
   version     : type: simpleSchema.Version
   isBase      : simpleSchema.BooleanNotUpdate(false)

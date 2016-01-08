@@ -7,6 +7,8 @@ template(name="customerPriceBookDetailSection")
           .document-name {{name}}
 
       table.lemon-grid: tr
+        if isGroup
+          th.selectAll.icon-ok-6.hide-on-print(style="width:30px; cursor: pointer; color:{{selectAll}};")
         th(style="width:auto") TÊN SẢN PHẨM
         th.number(style="width:100px") ĐƠN VỊ
         th.number(style="width:130px") GIÁ TIỀN MẶT
@@ -35,9 +37,9 @@ template(name="customerPriceBookDetailSection")
               td.date {{productUnitName}}
               td.number {{formatNumber salePrice}} VNĐ
               td.number {{formatNumber saleDebtPrice}} VNĐ
-
-    .panel-footer
-      .right-float
-        span.s5 TỔNG NỢ:
-        span.s3 <b>{{formatNumber finalDebtBalance}}</b> VNĐ
+    //
+    //.panel-footer
+    //  .right-float
+    //    span.s5 TỔNG NỢ:
+    //    span.s3 <b>{{formatNumber finalDebtBalance}}</b> VNĐ
         //h3 Tổng tiền: {{formatNumber totalPurchases}} VNĐ

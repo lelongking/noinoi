@@ -35,7 +35,9 @@ Wings.defineApp 'priceBookOverviewSection',
 
   events:
     "click .deletePriceBook": (event, template) ->
-      @remove() if @allowDelete is true and @isBase is false
+      if @allowDelete is true and @isBase is false
+        @remove()
+        $(".tooltip").remove()
 
     "click .unLockEditPriceBook": (event, template) ->
       Session.set('priceBookIsEditMode', true)
@@ -113,7 +115,7 @@ priceBookSearches  = (query) ->
 
   else if currentPriceBook.priceBookType is 2
     if customerGroup = Schema.customerGroups.findOne(currentPriceBook.owner)
-      lists = Schema.customers.find({$or: [{name: Helpers.BuildRegExp(query.term), _id:{$in:customerGroup.customers}}]}).fetch()
+      lists = Schema.customers.find({$or: [{name: Helpers.BuildRegExp(query.term), _id:{$in:customerGroup.customerLists}}]}).fetch()
 
   lists
 

@@ -37,6 +37,7 @@ template(name="defaultPriceBookDetailSection")
 template(name="defaultPriceBookDetailSectionHeader")
   if isHeader
     tr
+      th.selectAll.icon-ok-6.hide-on-print(style="width:30px; cursor: pointer; color:{{selectAll}};")
       th(style="width:auto") TÊN SẢN PHẨM
       th.date(style="width:80px") ĐƠN VỊ
       th.number(style="width:130px") GIÁ NHẬP

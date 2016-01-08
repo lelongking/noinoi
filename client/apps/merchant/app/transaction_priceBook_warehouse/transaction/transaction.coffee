@@ -12,10 +12,14 @@ ownerSearch = (textSearch) ->
     regExp = Helpers.BuildRegExp(textSearch);
     selector = {$or: [
       {nameSearch: regExp, merchant: Merchant.getId()}
+    ,
+      {name: regExp, merchant: Merchant.getId()}
     ]}
   customerList =
-    if transaction.group then Schema.providers.find(selector, options).fetch()
-    else Schema.customers.find(selector, options).fetch()
+    if transaction.group
+      Schema.providers.find(selector, options).fetch()
+    else
+      Schema.customers.find(selector, options).fetch()
   customerList
 
 findTransactionGroup = (transactionGroup) ->
@@ -63,6 +67,7 @@ transactionTypeSelect =
 
 Wings.defineApp 'transaction',
   created: ->
+    ownerSearch('')
     self = this
     self.autorun ()->
       transaction = Session.get('transactionDetail')
@@ -91,16 +96,17 @@ Wings.defineApp 'transaction',
       else
         Session.set('transactionOwner')
 
-    Session.set('transactionDetail',
-      active: 'interest'
-      group: 0
-      transactionType: Enums.getValue('TransactionTypes', 'customerLoanAmount')
-      name: undefined
-      amount: 0
-      description: undefined
-      interestRate: 0
-      owner: undefined
-    )
+    if !Session.get('transactionDetail')
+      Session.set('transactionDetail',
+        active: 'interest'
+        group: 0
+        transactionType: Enums.getValue('TransactionTypes', 'customerLoanAmount')
+        name: undefined
+        amount: 0
+        description: undefined
+        interestRate: 0
+        owner: undefined
+      )
 
   rendered: ->
 

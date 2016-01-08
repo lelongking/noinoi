@@ -14,7 +14,7 @@ template(name="customerGroupOverviewSection")
 
       .sub1
         span.editable.dashed(data-toggle="tooltip" data-container="body" data-placement="right"
-        title="tổng nợ") {{getString totalCash '0'}} VNĐ
+        title="tổng nợ") {{formatNumber totalCash}} VNĐ
 
       .sub2
         span.editable.dashed(data-toggle="tooltip" data-container="body" data-placement="right"

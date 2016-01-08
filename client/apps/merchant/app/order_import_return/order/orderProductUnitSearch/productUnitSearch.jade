@@ -2,10 +2,11 @@ template(name="orderProductUnitSearch")
   .dual-addon
     .search-filter.icon-search-8
       input(name='searchFilter' type="text" placeholder="tìm sản phẩm..." value="{{productTextSearch}}")
-      .icon-user-add-1.create-new-command(data-toggle="tooltip" data-container="body" data-placement="right" title="Tạo mới")
+      .icon-plus-6.create-new-command(data-toggle="tooltip" data-container="body" data-placement="right" title="Tạo mới")
 
     .nano: .nano-content(style="margin-bottom: 34px;")
       .group-wrapper
+        .caption.group(style="text-align: right; padding-right: 5px;"): b SẢN PHẨM NỔI BẬT
         each unitProductSearches
           if status
             .caption.advanced.inner.product-selection(class="{{productSelectionActiveClass}}")

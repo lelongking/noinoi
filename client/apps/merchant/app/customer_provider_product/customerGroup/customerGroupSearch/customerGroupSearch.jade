@@ -22,8 +22,11 @@ template(name="customerGroupSearch")
             style="background-image:url('')") {{aliasLetter name}}
             .doc-info
               .title {{name}}
-              //.price-stamp {{customerCount}} khách hàng
+              .sub-title
+                b {{customerCount}}
+                span(style="font-size: 13px;") KH
+
 
             .price-stamp
-              b {{customerCount}}
-              span(style="font-size: 13px;") khách hàng
+              b {{formatNumber totalCash}}
+              span(style="font-size: 13px;") VNĐ

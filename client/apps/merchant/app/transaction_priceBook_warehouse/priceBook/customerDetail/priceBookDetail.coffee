@@ -19,3 +19,11 @@ Wings.defineAppContainer 'priceBookDetail',
       else if (priceType is 3 or priceType is 4)
         'providerPriceBookDetailSection'
 
+  events:
+    "click th.selectAll": (event, template) ->
+      if priceBook?.products.length > 0
+        productLists = _.difference(priceBook.products, Session.get('mySession').productUnitSelected?[priceBook._id])
+        if productLists.length > 0
+          priceBook.selectedPriceProduct(productId) for productId in productLists
+        else
+          priceBook.unSelectedPriceProduct(productId) for productId in priceBook.products

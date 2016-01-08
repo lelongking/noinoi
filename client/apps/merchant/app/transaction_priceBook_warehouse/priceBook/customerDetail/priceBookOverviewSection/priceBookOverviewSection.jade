@@ -4,7 +4,7 @@ template(name="priceBookOverviewSection")
     .panel-heading
       +avatarImageComponent(avatar=avatarUrl alias=name)
 
-      .caption(data-toggle="tooltip" data-container="body" data-placement="right" title="tên bản giá")
+      .caption(data-toggle="tooltip" data-container="body" data-placement="right" title="tên bảng giá")
         span.editable.dashed(class="{{isEditMode false}}") {{name}}
 
         input.editable.dashed.priceBookEdit(class="{{isEditMode true}}" maxlength="50" size="20"

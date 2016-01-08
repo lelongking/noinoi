@@ -26,11 +26,11 @@ template(name="providerDetailSection")
           tr.header-row
             td.has-commands(colspan="5")
               | &nbsp;
-              .bill-header <b>Nợ tồn đầu kỳ</b>
+              .bill-header: b {{momentFormat initialStartDate "DD/MM/YYYY"}}
           tr
 
           tr.paid-row.top.receive(style="border-bottom: none;")
-            td.has-commands(colspan="4"): .bill-header Nợ Đầu Kỳ
+            td.has-commands(colspan="4"): .bill-header NỢ ĐẦU KỲ
             td.number: span.s5: b {{formatNumber initialAmount}}
 
           tr.detail-row(style="background-color: #EFEFF4;")

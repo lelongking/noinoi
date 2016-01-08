@@ -12,6 +12,12 @@ Wings.defineHyper 'customerPriceBookDetailSection',
       productUnitSelected = Session.get('mySession').productUnitSelected["#{Template.parentData()._id}"]
       if _.contains(productUnitSelected, @_id) then 'selected' else ''
 
+    selectAll: ->
+      console.log Template.currentData()
+      if priceBook = Template.currentData()
+        checkProductSelect = priceBook?.products?.length is Session.get('mySession').productUnitSelected?[priceBook._id]?.length
+      if priceBook?.products?.length > 0 and checkProductSelect then '#2e8bcc' else '#d8d8d8'
+
   events:
     "click .detail-row:not(.selected) td.command": (event, template) ->
       Template.currentData().selectedPriceProduct(@_id)

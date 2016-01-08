@@ -1,5 +1,13 @@
 scope = logics.priceBook
 
+Wings.defineHyper 'defaultPriceBookDetailSectionHeader',
+  helpers:
+    selectAll: ->
+      console.log Template.parentData()
+      if priceBook = Template.parentData()
+        checkProductSelect = priceBook?.products.length is Session.get('mySession').productUnitSelected?[priceBook._id]?.length
+      if priceBook?.products.length > 0 and checkProductSelect then '#2e8bcc' else '#d8d8d8'
+
 Wings.defineHyper 'defaultPriceBookDetailSection',
   helpers:
     isPriceBookType: (bookType)->
@@ -14,6 +22,8 @@ Wings.defineHyper 'defaultPriceBookDetailSection',
     productSelected: ->
       productUnitSelected = Session.get('mySession').productUnitSelected["#{Template.parentData()._id}"]
       if _.contains(productUnitSelected, @_id) then 'selected' else ''
+
+
 
   events:
     "click .detail-row:not(.selected) td.command": (event, template) ->

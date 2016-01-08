@@ -119,7 +119,7 @@ priceBookSearch  = (query) ->
 
   else if Session.get("currentPriceBook").priceBookType is 2
     if customerGroup = Schema.customerGroups.findOne(Session.get("currentPriceBook").owner)
-      lists = Schema.customers.find({$or: [{name: Helpers.BuildRegExp(query.term), _id:{$in:customerGroup.customers}}]}).fetch()
+      lists = Schema.customers.find({$or: [{name: Helpers.BuildRegExp(query.term), _id:{$in:customerGroup.customerLists}}]}).fetch()
 
   lists
 

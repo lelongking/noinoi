@@ -370,7 +370,7 @@ addNewProduct = (event, template, product = {}) ->
       newProductId = Schema.products.insert product
 
       if Schema.products.findOne(newProductId)
-        if importQuality isnt NaN
+        if !isNaN(importQuality)
           importDetail = {quantity: importQuality, product: newProductId}
           Meteor.call 'productInventory', newProductId, importDetail, (error, result) -> console.log error, result
 
