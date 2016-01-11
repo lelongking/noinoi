@@ -28,4 +28,4 @@ template(name="orderReturnDetail")
       .panel-footer
         input.editable.dashed.note(name="returnDescription"  value="{{description}}" placeholder="ghi chú đơn hàng" size="40" maxlength="200")
         .right-float
-          span.s3 <b>{{formatNumber finalPrice}}</b> VNĐ
+          span.s3 <b>{{formatNumber orderReturn.finalPrice}}</b> VNĐ

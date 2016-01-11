@@ -10,7 +10,8 @@ Wings.defineAppContainer 'customerDetail',
 
   helpers:
     currentCustomer: ->
-      if customerId = Session.get('mySession')?.currentCustomer
+      customerId = Session.get('mySession')?.currentCustomer
+      if customerId
         Schema.customers.findOne({_id: customerId})
 
 

@@ -31,6 +31,10 @@ Wings.defineHyper 'productOverviewSection',
       self.ui.$debtSalePrice.inputmask "integer", numericOption
       self.ui.$debtSalePrice.val productUnit.debtSalePrice
 
+    if self.ui.$debtSalePriceSub
+      self.ui.$debtSalePriceSub.inputmask "integer", {autoGroup: true, groupSeparator:",", radixPoint: ".", suffix: " VNĐ", integerDigits:10, rightAlign: false}
+      self.ui.$debtSalePriceSub.val productUnit.debtSalePrice
+
     if self.ui.$importPrice
       self.ui.$importPrice.inputmask "integer", numericOption
       self.ui.$importPrice.val productUnit.importPrice
@@ -111,6 +115,7 @@ Wings.defineHyper 'productOverviewSection',
 
           instance.ui.$directSalePrice.val productUnitData.directSalePrice
           instance.ui.$debtSalePrice.val productUnitData.debtSalePrice
+          instance.ui.$debtSalePriceSub.val productUnitData.debtSalePrice
           instance.ui.$importPrice.val productUnitData.importPrice
           instance.ui.$conversion.val productUnitData.conversion
           instance.ui.$importQuality.val productUnitData.inventoryQuality
@@ -118,6 +123,10 @@ Wings.defineHyper 'productOverviewSection',
       productUnitData
 
     productGroupSelected: -> productGroupSelects
+
+    getPriceDebit: ->
+      console.log @
+      @getPrice(undefined, 'debit')
 
   events:
     "click .productDelete": (event, template) ->
@@ -204,11 +213,30 @@ Wings.defineHyper 'productOverviewSection',
 
         if event.which is 27
           unitNameText = productUnit.rollBackUnitName
-          $unitName.val(productUnit.rollBackUnitName)
+          $unitName.val(unitNameText)
 
         if productUnit.unitName isnt unitNameText
           productUnit.unitName = unitNameText
           productUnitData.set(productUnit)
+
+        $unitNameSub = template.ui.$unitNameSub
+        $unitNameSub.val(unitNameText)
+
+
+      else if event.target.name is "unitNameSub"
+        $unitNameSub = template.ui.$unitNameSub
+        unitNameText = $unitNameSub.val().replace(/^\s*/, "").replace(/\s*$/, "")
+
+        if event.which is 27
+          unitNameText = productUnit.rollBackUnitName
+          $unitNameSub.val(unitNameText)
+
+        if productUnit.unitName isnt unitNameText
+          productUnit.unitName = unitNameText
+          productUnitData.set(productUnit)
+
+        $unitName = template.ui.$unitName
+        $unitName.val(unitNameText)
 
 
       else if event.target.name is "unitNameEx"
@@ -286,12 +314,33 @@ Wings.defineHyper 'productOverviewSection',
 
         if event.which is 27
           debtSalePriceText = productUnit.rollBackDebtSalePrice
-          $debtSalePrice.val productUnit.rollBackDebtSalePrice
+          $debtSalePrice.val debtSalePriceText
 
         if productUnit.debtSalePrice isnt debtSalePriceText
           productUnit.debtSalePrice = debtSalePriceText
           productUnit.debtSalePriceEx = productUnit.debtSalePrice * productUnit.conversion
           productUnitData.set(productUnit)
+
+        $debtSalePriceSub  = template.ui.$debtSalePriceSub
+        $debtSalePriceSub.val debtSalePriceText
+
+
+      else if event.target.name is "debtSalePriceSub"
+        $debtSalePriceSub  = template.ui.$debtSalePriceSub
+        debtSalePriceText = Math.abs(Helpers.Number($debtSalePriceSub.inputmask('unmaskedvalue')))
+
+        if event.which is 27
+          debtSalePriceText = productUnit.rollBackDebtSalePrice
+          $debtSalePriceSub.val debtSalePriceText
+
+        if productUnit.debtSalePrice isnt debtSalePriceText
+          productUnit.debtSalePrice = debtSalePriceText
+          productUnit.debtSalePriceEx = productUnit.debtSalePrice * productUnit.conversion
+          productUnitData.set(productUnit)
+
+        $debtSalePrice  = template.ui.$debtSalePrice
+        $debtSalePrice.val debtSalePriceText
+
 
       else if event.target.name is "importPrice"
         $importPrice  = template.ui.$importPrice
@@ -322,8 +371,8 @@ Wings.defineHyper 'productOverviewSection',
           Session.set "productManagementShowEditCommand", true
 
       else if event.target.name is "lowNorms"
-        $lowNorms  = template.ui.$lowNorms
-        lowNorms = Math.abs(Helpers.Number($lowNorms.inputmask('unmaskedvalue')))
+        $lowNorms = template.ui.$lowNorms
+        lowNorms  = Math.abs(Helpers.Number($lowNorms.inputmask('unmaskedvalue')))
 
         if event.which is 27
           lowNorms = productUnit.rollLowNorms
@@ -332,6 +381,20 @@ Wings.defineHyper 'productOverviewSection',
         if productUnit.lowNorms isnt lowNorms
           productUnit.lowNorms = lowNorms
           productUnitData.set(productUnit)
+
+      else if event.target.name is "productCode"
+        productData  = template.data
+        $productCode = template.ui.$productCode
+
+        if event.which is 27
+          $productCode.val productData.code
+
+      else if event.target.name is "productDescription"
+        productData         = template.data
+        $productDescription = template.ui.$productDescription
+
+        if event.which is 27
+          $productDescription.val productData.description
 
       productOverviewCheckAllowUpdate(template)
 
@@ -345,16 +408,16 @@ productGroupSelects =
       {sort: {nameSearch: 1, name: 1}}
     ).fetch()
     text: 'name'
-  initSelection: (element, callback) -> callback Session.get("productCreateSelectedGroup") ? 'skyReset'
+  initSelection: (element, callback) -> callback Session.get("productManagementSelectedGroup") ? 'skyReset'
   formatSelection: (item) -> "#{item.name}" if item
   formatResult: (item) -> "#{item.name}" if item
   id: '_id'
   placeholder: 'Chọn nhóm'
   changeAction: (e) ->
-    Session.set("productCreateSelectedGroup", e.added)
+    Session.set("productManagementSelectedGroup", e.added)
     Session.set("productManagementShowEditCommand", true)
-    checkAllowUpdateOverview(template)
-  reactiveValueGetter: -> Session.get("productCreateSelectedGroup") ? 'skyReset'
+    productOverviewCheckAllowUpdate(template)
+  reactiveValueGetter: -> Session.get("productManagementSelectedGroup") ? 'skyReset'
 
 
 
@@ -430,6 +493,8 @@ productOverviewCheckAllowUpdate = (template) ->
   productConversion = parseInt(template.ui.$conversion.inputmask('unmaskedvalue'))
   inventoryQuality = parseInt(template.ui.$importQuality.inputmask('unmaskedvalue'))
   productLowNorms  =  parseInt(template.ui.$lowNorms.inputmask('unmaskedvalue'))
+  productOfGroup   = Session.get("productManagementSelectedGroup")?._id
+
 
 
 
@@ -440,12 +505,14 @@ productOverviewCheckAllowUpdate = (template) ->
       productCode isnt (productData.code ? '') or
       productDescription isnt (productData.description ? '') or
 
+
       productDirectSalePrice isnt (priceBook.basicSale ? '') or
       productDebtSalePrice isnt (priceBook.basicSaleDebt ? '') or
       productImportPrice isnt (priceBook.basicImport ? '') or
       productLowNorms isnt (quantities.lowNormsQuantity ? '') or
       (if productData.inventoryInitial then false else !isNaN(inventoryQuality)) or
 
+      productOfGroup isnt (productData.productOfGroup ? '') or
       productUnitName isnt (productUnit.name ? '') or
       productBarcode isnt (productUnit.barcode ? '') or
       productUnitNameEx isnt (productUnitEx.name ? '') or
@@ -480,11 +547,14 @@ editProduct = (template) ->
     code        = template.ui.$productCode.val().replace(/^\s*/, "").replace(/\s*$/, "")
     description = template.ui.$productDescription.val().replace(/^\s*/, "").replace(/\s*$/, "")
     listCodes   = summaries.listProductCodes ? []
+    productOfGroup   = Session.get("productManagementSelectedGroup")?._id
+
 
     editOptions = {}
     editOptions.name        = name if name isnt product.name
     editOptions.code        = code if code isnt product.code
     editOptions.description = description if description isnt product.description
+    editOptions.productOfGroup = productOfGroup if productOfGroup isnt product.productOfGroup
 
 
     console.log listCodes, editOptions.code, _.indexOf(listCodes, editOptions.code)

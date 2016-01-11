@@ -37,6 +37,9 @@ Wings.defineHyper 'orderReturnDetail',
             returnDetail.errorClass = if crossAvailable >= 0 then '' else 'errors'
       orderReturn.details
 
+    finalPrice: ->
+      console.log finalPrice
+      @finalPrice
   events:
     "keyup": (event, template) ->
       Session.set("editingId") if event.which is 27

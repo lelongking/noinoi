@@ -9,18 +9,18 @@ template(name="productOverviewSection")
         input.editable.dashed.productEdit(class="{{isEditMode true}}" maxlength="50" size="20"
         name="productName" placeholder="tên sản phẩm" value="{{name}}")
 
+      with productUnitDetail
+        .sub1(data-toggle="tooltip" data-container="body" data-placement="right" title="giá bán nợ")
+          span.editable.dashed(class="{{isEditMode false}}") {{formatNumber debtSalePrice}} VNĐ
 
-      .sub1(data-toggle="tooltip" data-container="body" data-placement="right" title="giá bán nợ")
-        span.editable.dashed(class="{{isEditMode false}}") {{code}}
+          input.editable.dashed(class="{{isEditMode true}}" maxlength="50" size="15"
+          name="debtSalePriceSub" placeholder="giá bán nợ")
 
-        input.editable.dashed.productEdit(class="{{isEditMode true}}" maxlength="50" size="20"
-        name="productCode" placeholder="giá bán nợ" value="{{code}}")
+        .sub2(data-toggle="tooltip" data-container="body" data-placement="right" title="đơn vị tính")
+          span.editable.dashed(class="{{isEditMode false}}") {{unitName}}
 
-      .sub2(data-toggle="tooltip" data-container="body" data-placement="right" title="đơn vị tính")
-        span.editable.dashed(class="{{isEditMode false}}" style="{{colorIsUndefined description}}") {{getString description 'ghi chú'}}
-
-        input.editable.dashed.productEdit(class="{{isEditMode true}}" maxlength="100" size="25"
-         name="productDescription" placeholder="đơn vị tính" value="{{description}}")
+          input.editable.dashed(class="{{isEditMode true}}" maxlength="100" size="10"
+           name="unitNameSub" placeholder="đơn vị tính" value="{{unitName}}")
 
 
 
@@ -56,14 +56,56 @@ template(name="productOverviewSection")
 
         .collapsible-row
           .description Ghi chú
-          span.editable.dashed(class="{{isEditMode false}}") {{getString profiles.description ''}}
-          input.input-field(class="{{isEditMode true}}"  value="{{profiles.description}}"
+          span.editable.dashed(class="{{isEditMode false}}") {{getString description ''}}
+          input.input-field(class="{{isEditMode true}}"  value="{{description}}"
           name="productDescription" placeholder="Ghi thêm thông tin")
 
 
 
       with productUnitDetail
         .panel-body(class="{{isShowTab true}}" style=" margin-top: 0px;")
+          .collapsible-row.full-width.pull-right
+            .description.width-th.pull-right Giá tiền mặt
+            .description.width-th.pull-right Giá bán nợ
+            .description.width-th.pull-right Giá nhập
+            .description.width-th.pull-right Mã vạch
+            .description.width-th(style="width: 120px; margin: 0; padding-left: 15px; text-align: left;") Đơn vị tính
+
+
+          .collapsible-row.full-width.pull-right
+            span.editable.dashed.pull-right.editCash(class="{{isEditMode false}}") {{formatNumber directSalePrice}} VNĐ
+            span.editable.dashed.pull-right.editCash(class="{{isEditMode false}}") {{formatNumber debtSalePrice}} VNĐ
+            span.editable.dashed.pull-right.editCash(class="{{isEditMode false}}") {{formatNumber importPrice}} VNĐ
+            span.editable.dashed.pull-right.editCash(class="{{isEditMode false}}") {{barcode}}
+            span.editable.dashed.editCash(class="{{isEditMode false}}" style="width: 28%; text-align: left;") {{unitName}}
+
+            input.input-field.edit-field.pull-right.editCash(class="{{isEditMode true}}" name="directSalePrice")
+            input.input-field.edit-field.pull-right.editCash(class="{{isEditMode true}}" name="debtSalePrice")
+            input.input-field.edit-field.pull-right.editCash(class="{{isEditMode true}}" name="importPrice")
+            input.input-field.pull-right.editCash(class="{{isEditMode true}}" name="barcode" style="text-align: right;")
+            input.input-field.editCash(class="{{isEditMode true}}" name="unitName" style="width: 28%; text-align: left;" value="{{unitName}}")
+
+
+          .collapsible-row.full-width.pull-right
+            span.editable.dashed.pull-right.editCash {{formatNumber directSalePriceEx}} VNĐ
+            span.editable.dashed.pull-right.editCash {{formatNumber debtSalePriceEx}} VNĐ
+            span.editable.dashed.pull-right.editCash {{formatNumber importPriceEx}} VNĐ
+            span.editable.dashed.pull-right.editCash(class="{{isEditMode false}}") {{barcodeEx}}
+            span.editable.dashed.editCash(class="{{isEditMode false}}") {{unitNameEx}} ({{formatNumber conversion}} {{unitName}})
+
+
+            input.input-field.pull-right.editCash(class="{{isEditMode true}}" name="barcodeEx" style="text-align: right;")
+            .description.editCash(class="{{isEditMode true}}" style="width: 28%; min-width: 180px"): .input-group
+              input.form-control.input-field.full-width(name="unitNameEx" value="{{unitNameEx}}")
+              span.input-group-addon(style="width: 15px; padding: 0") =
+              input.form-control.input-field.full-width(name="conversion" value="{{conversion}}")
+              span.input-group-addon(style="padding: 0px 0px 0px 10px;") {{unitName}}
+
+
+
+
+
+        .panel-body(class="{{isShowTab true}}" style=" margin-top: 10px;")
           .collapsible-row(class="{{isEditMode false}}")
             .description Tồn kho đầu kỳ
             span.editable.dashed {{importQuality}}
@@ -90,45 +132,6 @@ template(name="productOverviewSection")
                 span.input-group-addon {{unitName}}
 
 
-        .panel-body(class="{{isShowTab true}}" style=" margin-top: 10px;")
-          .collapsible-row.full-width.pull-right
-            .description.width-th.pull-right Giá tiền mặt
-            .description.width-th.pull-right Giá bán nợ
-            .description.width-th.pull-right Giá nhập
-            .description.width-th.pull-right Mã vạch
-            .description.width-th(style="width: 120px; margin: 0; padding-left: 15px; text-align: left;") Đơn vị tính
 
-
-
-          .collapsible-row.full-width.pull-right
-            span.editable.dashed.pull-right.editCash(class="{{isEditMode false}}") {{formatNumber directSalePrice}} VNĐ
-            span.editable.dashed.pull-right.editCash(class="{{isEditMode false}}") {{formatNumber debtSalePrice}} VNĐ
-            span.editable.dashed.pull-right.editCash(class="{{isEditMode false}}") {{formatNumber importPrice}} VNĐ
-            span.editable.dashed.pull-right.editCash(class="{{isEditMode false}}") {{barcode}}
-            span.editable.dashed.editCash(class="{{isEditMode false}}" style="width: 28%; text-align: left;") {{unitName}}
-
-            input.input-field.edit-field.pull-right.editCash(class="{{isEditMode true}}" name="directSalePrice")
-            input.input-field.edit-field.pull-right.editCash(class="{{isEditMode true}}" name="debtSalePrice")
-            input.input-field.edit-field.pull-right.editCash(class="{{isEditMode true}}" name="importPrice")
-            input.input-field.pull-right.editCash(class="{{isEditMode true}}" name="barcode" style="text-align: right;")
-            input.input-field.editCash(class="{{isEditMode true}}" name="unitName" style="width: 28%; text-align: left;" value="{{unitName}}")
-
-
-
-
-          .collapsible-row.full-width.pull-right
-            span.editable.dashed.pull-right.editCash {{formatNumber directSalePriceEx}} VNĐ
-            span.editable.dashed.pull-right.editCash {{formatNumber debtSalePriceEx}} VNĐ
-            span.editable.dashed.pull-right.editCash {{formatNumber importPriceEx}} VNĐ
-            span.editable.dashed.pull-right.editCash(class="{{isEditMode false}}") {{barcodeEx}}
-            span.editable.dashed.editCash(class="{{isEditMode false}}") {{unitNameEx}} ({{formatNumber conversion}} {{unitName}})
-
-
-            input.input-field.pull-right.editCash(class="{{isEditMode true}}" name="barcodeEx" style="text-align: right;")
-            .description.editCash(class="{{isEditMode true}}" style="width: 28%; min-width: 180px"): .input-group
-              input.form-control.input-field.full-width(name="unitNameEx" value="{{unitNameEx}}")
-              span.input-group-addon(style="width: 15px; padding: 0") =
-              input.form-control.input-field.full-width(name="conversion" value="{{conversion}}")
-              span.input-group-addon(style="padding: 0px 0px 0px 10px;") {{unitName}}
 
 

@@ -8,9 +8,12 @@ Wings.defineAppContainer 'productDetail',
 
   helpers:
     currentProduct: ->
-      if productId = Session.get('mySession')?.currentProduct
-        Schema.products.findOne({_id: productId})
-
+      productId = Session.get('mySession')?.currentProduct
+      if productId
+        product      = Schema.products.findOne({_id: productId})
+        if product
+          productGroup = Schema.productGroups.findOne({_id: product.productOfGroup})
+          Session.set("productManagementSelectedGroup", productGroup)
+        product
 
 #  events:
-

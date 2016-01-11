@@ -3,7 +3,7 @@ template(name="importReturnProductSearch")
     //.search-filter.icon-search-8
     //  input(name='searchFilter' type="text" placeholder="tìm sản phẩm...")
 
-    .nano: .nano-content(style="margin-bottom: 35px;"): .group-wrapper
+    .nano: .nano-content(style="margin-bottom: 0px;"): .group-wrapper
       each returnParent.details
         .caption.advanced.inner.product-selection(class="{{productSelectionActiveClass}}")
           +avatarImageComponent(avatar=avatarUrl alias=name)
