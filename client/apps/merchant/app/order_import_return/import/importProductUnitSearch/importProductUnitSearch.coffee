@@ -14,6 +14,11 @@ Wings.defineApp 'importProductUnitSearch',
 
 
   events:
+    "click .create-new-command": (event, template) ->
+      FlowRouter.go('createProduct')
+      $(".tooltip").remove()
+      Helpers.arrangeAppLayout()
+
     "keyup input[name='searchFilter']": (event, template) ->
       searchFilter  = template.ui.$searchFilter.val()
       productSearch = Helpers.Searchify searchFilter

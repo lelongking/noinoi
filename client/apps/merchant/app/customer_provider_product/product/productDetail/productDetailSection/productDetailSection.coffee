@@ -107,11 +107,10 @@ lemon.defineHyper Template.productDetailSection,
         details.push({createdAt: key, details: value}) for key, value of combined
       return details
 
+    importQuantity  : -> @merchantQuantities?[0].importQuantity ? 0
     saleQuantity    : -> @merchantQuantities?[0].saleQuantity ? 0
     inStockQuantity : -> @merchantQuantities?[0].inStockQuantity ? 0
     inOderQuantity  : -> @merchantQuantities?[0].inOderQuantity ? 0
-    importQuantity  : -> @merchantQuantities?[0].importQuantity ? 0
-    orderQuantity  : -> @merchantQuantities?[0].orderQuantity ? 0
     availableQuantity  : -> @merchantQuantities?[0].availableQuantity ? 0
     totalPrice      : -> @price * @quality
 

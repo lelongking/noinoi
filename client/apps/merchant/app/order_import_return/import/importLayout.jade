@@ -1,27 +1,43 @@
 template(name="importLayout")
+  #header
+    .editor-row
+      .editor-wrapper.dual-spacer
+
+      .editor-wrapper(style="width:180px")
+        span.ilabel.optional công ty cung cấp
+        +iSelect(options=providerSelectOptions class="field")
+
+      .editor-wrapper(style="width: 150px")
+        span.ilabel.optional thanh toán
+        +iSelect(options=paymentMethodSelectOptions class="field")
+
+
+
   #content.modern
     .dual-content
       +Template.dynamic(template='importProductUnitSearch' data=currentImport)
       +Template.dynamic(template='importProductDetail' data=currentImport)
 
+
+
   #footer.modern
     .editor-row
       .editor-wrapper.dual-spacer
-      .editor-wrapper(style="width:180px")
-        span.ilabel.optional công ty cung cấp
-        +iSelect(options=providerSelectOptions class="field")
-      .editor-wrapper(style="width: 160px;")
-        span.ilabel.center chiết khấu
-        +iSpinEdit(options=discountOptions)
-      .editor-wrapper(style="width: 160px;")
+
+      .editor-wrapper.pull-right
+        button.flat.btn.lime.icon-award.importSubmit(class="{{allowSubmitOrder}}" type='submit') HOÀN TẤT
+
+      .editor-wrapper.pull-right
+        button.flat.btn.blue.print-command(data-toggle="tooltip" data-container="body"
+        data-placement="top" title="In phiếu nhập kho" type='submit'): span.icon-print-6
+
+      .editor-wrapper.pull-right(style="width: 200px; padding-right: 10px;")
         span.ilabel.center thanh toán
         +iSpinEdit(options=depositOptions)
 
+      .editor-wrapper.pull-right(style="width: 190px; padding-right: 0px;")
+        span.ilabel.center chiết khấu
+        +iSpinEdit(options=discountOptions)
 
-      .editor-wrapper.right
-        button.flat.btn.lime.icon-award.importSubmit(class="{{allowSubmitOrder}}" type='submit') HOÀN TẤT
-      .editor-wrapper.right
-        button.flat.btn.blue.print-command(data-toggle="tooltip" data-container="body"
-        data-placement="top" title="In phiếu nhập kho" type='submit'): span.icon-print-6
 
     +tabComponent(options=tabOptions)

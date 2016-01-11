@@ -65,6 +65,7 @@ Wings.defineHyper 'customerSearch',
 
     "click .list .doc-item": (event, template) ->
       selectCustomer(event, template, @)
+      $(".nano.customerDetail").nanoScroller({ scroll: 'bottom' })
 
     "keyup input[name='searchFilter']": (event, template) ->
       customerSearchByInput(event, template, Template.instance())

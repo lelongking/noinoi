@@ -10,17 +10,17 @@ template(name="productOverviewSection")
         name="productName" placeholder="tên sản phẩm" value="{{name}}")
 
 
-      .sub1(data-toggle="tooltip" data-container="body" data-placement="right" title="mã sản phẩm")
+      .sub1(data-toggle="tooltip" data-container="body" data-placement="right" title="giá bán nợ")
         span.editable.dashed(class="{{isEditMode false}}") {{code}}
 
         input.editable.dashed.productEdit(class="{{isEditMode true}}" maxlength="50" size="20"
-        name="productCode" placeholder="mã sản phẩm" value="{{code}}")
+        name="productCode" placeholder="giá bán nợ" value="{{code}}")
 
-      .sub2(data-toggle="tooltip" data-container="body" data-placement="right" title="ghi chú")
+      .sub2(data-toggle="tooltip" data-container="body" data-placement="right" title="đơn vị tính")
         span.editable.dashed(class="{{isEditMode false}}" style="{{colorIsUndefined description}}") {{getString description 'ghi chú'}}
 
         input.editable.dashed.productEdit(class="{{isEditMode true}}" maxlength="100" size="25"
-         name="productDescription" placeholder="ghi chú" value="{{description}}")
+         name="productDescription" placeholder="đơn vị tính" value="{{description}}")
 
 
 
@@ -42,12 +42,31 @@ template(name="productOverviewSection")
         span.icon-up-open-3.hideTab(class="{{isShowTab true}}" style="cursor:pointer;") Thông tin mở rộng
         span.icon-down-open-3.showTab(class="{{isShowTab false}}" style="cursor:pointer;") Thông tin mở rộng
 
+
+      .panel-body(class="{{isShowTab true}} ")
+        .collapsible-row
+          .description Mã sản phẩm
+          span.editable.dashed(class="{{isEditMode false}}") {{getString code}}
+          input.input-field(class="{{isEditMode true}}" value="{{code}}"
+          name="productCode" placeholder="{{getString code}}")
+
+        .collapsible-row
+          .description Nhóm sản phẩm
+          +iSelect(options=productGroupSelected class="field changeProductGroup")
+
+        .collapsible-row
+          .description Ghi chú
+          span.editable.dashed(class="{{isEditMode false}}") {{getString profiles.description ''}}
+          input.input-field(class="{{isEditMode true}}"  value="{{profiles.description}}"
+          name="productDescription" placeholder="Ghi thêm thông tin")
+
+
+
       with productUnitDetail
-        .panel-body(class="{{isShowTab true}} ")
+        .panel-body(class="{{isShowTab true}}" style=" margin-top: 0px;")
           .collapsible-row(class="{{isEditMode false}}")
             .description Tồn kho đầu kỳ
             span.editable.dashed {{importQuality}}
-
           .collapsible-row(class="{{isEditMode false}}")
             .description Định mức tồn kho
             span.editable.dashed {{formatNumber lowNorms}} {{unitName}}
@@ -57,25 +76,21 @@ template(name="productOverviewSection")
           .collapsible-row.full-width.pull-right(class="{{isEditMode true}}")
             .description Tồn kho đầu kỳ
             .description.editCash(style="width: 20%; min-width: 200px; height: 40px; padding-left: 15px;"): .input-group
-              input.edit-field.form-control.input-field.full-width(class="{{isShowInventory false}}" name="importQuality")
+              input.form-control.input-field.full-width(class="{{isShowInventory false}}" name="importQuality")
               span.form-control.input-field.full-width.pull-right.editable.editCash.dashed(class="{{isShowInventory true}}") {{inventoryQuality}}
               span.input-group-addon {{unitName}}
             span.editable.pull-right(class="{{isShowInventory false}}") Chưa nhập tồn kho lúc này
-            i.icon-ok-6.pull-right.inventory(class="{{isInventory}} {{isShowInventory false}}ss")
+            i.icon-ok-6.pull-right.inventory(class="{{isInventory}} {{isShowInventory false}}")
 
           .collapsible-row.full-width.pull-right(class="{{isEditMode true}}" style="margin-bottom: 0px;")
             .description Định mức tồn kho
             .description.editCash(style="width: 20%; min-width: 200px; ; padding-left: 15px;")
               .input-group
-                input.edit-field.form-control.input-field.full-width(name="lowNorms")
+                input.form-control.input-field.full-width(name="lowNorms")
                 span.input-group-addon {{unitName}}
 
 
-
-
-
-
-        .panel-body(class="{{isShowTab true}}" style=" margin-top: 20px;")
+        .panel-body(class="{{isShowTab true}}" style=" margin-top: 10px;")
           .collapsible-row.full-width.pull-right
             .description.width-th.pull-right Giá tiền mặt
             .description.width-th.pull-right Giá bán nợ
@@ -95,8 +110,8 @@ template(name="productOverviewSection")
             input.input-field.edit-field.pull-right.editCash(class="{{isEditMode true}}" name="directSalePrice")
             input.input-field.edit-field.pull-right.editCash(class="{{isEditMode true}}" name="debtSalePrice")
             input.input-field.edit-field.pull-right.editCash(class="{{isEditMode true}}" name="importPrice")
-            input.input-field.edit-field.pull-right.editCash(class="{{isEditMode true}}" name="barcode" style="text-align: right;")
-            input.input-field.edit-field.editCash(class="{{isEditMode true}}" name="unitName" style="width: 28%; text-align: left;" value="{{unitName}}")
+            input.input-field.pull-right.editCash(class="{{isEditMode true}}" name="barcode" style="text-align: right;")
+            input.input-field.editCash(class="{{isEditMode true}}" name="unitName" style="width: 28%; text-align: left;" value="{{unitName}}")
 
 
 
@@ -109,11 +124,11 @@ template(name="productOverviewSection")
             span.editable.dashed.editCash(class="{{isEditMode false}}") {{unitNameEx}} ({{formatNumber conversion}} {{unitName}})
 
 
-            input.edit-field.input-field.pull-right.editCash(class="{{isEditMode true}}" name="barcodeEx" style="text-align: right;")
+            input.input-field.pull-right.editCash(class="{{isEditMode true}}" name="barcodeEx" style="text-align: right;")
             .description.editCash(class="{{isEditMode true}}" style="width: 28%; min-width: 180px"): .input-group
-              input.edit-field.form-control.input-field.full-width(name="unitNameEx" value="{{unitNameEx}}")
+              input.form-control.input-field.full-width(name="unitNameEx" value="{{unitNameEx}}")
               span.input-group-addon(style="width: 15px; padding: 0") =
-              input.edit-field.form-control.input-field.full-width(name="conversion" value="{{conversion}}")
+              input.form-control.input-field.full-width(name="conversion" value="{{conversion}}")
               span.input-group-addon(style="padding: 0px 0px 0px 10px;") {{unitName}}
 
 

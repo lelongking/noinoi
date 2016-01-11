@@ -122,8 +122,8 @@ priceBookSearches  = (query) ->
 
 formatPriceBookSearch = (item) ->
   if item
-    return "KH - #{item.name}" if item.model is 'customers'
-    return "NCC - #{item.name}" if item.model is 'providers'
+    return "#{item.name}" if item.model is 'customers'
+    return "#{item.name}" if item.model is 'providers'
     return "NHÓM - #{item.name}" if item.model is 'customerGroups'
 
 

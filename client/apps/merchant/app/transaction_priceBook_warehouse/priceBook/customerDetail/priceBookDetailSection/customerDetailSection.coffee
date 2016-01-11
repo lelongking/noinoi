@@ -5,6 +5,8 @@ Wings.defineHyper 'customerPriceBookDetailSection',
     isGroup: ->
       Template.currentData().priceBookType is 2
 
+    isSearch: -> Session.get("customerGroupDetailSectionSearchProduct")
+
     allProductUnits: ->
       findAllProductUnits(@)
 
@@ -13,7 +15,6 @@ Wings.defineHyper 'customerPriceBookDetailSection',
       if _.contains(productUnitSelected, @_id) then 'selected' else ''
 
     selectAll: ->
-      console.log Template.currentData()
       if priceBook = Template.currentData()
         checkProductSelect = priceBook?.products?.length is Session.get('mySession').productUnitSelected?[priceBook._id]?.length
       if priceBook?.products?.length > 0 and checkProductSelect then '#2e8bcc' else '#d8d8d8'
@@ -65,8 +66,16 @@ findAllProductUnits = (priceBook)->
 
       productLists.push(product)
 
-#  scope.allProductUnits = productLists
-  return productLists
+
+  productSearchText = Session.get('customerPriceBookDetailSectionSearchProduct')
+  if productSearchText?.length > 0
+    _.filter productLists, (product) ->
+      unsignedTerm = Helpers.RemoveVnSigns productSearchText
+      unsignedName = Helpers.RemoveVnSigns product.name
+      unsignedName.indexOf(unsignedTerm) > -1
+  else
+    productLists
+
 
 
 

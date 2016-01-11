@@ -38,7 +38,16 @@ template(name="defaultPriceBookDetailSectionHeader")
   if isHeader
     tr
       th.selectAll.icon-ok-6.hide-on-print(style="width:30px; cursor: pointer; color:{{selectAll}};")
-      th(style="width:auto") TÊN SẢN PHẨM
+
+      if getSession 'customerPriceBookDetailSectionSearchProduct'
+        th(style="width:auto")
+          input(name='searchProductFilter' type="text" placeholder="tìm sản phẩm...")
+      else
+        th(style="width:auto")
+          | TÊN SẢN PHẨM
+          i.icon-search-8.rotateY180.searchProduct(
+          style="color: #ABD4E3; font-size: 16px; cursor:pointer; padding-left: 10px;")
+
       th.date(style="width:80px") ĐƠN VỊ
       th.number(style="width:130px") GIÁ NHẬP
       th.number(style="width:130px") GIÁ TIỀN MẶT

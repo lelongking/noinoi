@@ -72,7 +72,7 @@ template(name="productCreate")
               input.input-field.pull-right.editCash(name="debtSalePrice")
               input.input-field.pull-right.editCash(name="importPrice")
               input.input-field.pull-right.editCash(name="barcode" style="text-align: right;")
-              input.input-field.editCash(name="unitName" style="width: 28%" value="{{unitName}}")
+              input.edit-field.input-field.editCash(name="unitName" style="width: 28%" value="{{unitName}}")
 
             .collapsible-row.full-width.pull-right
               input.input-field.pull-right.editCash(name="directSalePriceEx")
@@ -82,7 +82,7 @@ template(name="productCreate")
 
               .description.editCash(style="width: 30%; min-width: 200px; height: 40px; padding-left: 15px;")
                 .input-group
-                  input.form-control.input-field.full-width(name="unitNameEx" value="{{unitNameEx}}"
+                  input.edit-field.form-control.input-field.full-width(name="unitNameEx" value="{{unitNameEx}}"
                   style="height: 40px;padding: 0;border: none; border-bottom: 1px solid #e0e0e0; box-shadow: none; border-radius: 0px; */")
 
                   span.input-group-addon(style="height: 40px;width: 15px;padding: 0;border: none;background-color: #fff;") =

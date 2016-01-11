@@ -20,7 +20,7 @@ Schema.add 'priceBooks', "PriceBook", class PriceBook
   @transform: (doc) ->
     doc.hasAvatar = -> if @avatar then '' else 'missing'
     doc.avatarUrl = -> if @avatar then AvatarImages.findOne(@avatar)?.url() else undefined
-    doc.productCount = -> @products.length
+    doc.productCount = ->if @products then @products.length else 0
 
     doc.remove = -> #ok
       if doc.allowDelete is true and doc.isBase is false

@@ -10,6 +10,7 @@ Wings.defineApp 'productGroupOverviewSection',
     Session.set("productGroupManagementShowEditCommand", false)
     Session.set('productGroupManagementIsEditMode', false)
 
+    console.log Template.currentData()
 #    scope.overviewTemplateInstance = @
     @ui.$productGroupName.autosizeInput({space: 10}) if @ui.$productGroupName
 #    changeProductReadonly = if Session.get("productSelectLists") then Session.get("productSelectLists").length is 0 else true

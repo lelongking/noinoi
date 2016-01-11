@@ -2,8 +2,8 @@ scope = logics.priceBook
 
 Wings.defineHyper 'defaultPriceBookDetailSectionHeader',
   helpers:
+    isSearch: -> Session.get("customerGroupDetailSectionSearchProduct")
     selectAll: ->
-      console.log Template.parentData()
       if priceBook = Template.parentData()
         checkProductSelect = priceBook?.products.length is Session.get('mySession').productUnitSelected?[priceBook._id]?.length
       if priceBook?.products.length > 0 and checkProductSelect then '#2e8bcc' else '#d8d8d8'
@@ -67,8 +67,16 @@ findAllProductUnits = (priceBook)->
 
       productLists.push(product)
 
-  #  scope.allProductUnits = productLists
-  return productLists
+  productSearchText = Session.get('customerPriceBookDetailSectionSearchProduct')
+  if productSearchText?.length > 0
+    _.filter productLists, (product) ->
+      unsignedTerm = Helpers.RemoveVnSigns productSearchText
+      unsignedName = Helpers.RemoveVnSigns product.name
+      unsignedName.indexOf(unsignedTerm) > -1
+  else
+    productLists
+
+
 
 
 

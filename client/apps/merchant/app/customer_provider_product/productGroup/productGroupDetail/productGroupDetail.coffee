@@ -11,7 +11,6 @@ Wings.defineHyper 'productGroupDetail',
         productGroup = Schema.productGroups.findOne({isBase: true, merchant: Merchant.getId()}) unless productGroup
 
         if productGroup
-          productGroup.productCount = if productGroup.productLists then productGroup.productLists.length else 0
           self.currentProductGroup.set(productGroup)
           Session.set "productSelectLists", Session.get('mySession').productSelected?[productGroup._id] ? []
 

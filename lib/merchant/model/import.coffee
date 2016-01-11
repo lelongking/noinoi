@@ -6,6 +6,7 @@ simpleSchema.imports = new SimpleSchema
   provider   : simpleSchema.OptionalString
   description: simpleSchema.OptionalString
 
+  paymentMethod    : type: Number, defaultValue: Enums.getValue('PaymentMethods', 'debit')
   importCode       : simpleSchema.OptionalString
   billNoOfProvider : type: String, optional: true
   billNoOfMerchant : type: String, optional: true
@@ -90,6 +91,27 @@ Schema.add 'imports', "Import", class Import
           optionUpdate.$set.description = value
 
         Schema.imports.update(@_id, optionUpdate) if _.keys(optionUpdate.$set).length > 0
+
+    doc.changePaymentMethod = (paymentMethodId)->
+      return console.log('Import da xac nhan') if doc.importType isnt Enums.getValue('ImportTypes', 'initialize')
+      predicate = $set:{'paymentMethod': paymentMethodId, discountCash: 0}
+
+      totalPrice = 0
+      for instance, index in @details
+        product = Schema.products.findOne(instance.product)
+        productPrice  = product.getPrice(doc.buyer, 'import')
+        totalPrice   += instance.basicQuantity * productPrice
+        predicate.$set["details.#{index}.price"] = productPrice
+        predicate.$set["details.#{index}.discountCash"] = 0
+
+      predicate.$set.totalPrice = totalPrice
+      predicate.$set.finalPrice = totalPrice
+
+      predicate.$set['depositCash'] =
+        if paymentMethodId is 0 then totalPrice
+        else if paymentMethodId is 1 then 0
+
+      Schema.imports.update @_id, predicate
 
     doc.addImportDetail = (productUnitId, quality = 1, expireDay = undefined, note = undefined, callback) ->
       return console.log('Import da xac nhan') unless _.contains(typesCantEdit, doc.importType)
@@ -221,7 +243,8 @@ Schema.add 'imports', "Import", class Import
 recalculationImport = (orderId) ->
   if importFound = Schema.imports.findOne(orderId)
     totalPrice = 0; discountCash = importFound.discountCash ? 0
-    (totalPrice += detail.quality * detail.conversion * detail.price) for detail in importFound.details
+    for detail in importFound.details
+      totalPrice += detail.quality * detail.conversion * detail.price
     discountCash = totalPrice if importFound.discountCash > totalPrice
     Schema.imports.update importFound._id, $set:{
       totalPrice  : totalPrice

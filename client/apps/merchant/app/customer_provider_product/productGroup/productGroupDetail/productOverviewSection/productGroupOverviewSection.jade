@@ -3,26 +3,21 @@ template(name="productGroupOverviewSection")
     input.hidden.avatarFile(type="file")
     .panel-heading
       +avatarImageComponent(avatar=avatarUrl alias=name)
-      .caption
-        span.editable.dashed(data-toggle="tooltip" data-container="body" data-placement="right"
-        class="{{isEditMode false}}" title="tên nhóm sản phẩm") {{name}}
+      .caption(data-toggle="tooltip" data-container="body" data-placement="right" title="tên nhóm sản phẩm")
+        span.editable.dashed(class="{{isEditMode false}}") {{name}}
 
-        input.editable.dashed.productGroupEdit(data-toggle="tooltip" data-container="body" data-placement="right"
-        class="{{isEditMode true}}" placeholder="tên nhóm sản phẩm" title="tên nhóm sản phẩm" maxlength="50" size="20"
-        name="productGroupName" value="{{name}}")
+        input.editable.dashed.productGroupEdit(class="{{isEditMode true}}" maxlength="50" size="20"
+        name="productGroupName" value="{{name}}" placeholder="tên nhóm sản phẩm" )
         //span.blured-color ({{productCount}} sản phẩm)
 
-      //.sub1
-      //  span.editable.dashed(data-toggle="tooltip" data-container="body" data-placement="right"
-      //  title="tổng nợ") {{getString totalCash '0'}} VNĐ
+      .sub1(data-toggle="tooltip" data-container="body" data-placement="right" title="số sản phẩm")
+        span.editable.dashed {{productCount}} sản phẩm
 
-      .sub1
-        span.editable.dashed(data-toggle="tooltip" data-container="body" data-placement="right"
-        class="{{isEditMode false}}" title="ghi chú" style="{{colorIsUndefined description}}") {{getString description 'ghi chú'}}
+      .sub2(data-toggle="tooltip" data-container="body" data-placement="right" title="ghi chú")
+        span.editable.dashed(class="{{isEditMode false}}" style="{{colorIsUndefined description}}") {{getString description 'ghi chú'}}
 
-        input.editable.dashed.productGroupEdit(data-toggle="tooltip" data-container="body" data-placement="right"
-        class="{{isEditMode true}}" placeholder="ghi chú" title="ghi chú" maxlength="100" size="25"
-        name="productGroupDescription" value="{{description}}")
+        input.editable.dashed.productGroupEdit(class="{{isEditMode true}}" maxlength="100" size="25"
+        name="productGroupDescription" value="{{description}}" placeholder="ghi chú")
 
 
 

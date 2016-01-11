@@ -87,22 +87,50 @@ template(name="productDetailSection")
 
 
     .panel-footer
-      .summary-row
-        .summary-wrapper(style="width: 100px"): span.s5 {{formatNumber importQuantity}} <b>{{unitName}}</b>
-        .summary-wrapper(style="width: 5px"): span.s5 :
-        .summary-wrapper(style="width: 80px; text-align: left;"): span.s5 Tổng nhập
-      .summary-row
-        .summary-wrapper(style="width: 100px"): span.s5 {{formatNumber saleQuantity}} <b>{{unitName}}</b>
-        .summary-wrapper(style="width: 5px"): span.s5 :
-        .summary-wrapper(style="width: 80px; text-align: left;"): span.s5 Tổng bán
-      .summary-row
-        .summary-wrapper(style="width: 100px"): span.s5 {{formatNumber orderQuantity}} <b>{{unitName}}</b>
-        .summary-wrapper(style="width: 5px"): span.s5 :
-        .summary-wrapper(style="width: 80px; text-align: left;"): span.s5 Đang giao
-      .summary-row
-        .summary-wrapper(style="width: 100px"): span.s5 {{formatNumber inStockQuantity}} <b>{{unitName}}</b>
-        .summary-wrapper(style="width: 5px"): span.s5 :
-        .summary-wrapper(style="width: 80px; text-align: left;"): span.s5 Tồn kho
+      table.lemon-grid
+        tr
+          th(style="width:auto")
+          th(style="width:80px")
+          th(style="width:5px")
+          th(style="width:155px")
+        tr
+          td
+          td Tổng nhập
+          td.number :
+          td.number <b>{{formatNumber importQuantity}}</b> {{unitName}}
+        tr
+          td
+          td Tổng bán
+          td.number :
+          td.number <b>{{formatNumber saleQuantity}}</b> {{unitName}}
+        tr
+          td
+          td Đang giao
+          td.number :
+          td.number <b>{{formatNumber inOderQuantity}}</b> {{unitName}}
+        tr
+          td
+          td: b Tồn kho
+          td.number: b :
+          td.number: b {{formatNumber inStockQuantity}} {{unitName}}
+
+
+      //.summary-row
+      //  .summary-wrapper(style="width: 100px"): span.s5 {{formatNumber importQuantity}} <b>{{unitName}}</b>
+      //  .summary-wrapper(style="width: 5px"): span.s5 :
+      //  .summary-wrapper(style="width: 80px; text-align: left;"): span.s5 Tổng nhập
+      //.summary-row
+      //  .summary-wrapper(style="width: 100px"): span.s5 {{formatNumber saleQuantity}} <b>{{unitName}}</b>
+      //  .summary-wrapper(style="width: 5px"): span.s5 :
+      //  .summary-wrapper(style="width: 80px; text-align: left;"): span.s5 Tổng bán
+      //.summary-row
+        //.summary-wrapper(style="width: 100px"): span.s5 {{formatNumber orderQuantity}} <b>{{unitName}}</b>
+        //.summary-wrapper(style="width: 5px"): span.s5 :
+        //.summary-wrapper(style="width: 80px; text-align: left;"): span.s5 Đang giao
+      //.summary-row
+      //  .summary-wrapper(style="width: 100px"): span.s5 {{formatNumber inStockQuantity}} <b>{{unitName}}</b>
+      //  .summary-wrapper(style="width: 5px"): span.s5 :
+      //  .summary-wrapper(style="width: 80px; text-align: left;"): span.s5 Tồn kho
 
 
       //unless inventoryInitial

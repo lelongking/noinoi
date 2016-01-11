@@ -3,6 +3,7 @@ scope = logics.customerManagement
 
 Wings.defineAppContainer 'customerDetail',
   created: ->
+    $(".nano.customerDetail").nanoScroller({ scroll: 'bottom' })
   rendered: ->
     $(".nano.customerDetail").nanoScroller({ scroll: 'bottom' })
   destroyed: ->

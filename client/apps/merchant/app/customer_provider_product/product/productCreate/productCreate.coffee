@@ -72,6 +72,8 @@ Wings.defineHyper 'productCreate',
       console.log FlowRouter.current()
       if currentRouter.oldRoute and currentRouter.oldRoute.name is 'order'
         FlowRouter.go('order')
+      else if currentRouter.oldRoute and currentRouter.oldRoute.name is 'import'
+        FlowRouter.go('import')
       else
         FlowRouter.go('product')
 
@@ -380,6 +382,8 @@ addNewProduct = (event, template, product = {}) ->
         currentRouter = FlowRouter.current()
         if currentRouter.oldRoute and currentRouter.oldRoute.name is 'order'
           FlowRouter.go('order')
+        else if currentRouter.oldRoute and currentRouter.oldRoute.name is 'import'
+          FlowRouter.go('import')
         else
           FlowRouter.go('product')
         toastr["success"]("Tạo sản phẩm thành công.")

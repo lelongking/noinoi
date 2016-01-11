@@ -11,7 +11,6 @@ Wings.defineAppContainer 'priceBookDetail',
 
     priceBookDetailShow: ->
       priceType = priceBook.priceBookType
-      console.log priceType
       if priceType is 0
         'defaultPriceBookDetailSection'
       else if (priceType is 1 or priceType is 2)
@@ -27,3 +26,15 @@ Wings.defineAppContainer 'priceBookDetail',
           priceBook.selectedPriceProduct(productId) for productId in productLists
         else
           priceBook.unSelectedPriceProduct(productId) for productId in priceBook.products
+
+    "keyup input[name='searchProductFilter']": (event, template) ->
+      Helpers.deferredAction ->
+        searchFilter  = $("input[name='searchProductFilter']").val()
+        Session.set("customerPriceBookDetailSectionSearchProduct", searchFilter.replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,"").replace(/\s+/g," "))
+      , "customerPriceBookDetailSectionProductSearchText"
+      , 100
+
+    "click .searchProduct": (event, template) ->
+      isSearch = Session.get("customerGroupDetailSectionSearchProduct")
+      Session.set("customerPriceBookDetailSectionSearchProduct", !isSearch)
+      Session.set("customerPriceBookDetailSectionProductSearchText",'')

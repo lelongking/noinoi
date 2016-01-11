@@ -1,4 +1,6 @@
 scope = logics.import = {}
+Enums = Apps.Merchant.Enums
+
 Wings.defineApp 'importLayout',
   created: ->
     self = this
@@ -34,11 +36,12 @@ Wings.defineApp 'importLayout',
 
 
 
-    tabOptions            : -> tabOptions
-    providerSelectOptions : -> providerSelectOptions
-    depositOptions        : -> depositOptions
-    discountOptions       : -> discountOptions
-    debtDateOptions       : -> debtDateOptions
+    tabOptions                : -> tabOptions
+    providerSelectOptions     : -> providerSelectOptions
+    paymentMethodSelectOptions: -> paymentMethodSelectOptions
+    depositOptions            : -> depositOptions
+    discountOptions           : -> discountOptions
+    debtDateOptions           : -> debtDateOptions
 
   events:
     "click .print-command": -> window.print()
@@ -113,15 +116,28 @@ updateImportAndProduct = (e)->
 
 providerSearch       = (query) -> ProviderSearch.search(query.term); ProviderSearch.getData({sort: {name: 1}})
 formatProviderSearch = (item) -> "#{item.name}" if item
+findPaymentMethods   = (paymentMethodId) -> _.findWhere(Enums.PaymentMethods, {_id: paymentMethodId})
 
 providerSelectOptions =
   query: (query) -> query.callback
     results: providerSearch(query)
     text: 'name'
-  initSelection: (element, callback) -> callback Schema.providers.findOne(scope.currentImport.provider)
+  initSelection: (element, callback) -> callback Schema.providers.findOne(Session.get('currentImport')?.provider)
   formatSelection: formatProviderSearch
   formatResult: formatProviderSearch
   id: '_id'
   placeholder: 'CHỌN NHÀ PHÂN PHỐI'
   changeAction: (e) -> scope.currentImport.changeField('provider', e.added._id)
   reactiveValueGetter: -> Session.get('currentImport')?.provider ? 'skyReset'
+
+paymentMethodSelectOptions =
+  query: (query) -> query.callback
+    results: Enums.PaymentMethods
+    text: '_id'
+  initSelection: (element, callback) -> callback findPaymentMethods(Session.get('currentImport')?.paymentMethod)
+  formatSelection: (item) -> "#{item.display}" if item
+  formatResult: (item) -> "#{item.display}" if item
+  placeholder: 'CHỌN PTGD'
+  minimumResultsForSearch: -1
+  changeAction: (e) -> scope.currentImport.changePaymentMethod(e.added._id)
+  reactiveValueGetter: -> findPaymentMethods(Session.get('currentImport')?.paymentMethod)

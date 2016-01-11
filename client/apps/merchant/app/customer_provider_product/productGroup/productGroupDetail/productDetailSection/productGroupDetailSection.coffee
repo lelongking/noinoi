@@ -33,7 +33,7 @@ Wings.defineHyper 'productGroupDetailSection',
 #      scope.productList = productList
 
       productSearchText = Session.get('productGroupDetailSectionProductSearchText')
-      if productSearchText?.length > 1
+      if productSearchText?.length > 0
         _.filter productList, (product) ->
           unsignedTerm = Helpers.RemoveVnSigns productSearchText
           unsignedName = Helpers.RemoveVnSigns product.name

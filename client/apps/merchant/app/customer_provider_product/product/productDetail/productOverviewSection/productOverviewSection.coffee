@@ -117,6 +117,8 @@ Wings.defineHyper 'productOverviewSection',
 
       productUnitData
 
+    productGroupSelected: -> productGroupSelects
+
   events:
     "click .productDelete": (event, template) ->
       console.log 'is delete'
@@ -335,6 +337,24 @@ Wings.defineHyper 'productOverviewSection',
 
 
 
+productGroupSelects =
+  query: (query) -> query.callback
+    results: Schema.productGroups.find(
+      {$or: [{nameSearch: Helpers.BuildRegExp(query.term)}, {name: Helpers.BuildRegExp(query.term)}]}
+    ,
+      {sort: {nameSearch: 1, name: 1}}
+    ).fetch()
+    text: 'name'
+  initSelection: (element, callback) -> callback Session.get("productCreateSelectedGroup") ? 'skyReset'
+  formatSelection: (item) -> "#{item.name}" if item
+  formatResult: (item) -> "#{item.name}" if item
+  id: '_id'
+  placeholder: 'Chọn nhóm'
+  changeAction: (e) ->
+    Session.set("productCreateSelectedGroup", e.added)
+    Session.set("productManagementShowEditCommand", true)
+    checkAllowUpdateOverview(template)
+  reactiveValueGetter: -> Session.get("productCreateSelectedGroup") ? 'skyReset'
 
 
 

@@ -2,9 +2,11 @@ template(name="importProductUnitSearch")
   .dual-addon
     .search-filter.icon-search-8
       input(name='searchFilter' type="text" placeholder="tìm sản phẩm...")
+      .icon-plus-6.create-new-command(data-toggle="tooltip" data-container="body" data-placement="right" title="Tạo mới")
 
     .nano: .nano-content(style="margin-bottom: 35px;")
       .group-wrapper
+        .caption.group(style="text-align: right; padding-right: 5px;"): b SẢN PHẨM NỔI BẬT
         each unitProductSearches
           .caption.advanced.inner.product-selection(class="{{productSelectionActiveClass}}")
             +avatarImageComponent(avatar=avatarUrl alias=name)
@@ -13,5 +15,5 @@ template(name="importProductUnitSearch")
 
             unless inventoryInitial
               span.left-info(data-toggle="tooltip" data-container="body" data-placement="right"
-              title="Quay về ô sản phẩm, nhập kho đầu kỳ.") Chưa tồn kho đầu kỳ
+              title="Quay về ô sản phẩm, nhập kho đầu kỳ.") Chưa nhập tồn kho
             span.right-info {{unitName}}

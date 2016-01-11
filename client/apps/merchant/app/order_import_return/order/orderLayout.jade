@@ -2,43 +2,55 @@ template(name="orderLayout")
   #header
     .editor-row
       .editor-wrapper.dual-spacer
+
       .editor-wrapper(style="width: 200px")
         span.ilabel.optional khách hàng
         +iSelect(options=customerSelectOptions class="field")
+
       .editor-wrapper(style="width: 150px")
         span.ilabel.optional thanh toán
         +iSelect(options=paymentMethodSelectOptions class="field")
+
       .editor-wrapper(style="width: 150px")
         span.ilabel.optional giao hàng
         +iSelect(options=paymentsDeliverySelectOptions class="field")
+
+
 
   #content.modern.sales-app
     .dual-content
       +Template.dynamic(template='orderProductUnitSearch' data=customerOrder)
       +Template.dynamic(template='orderProductDetail' data=customerOrder)
 
+
+
   #footer.modern
     .editor-row
       .editor-wrapper.dual-spacer
-      .editor-wrapper(style="width: 145px")
-        span.ilabel.center hạn nợ
-        +iSpinEdit(options=debtDateOptions)
-      .editor-wrapper(style="width: 145px")
-        span.ilabel.center chiết khấu
-        +iSpinEdit(options=discountOptions)
-      .editor-wrapper(style="width: 145px")
-        span.ilabel.center thanh toán
-        +iSpinEdit(options=depositOptions)
 
+      //.editor-wrapper(style="width: 145px")
+      //  span.ilabel.center hạn nợ
+      //  +iSpinEdit(options=debtDateOptions)
 
       .editor-wrapper.pull-right
         button.flat.btn.lime.pull-right.finish(
         type='submit' style="margin-right: 5px;" class="{{getSession 'currentOrderIsDisabled'}}") HOÀN TẤT
+
       .editor-wrapper.pull-right
         button.flat.btn.blue.pull-right.print-command(data-toggle="tooltip" data-container="body"
         data-placement="top" title="In phiếu bán hàng" type='submit'): span.icon-print-6
 
       //.editor-wrapper.pull-right
       //  button.flat.btn.blue.pull-right.export-command: span.icon-export-outline
+
+      .editor-wrapper.pull-right(style="width: 200px; padding-right: 10px;")
+        span.ilabel.center thanh toán
+        +iSpinEdit(options=depositOptions)
+
+      .editor-wrapper.pull-right(style="width: 190px; padding-right: 0px;")
+        span.ilabel.center chiết khấu
+        +iSpinEdit(options=discountOptions)
+
+
 
     +tabComponent(options=tabOptions)
