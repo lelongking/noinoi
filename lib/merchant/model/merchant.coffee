@@ -96,4 +96,4 @@ Schema.add 'merchants', "Merchant", class Merchant
 
 
   @getId: ->
-    Meteor.users.findOne(Meteor.userId())?.profile.merchant
+    Meteor.users.findOne(Meteor.userId())?.profile?.merchant

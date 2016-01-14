@@ -17,6 +17,10 @@ userProfile = new SimpleSchema
     type: Date
     optional: true
 
+  phone:
+    type: String
+    optional: true
+
   address:
     type: String
     optional: true
@@ -33,7 +37,7 @@ userProfile = new SimpleSchema
     type: String
     optional: true
 
-  roles:
+  role:
     type: String
     optional: true
 
@@ -123,10 +127,10 @@ Meteor.users.attachSchema new SimpleSchema
 class @User
   @hasManagerRoles: -> true
 #    myProfile = Meteor.users.findOne(Meteor.userId())?.profile
-#    return false if !myProfile or !myProfile.roles
-#    myProfile.roles isnt 'seller'
+#    return false if !myProfile or !myProfile.role
+#    myProfile.role isnt 'seller'
 
   @hasAdminRoles: -> true
 #    myProfile = Meteor.users.findOne(Meteor.userId())?.profile
-#    return false if !myProfile or !myProfile.roles
-#    myProfile.roles is 'admin'
+#    return false if !myProfile or !myProfile.role
+#    myProfile.role is 'admin'

@@ -51,8 +51,8 @@ Meteor.startup ->
   Accounts.validateNewUser (user) ->
     loggedInUser = Meteor.user()
     if loggedInUser
-      return true if Roles.userIsInRole(loggedInUser, Wings.Roles.isCreateMerchantUser)
-      console.log 'false'
+      return true #if Roles.userIsInRole(loggedInUser, Wings.Roles.isCreateMerchantUser)
+      console.log 'Not authorized to create new users'
       throw new (Meteor.Error)(403, 'Not authorized to create new users')
       return
     else

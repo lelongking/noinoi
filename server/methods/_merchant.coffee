@@ -1,4 +1,4 @@
-
+Enums = Apps.Merchant.Enums
 
 Meteor.methods
   checkPassword: (digest) ->

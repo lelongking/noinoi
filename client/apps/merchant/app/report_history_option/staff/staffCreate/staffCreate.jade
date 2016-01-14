@@ -1,0 +1,57 @@
+template(name="staffCreate")
+  .dual-detail-wrapper: .dual-detail
+    .nano: .nano-content
+      .section.top.panel.panel-default.new-options-section
+        .panel-heading
+          span.icon-contacts tạo nhân sự
+          .commandsiên
+            .lemon.btn.lime.icon-ok-6.addStaff Lưu
+            .lemon.btn.red.icon-cancel-7.cancelStaff Hủy
+
+        .panel-body
+          .collapsible-row
+            .description Tài khoản
+            input.input-field(name="staffUserName" placeholder="Nhập tài khoản ")
+
+          .collapsible-row
+            .description Mật khẩu
+            input.input-field(name="staffPassword" placeholder="Nhập mật khẩu")
+
+          .collapsible-row
+            .description Xác nhận
+            input.input-field(name="staffConfirmPassword" placeholder="Xác nhận mật khẩu")
+
+          //.collapsible-row
+          //  .description Phân quyền
+          //  +iSelect(options=staffPermissionSelect class="field")
+
+
+        .panel-heading
+          span.icon-contacts thông tin nhân sự
+        .panel-body
+          .collapsible-row
+            .description Tên nhân sự
+            input.input-field(name="staffName" placeholder="Nhập tên nhân sự")
+
+          .collapsible-row
+            .description Điện thoại
+            input.input-field(name="staffPhone" placeholder="Nhập số điện thoại")
+
+          .collapsible-row
+            .description Địa chỉ
+            input.input-field(name="staffAddress" placeholder="Nhập địa chỉ")
+
+
+          .collapsible-row
+            .description Giới tính
+            input.input-field(name="genderSwitch" type="checkbox" checked)
+
+          .collapsible-row
+            .description Sinh nhật
+            input.input-field(name="dateOfBirth" placeholder="Nhập ngày sinh"
+            binding="datePicker" todayHighlight="true")
+
+          .collapsible-row
+            .description Ghi chú
+            input.input-field(name="staffDescription" placeholder="Ghi thêm thông tin"
+            style="width: 70%;")

@@ -1,0 +1,27 @@
+template(name="staffSearch")
+  .dual-addon
+    .search-filter.icon-search-8
+      input(name='searchFilter' type="text" placeholder="tìm nhân viên...")
+      .icon-user-add-1.create-new-command(data-toggle="tooltip" data-container="body" data-placement="right" title="Tạo mới")
+
+    .nano: .nano-content(style="margin-bottom: 35px;")
+      .management.list
+        .caption-item: b quản lý
+        each staffSearcher
+          .doc-item(class="{{activeClass 'staffManagementCurrentStaff'}}")
+            .avatar-wrapper: .avatar-image(class="{{hasAvatar}}"
+            style="background-image:url('{{avatarUrl}}')") {{aliasLetter this.profile.name}}
+            .doc-info
+              .title {{profile.name}}
+              //.sub-title Chủ cửa hàng
+              .price-stamp
+                b {{formatNumber totalCash}}
+                span(style="font-size: 11px;"): b VND
+
+
+      //.group-wrapper
+      //  each staffSearcher
+      //    .caption.advanced.inner.product-selection(class="{{activeClass 'staffManagementCurrentStaff'}}")
+      //      +avatarImageComponent(avatar=avatarUrl alias=getEmails)
+      //      span.text {{profile.name}}
+      //      span.right-info {{permission}}

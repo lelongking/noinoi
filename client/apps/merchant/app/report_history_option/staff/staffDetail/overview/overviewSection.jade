@@ -1,0 +1,89 @@
+template(name="staffManagementOverviewSection")
+  .section.top.panel.panel-default
+    input.hidden.avatarFile(type="file")
+    .panel-heading
+      +avatarImageComponent(avatar=avatarUrl alias=profile.name)
+      .caption(data-toggle="tooltip" data-container="body" data-placement="right" title="tên nhân sự")
+        span.editable.dashed(style="{{colorIsUndefined profile.name}}"
+        class="{{isEditMode false}}") {{profile.name}}
+
+        input.editable.dashed.staffEdit(maxlength="50" size="20" placeholder="tên khách hàng"
+        class="{{isEditMode true}}" name="staffName" value="{{profile.name}}")
+
+
+
+      .sub1(data-toggle="tooltip" data-container="body" data-placement="right" title="tài khoản đăng nhập")
+        span.editable {{userName}}
+
+      .sub2(data-toggle="tooltip" data-container="body" data-placement="right" title="doanh số")
+        span.editable Doanh Số: 0 VND
+
+      .commands
+        .lemon.btn.rounded.red.icon-minus-4.staffDelete(class="{{showDeleteStaff}}"
+        data-toggle="tooltip" data-container="body" data-placement="bottom" title="xóa")
+
+        .lemon.btn.rounded.lime.icon-ok-6.syncStaffEdit(class="{{showSyncStaff}}"
+        data-toggle="tooltip" data-container="body" data-placement="bottom" title="xác nhận")
+
+        .lemon.btn.rounded.peter-river.icon-reply-3.cancelStaff(class="{{isEditMode true}}"
+        data-toggle="tooltip" data-container="body" data-placement="bottom" title="quay lại")
+
+        .lemon.btn.rounded.silver.icon-wrench-outline.editStaff(class="{{isEditMode false}}"
+        data-toggle="tooltip" data-container="body" data-placement="left" title="chỉnh sửa")
+
+
+    .panel-tab
+      .panel-heading(style="padding-top: 6px; padding-bottom: 6px;")
+        span.icon-up-open-3.hideTab(class="{{isShowTab true}}" style="cursor:pointer;") Thông tin mở rộng
+        span.icon-down-open-3.showTab(class="{{isShowTab false}}" style="cursor:pointer;") Thông tin mở rộng
+
+      .panel-body(class="{{isShowTab true}}")
+
+        .collapsible-row
+          .description Điện thoại
+          span.editable.dashed(class="{{isEditMode false}}") {{getString profile.phone ''}}
+          input.input-field.staffEdit(class="{{isEditMode true}}" value="{{profile.phone}}"
+          name="staffPhone" placeholder="Điện thoại")
+
+        .collapsible-row
+          .description Địa chỉ
+          span.editable.dashed(class="{{isEditMode false}}") {{getString profile.address ''}}
+          input.input-field.staffEdit(class="{{isEditMode true}}" value="{{profile.address}}"
+          name="staffAddress" placeholder="Địa chỉ")
+
+
+        .collapsible-row
+          .description Giới tính
+          .genderSwitch
+            input.input-field.staffEdit(name="genderSwitch" type="checkbox" checked)
+
+        .collapsible-row
+          .description Sinh nhật
+          span.editable.dashed(class="{{isEditMode false}}") {{momentFormat profile.dateOfBirth 'DD/MM/YYYY'}}
+          input.input-field.staffEdit(class="{{isEditMode true}}"
+          name="dateOfBirth" binding="datePicker" todayHighlight="true" maxlength="20" tabindex="4")
+
+        .collapsible-row
+          .description Ghi chú
+          span.editable.dashed(class="{{isEditMode false}}") {{getString profile.description ''}}
+          input.input-field.staffEdit(class="{{isEditMode true}}" value="{{profile.description}}"
+          name="staffDescription" placeholder="Ghi thêm thông tin")
+
+
+
+    //.panel-footer.has-details
+    //  .editor-row
+    //    .editor-wrapper(style="width: 200px")
+    //      span.ilabel.optional chuyển khách hàng
+    //      +iSelect(options=staffGroupSelects class="field changeStaff")
+    //    .editor-wrapper(style="width: 300px")
+    //      span.ilabel.optional phân quyền
+    //      +iSelect(options=roleSelectOptions class="field roleSelect")
+    //    .editor-wrapper(style="width: 90px")
+    //      span.ilabel.optional giới tính
+    //      +iSelect(options=genderSelectOptions class="field genderSelect")
+    //
+    //    if getSession 'showStaffListNotOfStaff'
+    //      .editor-wrapper.pull-right
+    //        button.flat.btn.lime.pull-right.addStaffToStaff(
+    //        type='submit' style="margin-right: 5px;" class="{{getSession 'addStaffToStaffIsDisabled'}}") THÊM

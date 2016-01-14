@@ -29,4 +29,4 @@ Module "Wings.Roles",
     Roles.userIsInRole(user, foundRoles(roles))
 
   addUsersToRoles: (user, roles) ->
-  isCreateMerchantUser: (user)->
+  isCreateMerchantUser: (user)-> true
