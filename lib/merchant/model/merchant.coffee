@@ -78,6 +78,22 @@ simpleSchema.merchants = new SimpleSchema
   'options.showInventory'         : type: Boolean, optional: true
   'options.autoConfirm'           : type: Boolean, optional: true
 
+  noteOptions                     : type: Object, defaultValue: {}
+  'noteOptions.customerReceivable': type: String, optional: true, defaultValue: 'THU TIỀN'
+  'noteOptions.customerPayable'   : type: String, optional: true, defaultValue: 'CHI TIỀN'
+  'noteOptions.customerSale'      : type: String, optional: true
+  'noteOptions.customerReturn'    : type: String, optional: true, defaultValue: 'TRẢ HÀNG'
+
+  'noteOptions.providerReceivable': type: String, optional: true
+  'noteOptions.providerPayable'   : type: String, optional: true, defaultValue: 'TRẢ TIỀN'
+  'noteOptions.providerImport'    : type: String, optional: true
+  'noteOptions.providerReturn'    : type: String, optional: true, defaultValue: 'TRẢ HÀNG'
+
+
 Schema.add 'merchants', "Merchant", class Merchant
+  @transform: (doc) ->
+    warehouse.merchantId = doc._id for warehouse in doc.branches
+
+
   @getId: ->
     Meteor.users.findOne(Meteor.userId())?.profile.merchant

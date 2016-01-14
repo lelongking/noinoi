@@ -543,10 +543,10 @@ editProduct = (template) ->
   product   = template.data
   summaries = Session.get('merchant')?.summaries
   if product and Session.get("productManagementShowEditCommand")
-    name        = template.ui.$productName.val().replace(/^\s*/, "").replace(/\s*$/, "")
-    code        = template.ui.$productCode.val().replace(/^\s*/, "").replace(/\s*$/, "")
-    description = template.ui.$productDescription.val().replace(/^\s*/, "").replace(/\s*$/, "")
-    listCodes   = summaries.listProductCodes ? []
+    name             = template.ui.$productName.val().replace(/^\s*/, "").replace(/\s*$/, "")
+    code             = template.ui.$productCode.val().replace(/^\s*/, "").replace(/\s*$/, "")
+    description      = template.ui.$productDescription.val().replace(/^\s*/, "").replace(/\s*$/, "")
+    listCodes        = summaries.listProductCodes ? []
     productOfGroup   = Session.get("productManagementSelectedGroup")?._id
 
 
@@ -555,6 +555,12 @@ editProduct = (template) ->
     editOptions.code        = code if code isnt product.code
     editOptions.description = description if description isnt product.description
     editOptions.productOfGroup = productOfGroup if productOfGroup isnt product.productOfGroup
+
+    productLowNorms =  parseInt(template.ui.$lowNorms.inputmask('unmaskedvalue'))
+    if !isNaN(productLowNorms) and productLowNorms isnt product.merchantQuantities[0].lowNormsQuantity
+      editOptions['merchantQuantities[0].lowNormsQuantity'] = productLowNorms
+
+
 
 
     console.log listCodes, editOptions.code, _.indexOf(listCodes, editOptions.code)

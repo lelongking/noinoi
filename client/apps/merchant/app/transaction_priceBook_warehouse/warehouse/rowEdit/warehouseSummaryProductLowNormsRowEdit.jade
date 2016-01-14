@@ -1,0 +1,9 @@
+template(name="warehouseSummaryProductLowNormsRowEdit")
+  tr.detail-row
+    td(style="padding-left: 10px;") {{count}}
+    td.first-column {{name}}
+    td.number
+      input.edit-field(name="editLowNorms" style="background-color: transparent;" value="{{quantity.lowNormsQuantity}}")
+    td(style="padding-left: 5px;") {{unitName}}
+    td.number {{quantity.inStockQuantity}}
+    td(style="padding-left: 5px;") {{unitName}}

@@ -1,0 +1,34 @@
+template(name="warehouseOnlyProductNotTrade")
+  .section.panel.panel-default.printable-area
+    .panel-heading
+      table.lemon-grid
+        tr
+          th(style="width:45px") STT
+          th(style="width:auto")
+            if getSession 'warehouseSectionSearchProduct'
+              input(name='searchProductFilter' type="text" placeholder="tìm sản phẩm...")
+            else
+              | Sản Phẩm
+              i.icon-search-8.rotateY180.searchProduct(style="color: #ABD4E3; font-size: 16px; cursor:pointer; padding-left: 10px;")
+          th.number(style="width:120px") Tồn Kho
+          th.number(style="width:160px") Giá Vốn
+          th.number(style="width:160px") Doanh Số
+
+    .panel-body
+      table.lemon-grid
+        tr
+          th(style="width:55px")
+          th(style="width:auto")
+          th(style="width:70px")
+          th(style="width:50px")
+          th(style="width:150px")
+          th(style="width:170px")
+
+        each details
+          tr.detail-row
+            td(style="padding-left: 10px;") {{count}}
+            td.first-column {{name}}
+            td.number {{allQuantity}}
+            td(style="padding-left: 5px;") {{unitName}}
+            td.number {{formatNumber costPrice}} VND
+            td.number {{formatNumber revenue}} VND

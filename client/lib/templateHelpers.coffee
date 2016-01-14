@@ -1,4 +1,8 @@
 Template.registerHelper 'getSession', (sessionName)-> Session.get(sessionName)
+
+Template.registerHelper 'isRowEdit', (sessionName)-> Session.get(sessionName) is @_id
+
+
 Template.registerHelper 'sellerName', -> Session.get('myProfile')?.name ? 'Nhân Viên'
 
 Template.registerHelper 'isRowEditing', -> Session.get("editingId") is @_id

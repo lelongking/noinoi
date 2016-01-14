@@ -1,0 +1,44 @@
+template(name="warehouseSummaryProductLowQuantity")
+  .section.panel.panel-default.printable-area
+    .panel-heading
+      table.lemon-grid
+        tr
+          th(style="width:40px") STT
+          th(style="width:auto")
+            if getSession 'warehouseSectionSearchProduct'
+              input(name='searchProductFilter' type="text" placeholder="tìm sản phẩm...")
+            else
+              | Sản Phẩm
+              i.icon-search-8.rotateY180.searchProduct(style="color: #ABD4E3; font-size: 16px; cursor:pointer; padding-left: 10px;")
+          th.number(style="width:110px") Định Mức
+          th.number(style="width:110px") Tồn Kho
+          th.number(style="width:110px") Chênh Lệch
+
+    .panel-body
+      table.lemon-grid
+        tr
+          th(style="width:50px")
+          th(style="width:auto")
+          th(style="width:70px")
+          th(style="width:40px")
+          th(style="width:70px")
+          th(style="width:40px")
+          th(style="width:70px")
+          th(style="width:40px")
+
+
+
+        each details
+          tr.detail-row
+            td(style="padding-left: 10px;") {{count}}
+            td.first-column {{name}}
+
+
+            td.number {{quantity.lowNormsQuantity}}
+            td(style="padding-left: 5px;") {{unitName}}
+
+            td.number {{quantity.inStockQuantity}}
+            td(style="padding-left: 5px;") {{unitName}}
+
+            td.number {{normsCount}}
+            td(style="padding-left: 5px;") {{unitName}}

@@ -2,7 +2,7 @@ scope = logics.billManager
 Enums = Apps.Merchant.Enums
 Wings.defineWidget 'billThumbnail',
   helpers:
-    styles: -> if moment().subtract(7, 'days').startOf('day')._d > @accountingConfirmAt then 'pumpkin' else 'belize-hole'
+    styles: -> if moment().subtract(7, 'days').startOf('day')._d > @accountingConfirmAt then 'pumpkin' else 'turquoise'
     customerAlias: -> Schema.customers.findOne(@buyer)?.name ? @contactName
     countDay: -> moment(new Date()).diff(@accountingConfirmAt, 'days').toString()
 

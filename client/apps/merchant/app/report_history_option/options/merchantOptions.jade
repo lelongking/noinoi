@@ -1,0 +1,47 @@
+template(name="merchantOptions")
+  //#header
+  #content.modern.merchant-options
+    .dual-content
+      .dual-addon
+        .nano: .nano-content
+          .group-wrapper
+            .caption.option tài khoản
+            each settings.account
+              .caption.inner(class="{{optionActiveClass}}")
+                span.avatar.letter(class="{{icon}}")
+                span.text.uppercase <b>{{display}}</b>
+
+          .group-wrapper
+            .caption.option doanh nghiệp
+            each settings.merchant
+              .caption.inner(class="{{optionActiveClass}}")
+                span.avatar.letter(class="{{icon}}")
+                span.text.uppercase <b>{{display}}</b>
+
+          .group-wrapper
+            .caption.option HỆ THỐNG
+            each settings.system
+              .caption.inner(class="{{optionActiveClass}}")
+                span.avatar.letter(class="{{icon}}")
+                span.text.uppercase <b>{{display}}</b>
+
+          //.group-wrapper
+          //  .caption.group CHỨC NĂNG
+          //  each settings.apps
+          //    .caption.inner(class="{{optionActiveClass}}")
+          //      span.avatar.letter(class="{{icon}}")
+          //      span.text.uppercase <b>{{display}}</b>
+
+
+      .dual-detail-wrapper
+        .dual-detail
+          .nano: .nano-content
+            +Template.dynamic(template=currentSectionDynamic.template data=currentSectionDynamic.data)
+
+
+
+  //#footer.modern
+  //  .editor-row
+  //    .editor-wrapper.dual-spacer
+  //    .editor-wrapper.right
+  //      button.flat.btn.lime.pull-right.finish ÁP DỤNG

@@ -1,0 +1,25 @@
+template(name="warehouseLayout")
+  //#header
+
+  #content.modern
+    .dual-content
+      .dual-addon
+        each options
+          .group-wrapper
+            .caption.option {{group}}
+
+            each optionChild
+              .caption.inner(class="{{optionActiveClass}}")
+                span.avatar.letter(class="{{icon}}")
+                span.text.uppercase <b>{{display}}</b>
+
+      with productLists
+        .dual-detail-wrapper
+          .dual-detail
+            +Template.dynamic(template=currentSectionDynamic.overview)
+
+            if currentSectionDynamic.template
+              .nano: .nano-content
+                +Template.dynamic(template=currentSectionDynamic.template)
+
+  //#footer.modern

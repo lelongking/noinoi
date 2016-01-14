@@ -1,0 +1,22 @@
+template(name="merchantAccountOverview")
+  .section.top.panel.panel-default.options-section
+    .panel-heading
+      span.icon-vcard thông tin cá nhân
+      .commands
+        if showEditCommand
+          .lemon.btn.rounded.lime.icon-ok-6.syncAccountProfileEdit
+    .panel-body
+      .collapsible-row
+        .description Họ tên
+        input.input-field.accountProfileOption(name="fullName" value="{{profile.name}}")
+      .collapsible-row
+        .description Giới tính
+        .input-field {{genderString gender}}
+        .commands
+          input.accountProfileOption(binding="switch" type="checkbox" name="gender")
+      .collapsible-row
+        .description Sinh nhật
+        input.input-field.accountProfileOption(name="dateOfBirth" binding="datePicker" todayHighlight="true" maxlength="20" tabindex="4")
+      .collapsible-row
+        .description Địa chỉ
+        input.input-field.accountProfileOption(name="address" value="{{profile.address}}" placeholder="chưa cập nhật")

@@ -1,0 +1,35 @@
+template(name="warehouseSummaryProductLastExpire")
+  .section.panel.panel-default.printable-area
+    .panel-heading
+      table.lemon-grid
+        tr
+          th(style="width:40px") STT
+          th(style="width:auto")
+            if getSession 'warehouseSectionSearchProduct'
+              input(name='searchProductFilter' type="text" placeholder="tìm sản phẩm...")
+            else
+              | Sản Phẩm
+              i.icon-search-8.rotateY180.searchProduct(style="color: #ABD4E3; font-size: 16px; cursor:pointer; padding-left: 10px;")
+          th.date(style="width:90px") Hết Hạn
+          th.date(style="width:90px") Còn Lại
+          th.number(style="width:110px") Tồn Kho
+
+    .panel-body
+      table.lemon-grid
+        tr
+          th(style="width:50px")
+          th(style="width:auto")
+          th(style="width:90px")
+          th(style="width:90px")
+          th(style="width:70px")
+          th(style="width:40px")
+
+
+        each details
+          tr.detail-row
+            td(style="padding-left: 10px;") {{count}}
+            td.first-column {{name}}
+            td.date {{momentFormat lastExpire 'DD/MM/YYYY'}}
+            td.date {{lastExpireDays}}
+            td.number {{quantity.inStockQuantity}}
+            td(style="padding-left: 5px;") {{unitName}}

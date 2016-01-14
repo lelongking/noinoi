@@ -1,0 +1,20 @@
+template(name="warehouseInfoOptions")
+  with warehouseProfile
+    .section.top.panel.panel-default.options-section
+      .panel-heading
+        span.icon-cubes thông tin kho hàng
+        .commands
+          if showSyncCommand
+            .lemon.btn.rounded.red.icon-cancel-7.rollBackWarehouseProfileEdit
+            .lemon.btn.rounded.lime.icon-ok-6.syncWarehouseProfileEdit
+
+      .panel-body
+        .collapsible-row
+          .description Tên kho hàng
+          input.input-field.warehouseProfileOption(name="warehouseName" value="{{name}}" placeholder="nhập tên kho hàng")
+        .collapsible-row
+          .description Điện thoại
+          input.input-field.warehouseProfileOption(name="warehousePhone" value="{{phone}}" placeholder="nhập số điện thoại")
+        .collapsible-row
+          .description Địa chỉ
+          input.input-field.warehouseProfileOption(name="warehouseAddress" value="{{address}}" placeholder="nhập địa chỉ hiện tại")

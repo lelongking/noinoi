@@ -1,0 +1,34 @@
+template(name="merchantNoteOptions")
+  .section.top.panel.panel-default.options-section
+    .panel-heading
+      span.icon-edit Ghi chú mặc định Khách Hàng
+    .panel-body
+      .collapsible-row
+        .description Ghi chú thu tiền
+        input.input-field(placeholder="để trống" name="customerReceivable" value="{{merchantNotes.customerReceivable}}")
+      .collapsible-row
+        .description Ghi chú chi tiền
+        input.input-field(placeholder="để trống" name="customerPayable" value="{{merchantNotes.customerPayable}}" )
+      .collapsible-row
+        .description Ghi chú bán hàng
+        input.input-field(placeholder="để trống" name="customerSale" value="{{merchantNotes.customerSale}}" )
+      .collapsible-row
+        .description Ghi chú trả hàng
+        input.input-field(placeholder="để trống" name="customerReturn" value="{{merchantNotes.customerReturn}}" )
+
+  .section.top.panel.panel-default.options-section
+    .panel-heading
+      span.icon-edit Ghi chú mặc định Nhà Cung Cấp
+    .panel-body
+      .collapsible-row
+        .description Ghi chú thu tiền
+        input.input-field(placeholder="để trống" name="providerReceivable" value="{{merchantNotes.providerReceivable}}" )
+      .collapsible-row
+        .description Ghi chú trả tiền
+        input.input-field(placeholder="để trống" name="providerPayable" value="{{merchantNotes.providerPayable}}" )
+      .collapsible-row
+        .description Ghi chú nhập kho
+        input.input-field(placeholder="để trống" name="providerImport" value="{{merchantNotes.providerImport}}" )
+      .collapsible-row
+        .description Ghi chú trả hàng
+        input.input-field(placeholder="để trống" name="providerReturn" value="{{merchantNotes.providerReturn}}" )

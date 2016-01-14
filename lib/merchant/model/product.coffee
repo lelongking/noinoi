@@ -108,11 +108,15 @@ Schema.add 'products', "Product", class Product
       doc.basicUnitId = -> doc.units[0]._id
 
     if doc.merchantQuantities?.length > 0
+      doc.quantity          = doc.merchantQuantities[0]
       doc.allQuantity       = doc.merchantQuantities[0].inStockQuantity
       doc.saleQuantity      = doc.merchantQuantities[0].saleQuantity
       doc.saleReturnQuantity= doc.merchantQuantities[0].returnSaleQuantity
       doc.normsQuantity     = doc.merchantQuantities[0].lowNormsQuantity
       doc.normsCount        = doc.merchantQuantities[0].lowNormsQuantity - doc.merchantQuantities[0].inStockQuantity
+      doc.availableImport   = doc.merchantQuantities[0].importQuantity - doc.merchantQuantities[0].returnImportQuantity
+      doc.availableSale     = doc.merchantQuantities[0].saleQuantity - doc.merchantQuantities[0].returnSaleQuantity
+
 
 
     doc.getPrice = (ownerId, priceType = 'sale') ->

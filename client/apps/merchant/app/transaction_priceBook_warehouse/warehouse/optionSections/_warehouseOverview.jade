@@ -1,0 +1,77 @@
+template(name="warehouseOverview")
+  .section.panel.panel-default(style="margin-bottom: 0px;")
+    table.lemon-grid
+      tr
+        th(style="width:40px")
+        th(style="width:200px")
+        th(style="width:5px")
+        th(style="width:200px")
+        th(style="width:5px")
+        th(style="width:auto")
+
+      tr
+        td
+        td: b Giá Trị Kho Hàng
+        td.number :
+        td.number <b>{{formatNumber overview.totalCostPrice}} </b>
+        td
+        td VNĐ
+
+      tr
+        td
+        td: b Doanh Số Dự Kiến
+        td.number :
+        td.number <b>{{formatNumber overview.totalRevenue}}</b>
+        td
+        td VNĐ
+
+      if overview.showProductExchange
+        tr
+          td
+          td Tất Cả Sản Phẩm
+          td.number :
+          td.number <b>{{formatNumber overview.totalProduct}}</b>
+          td
+          td
+
+        tr
+          td
+          td Sản Phẩm Có Giao Dịch
+          td.number :
+          td.number <b>{{formatNumber overview.tradeProductCount}}</b>
+          td
+          td
+
+        tr
+          td
+          td Sản Phẩm Chưa Giao Dịch
+          td.number :
+          td.number <b>{{formatNumber overview.notTradeProductCount}}</b>
+          td
+          td
+
+        tr
+          td
+          td Sản Phẩm Thu Hồi
+          td.number :
+          td.number <b>{{formatNumber overview.returnProductCount}}</b>
+          td
+          td
+
+      if overview.showExpireAndQuantity
+        tr
+          td
+          td Sản Phẩm Sắp Hết Hạn
+          td.number :
+          td.number <b>{{formatNumber expireProductCount}}</b>
+          td
+          td
+
+        tr
+          td
+          td Sản Phẩm Sắp Hết Hàng
+          td.number :
+          td.number <b>{{formatNumber lowProductCount}}</b>
+          td
+          td
+
