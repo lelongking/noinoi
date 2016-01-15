@@ -222,7 +222,7 @@ metroHome.staffManagementApp =
   appIcon      : ''
 
   description  : ''
-  caption      : 'nhân viên'
+  caption      : 'nhân sự'
   captionClass : 'bottom right'
 
   isCanvas     : false

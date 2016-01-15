@@ -7,7 +7,7 @@ merchantRouter.route '/transaction',
     Session.set "currentAppInfo",
       name: "thu chi - tài chính"
       navigationPartial:
-        template: "transactionNavigationPartial"
+        template: ""
         data: {}
 
     BlazeLayout.render 'merchantLayout',

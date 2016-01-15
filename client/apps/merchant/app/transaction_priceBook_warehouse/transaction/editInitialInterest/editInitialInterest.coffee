@@ -3,12 +3,12 @@ Wings.defineHyper 'editInitialInterest',
 
   rendered: ->
     self = this
-    integerOption  = {autoGroup: true, groupSeparator:",", radixPoint: ".", suffix: " VNĐ", integerDigits: 11}
+    integerOption  = {autoGroup: true, groupSeparator:",", radixPoint: ".", suffix: " VNĐ", integerDigits: 12}
     $initialAmount = self.ui.$initialAmount
     $initialAmount.inputmask "integer", integerOption
     $initialAmount.val 0
 
-    decimalOption        = {autoGroup: true, groupSeparator:",", radixPoint: ".", integerDigits:4}
+    decimalOption        = {autoGroup: true, groupSeparator:",", radixPoint: ".", suffix: " %/tháng", integerDigits:4}
     $initialInterestRate = self.ui.$initialInterestRate
     $initialInterestRate.inputmask "decimal", decimalOption
     $initialInterestRate.val 0
@@ -28,7 +28,11 @@ Wings.defineHyper 'editInitialInterest',
           initialStartDate = moment(owner.initialStartDate).format("DD/MM/YYYY")
           self.datePicker.$dateDebit.datepicker('setDate', initialStartDate)
         else
-          self.datePicker.$dateDebit.datepicker('clearDates')
+          self.datePicker.$dateDebit.datepicker('setDate', new Date())
+#          self.datePicker.$dateDebit.datepicker('clearDates')
+
+  helpers:
+    currentOwner: -> Session.get('transactionOwner')
 
   events:
     "keyup .input-field":  (event, template) ->

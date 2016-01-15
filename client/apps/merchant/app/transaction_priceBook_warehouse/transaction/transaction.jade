@@ -1,52 +1,68 @@
 template(name="transaction")
   #header
     .editor-row
-      .editor-wrapper(style="width: 260px ;border-right: solid 1px #cfcfcf;")
-        span.ilabel.optional Áp dụng:
-        +iSelect(options=typeSelectOptions class="field")
+      .editor-wrapper.dual-spacer
+      if isShowSelectOption 'customer'
+        .editor-wrapper(style="width: 300px")
+          span.ilabel.optional Tên Khách Hàng :
+          +iSelect(options=ownerSelectOptions class="field")
 
-      .editor-wrapper(style="width: 300px")
-        span.ilabel.optional Tên KH hoặc NCC :
-        +iSelect(options=ownerSelectOptions class="field")
+      if isShowSelectOption 'provider'
+        .editor-wrapper(style="width: 300px")
+          span.ilabel.optional Tên Nhà Cung Cấp :
+          +iSelect(options=ownerSelectOptions class="field")
 
-      //.editor-wrapper(style="width: 250px")
-      //  span.ilabel.optional Loại phiếu:
-      //  +iSelect(options=customerIncomeOrCostSelectOptions class="field")
+        //.editor-wrapper(style="width: 250px")
+        //  span.ilabel.optional Loại phiếu:
+        //  +iSelect(options=customerIncomeOrCostSelectOptions class="field")
+      if isShowSubmit
+        .editor-wrapper.pull-right
+          button.flat.btn.lime.createTransaction XÁC NHẬN
 
-      .editor-wrapper.pull-right
-        button.flat.btn.lime.createTransaction(class="{{getSession 'transactionCreateNewIsDisabled'}}") XÁC NHẬN
+
 
 
   #content.modern
     .dual-content
-      with currentData
-        .dual-addon
-          .group-nav
-            .caption.inner.toInterest(class="{{isActive 'interest'}}")
-              span.avatar.letter
-              span.text.uppercase LÃI SUẤT
-            .caption.inner.toLoan(class="{{isActive 'loan'}}")
-              span.avatar.letter
-              span.text.uppercase NHẬP NỢ
-            .caption.inner.toPaid(class="{{isActive 'paid'}}")
-              span.avatar.letter
-              span.text.uppercase TRẢ TIỀN
+      .dual-addon
+        .group-wrapper
+          .caption.option khách hàng
+          .caption.inner.toCustomerEditInitialInterest(class="{{isActiveClass 'customerInitialInterest'}}")
+            span.avatar.letter(class="icon-home-4")
+            span.text.uppercase: b nợ đầu kỳ
 
-        .dual-detail-wrapper
-          .dual-detail
-            .nano: .nano-content
+          .caption.inner.toCustomerAddLoanCash(class="{{isActiveClass 'customerLoanCash'}}")
+            span.avatar.letter(class="icon-home-4")
+            span.text.uppercase: b vay tiền
 
-              if isShowDetail 'interest'
-                +interestRateManager
-              else
-                if isShowDetail 'loan'
-                  +editInitialInterest
-                +createLoanTransaction(currentCustomer)
+          .caption.inner.toCustomerAddPaidCash(class="{{isActiveClass 'customerPaidCash'}}")
+            span.avatar.letter(class="icon-home-4")
+            span.text.uppercase: b thu tiền
 
-              //if isShowDetail 'paid'
-              //  +createpaidTransaction
+          .caption.option nhà cung cấp
+          .caption.inner.toProviderEditInitialInterest(class="{{isActiveClass 'providerInitialInterest'}}")
+            span.avatar.letter(class="icon-home-4")
+            span.text.uppercase: b nợ đầu kỳ
+
+          .caption.inner.toProviderAddPaidCash(class="{{isActiveClass 'providerPaidCash'}}")
+            span.avatar.letter(class="icon-home-4")
+            span.text.uppercase: b trả tiền
+
+          .caption.option lãi suất
+          .caption.inner.toEditInterestRate(class="{{isActiveClass 'interestRateManager'}}")
+            span.avatar.letter(class="icon-home-4")
+            span.text.uppercase: b lãi suất
 
 
+      .dual-detail-wrapper
+        .dual-detail
+          .nano: .nano-content
+            +Template.dynamic(template=currentData.template data=currentData.data)
+
+
+  //#footer.modern
+  //  .editor-row
+  //    .editor-wrapper.dual-spacer
 
 
 

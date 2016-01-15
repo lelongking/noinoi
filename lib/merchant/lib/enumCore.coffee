@@ -270,6 +270,10 @@ Apps.Merchant.Enums.TransactionTypes = [
   _id    : 9
   value  : 'returnProviderPaidAmount'
   display: 'NCC Trả'
+,
+  _id    : 10
+  value  : 'editInitialInterest'
+  display: 'Nợ Đẩu Kỳ'
 ]
 
 Apps.Merchant.Enums.TransactionStatuses = [

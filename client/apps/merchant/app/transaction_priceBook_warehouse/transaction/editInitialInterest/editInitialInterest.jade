@@ -1,19 +1,55 @@
 template(name="editInitialInterest")
   .section.top.panel.panel-default.options-section
-    .panel-heading
-      span.icon-contacts nợ đầu kỳ
+    .panel-heading.text-align-center(style="position: relative")
+      span(style="position: absolute; left: 10px; text-transform: none")
+        <b>{{timeHM}}<sup>{{timeS}}</sup></b>, ngày <b>{{timeDMY}}</b> <b>{{fullDay}}</b>
+
+      span {{currentOwner.transactionName}}
+      span: b {{currentOwner.name}}
 
     .panel-body
       .collapsible-row
-        .description(style="width:100px") Nợ đầu kỳ :
-        input.input-field(style="width:140px; font-weight: bolder; color: #7ac5f9;"
-        name="initialAmount" tabindex="1")
+        .description(style="font-weight: normal") Nợ đầu kỳ
+        input.input-field.float-right(name="initialAmount" placeholder="Nhập nợ đầu kỳ" tabindex="1"
+        style="padding-right: 10px;")
 
-        .description(style="width:85px") Lãi suất :
-        input.input-field(style="width:50px; font-weight: bolder; color: #7ac5f9;"
-        name="initialInterestRate" tabindex="2")
-        .description(style="width:100px; padding-left: 5px;"): b %/tháng
+      .collapsible-row
+        .description(style="font-weight: normal") Lãi suất
+        input.input-field.float-right(name="initialInterestRate" placeholder="Nhập lãi suất của nợ đầu kỳ" tabindex="2"
+        style="padding-right: 10px;")
 
-        .description(style="width:100px") Ngày nợ :
-        input.input-field(name="dateDebit" binding="datePicker" todayHighlight="true" maxlength="20"
-        style="width:100px; font-weight: bolder; color: #7ac5f9;" tabindex="3")
+
+      .collapsible-row
+        .description(style="font-weight: normal") Ngày nợ
+        input.input-field.float-right.text-align-right(name="dateDebit" placeholder="Nhập ngày nợ đầu kỳ" tabindex="3"
+        style="padding-right: 10px;" binding="datePicker" todayHighlight="true" maxlength="20")
+
+
+    .panel-footer(style="border-top: solid 4px #EFEFF4;")
+      table.lemon-grid
+        tr
+          th(style="width:auto")
+          th(style="width:80px")
+          th(style="width:5px")
+          th(style="width:200px")
+
+        tr
+          td
+          td Tiền nợ
+          td.number :
+          td.number <b>{{formatNumber currentOwner.totalDebitCash}}</b> VND
+        tr
+          td
+          td Tiền lãi
+          td.number :
+          td.number <b>{{formatNumber currentOwner.interestCash}}</b> VND
+        tr
+          td
+          td Thanh toán
+          td.number :
+          td.number <b>{{formatNumber currentOwner.paidCash}}</b> VND
+        tr
+          td
+          td: b Tổng nợ
+          td.number: b :
+          td.number(style="border-top: solid 1px #d7d7d7"): b {{formatNumber currentOwner.totalCash}} VND

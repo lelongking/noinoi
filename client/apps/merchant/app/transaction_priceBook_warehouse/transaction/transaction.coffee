@@ -1,6 +1,6 @@
 Enums = Apps.Merchant.Enums
 scope = logics.transactionManagement
-
+setTime = -> Session.set('realtime-now', new Date())
 
 customerList = {}
 ownerSearch = (textSearch) ->
@@ -16,14 +16,11 @@ ownerSearch = (textSearch) ->
       {name: regExp, merchant: Merchant.getId()}
     ]}
   customerList =
-    if transaction.group
+    if transaction.isOwner is 'provider'
       Schema.providers.find(selector, options).fetch()
-    else
+    else if transaction.isOwner is 'customer'
       Schema.customers.find(selector, options).fetch()
   customerList
-
-findTransactionGroup = (transactionGroup) ->
-  _.findWhere(Enums.TransactionGroups, {_id: transactionGroup})
 
 
 findTransactionOwner = (ownerId)->
@@ -37,7 +34,7 @@ transactionOwnerSelect =
   formatSelection: (item) -> "#{item.name}" if item
   formatResult: (item) -> "#{item.name}" if item
   id: '_id'
-  placeholder: 'Chọn KH hoặc NCC'
+  placeholder: 'Chọn'
   changeAction: (e) ->
     if e.added
       transactionDetail = Session.get('transactionDetail')
@@ -46,33 +43,17 @@ transactionOwnerSelect =
   reactiveValueGetter: -> Session.get('transactionDetail')?.owner ? 'skyReset'
 
 
-transactionTypeSelect =
-  query: (query) -> query.callback
-    results: _.filter(Enums.TransactionGroups, (num) -> return num unless num._id is 2)
-    text: '_id'
-  initSelection: (element, callback) -> callback findTransactionGroup(Session.get('transactionDetail')?.group)
-  formatSelection: (item)-> "#{item.display}" if item
-  formatResult: (item)-> "#{item.display}" if item
-  placeholder: 'Chọn KH Hoặc NCC'
-  minimumResultsForSearch: -1
-  changeAction: (e) ->
-    if e.added
-      newTransaction = Session.get('transactionDetail')
-      newTransaction.group = e.added._id
-      delete newTransaction.owner
-      Session.set('transactionDetail', newTransaction)
-  reactiveValueGetter: -> findTransactionGroup(Session.get('transactionDetail')?.group)
-
-
 
 Wings.defineApp 'transaction',
   created: ->
+    @timeInterval = Meteor.setInterval(setTime, 1000)
     ownerSearch('')
     self = this
     self.autorun ()->
       transaction = Session.get('transactionDetail')
       if transaction?.owner
-        if transaction.group
+        ownerSearch('')
+        if transaction.isOwner is 'provider'
           owner = Schema.providers.findOne({_id: transaction.owner}) ? {}
 
           owner.debitCash  = (owner.initialAmount ? 0) + (owner.importAmount ? 0) + (owner.loanAmount ? 0) + (owner.returnPaidAmount ? 0) - (owner.returnAmount ? 0) - (owner.paidAmount ? 0)
@@ -80,17 +61,25 @@ Wings.defineApp 'transaction',
           if transaction.transactionType is Enums.getValue('TransactionTypes', 'providerLoanAmount')
             owner.totalCash = owner.debitCash + owner.amountCash
           else if transaction.transactionType is Enums.getValue('TransactionTypes', 'providerPaidAmount')
+            owner.transactionName = 'Trả Tiền'
             owner.totalCash = owner.debitCash - owner.amountCash
+          else
+            owner.transactionName = 'Nợ Đầu Kỳ'
 
-        else
+        else if transaction.isOwner is 'customer'
           owner = Schema.customers.findOne({_id: transaction.owner}) ? {}
 
           owner.debitCash  = (owner.initialAmount ? 0) + (owner.saleAmount ? 0) + (owner.loanAmount ? 0) + (owner.returnPaidAmount ? 0) - (owner.returnAmount ? 0) - (owner.paidAmount ? 0)
           owner.amountCash = Math.abs(transaction.amount)
           if transaction.transactionType is Enums.getValue('TransactionTypes', 'customerLoanAmount')
+            owner.transactionName = 'Vay Tiền'
             owner.totalCash = owner.debitCash + owner.amountCash
           else if transaction.transactionType is Enums.getValue('TransactionTypes', 'customerPaidAmount')
+            owner.transactionName = 'Thu Tiền'
             owner.totalCash = owner.debitCash - owner.amountCash
+          else
+              owner.transactionName = 'Nợ Đầu Kỳ'
+
 
         Session.set('transactionOwner', owner)
       else
@@ -98,33 +87,39 @@ Wings.defineApp 'transaction',
 
     if !Session.get('transactionDetail')
       Session.set('transactionDetail',
-        active: 'interest'
-        group: 0
+        template: 'interestRateManager'
+        active: 'interestRateManager'
+        isOwner: ''
         transactionType: Enums.getValue('TransactionTypes', 'customerLoanAmount')
         name: undefined
         amount: 0
         description: undefined
         interestRate: 0
-        owner: undefined
+        owner: ''
       )
 
   rendered: ->
 
   destroyed: ->
-    Session.set('transactionShowHistory')
+    Session.set('transactionCreateNew')
     Session.set('transactionDetail')
     Session.set('transactionOwner')
+    Meteor.clearInterval(@timeInterval)
 
 
   helpers:
+    currentOwner: -> Session.get('transactionOwner')
     currentData: -> Session.get('transactionDetail')
-    isActive: (transaction)-> if @active is transaction then 'active' else ''
 
-    isShowDetail: (transaction)-> if @active is transaction then true else false
+    isShowSelectOption: (owner)-> Session.get('transactionDetail')?.isOwner is owner
+    isShowSubmit: -> Session.get('transactionDetail')?.amount > 0
+
+    isActiveClass: (template)-> if Session.get('transactionDetail')?.active is template then 'active' else ''
 
     ownerSelectOptions: transactionOwnerSelect
-    typeSelectOptions: transactionTypeSelect
-    currentCustomer: -> Session.get('transactionOwner')
+
+
+
 
   events:
     "click .createTransaction":  (event, template) ->
@@ -140,35 +135,116 @@ Wings.defineApp 'transaction',
           (error, result) -> console.log error, result
         )
 
-        $("[name=transactionAmount]").val('')
-        $("[name=transactionDescription]").val('')
-        transaction.amount = 0
-        transaction.description = ''
-        Session.set('transactionDetail', transaction)
+        currentRouter = FlowRouter.current()
+        if currentRouter.oldRoute and currentRouter.oldRoute.name is 'customer' and transaction.isOwner is 'customer'
+          FlowRouter.go('customer')
+        else if currentRouter.oldRoute and currentRouter.oldRoute.name is 'provider' and transaction.isOwner is 'provider'
+          FlowRouter.go('provider')
+        else
+          $("[name=transactionAmount]").val('')
+          $("[name=transactionDescription]").val('')
+          transaction.amount = 0
+          transaction.description = ''
+          Session.set('transactionDetail', transaction)
 
-    "click .group-nav .caption.toInterest":  (event, template) ->
+    "click .toEditInterestRate":  (event, template) ->
       transactionData = Session.get('transactionDetail')
-      transactionData.active = 'interest'
+      transactionData.template    = 'interestRateManager'
+      transactionData.active      = 'interestRateManager'
+      transactionData.isOwner     = ''
+      transactionData.owner       = ''
+      transactionData.amount      = undefined
+      transactionData.description = undefined
+      transactionData.interestRate= undefined
       Session.set('transactionDetail', transactionData)
 
-    "click .group-nav .caption.toLoan":  (event, template) ->
+    "click .toCustomerEditInitialInterest":  (event, template) ->
       transactionData = Session.get('transactionDetail')
-      transactionData.active = 'loan'
-      if transactionData.group
-        transactionData.transactionType = Enums.getValue('TransactionTypes', 'providerLoanAmount')
+      transactionData.template        = 'editInitialInterest'
+      transactionData.active          = 'customerInitialInterest'
+      transactionData.amount          = undefined
+      transactionData.description     = undefined
+      transactionData.transactionType = Enums.getValue('TransactionTypes', 'editInitialInterest')
+
+      if transactionData.isOwner is 'customer'
+        interestRate = Session.set('transactionOwner')?.initialInterestRate
+        interestRate = Session.get('merchant')?.interestRates?.loan ? 0
+        transactionData.interestRate  = interestRate
       else
-        transactionData.transactionType = Enums.getValue('TransactionTypes', 'customerLoanAmount')
+        transactionData.isOwner       = 'customer'
+        transactionData.owner         = Session.get('mySession')?.currentCustomer ? ''
+
       Session.set('transactionDetail', transactionData)
 
-
-    "click .group-nav .caption.toPaid":  (event, template) ->
+    "click .toCustomerAddLoanCash":  (event, template) ->
       transactionData = Session.get('transactionDetail')
-      transactionData.active = 'paid'
-      if transactionData.group
-        transactionData.transactionType = Enums.getValue('TransactionTypes', 'providerPaidAmount')
+      transactionData.template        = 'createLoanTransaction'
+      transactionData.active          = 'customerLoanCash'
+      transactionData.amount          = undefined
+      transactionData.description     = undefined
+      transactionData.transactionType = Enums.getValue('TransactionTypes', 'customerLoanAmount')
+
+      if transactionData.isOwner is 'customer'
+        interestRate = Session.set('transactionOwner')?.initialInterestRate
+        interestRate = Session.get('merchant')?.interestRates?.loan ? 0
+        transactionData.interestRate  = interestRate
       else
-        transactionData.transactionType = Enums.getValue('TransactionTypes', 'customerPaidAmount')
+        transactionData.isOwner       = 'customer'
+        transactionData.owner         = Session.get('mySession')?.currentCustomer ? ''
+
+
       Session.set('transactionDetail', transactionData)
 
+    "click .toCustomerAddPaidCash":  (event, template) ->
+      transactionData = Session.get('transactionDetail')
+      transactionData.template        = 'createPaidTransaction'
+      transactionData.active          = 'customerPaidCash'
+      transactionData.amount          = undefined
+      transactionData.description     = undefined
+      transactionData.transactionType = Enums.getValue('TransactionTypes', 'customerPaidAmount')
 
+      if transactionData.isOwner is 'customer'
+        interestRate = Session.set('transactionOwner')?.initialInterestRate
+        interestRate = Session.get('merchant')?.interestRates?.loan ? 0
+        transactionData.interestRate  = interestRate
+      else
+        transactionData.isOwner       = 'customer'
+        transactionData.owner         = Session.get('mySession')?.currentCustomer ? ''
 
+      Session.set('transactionDetail', transactionData)
+
+    "click .toProviderEditInitialInterest":  (event, template) ->
+      transactionData = Session.get('transactionDetail')
+      transactionData.template        = 'editInitialInterest'
+      transactionData.active          = 'providerInitialInterest'
+      transactionData.amount          = undefined
+      transactionData.description     = undefined
+      transactionData.transactionType = Enums.getValue('TransactionTypes', 'editInitialInterest')
+
+      if transactionData.isOwner is 'provider'
+        interestRate = Session.set('transactionOwner')?.initialInterestRate
+        interestRate = Session.get('merchant')?.interestRates?.loan ? 0
+        transactionData.interestRate  = interestRate
+      else
+        transactionData.isOwner       = 'provider'
+        transactionData.owner         = Session.get('mySession')?.currentProvider ? ''
+
+      Session.set('transactionDetail', transactionData)
+
+    "click .toProviderAddPaidCash":  (event, template) ->
+      transactionData = Session.get('transactionDetail')
+      transactionData.template        = 'createPaidTransaction'
+      transactionData.active          = 'providerPaidCash'
+      transactionData.amount          = undefined
+      transactionData.description     = undefined
+      transactionData.transactionType = Enums.getValue('TransactionTypes', 'providerPaidAmount')
+
+      if transactionData.isOwner is 'provider'
+        interestRate = Session.set('transactionOwner')?.initialInterestRate
+        interestRate = Session.get('merchant')?.interestRates?.loan ? 0
+        transactionData.interestRate  = interestRate
+      else
+        transactionData.isOwner       = 'provider'
+        transactionData.owner         = Session.get('mySession')?.currentProvider ? ''
+
+      Session.set('transactionDetail', transactionData)

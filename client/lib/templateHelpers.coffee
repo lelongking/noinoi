@@ -16,7 +16,13 @@ Template.registerHelper 'colorIsUndefined', (value)->
 
 Template.registerHelper 'firstName', -> if @firstName then @firstName else Helpers.firstName(@?.name ? @)
 
-Template.registerHelper 'avatarUrl', -> if @avatar then AvatarImages.findOne(@avatar)?.url() else undefined
+Template.registerHelper 'hasAvatar', -> if @avatar or @image or @profile?.image then '' else 'missing'
+Template.registerHelper 'avatarUrl', ->
+  if @avatar then AvatarImages.findOne(@avatar ? @image ? @profile?.image)?.url()
+  else if @image then AvatarImages.findOne(@image)?.url()
+  else if @profile?.image then AvatarImages.findOne(@profile.image)?.url()
+  else undefined
+
 Template.registerHelper 'activeClass', (sessionName)-> if Session.get(sessionName)?._id is @_id  then 'active' else ''
 Template.registerHelper 'isDisabled', (sessionName)-> if Session.get(sessionName) then '' else 'disabled'
 Template.registerHelper 'isNotDisabled', (sessionName)-> if Session.get(sessionName) then '' else 'disabled'

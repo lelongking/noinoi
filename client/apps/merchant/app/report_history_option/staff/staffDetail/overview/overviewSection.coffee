@@ -164,7 +164,7 @@ updateChangeAvatar = (event, template)->
     files = event.target.files; staff = Template.currentData()
     if files.length > 0 and staff?._id
       AvatarImages.insert files[0], (error, fileObj) ->
-        Schema.staffs.update(staff._id, {$set: {avatar: fileObj._id}})
+        Meteor.users.update(staff._id, {$set: {'profile.image': fileObj._id}})
         AvatarImages.findOne(staff.avatar)?.remove()
 
 editStaff = (template) ->

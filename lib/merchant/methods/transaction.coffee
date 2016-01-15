@@ -53,13 +53,13 @@ Meteor.methods
         transactionInsert.isBeginCash = if oldTransaction then false else true
         transactionInsert.isUseCode = !transactionInsert.isBeginCash
 
-        debitCash = (owner.interestAmount ? 0) + (owner.saleAmount ? 0) + (owner.loanAmount ? 0) + (owner.returnPaidAmount ? 0)
-        paidCash  = (owner.returnAmount ? 0) + (owner.paidAmount ? 0)
-        transactionInsert.balanceBefore = debitCash - paidCash
-        transactionInsert.balanceLatest = transactionInsert.balanceBefore
-
         ownerUpdate = $set: {allowDelete : false}
         if isCustomer
+          debitCash = (owner.interestAmount ? 0) + (owner.saleAmount ? 0) + (owner.loanAmount ? 0) + (owner.returnPaidAmount ? 0)
+          paidCash  = (owner.returnAmount ? 0) + (owner.paidAmount ? 0)
+          transactionInsert.balanceBefore = debitCash - paidCash
+          transactionInsert.balanceLatest = transactionInsert.balanceBefore
+
           if transactionType is Enums.getValue('TransactionTypes', 'saleAmount')
             ownerUpdate.$inc = {saleAmount : balanceChange}
             transactionInsert.balanceLatest += balanceChange
@@ -73,20 +73,31 @@ Meteor.methods
             ownerUpdate.$inc = {returnPaidAmount : balanceChange}
             transactionInsert.balanceLatest += balanceChange
             transactionInsert.receivable     = true
-            transactionInsert.description    = (merchant.noteOptions.customerReceivable ? '') if !transactionInsert.description
+            transactionInsert.description    = (merchant.noteOptions.customerPayable ? '') if !transactionInsert.description
 
           else if transactionType is Enums.getValue('TransactionTypes', 'customerPaidAmount')
             ownerUpdate.$inc = {paidAmount : balanceChange}
             transactionInsert.balanceLatest += -balanceChange
             transactionInsert.receivable     = false
-            transactionInsert.description    = (merchant.noteOptions.customerPayable ? '') if !transactionInsert.description
+            transactionInsert.description    = (merchant.noteOptions.customerReceivable ? '') if !transactionInsert.description
           else if transactionType is Enums.getValue('TransactionTypes', 'returnSaleAmount')
             ownerUpdate.$inc = {returnAmount : balanceChange}
             transactionInsert.balanceLatest += -balanceChange
             transactionInsert.receivable     = false
             transactionInsert.description    = (merchant.noteOptions.customerReturn ? '') if !transactionInsert.description
 
-  #      else if isProvider
+        else if isProvider
+          debitCash = (owner.interestAmount ? 0) + (owner.importAmount ? 0) + (owner.loanAmount ? 0) + (owner.returnPaidAmount ? 0)
+          paidCash  = (owner.returnAmount ? 0) + (owner.paidAmount ? 0)
+          transactionInsert.balanceBefore = debitCash - paidCash
+          transactionInsert.balanceLatest = transactionInsert.balanceBefore
+
+
+          if transactionType is Enums.getValue('TransactionTypes', 'providerPaidAmount')
+            ownerUpdate.$inc = {paidAmount : balanceChange}
+            transactionInsert.balanceLatest += -balanceChange
+            transactionInsert.receivable     = true
+            transactionInsert.description    = (merchant.noteOptions.providerPayable ? '') if !transactionInsert.description
 
 
         console.log transactionInsert

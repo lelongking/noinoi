@@ -75,6 +75,7 @@ findAllImport = (currentProvider)->
               transaction.sumLatestBalance = transaction.sumBeforeBalance + balanceChange
             else
               transaction.sumLatestBalance = beforeDebtCash + transaction.balanceLatest
+            console.log transaction
             transaction
         )
         item.transactions[item.transactions.length-1].isLastTransaction = true if item.transactions.length > 0

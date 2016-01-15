@@ -1,0 +1,40 @@
+template(name="createPaidTransaction")
+  .section.panel.panel-default.printable-area
+    .panel-heading
+      .hide-on-print.text-align-center(style="position: relative; color: #7c7c7c; font-weight: lighter;")
+        span(style="position: absolute; left: 0px;")
+          <b>{{timeHM}}<sup>{{timeS}}</sup></b>, ngày <b>{{timeDMY}}</b> <b>{{fullDay}}</b>
+
+        span(style="text-transform: uppercase;") {{currentOwner.transactionName}}
+        span(style="text-transform: uppercase;"): b {{currentOwner.name}}
+
+    .panel-body(style="border-color: #7ac5f9;")
+      table.lemon-grid
+        tr
+          th(style="width:auto")
+          th(style="width:80px")
+          th(style="width:5px")
+          th(style="width:200px")
+
+        tr(style="height: 35px; border-bottom: solid 1px rgba(122, 197, 249, 0.3); {{showTransaction}}")
+          td: input.transaction-field(name='transactionDescription' placeholder="ghi chú thu chi")
+          td(colspan="2")
+          td: input.transaction-field(name='transactionAmount' placeholder="số tiền thu chi")
+
+        tr(style="height: 20px;")
+
+        tr
+          td
+          td Tiền Nợ
+          td.number :
+          td.number: <b>{{formatNumber currentOwner.debitCash}}</b> VNĐ
+        tr
+          td
+          td {{currentOwner.transactionName}}
+          td.number :
+          td.number:  <b>{{formatNumber currentOwner.amountCash}}</b> VNĐ
+        tr
+          td
+          td: b Tổng Nợ:
+          td.number: b :
+          td.number(style="border-top: solid 1px #d7d7d7"):  <b>{{formatNumber currentOwner.totalCash}} VNĐ </b>

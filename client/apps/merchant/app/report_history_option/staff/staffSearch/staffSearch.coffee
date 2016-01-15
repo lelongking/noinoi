@@ -18,12 +18,6 @@ Wings.defineHyper 'staffSearch',
     activeClass: ->
       if @_id is Template.instance().currentStaff.get()?._id then 'active' else ''
 
-    hasAvatar: ->
-      if @avatar then '' else 'missing'
-
-    avatarUrl: ->
-      if @avatar then AvatarImages.findOne(@avatar ? @image)?.url() else undefined
-
     staffSearcher: ->
       selector   = {'profile.merchant': Merchant.getId()}
       options    = {sort: {'profile.name': 1, 'emails.address': 1}}
