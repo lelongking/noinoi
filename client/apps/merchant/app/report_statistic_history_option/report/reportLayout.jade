@@ -13,12 +13,9 @@ template(name="reportLayout")
                 span.avatar.letter(class="{{icon}}")
                 span.text.uppercase <b>{{display}}</b>
 
-      with productLists
-        .dual-detail-wrapper
-          .dual-detail
-            +Template.dynamic(template=currentSectionDynamic.overview)
-
-            if currentSectionDynamic.template
-              +Template.dynamic(template=currentSectionDynamic.template)
+      .dual-detail-wrapper
+        .dual-detail
+          if currentSectionDynamic.template
+            +Template.dynamic(template=currentSectionDynamic.template)
 
   //#footer.modern

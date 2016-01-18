@@ -1,0 +1,55 @@
+template(name="customerGroupOverview")
+  with dataLists
+    .section.panel.panel-default(style="margin-bottom: 10px;")
+      table.lemon-grid
+        tr
+          th(style="width:40px")
+          th(style="width:110px")
+          th(style="width:5px")
+          th(style="width:120px")
+          th(style="width:5px")
+          th(style="width:auto")
+
+        tr
+          td
+          td: b Số nhóm KH
+          td.number :
+          td.number <b>{{formatNumber overview.count}} </b>
+          td
+          td
+
+        tr
+          td
+          td: b Tổng nợ
+          td.number :
+          td.number <b>{{formatNumber overview.totalCash}}</b>
+          td
+          td VNĐ
+
+
+    .section.panel.panel-default(style="margin-bottom: 0px; border: none;")
+      .panel-heading
+        table.lemon-grid
+          tr
+            th(style="width:45px") STT
+            th(style="width:auto") Tên nhóm khách hàng
+            th(style="width:120px") Tổng khách hàng
+            th.number(style="width:190px") Tổng nợ
+
+
+    .nano: .nano-content(style="margin-bottom: 135px;")
+      .section(style="margin: 0")
+        table.lemon-grid
+          tr
+            th(style="width:55px")
+            th(style="width:auto")
+            th(style="width:120px")
+            th(style="width:200px")
+
+
+          each details
+            tr.detail-row
+              td(style="padding-left: 10px;") {{count}}
+              td {{name}}
+              td.date {{customerCount}} khách hàng
+              td.number <b>{{formatNumber totalCash}}</b> VND

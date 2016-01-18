@@ -1,0 +1,75 @@
+template(name="providerOverview")
+  with dataLists
+    .section.panel.panel-default(style="margin-bottom: 10px;")
+      table.lemon-grid
+        tr
+          th(style="width:40px")
+          th(style="width:110px")
+          th(style="width:5px")
+          th(style="width:120px")
+          th(style="width:5px")
+          th(style="width:auto")
+
+        tr
+          td
+          td: b Số nhà cung cấp
+          td.number :
+          td.number <b>{{formatNumber overview.count}} </b>
+          td
+          td
+
+        tr
+          td
+          td: b Tổng nợ
+          td.number :
+          td.number <b>{{formatNumber overview.totalCash}}</b>
+          td
+          td VNĐ
+
+        tr
+          td
+          td: b Thanh toán
+          td.number :
+          td.number <b>{{formatNumber overview.paidCash}}</b>
+          td
+          td VNĐ
+
+    .section.panel.panel-default(style="margin-bottom: 0px; border: none;")
+      .panel-heading
+        table.lemon-grid
+          tr
+            th(style="width:40px") STT
+            th(style="width:80px") Mã
+            th(style="width:auto") Nhà cung cấp
+            th(style="width:100px") Tiền nợ
+            th(style="width:80px") Tiền lãi
+            th(style="width:100px") Thanh toán
+            th.number(style="width:140px") Tổng nợ
+
+
+    .nano: .nano-content(style="margin-bottom: 160px;")
+      .section(style="margin: 0")
+        table.lemon-grid
+          tr
+            th(style="width:50px")
+            th(style="width:80px")
+            th(style="width:auto")
+            th(style="width:100px")
+            th(style="width:80px")
+            th(style="width:100px")
+            th(style="width:150px")
+
+          //each details
+          //  tr.detail-row(style=" background-color: #A7FFEE;")
+          //    td.number(colspan="4") <b>{{description}}</b>
+          //    td.number <b>{{formatNumber totalCash}}</b> VNĐ
+
+          each details
+            tr.detail-row
+              td(style="padding-left: 10px;") {{count}}
+              td {{code}}
+              td {{name}}
+              td {{formatNumber totalDebitCash}}
+              td {{formatNumber interestCash}}
+              td {{formatNumber paidCash}}
+              td.number <b>{{formatNumber totalCash}}</b> VND
