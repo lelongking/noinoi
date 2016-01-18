@@ -37,14 +37,14 @@ template(name="createLoanTransaction")
           td
           td Tiền vay
           td.number :
-          td.number <b>{{formatNumber currentOwner.amountCash}}</b> VND
+          td.number <b>{{formatNumber currentOwner.amountCash}}</b> VNĐ
         tr
           td
           td Tiền nợ
           td.number :
-          td.number <b>{{formatNumber currentOwner.totalDebitCash}}</b> VND
+          td.number <b>{{formatNumber currentOwner.totalDebitCash}}</b> VNĐ
         tr
           td
           td: b Tổng nợ
           td.number: b :
-          td.number(style="border-top: solid 1px #d7d7d7"): b {{formatNumber currentOwner.totalCash}} VND
+          td.number(style="border-top: solid 1px #d7d7d7"): b {{formatNumber currentOwner.totalCash}} VNĐ

@@ -96,7 +96,7 @@ Meteor.methods
           if transactionType is Enums.getValue('TransactionTypes', 'providerPaidAmount')
             ownerUpdate.$inc = {paidAmount : balanceChange}
             transactionInsert.balanceLatest += -balanceChange
-            transactionInsert.receivable     = true
+            transactionInsert.receivable     = false
             transactionInsert.description    = (merchant.noteOptions.providerPayable ? '') if !transactionInsert.description
 
 

@@ -1,37 +1,24 @@
-merchantRouter = Wings.Routers.merchantRouter
+merchantReportRouter = Wings.Routers.merchantReportRouter =
+  Wings.Routers.merchantRouter.group
+    prefix: '/report'
+    name: "reportRouter"
+    triggersEnter: [ (context, redirect, stop) ->
+    ]
 
-merchantRouter.route '/basicHistory',
-  name: 'basicHistory'
+merchantReportRouter.route '/',
+  name: 'report'
   action: ->
     Session.set "currentAppInfo",
       name: "báo cáo"
       navigationPartial:
-        template: "basicHistoryNavigationPartial"
+        template: ""
         data: {}
 
     BlazeLayout.render 'merchantLayout',
-      content: 'basicHistory'
+      container: 'reportLayout'
     return
 
   triggersEnter: [ (context, redirect) ->
-    console.log 'running /provider trigger'
+    console.log 'running /report trigger'
     return
   ]
-
-
-merchantRouter.route '/basicReport',
-  name: 'basicReport'
-  action: ->
-    Session.set "currentAppInfo",
-      name: "báo cáo"
-
-    BlazeLayout.render 'merchantLayout',
-      content: 'basicReport'
-    return
-
-  triggersEnter: [ (context, redirect) ->
-    console.log 'running /basicReport trigger'
-    return
-  ]
-
-

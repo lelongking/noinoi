@@ -259,15 +259,15 @@ metroHome.customerReturnApp =
   canvasClass  : ''
 
 metroHome.orderManagerApp =
-  appName      : 'orderManager'
+  appName      : ''
   appColor     : 'wisteria'
-  appCount     : 'orderManagers'
+  appCount     : ''
   appSize      : ''
   appClass     : ''
   appIcon      : ''
 
-  description  : 'hoàn thành'
-  caption      : 'phiếu bán'
+  description  : ''
+  caption      : 'nhật ký'
   captionClass : 'bottom right'
 
   isCanvas     : false
@@ -288,6 +288,21 @@ metroHome.providerReturnApp =
   isCanvas     : false
   canvasClass  : ''
 
+metroHome.reportApp =
+  appName      : 'report'
+  appColor     : 'orange'
+  appCount     : ''
+  appSize      : ''
+  appClass     : ''
+  appIcon      : ''
+
+  description  : ''
+  caption      : 'Báo Cáo'
+  captionClass : 'bottom right'
+
+  isCanvas     : false
+  canvasClass  : ''
+
 metroHome.basicHistoryApp =
   appName      : 'basicHistory'
   appColor     : 'orange'
@@ -296,8 +311,8 @@ metroHome.basicHistoryApp =
   appClass     : ''
   appIcon      : ''
 
-  description  : 'Báo Cáo'
-  caption      : 'nhật ký'
+  description  : ''
+  caption      : 'Báo Cáo'
   captionClass : 'bottom right'
 
   isCanvas     : false
@@ -390,7 +405,7 @@ setups.metroHome.metroData = [
   ,
     setups.metroHome.providerReturnApp
   ,
-    setups.metroHome.basicHistoryApp
+    setups.metroHome.reportApp
   ,
     setups.metroHome.programManagerAppa
   ,
