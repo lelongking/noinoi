@@ -14,27 +14,41 @@ Wings.defineApp 'customerManagementNavigationPartial',
     "click .customerToAddDebt": (event, template) ->
       if customerId = Session.get('mySession').currentCustomer
         Session.set('transactionDetail',
-          active: 'loan'
-          group: 0
-          transactionType: Enums.getValue('TransactionTypes', 'customerLoanAmount')
-          name: undefined
-          amount: 0
-          description: undefined
-          interestRate: 0
-          owner: customerId
+          owner           : customerId
+          isOwner         : 'customer'
+          interestRate    : Session.get('merchant')?.interestRates?.loan ? 0
+          template        : 'editInitialInterest'
+          active          : 'customerInitialInterest'
+          amount          : undefined
+          description     : undefined
+          transactionType : Enums.getValue('TransactionTypes', 'editInitialInterest')
+        )
+        FlowRouter.go('transaction')
+
+    "click .customerToAddLoan": (event, template) ->
+      if customerId = Session.get('mySession').currentCustomer
+        Session.set('transactionDetail',
+          owner           : customerId
+          isOwner         : 'customer'
+          interestRate    : Session.get('merchant')?.interestRates?.loan ? 0
+          template        : 'createPaidTransaction'
+          active          : 'customerLoanCash'
+          amount          : undefined
+          description     : undefined
+          transactionType : Enums.getValue('TransactionTypes', 'customerLoanAmount')
         )
         FlowRouter.go('transaction')
 
     "click .customerToAddPay": (event, template) ->
       if customerId = Session.get('mySession').currentCustomer
         Session.set('transactionDetail',
-          active: 'paid'
-          group: 0
-          transactionType: Enums.getValue('TransactionTypes', 'customerPaidAmount')
-          name: undefined
-          amount: 0
-          description: undefined
-          interestRate: 0
-          owner: customerId
+          owner           : customerId
+          isOwner         : 'customer'
+          template        : 'createPaidTransaction'
+          active          : 'customerPaidCash'
+          amount          : undefined
+          interestRate    : 0
+          description     : undefined
+          transactionType : Enums.getValue('TransactionTypes', 'customerPaidAmount')
         )
         FlowRouter.go('transaction')

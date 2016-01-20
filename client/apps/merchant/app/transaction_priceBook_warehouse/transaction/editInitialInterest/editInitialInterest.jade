@@ -4,52 +4,81 @@ template(name="editInitialInterest")
       span(style="position: absolute; left: 10px; text-transform: none")
         <b>{{timeHM}}<sup>{{timeS}}</sup></b>, ngày <b>{{timeDMY}}</b> <b>{{fullDay}}</b>
 
-      span {{currentOwner.transactionName}}
-      span: b {{currentOwner.name}}
+      span: b NỢ ĐẦU KỲ KHÁCH HÀNG
+
+      //.commands
+      //  .lemon.btn.rounded.peter-river.icon-reply-3.rollbackEditInitialInterest(class="{{isEditMode true}}"
+      //  data-toggle="tooltip" data-container="body" data-placement="bottom" title="quay lại")
+      //
+      //  .lemon.btn.rounded.lime.icon-ok-6.syncEditInitialInterest(class="{{isEditMode true}}"
+        data-toggle="tooltip" data-container="body" data-placement="bottom" title="xác nhận")
 
     .panel-body
-      .collapsible-row
-        .description(style="font-weight: normal") Nợ đầu kỳ
-        input.input-field.float-right(name="initialAmount" placeholder="Nhập nợ đầu kỳ" tabindex="1"
-        style="padding-right: 10px;")
-
-      .collapsible-row
-        .description(style="font-weight: normal") Lãi suất
-        input.input-field.float-right(name="initialInterestRate" placeholder="Nhập lãi suất của nợ đầu kỳ" tabindex="2"
-        style="padding-right: 10px;")
-
-
-      .collapsible-row
-        .description(style="font-weight: normal") Ngày nợ
-        input.input-field.float-right.text-align-right(name="dateDebit" placeholder="Nhập ngày nợ đầu kỳ" tabindex="3"
-        style="padding-right: 10px;" binding="datePicker" todayHighlight="true" maxlength="20")
-
-
-    .panel-footer(style="border-top: solid 4px #EFEFF4;")
       table.lemon-grid
-        tr
-          th(style="width:auto")
-          th(style="width:80px")
-          th(style="width:5px")
-          th(style="width:200px")
+        tr(style="height:40px; border-bottom: solid 2px #EFEFF4;")
+          th(style="width:55px; padding-left: 10px") STT
+          th(style="width:auto") Tên khách hàng
+          th(style="width:120px") Ngày tính lãi
+          th.number(style="width:100px") Lãi suất
+          th.number(style="width:170px; padding-right: 10px;") Nợ đầu kỳ
 
-        tr
-          td
-          td Tiền nợ
-          td.number :
-          td.number <b>{{formatNumber currentOwner.totalDebitCash}}</b> VNĐ
-        tr
-          td
-          td Tiền lãi
-          td.number :
-          td.number <b>{{formatNumber currentOwner.interestCash}}</b> VNĐ
-        tr
-          td
-          td Thanh toán
-          td.number :
-          td.number <b>{{formatNumber currentOwner.paidCash}}</b> VNĐ
-        tr
-          td
-          td: b Tổng nợ
-          td.number: b :
-          td.number(style="border-top: solid 1px #d7d7d7"): b {{formatNumber currentOwner.totalCash}} VNĐ
+        each details
+          if isRowEditing
+            +editInitialInterestRowEditing
+          else
+            tr.detail-row
+              td(style="padding-left: 10px;") {{count}}
+              td.has-commands
+                | {{name}}
+                .action-commands
+                  .lemon.rounded.tiny.btn.blue.animated.bounceIn.editOwner: span.icon-pencil-1
+              td {{momentFormat initialStartDate 'DD/MM/YYYY'}}
+              td.number {{initialInterestRate}}%/tháng
+              td.number {{formatNumber initialAmount}} VND
+
+    //
+    //.panel-footer(style="border-top: solid 4px #EFEFF4;")
+    //  table.lemon-grid
+    //    tr
+    //      th(style="width:auto")
+    //      th(style="width:80px")
+    //      th(style="width:5px")
+    //      th(style="width:200px")
+    //
+    //    tr
+    //      td
+    //      td Tiền nợ
+    //      td.number :
+    //      td.number <b>{{formatNumber currentOwner.totalDebitCash}}</b> VNĐ
+    //    tr
+    //      td
+    //      td Tiền lãi
+    //      td.number :
+    //      td.number <b>{{formatNumber currentOwner.interestCash}}</b> VNĐ
+    //    tr
+    //      td
+    //      td Thanh toán
+    //      td.number :
+    //      td.number <b>{{formatNumber currentOwner.paidCash}}</b> VNĐ
+    //    tr
+    //      td
+    //      td: b Tổng nợ
+    //      td.number: b :
+    //      td.number(style="border-top: solid 1px #d7d7d7"): b {{formatNumber currentOwner.totalCash}} VNĐ
+
+
+template(name="editInitialInterestRowEditing")
+  tr.detail-row
+    td(style="padding-left: 10px;") {{count}}
+    td.has-commands
+      | {{name}}
+      .commands(class="{{isEditMode true}}")
+        .lemon.rounded.tiny.btn.peter-river.animated.bounceIn.rollbackEditInitialInterest: span.icon-reply-3
+        .lemon.rounded.tiny.btn.lime.animated.bounceIn.syncEditInitialInterest: span.icon-ok-6
+    td
+      input.input-field.edit-field(name="dateDebit" placeholder="Nhập ngày nợ đầu kỳ" tabindex="1"
+      binding="datePicker" todayHighlight="true" maxlength="20")
+    td
+      input.input-field.edit-field(name="initialInterestRate" placeholder="Nhập lãi suất của nợ đầu kỳ" tabindex="2")
+    td.number
+      input.input-field.edit-field(name="initialAmount" placeholder="Nhập nợ đầu kỳ" tabindex="3")

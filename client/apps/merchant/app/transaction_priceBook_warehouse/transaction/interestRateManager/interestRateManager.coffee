@@ -11,8 +11,8 @@ Wings.defineHyper 'interestRateManager',
     $initialRate = self.ui.$interestRateInitial
     $initialRate.inputmask "decimal", decimalOption
 
-    $loanRate = self.ui.$interestRateLoan
-    $loanRate.inputmask "decimal", decimalOption
+#    $loanRate = self.ui.$interestRateLoan
+#    $loanRate.inputmask "decimal", decimalOption
 
     $saleRate = self.ui.$interestRateSale
     $saleRate.inputmask "decimal", decimalOption
@@ -22,8 +22,8 @@ Wings.defineHyper 'interestRateManager',
         initialRateValue = parseInt($initialRate.inputmask('unmaskedvalue'))
         $initialRate.val interestRates.initial if initialRateValue isnt interestRates.initial
 
-        loanRateValue = parseInt($loanRate.inputmask('unmaskedvalue'))
-        $loanRate.val interestRates.loan if loanRateValue isnt interestRates.loan
+#        loanRateValue = parseInt($loanRate.inputmask('unmaskedvalue'))
+#        $loanRate.val interestRates.loan if loanRateValue isnt interestRates.loan
 
         saleRateValue = parseInt($saleRate.inputmask('unmaskedvalue'))
         $saleRate.val interestRates.sale if saleRateValue isnt interestRates.sale
@@ -35,11 +35,11 @@ Wings.defineHyper 'interestRateManager',
           initial = parseInt(template.ui.$interestRateInitial.inputmask('unmaskedvalue'))
           if initial isnt (merchant.interestRates.initial ? 0)
             Schema.merchants.update merchant._id, $set:{'interestRates.initial': initial}
-
-        else if event.target.name is 'interestRateLoan'
-          loan = parseInt(template.ui.$interestRateLoan.inputmask('unmaskedvalue'))
-          if loan isnt (merchant.interestRates.loan ? 0)
-            Schema.merchants.update merchant._id, $set:{'interestRates.loan': loan}
+#
+#        else if event.target.name is 'interestRateLoan'
+#          loan = parseInt(template.ui.$interestRateLoan.inputmask('unmaskedvalue'))
+#          if loan isnt (merchant.interestRates.loan ? 0)
+#            Schema.merchants.update merchant._id, $set:{'interestRates.loan': loan}
 
         else if event.target.name is 'interestRateSale'
           sale = parseInt(template.ui.$interestRateSale.inputmask('unmaskedvalue'))

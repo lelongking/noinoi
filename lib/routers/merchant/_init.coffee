@@ -258,7 +258,7 @@ metroHome.customerReturnApp =
   isCanvas     : false
   canvasClass  : ''
 
-metroHome.orderManagerApp =
+metroHome.logsApp =
   appName      : ''
   appColor     : 'wisteria'
   appCount     : ''
@@ -318,24 +318,10 @@ metroHome.basicHistoryApp =
   isCanvas     : false
   canvasClass  : ''
 
+
+
 metroHome.programManagerApp =
-  appName      : 'saleProgram'
-  appColor     : 'peter-river'
-  appCount     : ''
-  appSize      : ''
-  appClass     : ''
-  appIcon      : ''
-
-  description  : ''
-  caption      : 'Lãi Suất'
-  captionClass : 'bottom right'
-
-  isCanvas     : false
-  canvasClass  : ''
-
-
-metroHome.programManagerAppa =
-  appName      : 'saleProgram'
+  appName      : ''
   appColor     : 'green-sea'
   appCount     : ''
   appSize      : ''
@@ -352,7 +338,7 @@ metroHome.basicReportApp =
   appName      : 'basicReport'
   appColor     : 'magenta'
   appCount     : 'revenueDay'
-  appSize      : ''
+  appSize      : 'double'
   appClass     : ''
   appIcon      : ''
 
@@ -363,7 +349,20 @@ metroHome.basicReportApp =
   isCanvas     : false
   canvasClass  : ''
 
+metroHome.statisticApp =
+  appName      : 'statistic'
+  appColor     : 'magenta'
+  appCount     : 'revenueDay'
+  appSize      : 'double'
+  appClass     : ''
+  appIcon      : ''
 
+  description  : ''
+  caption      : 'thống kê'
+  captionClass : 'bottom right'
+
+  isCanvas     : false
+  canvasClass  : ''
 
 
 setups.metroHome.metroData = [
@@ -401,14 +400,12 @@ setups.metroHome.metroData = [
   ,
     setups.metroHome.customerReturnApp
   ,
-    setups.metroHome.orderManagerApp
+    setups.metroHome.logsApp
   ,
     setups.metroHome.providerReturnApp
   ,
     setups.metroHome.reportApp
   ,
-    setups.metroHome.programManagerAppa
-  ,
-    setups.metroHome.basicReportApp
+    setups.metroHome.statisticApp
   ]
 ]

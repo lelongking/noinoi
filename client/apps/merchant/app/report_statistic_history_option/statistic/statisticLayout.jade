@@ -1,0 +1,94 @@
+template(name="statisticLayout")
+  #content.modern
+    .dual-content
+      .dual-addon
+        //.search-filter.icon-search-8
+        //  input(name='searchFilter' type="text")
+
+        .nano: .nano-content(style="margin-bottom: 35px;")
+
+          .group-wrapper
+            .caption.option tổng quát
+            .caption.inner.generalStatisticCustomerGroup(
+            class="{{optionActiveClass 'basicStatisticCustomerGroup'}}")
+              span.avatar.letter(class="{{icon}}")
+              span.text.uppercase: b nhóm khách hàng
+
+            .caption.inner.generalStatisticCustomer(
+            class="{{optionActiveClass 'basicStatisticCustomerGroup'}}")
+              span.avatar.letter(class="{{icon}}")
+              span.text.uppercase: b khách hàng
+
+            .caption.inner.generalStatisticProvider(
+            class="{{optionActiveClass 'basicStatisticCustomerGroup'}}")
+              span.avatar.letter(class="{{icon}}")
+              span.text.uppercase: b nhà cung cấp
+
+            .caption.inner.generalStatisticProductGroup(
+            class="{{optionActiveClass 'basicStatisticCustomerGroup'}}")
+              span.avatar.letter(class="{{icon}}")
+              span.text.uppercase: b nhóm sản phẩm
+
+            .caption.inner.generalStatisticProduct(
+            class="{{optionActiveClass 'basicStatisticCustomerGroup'}}")
+              span.avatar.letter(class="{{icon}}")
+              span.text.uppercase: b sản phẩm
+          //
+          //.group-wrapper
+          //  .caption.option chi tiết
+          //  .caption.inner.basicStatisticCustomerGroup(class="{{optionActiveClass 'basicStatisticCustomerGroup'}}")
+          //    span.avatar.letter(class="{{icon}}")
+          //    span.text.uppercase: b nhóm khách hàng
+          //  .caption.inner.basicStatisticCustomerGroup(class="{{optionActiveClass 'basicStatisticCustomerGroup'}}")
+          //    span.avatar.letter(class="{{icon}}")
+          //    span.text.uppercase: b khách hàng
+          //  .caption.inner.basicStatisticCustomerGroup(class="{{optionActiveClass 'basicStatisticCustomerGroup'}}")
+          //    span.avatar.letter(class="{{icon}}")
+          //    span.text.uppercase: b nhà cung cấp
+          //  .caption.inner.basicStatisticCustomerGroup(class="{{optionActiveClass 'basicStatisticCustomerGroup'}}")
+          //    span.avatar.letter(class="{{icon}}")
+          //    span.text.uppercase: b nhóm sản phẩm
+          //  .caption.inner.basicStatisticCustomerGroup(class="{{optionActiveClass 'basicStatisticCustomerGroup'}}")
+          //    span.avatar.letter(class="{{icon}}")
+          //    span.text.uppercase: b sản phẩm
+          //
+          //.group-wrapper
+          //  .caption.option thời gian
+          //  .caption.inner.basicStatisticCustomerGroup(class="{{optionActiveClass 'basicStatisticCustomerGroup'}}")
+          //    span.avatar.letter(class="{{icon}}")
+          //    span.text.uppercase: b nhóm khách hàng
+          //  .caption.inner.basicStatisticCustomerGroup(class="{{optionActiveClass 'basicStatisticCustomerGroup'}}")
+          //    span.avatar.letter(class="{{icon}}")
+          //    span.text.uppercase: b khách hàng
+          //  .caption.inner.basicStatisticCustomerGroup(class="{{optionActiveClass 'basicStatisticCustomerGroup'}}")
+          //    span.avatar.letter(class="{{icon}}")
+          //    span.text.uppercase: b nhà cung cấp
+          //  .caption.inner.basicStatisticCustomerGroup(class="{{optionActiveClass 'basicStatisticCustomerGroup'}}")
+          //    span.avatar.letter(class="{{icon}}")
+          //    span.text.uppercase: b nhóm sản phẩm
+          //  .caption.inner.basicStatisticCustomerGroup(class="{{optionActiveClass 'basicStatisticCustomerGroup'}}")
+          //    span.avatar.letter(class="{{icon}}")
+          //    span.text.uppercase: b sản phẩm
+          //
+          //  .group-wrapper
+          //  .caption.option đặc biệt
+          //  .caption.inner.totalRevenue(class="{{optionActiveClass 'totalRevenueAll'}}")
+          //    span.avatar.letter(class="{{icon}}")
+          //    span.text.uppercase <b>Bán Chạy</b>
+          //
+          //  .caption.inner.revenueArea(class="{{optionActiveClass 'totalRevenueArea'}}")
+          //    span.avatar.letter(class="{{icon}}")
+          //    span.text.uppercase <b>Doanh Số</b>
+          //
+          //  .caption.inner.customerProduct(class="{{optionActiveClass 'customerProduct'}}")
+          //    span.avatar.letter(class="{{icon}}")
+          //    span.text.uppercase <b>Lợi Nhuận</b>
+
+
+
+      .dual-detail-wrapper
+        .dual-detail
+          .nano: .nano-content
+            +Template.dynamic(template=statisticDynamics.template data=statisticDynamics.data)
+
+

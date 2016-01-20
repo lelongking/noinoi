@@ -1,12 +1,12 @@
 template(name="createPaidTransaction")
   .section.panel.panel-default.printable-area
     .panel-heading
-      .hide-on-print.text-align-center(style="position: relative; color: #7c7c7c; font-weight: lighter;")
+      .hide-on-print.text-align-center(style="position: relative; color: #7c7c7c; font-weight: lighter; height: 20px;")
         span(style="position: absolute; left: 0px;")
           <b>{{timeHM}}<sup>{{timeS}}</sup></b>, ngày <b>{{timeDMY}}</b> <b>{{fullDay}}</b>
 
-        span(style="text-transform: uppercase;") {{currentOwner.transactionName}}
-        span(style="text-transform: uppercase;"): b {{currentOwner.name}}
+        span.uppercase {{currentOwner.transactionName}}
+        span.uppercase: b {{currentOwner.name}}
 
     .panel-body(style="border-color: #7ac5f9;")
       table.lemon-grid
@@ -17,9 +17,9 @@ template(name="createPaidTransaction")
           th(style="width:200px")
 
         tr(style="height: 35px; border-bottom: solid 1px rgba(122, 197, 249, 0.3); {{showTransaction}}")
-          td: input.transaction-field(name='transactionDescription' placeholder="ghi chú thu chi")
+          td: input.transaction-field.lowercase(name='transactionDescription' placeholder="ghi chú {{currentOwner.transactionName}}")
           td(colspan="2")
-          td: input.transaction-field(name='transactionAmount' placeholder="số tiền thu chi")
+          td: input.transaction-field.lowercase(name='transactionAmount' placeholder="số tiền")
 
         tr(style="height: 20px;")
 

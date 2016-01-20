@@ -2,12 +2,12 @@ template(name="transaction")
   #header
     .editor-row
       .editor-wrapper.dual-spacer
-      if isShowSelectOption 'customer'
+      if isShowCustomerSelectOption
         .editor-wrapper(style="width: 300px")
           span.ilabel.optional Tên Khách Hàng :
           +iSelect(options=ownerSelectOptions class="field")
 
-      if isShowSelectOption 'provider'
+      if isShowProviderSelectOption
         .editor-wrapper(style="width: 300px")
           span.ilabel.optional Tên Nhà Cung Cấp :
           +iSelect(options=ownerSelectOptions class="field")
@@ -33,7 +33,7 @@ template(name="transaction")
 
           .caption.inner.toCustomerAddLoanCash(class="{{isActiveClass 'customerLoanCash'}}")
             span.avatar.letter(class="icon-money")
-            span.text.uppercase: b vay tiền
+            span.text.uppercase: b nhập nợ
 
           .caption.inner.toCustomerAddPaidCash(class="{{isActiveClass 'customerPaidCash'}}")
             span.avatar.letter(class="icon-money-1")

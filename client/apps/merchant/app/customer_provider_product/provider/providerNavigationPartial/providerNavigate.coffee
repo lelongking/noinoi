@@ -11,30 +11,28 @@ Wings.defineApp 'providerNavigationPartial',
         Meteor.call 'providerToReturn', providerId, (error, result) ->
           if error then console.log error else FlowRouter.go('importReturn')
 
-    "click .providerOldDebt": (event, template) ->
+    "click .providerOldDebt ": (event, template) ->
       if providerId = Session.get('mySession').currentProvider
         Session.set('transactionDetail',
-          active: 'paid'
-          group: 1
-          transactionType: Enums.getValue('TransactionTypes', 'providerLoanAmount')
-          name: undefined
-          amount: 0
-          description: undefined
-          interestRate: 0
-          owner: providerId
+          isOwner         : 'provider'
+          owner           : providerId
+          template        : 'editInitialInterest'
+          active          : 'providerInitialInterest'
+          amount          : undefined
+          description     : undefined
+          transactionType : Enums.getValue('TransactionTypes', 'editInitialInterest')
         )
         FlowRouter.go('transaction')
 
     "click .providerPaid": (event, template) ->
       if providerId = Session.get('mySession').currentProvider
         Session.set('transactionDetail',
-          active: 'loan'
-          group: 1
-          transactionType: Enums.getValue('TransactionTypes', 'providerPaidAmount')
-          name: undefined
-          amount: 0
-          description: undefined
-          interestRate: 0
-          owner: providerId
+          isOwner         : 'provider'
+          owner           : providerId
+          template        : 'createPaidTransaction'
+          active          : 'providerPaidCash'
+          amount          : undefined
+          description     : undefined
+          transactionType : Enums.getValue('TransactionTypes', 'providerPaidAmount')
         )
         FlowRouter.go('transaction')

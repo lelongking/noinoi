@@ -6,7 +6,7 @@ grid-left-border-width = 2px
 
   th
     position relative
-    &.has-commands .commands
+    &.has-commands .commands, &.has-commands .action-commands
       absolute top 5px right 5px
       .btn
         margin-right 5px;
@@ -21,10 +21,14 @@ grid-left-border-width = 2px
       padding-right 10px
     .summary-total
       padding-bottom 25px
-    &.has-commands .commands
+    &.has-commands .commands, &.has-commands .action-commands
       absolute top 5px right 5px
       .btn
         margin-right 5px;
+
+    .action-commands
+      display none
+
     &.old-debt-total
       padding-right 25px
     .note
@@ -55,6 +59,9 @@ grid-left-border-width = 2px
       background-color lighten(pumpkin, 40) !important
     &.paid-row.paid:hover
       background-color lighten(lime, 45) !important
+
+    &.detail-row:hover .action-commands
+      display block
   //End hover colors------------------------------------------------
 
   tr.table-header
