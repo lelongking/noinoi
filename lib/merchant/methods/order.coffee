@@ -244,7 +244,6 @@ Meteor.methods
     return {valid: false, error: 'user not permission!'} unless User.hasManagerRoles()
 
     query =
-      seller      : user._id
       buyer       : $exists: true
       merchant    : user.profile.merchant
       orderType   : Enums.getValue('OrderTypes', 'success')
@@ -253,21 +252,23 @@ Meteor.methods
     currentOrderQuery = _.clone(query)
     currentOrderQuery._id = orderId
 
+    console.log 'ok1'
     currentOrderFound = Schema.orders.findOne currentOrderQuery
     return {valid: false, error: 'order not found!'} unless currentOrderFound
-    return {valid: false, error: 'order not delete!'} unless currentOrderFound.allowDelete
-
+#    return {valid: false, error: 'order not delete!'} unless currentOrderFound.allowDelete
+    console.log 'ok2'
     customerFound = Schema.customers.findOne(currentOrderFound.buyer)
     return {valid: false, error: 'customer not found!'} unless customerFound
 
-    merchantFound = Schema.merchants.findOne(user.profile.merchant)
-    return {valid: false, error: 'merchant not found!'} unless merchantFound
-
-#    lastOrderQuery = _.clone(query)
-#    lastOrderQuery.successDate = {$gt:currentOrderFound.successDate}
-#    lastOrderFound = Schema.orders.findOne lastOrderQuery
-#
-#    console.log currentOrderFound._id, lastOrderFound?._id
+    console.log 'ok3'
+    returnFound = Schema.returns.findOne({
+      merchant    : currentOrderFound.merchant
+      parent      : currentOrderFound._id
+      returnType  : Enums.getValue('ReturnTypes', 'customer')
+      returnStatus: Enums.getValue('ReturnStatus', 'success')
+    })
+    console.log returnFound
+    return {valid: false, error: 'return found!'} if returnFound
 
     productLists = []
     for item in currentOrderFound.details
@@ -276,42 +277,30 @@ Meteor.methods
       productLists.push(product)
 
 
-    for orderDetail in currentOrderFound.details
-      product = _.findWhere(productLists, {_id: orderDetail.product})
-
-      updateProductQuery =
-        $inc:
-          'merchantQuantities.0.saleQuantity'     : -orderDetail.basicQuantity
-          'merchantQuantities.0.availableQuantity': orderDetail.basicQuantity
-          'merchantQuantities.0.inStockQuantity'  : orderDetail.basicQuantity
-      console.log updateProductQuery
-      Schema.products.update product._id, updateProductQuery
-
-      if product.inventoryInitial
-        #da nhap ton dau ky
-        for orderImportDetail in orderDetail.imports
-
-          #tim Import
-          if currentImport = Schema.imports.findOne(orderImportDetail._id)
-
-            #tim ImportDetail
-            for importDetail, index in currentImport.details
-
-              #so sanh ImportDetail giong voi orderImportDetail
-              if importDetail._id is orderImportDetail.detailId
-
-               #cap nhat lai Imports
-                updateImport = $inc:{}
-                updateImport.$inc["details.#{index}.basicOrderQuantity"]     = -orderImportDetail.basicQuantity
-                updateImport.$inc["details.#{index}.basicQuantityAvailable"] = orderImportDetail.basicQuantity
-                console.log updateImport
-                Schema.imports.update currentImport._id, updateImport
 
     if Schema.orders.remove(currentOrderFound._id)
-      Meteor.call 'deleteTransaction', currentOrderFound.transaction
+      for orderDetail in currentOrderFound.details
+        product = _.findWhere(productLists, {_id: orderDetail.product})
 
-#    if lastOrderFound
-#    else
+        updateProductQuery =
+          $inc:
+            'merchantQuantities.0.saleQuantity'     : -orderDetail.basicQuantity
+            'merchantQuantities.0.availableQuantity': orderDetail.basicQuantity
+            'merchantQuantities.0.inStockQuantity'  : orderDetail.basicQuantity
+        Schema.products.update product._id, updateProductQuery
+
+      Schema.transactions.find(
+        $and: [
+          merchant : currentOrderFound.merchant
+          owner    : currentOrderFound.buyer
+          parent   : currentOrderFound._id
+        ,
+          $or: [{isRoot: true}, {isPaidDirect : true}]
+        ]
+      ).forEach(
+        (transaction)->
+          Meteor.call 'deleteTransaction', transaction._id
+      )
 
 
 

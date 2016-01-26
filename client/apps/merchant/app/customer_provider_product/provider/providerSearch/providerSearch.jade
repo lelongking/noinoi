@@ -12,8 +12,8 @@ template(name="providerSearch")
 
         each providerLists
           .doc-item(class="{{activeClass}}")
-            .avatar-wrapper: .avatar-image(class="missing"
-            style="background-image:url('')") {{aliasLetter firstName}}
+            .avatar-wrapper: .avatar-image(class="{{hasAvatar}}"
+            style="background-image:url('{{avatarUrl}}')") {{aliasLetter firstName}}
 
             .doc-info
               .title {{name}}

@@ -1,29 +1,6 @@
 template(name="merchantHome")
   #content.modern.merchant-home
     .dual-content
-      .dual-detail-wrapper
-        .dual-detail.metro: .merchant-metro-wrapper
-          //.home-separator-line.icon-down-open-2
-          //.home-eds-text THIEN BAN
-          //.home-separator-logo
-
-          if showMetroBySeller
-            +merchantHomeBySeller
-
-
-          if showMetroByAdmin
-            .metro-inner-wrapper
-              +metroDecoratorTiles
-
-              each this
-                div(class="{{classGroup}}")
-                  each dataGroup
-                    +Template.dynamic(template='metroTile' data=this)
-
-              +metroDecoratorTiles
-
-
-
       .dual-addon
         .search-filter.icon-search-8
           input(name='searchFilter' type="text" placeholder="tìm kiếm...")
@@ -79,6 +56,31 @@ template(name="merchantHome")
                       //.commands {{momentFormat accountingConfirmAt 'DD/MM/YYYY'}}
                     //span.left-info {{orderName}}
                     //span.right-info {{formatNumber finalPrice}} VND
+
+
+
+
+
+      .dual-detail-wrapper
+        .dual-detail.metro: .merchant-metro-wrapper
+          //.home-separator-line.icon-down-open-2
+          //.home-eds-text THIEN BAN
+          //.home-separator-logo
+
+          if showMetroBySeller
+            +merchantHomeBySeller
+
+
+          if showMetroByAdmin
+            .metro-inner-wrapper
+              +metroDecoratorTiles
+
+              each this
+                div(class="{{classGroup}}")
+                  each dataGroup
+                    +Template.dynamic(template='metroTile' data=this)
+
+              +metroDecoratorTiles
 
 
 

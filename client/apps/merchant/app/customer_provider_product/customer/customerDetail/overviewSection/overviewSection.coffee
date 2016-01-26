@@ -221,7 +221,7 @@ editCustomer = (template) ->
     address         = template.ui.$customerAddress.val().replace(/^\s*/, "").replace(/\s*$/, "")
     description     = template.ui.$customerDescription.val().replace(/^\s*/, "").replace(/\s*$/, "")
     gender          = template.ui.$genderSwitch.bootstrapSwitch('state')
-    dateOfBirth     = template.datePicker.$dateOfBirth.datepicker().data().datepicker.dates.get().toString()
+    dateOfBirth     = template.datePicker.$dateOfBirth.datepicker().data().datepicker.dates.get()?.toString()
     customerOfGroup = Session.get("customerCreateSelectedGroup")?._id
 
     listPhones  = summaries.listCustomerPhones ? []

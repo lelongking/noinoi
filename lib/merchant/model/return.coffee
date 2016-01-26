@@ -281,9 +281,6 @@ Schema.add 'returns', "Return", class Return
               'merchantQuantities.0.availableQuantity'  : quantities
           Schema.products.update productId, productUpdate
 
-  #      for importId, importUpdate of importUpdateOption
-  #        Schema.imports.update importId, importUpdate
-
         orderUpdateOption.$set = {allowDelete: false}
         Schema.orders.update @parent, orderUpdateOption
 
@@ -419,9 +416,9 @@ createTransactionByCustomer = (currentReturn)->
       parent       : currentReturn._id
       isUseCode    : false
       isPaidDirect : false
-      balanceBefore: customer.debitCash
+      balanceBefore: customer.debitCash + customer.paidAmount
       balanceChange: currentReturn.finalPrice
-      balanceLatest: customer.debitCash - currentReturn.finalPrice
+      balanceLatest: customer.debitCash + customer.paidAmount - currentReturn.finalPrice
 
     if transactionSaleReturnId = Schema.transactions.insert(createTransactionOfSaleReturn)
       if currentReturn.depositCash > 0
@@ -435,9 +432,9 @@ createTransactionByCustomer = (currentReturn)->
           parent       : currentReturn._id
           isUseCode    : true
           isPaidDirect : true
-          balanceBefore: customer.debitCash - currentReturn.finalPrice
+          balanceBefore: customer.debitCash + customer.paidAmount - currentReturn.finalPrice
           balanceChange: currentReturn.depositCash
-          balanceLatest: customer.debitCash - currentReturn.finalPrice + currentReturn.depositCash
+          balanceLatest: customer.debitCash + customer.paidAmount - currentReturn.finalPrice + currentReturn.depositCash
         Schema.transactions.insert(createTransactionOfDepositReturnSale)
 
       customerUpdate =
@@ -459,9 +456,9 @@ createTransactionByProvider = (currentReturn)->
       parent       : currentReturn._id
       isUseCode    : false
       isPaidDirect : false
-      balanceBefore: provider.debitCash
+      balanceBefore: provider.debitCash + provider.paidCash
       balanceChange: currentReturn.finalPrice
-      balanceLatest: provider.debitCash - currentReturn.finalPrice
+      balanceLatest: provider.debitCash + provider.paidCash - currentReturn.finalPrice
 
     createTransactionOfImportReturn.description = currentReturn.description if currentReturn.description
 
@@ -477,9 +474,9 @@ createTransactionByProvider = (currentReturn)->
           parent       : currentReturn._id
           isUseCode    : true
           isPaidDirect : true
-          balanceBefore: provider.debitCash - currentReturn.finalPrice
+          balanceBefore: provider.debitCash + provider.paidCash - currentReturn.finalPrice
           balanceChange: currentReturn.depositCash
-          balanceLatest: provider.debitCash - currentReturn.finalPrice + currentReturn.depositCash
+          balanceLatest: provider.debitCash + provider.paidCash - currentReturn.finalPrice + currentReturn.depositCash
         Schema.transactions.insert(createTransactionOfDepositReturnImport)
 
       providerUpdate =

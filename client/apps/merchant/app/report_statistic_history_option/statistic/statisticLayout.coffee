@@ -2,7 +2,7 @@ Enums = Apps.Merchant.Enums
 
 Wings.defineApp 'statisticLayout',
   created: ->
-    Session.set("statisticDynamics", {template: 'revenueBasicAreaReport', data: {}})
+    Session.set("statisticDynamics", {template: 'generalStatisticCustomerGroup', data: {}})
 
     self = @
     self.autorun ()->
@@ -13,13 +13,10 @@ Wings.defineApp 'statisticLayout',
     optionActiveClass: (template)-> 'active' if Session.get("statisticDynamics")?.template is template
 
   events:
-    "click .basicStatisticCustomerGroup": ->
-      option = template: 'basicStatisticCustomerGroup', data: {}
+    "click .generalStatisticCustomerGroup": ->
+      option = template: 'generalStatisticCustomerGroup', data: {}
       Session.set("statisticDynamics", option)
-    "click .basicStatisticCustomer": ->
-      option = template: 'basicStatisticCustomer', data: {}
-      Session.set("statisticDynamics", option)
-    "click .basicStatisticProvider": ->
-      option = template: 'basicStatisticProvider', data: {}
+    "click .merchantReportDayTimeline": ->
+      option = template: 'merchantReportDayTimeline', data: {}
       Session.set("statisticDynamics", option)
 

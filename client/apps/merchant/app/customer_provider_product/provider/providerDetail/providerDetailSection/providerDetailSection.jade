@@ -27,39 +27,79 @@ template(name="providerDetailSection")
             td.has-commands(colspan="5")
               | &nbsp;
               .bill-header: b {{momentFormat initialStartDate "DD/MM/YYYY"}}
-          tr
-
+          tr(style="background-color: {{isColor}};")
           tr.paid-row.top.receive(style="border-bottom: none;")
             td.has-commands(colspan="4"): .bill-header NỢ ĐẦU KỲ
             td.number: span.s5: b {{formatNumber initialAmount}}
-
           tr.detail-row(style="background-color: #EFEFF4;")
             td(colspan="5" style="padding-top: 2px !important; padding-bottom: 2px !important;")
 
-          each oldDebts
-            tr.paid-row.top(class="{{transactionClass}}" style="border-bottom: none;")
-              td.has-commands(colspan="3")
-                .bill-header {{description}}
-                //if isDelete
-                //    .commands: .lemon.rounded.tiny.btn.red.deleteTransaction: span.icon-minus-4
+        each transactions
+          tr.header-row
+            td.has-commands(colspan="5" style="border-left: solid 2px #f39c12")
+              | &nbsp;
+              .bill-header(style="background-color: #f39c12;") <b>{{momentFormat successDate "DD/MM/YYYY"}}</b>
+              .bill-header.billNo.hide-on-print(style="left: 90px")  <b><i>{{billNo}}</i></b>
+              .bill-header.billNo.show-on-print(style="left: 120px") <b><i>{{billNo}}</i></b>
+              .commands
+                if isDelete
+                  .lemon.rounded.tiny.btn.red.deleteTransaction: span.icon-minus-4
+          tr(style="{{isColor}};")
 
-              td.number
-                if sumBeforeBalance
-                  span.s5.gray.icon-feather-1: b {{formatNumber sumBeforeBalance}}
+          with parentFound
+            each details
+              with detail
+                tr.detail-row(style="{{isColor}};")
+                  td.first-column {{productName}}
+                  td {{quality}}
+                  td: span
+                    | {{productUnitName}}
+                    unless isBase
+                      span.super.s7.color-lime {{formatNumber basicQuantity}} {{basicUnitName}}
+                  td.number {{formatNumber price}}
+                  td.last-column.number {{formatNumber totalPrice}}
 
-              td.number
-                span.s5: b {{formatNumber balanceChange}}
+            if discountCash
+              tr.detail-row(style="{{isColor}};")
+                td.number(colspan="4"): span Tổng phiếu :
+                td.number.receive: span.s5 <b>{{formatNumber totalPrice}}</b>
+              if depositCash
+                tr.detail-row(style="{{isColor}};")
+                  td.number(colspan="4"): span Chiết khấu :
+                  td.number.paid: span.s5 <b>{{formatNumber discountCash}}</b>
+                tr.detail-row(style="{{isColor}};")
+                  td.number(colspan="4"): span Thanh toán :
+                  td.number.paid.border-bottom: span.s5 <b>{{formatNumber depositCash}}</b>
+              else
+                tr.detail-row(style="{{isColor}};")
+                  td.number(colspan="4"): span Chiết khấu :
+                  td.number.paid.border-bottom: span.s5 <b>{{formatNumber discountCash}}</b>
+            else
+              if depositCash
+                tr.detail-row(style="{{isColor}};")
+                  td.number(colspan="4"): span Tổng phiếu :
+                  td.number.receive: span.s5 <b>{{formatNumber totalPrice}}</b>
+                tr.detail-row(style="{{isColor}};")
+                  td.number(colspan="4"): span Thanh toán :
+                  td.number.paid.border-bottom: span.s5 <b>{{formatNumber depositCash}}</b>
 
-            if sumBeforeBalance
-              tr.detail-row
-                td.number(colspan="3")
-                td.number.border-top(colspan="2")
-                  span.s5: b {{formatNumber sumLatestBalance}}
-
-
-        each allImports
-          +providerImportDetails this
-
+          tr.paid-row.top(class="{{transactionClass}}"
+          style="{{isColor}}; border-bottom: none;")
+            td.has-commands(colspan="3")
+              if isRoot
+                span(style="color: #666; font-style: italic !important;") {{description}}
+              else
+                span {{description}}
+            td.number(style="color: #666;")
+              span.icon-feather-1.s5 <b>{{formatNumber sumBeforeBalance}}</b>
+            td.number
+              span.s5 <b>{{formatNumber balanceChange}}</b>
+          tr.detail-row(style="{{isColor}};")
+            td.number(colspan="3")
+            td.number.border-top(colspan="2")
+              span.s5: b {{formatNumber sumLatestBalance}}
+          tr.detail-row(style="background-color: #EFEFF4;")
+            td(colspan="5" style="padding-top: 2px !important; padding-bottom: 2px !important;")
 
     .panel-footer
       table.lemon-grid

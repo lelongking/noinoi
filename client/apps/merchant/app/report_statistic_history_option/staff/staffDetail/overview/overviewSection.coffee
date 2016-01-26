@@ -175,7 +175,7 @@ editStaff = (template) ->
     address         = template.ui.$staffAddress.val().replace(/^\s*/, "").replace(/\s*$/, "")
     description     = template.ui.$staffDescription.val().replace(/^\s*/, "").replace(/\s*$/, "")
     gender          = template.ui.$genderSwitch.bootstrapSwitch('state')
-    dateOfBirth     = template.datePicker.$dateOfBirth.datepicker().data().datepicker.dates.get().toString()
+    dateOfBirth     = template.datePicker.$dateOfBirth.datepicker().data().datepicker.dates.get()?.toString()
 
 
     editOptions = {}

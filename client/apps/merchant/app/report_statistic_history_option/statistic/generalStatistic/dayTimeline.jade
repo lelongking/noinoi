@@ -1,0 +1,32 @@
+//.section.panel.top.panel-default
+//   .panel-heading
+//      span nhật ký
+//   .panel-body
+//      .lemon-timelime
+//         each timelineRecords
+//            .timeline-block(class="{{timelineMeta.color}}")
+//               .timeline-hook {{timeHook}}
+//               .timeline-thumb(class="{{timelineMeta.icon}}")
+//               .timeline-avatar
+//                  +avatarImageComponent(avatar=timelineMeta.creatorAvatar alias=timelineMeta.creatorFirstName)
+//               .timeline-content
+//                  span {{timelineMeta.message}}
+//   .panel-footer
+//      span.icon-angle-right
+
+template(name="merchantReportDayTimeline")
+  .timeline
+    article.timeline-item.alt
+      .text-right
+        .time-show.first
+          a.btn.btn-primary(href='#') Today
+
+    each timelineRecords
+      article.timeline-item(class="{{align}}")
+        .timeline-desk
+          .panel: .panel-body
+            span(class="{{arrowAlign}}")
+            span.timeline-icon(class="{{timelineMeta.color}}"): i(class="{{timelineMeta.icon}}")
+            span.timeline-date {{timeHook}}
+            h1(class="{{timelineMeta.color}}") {{timeHook}}
+            p {{timelineMeta.message}}

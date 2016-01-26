@@ -108,6 +108,7 @@ Schema.add 'customers', "Customer", class Customer
 
 
     saleCash         = (doc.saleAmount ? 0) + (doc.returnPaidAmount ? 0) - (doc.returnAmount ? 0)
+    doc.initialCash    = (doc.initialAmount ? 0)
     doc.debitCash      = saleCash + (doc.loanAmount ? 0)
     doc.interestCash   = (doc.interestAmount ? 0)
     doc.paidCash       = (doc.paidAmount ? 0)

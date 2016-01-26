@@ -1,115 +1,89 @@
-scope = logics.providerManagement
-numericOption = {autoGroup: true, groupSeparator:",", radixPoint: ".", suffix: " VNĐ", integerDigits:11}
 Enums = Apps.Merchant.Enums
 
 Wings.defineHyper 'providerDetailSection',
-  rendered: ->
-#    @ui.$payImportAmount.inputmask("numeric", numericOption)
-
   helpers:
-    allImports: ->
-      console.log Template.currentData()
-      findAllImport(Template.currentData())
-    oldDebts: ->  findOldDebt()
-    hasOldDebts: -> findOldDebt().length > 0
-
-    isDelete: -> moment().diff(@version.createdAt ? new Date(), 'days') < 1
-
-    totalDebtCash: ->
+    transactions: ->
+      transactions = []
       if provider = Template.currentData()
-        provider.debtCash + provider.loanCash
-      else 0
+        transaction = Schema.transactions.find(
+          owner: provider._id
+          isPaidDirect: {$ne: true}
+        )
 
-    totalPaidCash: ->
-      if provider = Template.currentData()
-        (unless provider.paidCash is undefined then provider.paidCash else 0) + (unless provider.returnCash is undefined then provider.returnCash else 0)
-      else 0
+        beforeDebtCash = (provider.initialAmount ? 0)
 
-    transactionDescription: -> if Session.get("providerManagementOldDebt") then 'ghi chú nợ tiền' else 'ghi chú trả tiền'
-    transactionStatus: -> if Session.get("providerManagementOldDebt") then 'Nợ Tiền' else 'Trả Tiền'
-    showTransaction: -> if Session.get("providerManagementOldDebt") is undefined then 'display: none'
+        transactions = _.sortBy transaction.fetch(), (item) ->
+          item.sumBeforeBalance = beforeDebtCash + item.balanceBefore
+          item.sumLatestBalance = beforeDebtCash + item.balanceLatest
+
+
+          if item.isRoot
+            if item.balanceType is Enums.getValue('TransactionTypes', 'importAmount')
+              parentFound = Schema.imports.findOne({
+                _id        : item.parent
+                provider   : item.owner
+                importType : Enums.getValue('ImportTypes', 'success')
+              })
+              if parentFound
+                item.sumLatestBalance = item.sumBeforeBalance + (parentFound.finalPrice - parentFound.depositCash)
+            else if item.balanceType is Enums.getValue('TransactionTypes', 'returnImportAmount')
+              parentFound = Schema.returns.findOne({
+                _id         : item.parent
+                owner       : item.owner
+                returnType  : Enums.getValue('ReturnTypes', 'provider')
+                returnStatus: Enums.getValue('ReturnStatus', 'success')
+              })
+              if parentFound
+                item.sumLatestBalance = item.sumBeforeBalance - (parentFound.finalPrice - parentFound.depositCash)
+
+            if parentFound
+              item.parentFound      = parentFound
+              item.balanceChange    = Math.abs(parentFound.finalPrice - parentFound.depositCash)
+              item.description      = '(' + item.description + ')' if item.description
+
+
+          item.billNo =
+            if parentFound?.model is 'imports'
+              'Phiếu ' + parentFound.billNoOfProvider
+            else if parentFound?.model is 'returns'
+              'Trả hàng theo phiếu ' + parentFound.returnCode
+
+          item.successDate =
+            if parentFound
+              parentFound.successDate
+            else
+              item.version.createdAt
+
+          item.successDate
+
+      transactions
+
+    detail: ->
+      detail = @
+      detail.totalPrice = detail.basicQuantity * detail.price
+
+      if product = Schema.products.findOne({'units._id': detail.productUnit})
+        productUnit = _.findWhere(product.units, {_id: detail.productUnit})
+        detail.productName      = product.name
+        detail.basicUnitName    = product.unitName()
+        detail.productUnitName  = productUnit.name
+        detail.isBase           = productUnit.isBase
+        detail.productUnitPrice = detail.price * detail.conversion
+      detail
+
+    isDelete: ->
+      trackingDate   = moment().diff(@version.createdAt ? new Date(), 'days') < 1
+      trackingDate and @allowDelete
 
   events:
-    "keyup input.transaction-field":  (event, template) ->
-      scope.checkAllowCreateAndCreateTransaction(event, template)
-
     "click .deleteTransaction": (event, template) ->
-      Meteor.call 'deleteTransaction', @_id
+      console.log @
+      if @isRoot
+        if @balanceType is Enums.getValue('TransactionTypes', 'returnImportAmount')
+          Meteor.call('deleteReturn', @parent, @owner, Enums.getValue('ReturnTypes', 'provider')) if @parent
 
-    "click .createTransaction": (event, template) ->
-      scope.createTransactionOfProvider(event, template)
-
-findOldDebt = (currentProvider)->
-  if currentProvider
-    transaction = Schema.transactions.find({owner: currentProvider._id, parent:{$exists: false}}, {sort: {'version.createdAt': 1}})
-    transactionCount = transaction.count(); count = 0
-    transaction.map(
-      (transaction) ->
-        count += 1
-        transaction.isLastTransaction = true if count is transactionCount
-        transaction
-    )
-  else []
-
-
-
-
-transactionFind = (parentId)->
-  Schema.transactions.find({parent: parentId}, {sort: {'version.createdAt': 1}})
-
-findAllImport = (currentProvider)->
-  if currentProvider
-    beforeDebtCash = (currentProvider.initialAmount ? 0)
-    imports = Schema.imports.find({
-      provider  : currentProvider._id
-      importType: Enums.getValue('ImportTypes', 'success')
-    }).map(
-      (item) ->
-        item.transactions = transactionFind(item._id).map(
-          (transaction) ->
-            transaction.hasDebitBegin = (beforeDebtCash ? 0) > 0
-            transaction.sumBeforeBalance = beforeDebtCash + transaction.balanceBefore
-            if transaction.isRoot
-              transaction.receivable       = true if (balanceChange = item.finalPrice - item.depositCash) > 0
-              transaction.balanceChange    = Math.abs(balanceChange)
-              transaction.sumLatestBalance = transaction.sumBeforeBalance + balanceChange
-            else
-              transaction.sumLatestBalance = beforeDebtCash + transaction.balanceLatest
-            console.log transaction
-            transaction
-        )
-        item.transactions[item.transactions.length-1].isLastTransaction = true if item.transactions.length > 0
-        item
-    )
-
-    returns = Schema.returns.find({
-      owner       : currentProvider._id
-      returnType  : Enums.getValue('ReturnTypes', 'provider')
-      returnStatus: Enums.getValue('ReturnStatus', 'success')
-    }).map(
-      (item) ->
-        item.transactions = transactionFind(item._id).map(
-          (transaction) ->
-            transaction.hasDebitBegin = beforeDebtCash > 0
-            transaction.sumBeforeBalance = beforeDebtCash + transaction.balanceBefore
-            if transaction.isRoot
-              transaction.receivable       = true if (balanceChange = -item.finalPrice + item.depositCash) > 0
-              transaction.balanceChange    = Math.abs(balanceChange)
-              transaction.sumLatestBalance = transaction.sumBeforeBalance + balanceChange
-            else
-              transaction.sumLatestBalance = beforeDebtCash + transaction.balanceLatest
-
-            transaction
-        )
-        item.transactions[item.transactions.length-1].isLastTransaction = true if item.transactions.length > 0
-        item
-    )
-
-    dataSource = _.sortBy(imports.concat(returns), (item) -> item.successDate)
-    classColor = false
-    for item in dataSource
-      item.classColor = classColor
-      classColor = !classColor
-    dataSource
-
-  else []
+        else if @balanceType is Enums.getValue('TransactionTypes', 'importAmount')
+          Meteor.call('deleteImport', @parent) if @parent
+      else
+        Meteor.call('deleteTransaction', @_id)
+      event.stopPropagation()

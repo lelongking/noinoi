@@ -34,7 +34,7 @@ template(name="editInitialInterest")
                   .lemon.rounded.tiny.btn.blue.animated.bounceIn.editOwner: span.icon-pencil-1
               td {{momentFormat initialStartDate 'DD/MM/YYYY'}}
               td.number {{initialInterestRate}}%/tháng
-              td.number {{formatNumber initialAmount}} VND
+              td.number {{formatNumber initialAmount}} VNĐ
 
     //
     //.panel-footer(style="border-top: solid 4px #EFEFF4;")
@@ -72,9 +72,9 @@ template(name="editInitialInterestRowEditing")
     td(style="padding-left: 10px;") {{count}}
     td.has-commands
       | {{name}}
-      .commands(class="{{isEditMode true}}")
+      .commands
         .lemon.rounded.tiny.btn.peter-river.animated.bounceIn.rollbackEditInitialInterest: span.icon-reply-3
-        .lemon.rounded.tiny.btn.lime.animated.bounceIn.syncEditInitialInterest: span.icon-ok-6
+        .lemon.rounded.tiny.btn.lime.animated.bounceIn.syncEditInitialInterest(class="{{isEditMode true}}"): span.icon-ok-6
     td
       input.input-field.edit-field(name="dateDebit" placeholder="Nhập ngày nợ đầu kỳ" tabindex="1"
       binding="datePicker" todayHighlight="true" maxlength="20")

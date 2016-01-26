@@ -176,7 +176,7 @@ Schema.add 'imports', "Import", class Import
         basicQuantity = quality * updateInstance.conversion
         predicate.$set["details.#{updateIndex}.quality"]               = quality
         predicate.$set["details.#{updateIndex}.basicQuantity"]          = basicQuantity
-        predicate.$set["details.#{updateIndex}.availableBasicQuantity"] = basicQuantity
+        predicate.$set["details.#{updateIndex}.basicQuantityAvailable"] = basicQuantity
 
       if _.keys(predicate.$set).length > 0
         recalculationImport(@_id) if Schema.imports.update(@_id, predicate, callback)

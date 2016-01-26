@@ -51,7 +51,7 @@ metroHome.customerApp =
   appClass     : 'customer-management overlay'
   appIcon      : ''
 
-  description  : 'tất cả'
+  description  : ''
   caption      : 'khách hàng'
   captionClass : 'bottom right'
 
@@ -66,7 +66,7 @@ metroHome.providerApp =
   appClass     : 'distributor-management overlay'
   appIcon      : ''
 
-  description  : 'tất cả'
+  description  : ''
   caption      : 'nhà cung cấp'
   captionClass : 'bottom right'
 
@@ -81,7 +81,7 @@ metroHome.productApp =
   appClass     : 'product-management overlay'
   appIcon      : ''
 
-  description  : 'tất cả'
+  description  : ''
   caption      : 'sản phẩm'
   captionClass : 'bottom right'
 
@@ -90,24 +90,9 @@ metroHome.productApp =
 
 
 
-metroHome.customerGroupApp =
-  appName      : 'customerGroup'
-  appColor     : 'green-sea'
-  appCount     : 'customerGroups'
-  appSize      : ''
-  appClass     : ''
-  appIcon      : ''
-
-  description  : 'NHÓM'
-  caption      : 'khách hàng'
-  captionClass : 'bottom right'
-
-  isCanvas     : false
-  canvasClass  : ''
-
 metroHome.transactionApp =
   appName      : 'transaction'
-  appColor     : 'alizarin'
+  appColor     : 'orange'
   appCount     : ''
   appSize      : 'double'
   appClass     : ''
@@ -122,7 +107,7 @@ metroHome.transactionApp =
 
 metroHome.orderApp =
   appName      : 'order'
-  appColor     : 'wet-asphalt'
+  appColor     : 'amethyst'
   appCount     : 'orders'
   appSize      : ''
   appClass     : ''
@@ -137,14 +122,14 @@ metroHome.orderApp =
 
 metroHome.billManagerApp =
   appName      : 'billManager'
-  appColor     : 'lime'
+  appColor     : 'peter-river'
   appCount     : 'billManagers'
   appSize      : ''
   appClass     : ''
   appIcon      : ''
 
   description  : 'tình trạng'
-  caption      : 'phiếu bán'
+  caption      : 'giao hàng'
   captionClass : 'bottom right'
 
   isCanvas     : false
@@ -152,7 +137,7 @@ metroHome.billManagerApp =
 
 metroHome.importApp =
   appName      : 'import'
-  appColor     : 'carrot'
+  appColor     : 'turquoise'
   appCount     : 'imports'
   appSize      : ''
   appClass     : ''
@@ -167,7 +152,7 @@ metroHome.importApp =
 
 metroHome.warehouseApp =
   appName      : 'warehouse'
-  appColor     : 'peter-river'
+  appColor     : 'wet-asphalt'
   appCount     : ''
   appSize      : ''
   appClass     : ''
@@ -180,24 +165,9 @@ metroHome.warehouseApp =
   isCanvas     : false
   canvasClass  : ''
 
-metroHome.productGroupApp =
-  appName      : 'productGroup'
-  appColor     : 'amethyst'
-  appCount     : 'productGroups'
-  appSize      : ''
-  appClass     : ''
-  appIcon      : ''
-
-  description  : 'NHÓM'
-  caption      : 'sản phẩm'
-  captionClass : 'bottom right'
-
-  isCanvas     : false
-  canvasClass  : ''
-
 metroHome.priceBookApp =
   appName      : 'priceBook'
-  appColor     : 'light-green'
+  appColor     : 'carrot'
   appCount     : 'priceBooks'
   appSize      : ''
   appClass     : ''
@@ -230,7 +200,7 @@ metroHome.staffManagementApp =
 
 metroHome.merchantOptionsApp =
   appName      : 'option'
-  appColor     : 'dark-blue'
+  appColor     : 'wet-asphalt'
   appCount     : ''
   appSize      : ''
   appClass     : ''
@@ -260,13 +230,13 @@ metroHome.customerReturnApp =
 
 metroHome.logsApp =
   appName      : ''
-  appColor     : 'wisteria'
+  appColor     : 'concrete'
   appCount     : ''
   appSize      : ''
   appClass     : ''
   appIcon      : ''
 
-  description  : ''
+  description  : 'hoạt động'
   caption      : 'nhật ký'
   captionClass : 'bottom right'
 
@@ -275,7 +245,7 @@ metroHome.logsApp =
 
 metroHome.providerReturnApp =
   appName      : 'importReturn'
-  appColor     : 'pumpkin'
+  appColor     : 'yellow'
   appCount     : 'providerReturnHistories'
   appSize      : ''
   appClass     : ''
@@ -290,7 +260,7 @@ metroHome.providerReturnApp =
 
 metroHome.reportApp =
   appName      : 'report'
-  appColor     : 'orange'
+  appColor     : 'lime'
   appCount     : ''
   appSize      : ''
   appClass     : ''
@@ -322,7 +292,7 @@ metroHome.basicHistoryApp =
 
 metroHome.programManagerApp =
   appName      : ''
-  appColor     : 'green-sea'
+  appColor     : 'pink'
   appCount     : ''
   appSize      : ''
   appClass     : ''
@@ -351,7 +321,7 @@ metroHome.basicReportApp =
 
 metroHome.statisticApp =
   appName      : 'statistic'
-  appColor     : 'magenta'
+  appColor     : 'teal'
   appCount     : 'revenueDay'
   appSize      : 'double'
   appClass     : ''

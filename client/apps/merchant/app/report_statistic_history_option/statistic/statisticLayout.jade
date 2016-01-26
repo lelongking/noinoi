@@ -8,31 +8,27 @@ template(name="statisticLayout")
         .nano: .nano-content(style="margin-bottom: 35px;")
 
           .group-wrapper
-            .caption.option tổng quát
+            .caption.option cơ bản
             .caption.inner.generalStatisticCustomerGroup(
-            class="{{optionActiveClass 'basicStatisticCustomerGroup'}}")
+            class="{{optionActiveClass 'generalStatisticCustomerGroup'}}")
               span.avatar.letter(class="{{icon}}")
               span.text.uppercase: b nhóm khách hàng
 
-            .caption.inner.generalStatisticCustomer(
-            class="{{optionActiveClass 'basicStatisticCustomerGroup'}}")
-              span.avatar.letter(class="{{icon}}")
-              span.text.uppercase: b khách hàng
 
-            .caption.inner.generalStatisticProvider(
-            class="{{optionActiveClass 'basicStatisticCustomerGroup'}}")
+            .caption.inner.merchantReportDayTimeline(
+            class="{{optionActiveClass 'merchantReportDayTimeline'}}")
               span.avatar.letter(class="{{icon}}")
-              span.text.uppercase: b nhà cung cấp
+              span.text.uppercase: b hoạt động
 
-            .caption.inner.generalStatisticProductGroup(
-            class="{{optionActiveClass 'basicStatisticCustomerGroup'}}")
-              span.avatar.letter(class="{{icon}}")
-              span.text.uppercase: b nhóm sản phẩm
-
-            .caption.inner.generalStatisticProduct(
-            class="{{optionActiveClass 'basicStatisticCustomerGroup'}}")
-              span.avatar.letter(class="{{icon}}")
-              span.text.uppercase: b sản phẩm
+            //.caption.inner.generalStatisticProductGroup(
+            //class="{{optionActiveClass 'basicStatisticCustomerGroup'}}")
+            //  span.avatar.letter(class="{{icon}}")
+            //  span.text.uppercase: b nhóm sản phẩm
+            //
+            //.caption.inner.generalStatisticProduct(
+            //class="{{optionActiveClass 'basicStatisticCustomerGroup'}}")
+            //  span.avatar.letter(class="{{icon}}")
+            //  span.text.uppercase: b sản phẩm
           //
           //.group-wrapper
           //  .caption.option chi tiết

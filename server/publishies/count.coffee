@@ -33,7 +33,7 @@ Meteor.publish null, ->
   Counts.publish @, 'providers', Schema.providers.find({merchant: merchantId})
   Counts.publish @, 'providerReturns', Schema.returns.find({returnType: 1, merchant: merchantId})
 
-  Counts.publish @, 'imports', Schema.imports.find({importType: Enums.getValue('ImportTypes', 'success'),  merchant: merchantId})
+  Counts.publish @, 'imports', Schema.imports.find({importType: Enums.getValue('ImportTypes', 'initialize'),  merchant: merchantId})
   Counts.publish @, 'inventories', Schema.inventories.find({merchant: merchantId})
 
   Counts.publish @, 'staffs', Meteor.users.find({'profile.merchant': merchantId})
@@ -86,12 +86,12 @@ Meteor.publish null, ->
   Counts.publish @, 'customerReturnHistories', Schema.returns.find(
     merchant    : merchantId
     returnType  : Enums.getValue('ReturnTypes', 'customer')
-    returnStatus: Enums.getValue('ReturnStatus', 'success')
+    returnStatus: Enums.getValue('ReturnStatus', 'initialize')
   )
   Counts.publish @, 'providerReturnHistories', Schema.returns.find(
     merchant    : merchantId
     returnType  : Enums.getValue('ReturnTypes', 'provider')
-    returnStatus: Enums.getValue('ReturnStatus', 'success')
+    returnStatus: Enums.getValue('ReturnStatus', 'initialize')
   )
 
   return

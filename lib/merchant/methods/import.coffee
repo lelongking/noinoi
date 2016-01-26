@@ -105,7 +105,6 @@ Meteor.methods
     return {valid: false, error: 'user not permission!'} unless User.hasManagerRoles()
 
     query =
-      seller     : user._id
       provider   : $exists: true
       merchant   : user.profile.merchant
       importType : Enums.getValue('ImportTypes', 'success')
@@ -122,6 +121,51 @@ Meteor.methods
 
     merchantFound = Schema.merchants.findOne(user.profile.merchant)
     return {valid: false, error: 'merchant not found!'} unless merchantFound
+
+
+
+    returnFound = Schema.returns.findOne({
+      merchant    : currentImportFound.merchant
+      parent      : currentImportFound._id
+      returnType  : Enums.getValue('ReturnTypes', 'provider')
+      returnStatus: Enums.getValue('ReturnStatus', 'success')
+    })
+    console.log returnFound
+    return {valid: false, error: 'return found!'} if returnFound
+
+    productLists = []
+    for item in currentImportFound.details
+      product = Schema.products.findOne(item.product)
+      return {valid: false, error: 'product not found!'} unless product
+      productLists.push(product)
+
+
+
+    if Schema.imports.remove(currentImportFound._id)
+      for orderDetail in currentImportFound.details
+        product = _.findWhere(productLists, {_id: orderDetail.product})
+
+        updateProductQuery =
+          $inc:
+            'merchantQuantities.0.availableQuantity' : -orderDetail.basicQuantity
+            'merchantQuantities.0.inStockQuantity'   : -orderDetail.basicQuantity
+            'merchantQuantities.0.importQuantity'    : -orderDetail.basicQuantity
+        Schema.products.update product._id, updateProductQuery
+
+      Schema.transactions.find(
+        $and: [
+          merchant : currentImportFound.merchant
+          owner    : currentImportFound.provider
+          parent   : currentImportFound._id
+        ,
+          $or: [{isRoot: true}, {isPaidDirect : true}]
+        ]
+      ).forEach(
+        (transaction)->
+          Meteor.call 'deleteTransaction', transaction._id
+      )
+
+
 
 
   importAccountingConfirmed: (importId)->

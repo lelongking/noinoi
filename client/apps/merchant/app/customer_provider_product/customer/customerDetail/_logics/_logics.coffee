@@ -14,16 +14,60 @@ scope.transactionFind = (parentId)->
     })
 
 
-scope.findOldDebtCustomer = ->
-  if customer = Template.currentData()
-    transaction = Schema.transactions.find({owner: customer._id, parent:{$exists: false}}, {sort: {'version.createdAt': 1}})
-    transactionCount = transaction.count(); count = 0
-    transaction.map(
-      (transaction) ->
-        count += 1
-        transaction.isLastTransaction = true if count is transactionCount
-        transaction
+scope.findOldDebtCustomer = (customer)->
+  if customer
+    transaction = Schema.transactions.find(
+      owner: customer._id
+      isPaidDirect: {$ne: true}
     )
+
+    beforeDebtCash = (customer.initialAmount ? 0)
+
+    _.sortBy transaction.fetch(), (item) ->
+      item.sumBeforeBalance = beforeDebtCash + item.balanceBefore
+      item.sumLatestBalance = beforeDebtCash + item.balanceLatest
+
+
+      if item.isRoot
+        if item.balanceType is Enums.getValue('TransactionTypes', 'saleAmount')
+          parentFound = Schema.orders.findOne({
+            _id        : item.parent
+            buyer      : item.owner
+            orderType  : Enums.getValue('OrderTypes', 'success')
+            orderStatus: Enums.getValue('OrderStatus', 'finish')
+          })
+          if parentFound
+            item.sumLatestBalance = item.sumBeforeBalance + (parentFound.finalPrice - parentFound.depositCash)
+        else if item.balanceType is Enums.getValue('TransactionTypes', 'returnSaleAmount')
+          parentFound = Schema.returns.findOne({
+            _id         : item.parent
+            owner       : item.owner
+            returnType  : Enums.getValue('ReturnTypes', 'customer')
+            returnStatus: Enums.getValue('ReturnStatus', 'success')
+          })
+          if parentFound
+            item.sumLatestBalance = item.sumBeforeBalance - (parentFound.finalPrice - parentFound.depositCash)
+
+        if parentFound
+          item.parentFound      = parentFound
+          item.balanceChange    = Math.abs(parentFound.finalPrice - parentFound.depositCash)
+          item.description      = '(' + item.description + ')' if item.description
+
+
+      item.billNo =
+        if parentFound?.model is 'orders'
+          'Phiếu ' + parentFound.billNoOfBuyer
+        else if parentFound?.model is 'returns'
+          'Trả hàng theo phiếu ' + parentFound.returnCode
+
+      item.successDate =
+        if parentFound
+          parentFound.successDate
+        else
+          item.version.createdAt
+
+      item.successDate
+
   else []
 
 scope.findAllOrders = ()->

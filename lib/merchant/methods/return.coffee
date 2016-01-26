@@ -25,24 +25,69 @@ Meteor.methods
     return {valid: false, error: 'return not found!'} unless currentReturnFound
     return {valid: false, error: 'return not delete!'} unless currentReturnFound.allowDelete
 
-#Xoa Tra hang
-    if returnType
-      orderFound = Schema.orders.findOne(currentReturnFound.owner)
-      return {valid: false, error: 'order not found!'} unless orderFound
+    parent =
+      if currentReturnFound.returnType is Enums.getValue('ReturnTypes', 'customer')
+        Schema.orders.findOne(
+          _id        : currentReturnFound.parent
+          merchant   : currentReturnFound.merchant
+          orderType  : Enums.getValue('OrderTypes', 'success')
+          orderStatus: Enums.getValue('OrderStatus', 'finish')
+        )
+      else if currentReturnFound.returnType is Enums.getValue('ReturnTypes', 'provider')
+        Schema.imports.findOne(
+          _id        : currentReturnFound.parent
+          merchant   : currentReturnFound.merchant
+          importType : Enums.getValue('ImportTypes', 'success')
+        )
+    return {valid: false, error: 'parent not found!'} unless parent
+
+
+    for item in currentReturnFound.details
+      product = Schema.products.findOne(item.product)
+      return {valid: false, error: 'product not found!'} unless product
 
 
 
+    if Schema.returns.remove(currentReturnFound._id)
+      for orderDetail in currentReturnFound.details
+        if currentReturnFound.returnType is Enums.getValue('ReturnTypes', 'customer')
+          productUpdate =
+            $inc:
+              'merchantQuantities.0.inStockQuantity'    : -orderDetail.basicQuantity
+              'merchantQuantities.0.returnSaleQuantity' : -orderDetail.basicQuantity
+              'merchantQuantities.0.availableQuantity'  : -orderDetail.basicQuantity
+        else if currentReturnFound.returnType is Enums.getValue('ReturnTypes', 'provider')
+          productUpdate =
+            $inc:
+              'merchantQuantities.0.inStockQuantity'    : orderDetail.basicQuantity
+              'merchantQuantities.0.returnSaleQuantity' : orderDetail.basicQuantity
+              'merchantQuantities.0.availableQuantity'  : orderDetail.basicQuantity
+        Schema.products.update orderDetail.product, productUpdate
 
 
+      Schema.transactions.find(
+        $and: [
+          merchant : currentReturnFound.merchant
+          owner    : currentReturnFound.owner
+          parent   : currentReturnFound._id
+        ,
+          $or: [{isRoot: true}, {isPaidDirect : true}]
+        ]
+      ).forEach(
+        (transaction)->
+          Meteor.call 'deleteTransaction', transaction._id
+      )
 
 
-
-
-
-
-
-    else
-      providerFound = Schema.providers.findOne(currentReturnFound.provider)
-      return {valid: false, error: 'provider not found!'} unless providerFound and currentReturnFound.provider
-
-
+      returnFound = Schema.returns.findOne(
+        owner        : currentReturnFound.owner
+        parent       : currentReturnFound.parent
+        merchant     : currentReturnFound.merchant
+        returnType   : currentReturnFound.returnType
+        returnStatus : Enums.getValue('ReturnStatus', 'success')
+      )
+      unless returnFound
+        if currentReturnFound.returnType is Enums.getValue('ReturnTypes', 'customer')
+          Schema.orders.update(currentReturnFound.parent, $set: {allowDelete: true})
+        else if currentReturnFound.returnType is Enums.getValue('ReturnTypes', 'provider')
+          Schema.imports.update(currentReturnFound.parent, $set: {allowDelete: true})

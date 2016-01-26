@@ -1,47 +1,91 @@
-scope = logics.customerManagement
-numericOption = {autoGroup: true, groupSeparator:",", radixPoint: ".", suffix: " VNĐ", integerDigits:11}
+Enums = Apps.Merchant.Enums
 
-lemon.defineHyper Template.customerManagementSalesHistorySection,
+Wings.defineHyper 'customerManagementSalesHistorySection',
   helpers:
-    currentCustomer: -> Template.currentData()
+    transactions: ->
+      transactions = []
+      if customer = Template.currentData()
+        transaction = Schema.transactions.find(
+          owner: customer._id
+          isPaidDirect: {$ne: true}
+        )
 
-    isDelete: -> moment().diff(@version.createdAt ? new Date(), 'days') < 1
-    allSales: -> logics.customerManagement.findAllOrders(Template.currentData())
-    oldDebts: -> logics.customerManagement.findOldDebtCustomer()
+        beforeDebtCash = (customer.initialAmount ? 0)
 
-    hasOldDebts: -> logics.customerManagement.findOldDebtCustomer(Template.currentData()).length > 0
-
-
-
-    sumBeforeBalance: ->
-      (Template.parentData().initialAmount ? 0) + @balanceBefore ? 0
-
-    sumLatestBalance: ->
-      (Template.parentData().initialAmount ? 0) + @balanceLatest ? 0
-
-    sumRequiredAndBeginDebtCash: ->
-      if @model is "customers"
-        (@initialAmount ? 0)
-      else if Template.parentData()?.model is "customers"
-        (Template.parentData().initialAmount ? 0)
+        transactions = _.sortBy transaction.fetch(), (item) ->
+          item.sumBeforeBalance = beforeDebtCash + item.balanceBefore
+          item.sumLatestBalance = beforeDebtCash + item.balanceLatest
 
 
-    transactionDescription: -> if Session.get("customerManagementOldDebt") then 'ghi chú nợ tiền' else 'ghi chú trả tiền'
-    transactionStatus: -> if Session.get("customerManagementOldDebt") then 'Nợ Tiền' else 'Trả Tiền'
-    showTransaction: -> if Session.get("customerManagementOldDebt") is undefined then 'display: none'
+          if item.isRoot
+            if item.balanceType is Enums.getValue('TransactionTypes', 'saleAmount')
+              parentFound = Schema.orders.findOne({
+                _id        : item.parent
+                buyer      : item.owner
+                orderType  : Enums.getValue('OrderTypes', 'success')
+                orderStatus: Enums.getValue('OrderStatus', 'finish')
+              })
+              if parentFound
+                item.sumLatestBalance = item.sumBeforeBalance + (parentFound.finalPrice - parentFound.depositCash)
+            else if item.balanceType is Enums.getValue('TransactionTypes', 'returnSaleAmount')
+              parentFound = Schema.returns.findOne({
+                _id         : item.parent
+                owner       : item.owner
+                returnType  : Enums.getValue('ReturnTypes', 'customer')
+                returnStatus: Enums.getValue('ReturnStatus', 'success')
+              })
+              if parentFound
+                item.sumLatestBalance = item.sumBeforeBalance - (parentFound.finalPrice - parentFound.depositCash)
+
+            if parentFound
+              item.parentFound      = parentFound
+              item.balanceChange    = Math.abs(parentFound.finalPrice - parentFound.depositCash)
+              item.description      = '(' + item.description + ')' if item.description
 
 
-  rendered: ->
-    Session.get("customerManagementOldDebt")
-    @ui.$paySaleAmount.inputmask("numeric", numericOption) if @ui.$paySaleAmount
+          item.billNo =
+            if parentFound?.model is 'orders'
+              'Phiếu ' + parentFound.billNoOfBuyer
+            else if parentFound?.model is 'returns'
+              'Trả hàng theo phiếu ' + parentFound.returnCode
+
+          item.successDate =
+            if parentFound
+              parentFound.successDate
+            else
+              item.version.createdAt
+
+          item.successDate
+
+      transactions
+
+    detail: ->
+      detail = @
+      detail.totalPrice = detail.basicQuantity * detail.price
+
+      if product = Schema.products.findOne({'units._id': detail.productUnit})
+        productUnit = _.findWhere(product.units, {_id: detail.productUnit})
+        detail.productName      = product.name
+        detail.basicUnitName    = product.unitName()
+        detail.productUnitName  = productUnit.name
+        detail.isBase           = productUnit.isBase
+        detail.productUnitPrice = detail.price * detail.conversion
+      detail
+
+    isColor: -> 'background-color: #fff'
+#    isBase: -> @conversion is 1
+    isDelete: ->
+      trackingDate   = moment().diff(@version.createdAt ? new Date(), 'days') < 1
+      trackingDate and @allowDelete
 
   events:
-    "keyup input.transaction-field":  (event, template) ->
-      scope.checkAllowCreateAndCreateTransaction(event, template)
-
     "click .deleteTransaction": (event, template) ->
-      Meteor.call 'deleteTransaction', @_id
-      event.stopPropagation()
+      if @isRoot
+        if @balanceType is Enums.getValue('TransactionTypes', 'returnSaleAmount')
+          Meteor.call('deleteReturn', @parent, @owner, Enums.getValue('ReturnTypes', 'customer')) if @parent
 
-    "click .createTransaction": (event, template) ->
-      scope.createTransactionOfCustomer(event, template)
+        else if @balanceType is Enums.getValue('TransactionTypes', 'saleAmount')
+          Meteor.call('deleteOrder', @parent) if @parent
+      else
+        Meteor.call('deleteTransaction', @_id)
+      event.stopPropagation()

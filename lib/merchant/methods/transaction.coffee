@@ -1,14 +1,4 @@
 Enums = Apps.Merchant.Enums
-findTransactionParent = (transaction)->
-  if transaction.transactionType is Enums.getValue('TransactionTypes', 'provider')
-    parent = Schema.imports.findOne(transaction.parent)
-  else if transaction.transactionType is Enums.getValue('TransactionTypes', 'customer')
-    parent = Schema.orders.findOne(transaction.parent)
-  else
-    parent = Schema.returns.findOne(transaction.parent)
-  parent
-
-
 Meteor.methods
   addCustomer:(name, description) -> Schema.customers.insert({name: name})
 
@@ -110,9 +100,11 @@ Meteor.methods
         transactionId
 
 
-# chi xoa transaction no dau ky, voi phieu tra tien, no cu, ko xoa dc phieu ban hang va tra hang
   deleteTransaction: (transactionId) ->
-    if transaction = Schema.transactions.findOne({_id: transactionId})
+    userProfile = Meteor.users.findOne({_id: Meteor.userId()})?.profile
+    merchant    = Schema.merchants.findOne({_id: userProfile.merchant}) if userProfile
+    transaction = Schema.transactions.findOne({_id: transactionId, merchant: merchant._id }) if merchant
+    if transaction
       if Schema.transactions.remove(transaction._id)
         if transaction.parent
           beforeTransactionQuery =

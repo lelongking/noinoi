@@ -57,6 +57,9 @@ Wings.defineApp 'importLayout',
           Import.setSession(Import.insert())
 
         scope.currentImport.importSubmit()
+        currentRouter = FlowRouter.current()
+        if currentRouter.oldRoute and currentRouter.oldRoute.name is 'provider'
+          FlowRouter.go('provider')
 
 
 
