@@ -203,7 +203,7 @@ Schema.add 'returns', "Return", class Return
         return console.log('So luong tra qua lon') if productOrderQuantities[product] < quantities
 
       #cap nhat vao product and import
-      orderUpdateOption = $inc:{}; importUpdateOption = {}
+      orderUpdateOption = $set:{allowDelete: false}, $inc:{}; importUpdateOption = {}
       for product, quantities of productReturnQuantities
         takenReturnQuantity = 0
         for orderDetail, index in orderFound.details
@@ -301,7 +301,7 @@ Schema.add 'returns', "Return", class Return
       return console.log('Return rỗng.') if @details.length is 0
       return console.log('Phieu Order Khong Chinh Xac.') if (importFound = Schema.imports.findOne(@parent)) is undefined
 
-      productUpdateList = []; importUpdateOption = $inc:{}
+      productUpdateList = []; importUpdateOption = $set:{allowDelete: false}, $inc:{}
       for returnDetail in currentReturn.details
         currentProductQuantity = 0; findProductUnit = false
         productUpdateList.push(updateProductQuery(returnDetail, currentReturn.returnType))

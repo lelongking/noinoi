@@ -124,10 +124,10 @@ Schema.products.after.update (userId, newProduct, fieldNames, modifier, options)
   oldProduct = @previous
   isChangeProductGroup = oldProduct.productOfGroup isnt newProduct.productOfGroup
 
-  if isChangeProductGroup
-    updateCashOfProductGroup(userId, oldProduct, newProduct, fieldNames, modifier, options)
-  else
-    updateProductGroup(userId, oldProduct, newProduct, fieldNames, modifier, options)
+#  if isChangeProductGroup
+#    updateCashOfProductGroup(userId, oldProduct, newProduct, fieldNames, modifier, options)
+#  else
+#    updateProductGroup(userId, oldProduct, newProduct, fieldNames, modifier, options)
 
 
 

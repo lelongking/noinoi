@@ -1,5 +1,5 @@
 Enums = Apps.Merchant.Enums
 Wings.defineApp 'importReturnNavigationPartial',
   events:
-    "click .importReturnToImport": (event, template) -> FlowRouter.go('import')
+    "click .importReturnToProvider": (event, template) -> FlowRouter.go('provider')
 

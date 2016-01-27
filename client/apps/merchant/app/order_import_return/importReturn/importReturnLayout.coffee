@@ -80,6 +80,9 @@ Wings.defineApp 'importReturnLayout',
           Return.setReturnSession(returnId, 'provider')
 
         scope.currentProviderReturn.submitProviderReturn()
+        currentRouter = FlowRouter.current()
+        if currentRouter.oldRoute and currentRouter.oldRoute.name is 'provider' and Session.get('mySession').currentProvider is currentReturn.owner
+          FlowRouter.go('provider')
 
 
 providerSearch = (query) ->

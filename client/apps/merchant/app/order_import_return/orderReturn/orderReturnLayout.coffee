@@ -92,6 +92,9 @@ Wings.defineApp 'orderReturnLayout',
           Return.setReturnSession(Return.insert(Enums.getValue('OrderTypes', 'customer')), 'customer')
 
         scope.currentCustomerReturn.submitCustomerReturn()
+        currentRouter = FlowRouter.current()
+        if currentRouter.oldRoute and currentRouter.oldRoute.name is 'customer' and Session.get('mySession').currentCustomer is currentReturn.owner
+          FlowRouter.go('customer')
 
 
 

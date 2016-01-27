@@ -76,7 +76,8 @@ Wings.defineHyper 'customerManagementSalesHistorySection',
 #    isBase: -> @conversion is 1
     isDelete: ->
       trackingDate   = moment().diff(@version.createdAt ? new Date(), 'days') < 1
-      trackingDate and @allowDelete
+      trackingDelete = if @isRoot then @parentFound?.allowDelete else @allowDelete
+      trackingDate and trackingDelete
 
   events:
     "click .deleteTransaction": (event, template) ->

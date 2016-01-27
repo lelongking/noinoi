@@ -30,17 +30,21 @@ Schema.add 'productGroups', "ProductGroup", class ProductGroup
 
     doc.changeProductTo = (productGroupId) ->
       if user = Meteor.users.findOne(Meteor.userId())
-        productList = []; productSelected = user.sessions.productSelected[@_id]
-        for productId in productSelected
-          if productFound = Schema.products.findOne({_id: productId, productOfGroup: @_id})
-            Schema.products.update(productFound._id, $set: {productOfGroup: productGroupId})
-            productList.push(productFound._id)
 
-
+        productSelected = user.sessions.productSelected[@_id]
         updateGroupFrom = $pullAll:{products: productSelected}
         productNotExistedCount = (_.difference(@products, productSelected)).length
-        updateGroupFrom.$set = {allowDelete: true} if productNotExistedCount is 0 and @isBase is false
+        if productNotExistedCount is 0 and @isBase is false
+          updateGroupFrom.$set = {allowDelete: true}
         Schema.productGroups.update @_id, updateGroupFrom
+
+
+        productList = []
+        for productId in productSelected
+          productFound = Schema.products.findOne({_id: productId, productOfGroup: @_id})
+          if Schema.products.update(productFound._id, $set: {productOfGroup: productGroupId})
+            productList.push(productFound._id)
+
 
         updateGroupTo = $set:{allowDelete: false}, $addToSet:{products: {$each: productList}}
         Schema.productGroups.update productGroupId, updateGroupTo

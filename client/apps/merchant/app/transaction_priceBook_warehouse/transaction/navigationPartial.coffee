@@ -1,11 +1,5 @@
 Enums = Apps.Merchant.Enums
-lemon.defineApp Template.transactionNavigationPartial,
-  helpers:
-    isShowHistory: -> Session.get('transactionShowHistory')
-
+Wings.defineApp 'transactionNavigationPartial',
   events:
-    "click .transactionCreateNew": (event, template) ->
-      Session.set('transactionShowHistory', false)
-
-    "click .transactionHistories": (event, template) ->
-      Session.set('transactionShowHistory', true)
+    "click .transactionToCustomer": (event, template) -> FlowRouter.go('customer')
+    "click .transactionToProvider": (event, template) -> FlowRouter.go('provider')

@@ -31,7 +31,7 @@ merchantOrderRouter.route '/delivery',
     Session.set "currentAppInfo",
       name: "tình trạng phiếu bán"
       navigationPartial:
-        template: ""
+        template: "orderDeliveryNavigationPartial"
         data: {}
 
     BlazeLayout.render 'merchantLayout',
@@ -104,6 +104,9 @@ merchantRouter.route '/billManager',
   action: ->
     Session.set "currentAppInfo",
       name: "tình trạng phiếu bán"
+      navigationPartial:
+        template: "orderDeliveryNavigationPartial"
+        data: {}
 
     BlazeLayout.render 'merchantLayout',
       content: 'billManager'
