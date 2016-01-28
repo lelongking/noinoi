@@ -2,8 +2,13 @@
 #  keepHistory: 1000 * 60 * 5
   localSearch: true
 
-@UnitProductSearch.fetchData =(searchText, options, callback) ->
-  selector = {status: 1}; options = {sort: {name: 1}, limit: 200}
+@UnitProductSearch.fetchData =(searchText, options = {}, callback) ->
+  selector =
+    $and: [
+      merchant : merchantId ? Merchant.getId()
+      status   : 1
+    ]
+
   if(searchText)
     regExp = Helpers.BuildRegExp(searchText);
     selector =
@@ -31,4 +36,4 @@
 Template.registerHelper 'unitProductSearches', ->
   UnitProductSearch.getData
 #    transform : (matchText, regExp) -> matchText.replace(regExp, "<b>$&</b>")
-    sort      : {name: 1}
+    sort      : {name: 1, isBase: -1}

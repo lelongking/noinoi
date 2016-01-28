@@ -4,7 +4,7 @@ template(name="importReturnProductSearch")
     //  input(name='searchFilter' type="text" placeholder="tìm sản phẩm...")
 
     .nano: .nano-content(style="margin-bottom: 0px;"): .group-wrapper
-      each returnParent.details
+      each getSession 'currentReturnParent'
         .caption.advanced.inner.product-selection(class="{{productSelectionActiveClass}}")
           +avatarImageComponent(avatar=avatarUrl alias=name)
           span.text {{getProductName product}}

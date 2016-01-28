@@ -9,9 +9,9 @@ Meteor.methods
     return {valid: false, error: 'importDetails Error!'} if inventoryDetail.product isnt product._id
 
     inventoryQuantities = -product.merchantQuantities[0].availableQuantity
-    inventoryQuantities += inventoryDetail.quantity if inventoryDetail.quantity > 0
+    inventoryQuantities += inventoryDetail.quantity if inventoryDetail.quantity >= 0
 
-    if inventoryQuantities > 0
+    if product and inventoryQuantities >= 0
       importId = Import.insert(null,'Tồn kho đầu kỳ', null)
       if importFound = Schema.imports.findOne(importId)
         importFound.addImportDetail(product.basicUnitId(), inventoryQuantities, inventoryDetail.expireDay)
@@ -20,7 +20,8 @@ Meteor.methods
       if importFound?.details.length > 0
         updateImportInventory =
           $set:
-            importType     : Enums.getValue('ImportTypes', 'inventorySuccess')
+            importType  : Enums.getValue('ImportTypes', 'inventorySuccess')
+            successDate : new Date()
           $inc:
             'details.0.basicOrderQuantity'     : product.merchantQuantities[0].saleQuantity
             'details.0.basicQuantityAvailable' : -product.merchantQuantities[0].saleQuantity
@@ -29,7 +30,7 @@ Meteor.methods
           updateQuery =
             $set:
               inventoryInitial: true
-              allowDelete     : false
+              allowDelete     : inventoryQuantities is 0
               status          : Enums.getValue('ProductStatuses', 'confirmed')
               importInventory : inventoryQuantities
             $inc:
@@ -67,11 +68,3 @@ Meteor.methods
 
               Schema.orders.update(order._id, updateOrderQuery)
           )
-    else
-      Schema.products.update(product._id,
-        $set:
-          inventoryInitial: true
-          allowDelete     : true
-          status          : Enums.getValue('ProductStatuses', 'confirmed')
-          importInventory : 0
-      )

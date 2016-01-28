@@ -26,6 +26,11 @@ Option01 =  [
   template: 'warehouseSummaryProductLowQuantity'
   overview: 'warehouseOverview'
 ,
+  display: "tồn kho đầu kỳ"
+  icon: "icon-cubes"
+  template: 'warehouseSummaryProductInventory'
+  overview: 'warehouseOverview'
+,
   display: "tồn kho đinh mức"
   icon: "icon-database"
   template: 'warehouseSummaryProductLowNorms'
@@ -77,7 +82,8 @@ Wings.defineApp 'warehouseLayout',
     self.autorun ()->
 
 
-    Session.set "warehouseOptionsCurrentDynamics", warehouseOption[1].optionChild()[0]
+#    Session.set "warehouseOptionsCurrentDynamics", warehouseOption[1].optionChild()[0]
+    Session.set "warehouseOptionsCurrentDynamics", warehouseOption[0].optionChild()[3]
 
   rendered: ->
   destroyed: ->
@@ -106,6 +112,7 @@ Wings.defineApp 'warehouseLayout',
           expireProductCount    : 0
           lowProductCount       : 0
           normsProductCount     : 0
+          inventoryProductCount : 0
 
       currentDynamic = Session.get("warehouseOptionsCurrentDynamics")
       return productLists if !currentDynamic
@@ -115,6 +122,7 @@ Wings.defineApp 'warehouseLayout',
         warehouseOption[0].optionChild()[1].template
         warehouseOption[0].optionChild()[2].template
         warehouseOption[0].optionChild()[3].template
+        warehouseOption[0].optionChild()[4].template
       ], currentDynamic.template)
 
       productLists.overview.showProductExchange = _.contains([
@@ -157,6 +165,7 @@ Wings.defineApp 'warehouseLayout',
           productLists.overview.expireProductCount    += 1 if product.lastExpire
           productLists.overview.lowProductCount       += 1 if quantity.importQuantity > 0 and quantity.inStockQuantity < quantity.lowNormsQuantity
           productLists.overview.normsProductCount     += 1 if quantity.lowNormsQuantity > 0
+          productLists.overview.inventoryProductCount += 1 if product.inventoryInitial
 
 
           if currentDynamic.template is warehouseOption[0].optionChild()[0].template
@@ -176,6 +185,13 @@ Wings.defineApp 'warehouseLayout',
 
 
           else if currentDynamic.template is warehouseOption[0].optionChild()[3].template
+#            if product.inventoryInitial
+#              product.count = productLists.overview.inventoryProductCount
+#              productLists.details.push(product)
+            product.count = productLists.overview.totalProduct
+            productLists.details.push(product)
+
+          else if currentDynamic.template is warehouseOption[0].optionChild()[4].template
             product.count = productLists.overview.totalProduct
             productLists.details.push(product)
 
@@ -239,12 +255,19 @@ Wings.defineApp 'warehouseLayout',
       , 200
 
 
-    "click .detail-row": (event, template) ->
+    "click .detail-row.editLowNorms": (event, template) ->
       currentDynamic = Session.get("warehouseOptionsCurrentDynamics")
-      if currentDynamic.template is warehouseOption[0].optionChild()[3].template
+      if currentDynamic.template is warehouseOption[0].optionChild()[4].template
         Session.set("warehouseSummaryProductLowNormsEditId", @_id)
       else
         Session.set("warehouseSummaryProductLowNormsEditId", '')
+
+    "click .detail-row.inventory": (event, template) ->
+      currentDynamic = Session.get("warehouseOptionsCurrentDynamics")
+      if currentDynamic.template is warehouseOption[0].optionChild()[3].template
+        Session.set("warehouseSummaryProductInventoryEditId", @_id)
+      else
+        Session.set("warehouseSummaryProductInventoryEditId", '')
 
 
     "click .searchProduct": (event, template) ->

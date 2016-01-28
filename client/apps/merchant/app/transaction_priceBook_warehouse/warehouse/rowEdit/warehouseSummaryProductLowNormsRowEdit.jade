@@ -1,5 +1,5 @@
 template(name="warehouseSummaryProductLowNormsRowEdit")
-  tr.detail-row
+  tr.detail-row.editors.dual-border
     td(style="padding-left: 10px;") {{count}}
     td.first-column {{name}}
     td.number
@@ -7,3 +7,19 @@ template(name="warehouseSummaryProductLowNormsRowEdit")
     td(style="padding-left: 5px;") {{unitName}}
     td.number {{quantity.inStockQuantity}}
     td(style="padding-left: 5px;") {{unitName}}
+
+template(name="warehouseSummaryProductInventoryEdit")
+  tr.detail-row.editors.dual-border
+    td(style="padding-left: 10px;") {{count}}
+    td.first-column.has-commands
+      | {{name}}
+      .commands
+        unless inventoryInitial
+          |(chưa nhập tồn đầu kỳ)
+    td.number
+      if inventoryInitial
+        input.edit-field(name="importPrice" style="background-color: transparent;")
+      else
+        |Tồn kho hiện tại :
+    td.number: input.edit-field(name="importQuality" style="background-color: transparent;")
+    td.date {{unitName}}

@@ -35,8 +35,9 @@ Wings.defineHyper 'importProductDetail',
         Session.set("editingId")
 
     "keyup [name='importDescription']": (event, template)->
+      currentImport = Template.currentData()
       Helpers.deferredAction ->
-        if currentImport = Template.currentData()
+        if currentImport
           description = template.ui.$importDescription.val()
           currentImport.changeField('description', description)
       , "currentImportUpdateDescription", 1000

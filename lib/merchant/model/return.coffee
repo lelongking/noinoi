@@ -301,23 +301,67 @@ Schema.add 'returns', "Return", class Return
       return console.log('Return rỗng.') if @details.length is 0
       return console.log('Phieu Order Khong Chinh Xac.') if (importFound = Schema.imports.findOne(@parent)) is undefined
 
-      productUpdateList = []; importUpdateOption = $set:{allowDelete: false}, $inc:{}
+      #so luong tra cua return
+      productReturnQuantities = {}
       for returnDetail in currentReturn.details
-        currentProductQuantity = 0; findProductUnit = false
-        productUpdateList.push(updateProductQuery(returnDetail, currentReturn.returnType))
+        productReturnQuantities[returnDetail.product] = 0 unless productReturnQuantities[returnDetail.product]
+        productReturnQuantities[returnDetail.product] += returnDetail.basicQuantity
 
+      #so luong ton cua order
+      productImportQuantities = {}
+      for importDetail in importFound.details
+        productImportQuantities[importDetail.product] = 0 unless productImportQuantities[importDetail.product]
+        productImportQuantities[importDetail.product] += importDetail.basicQuantityAvailable
+
+      #so sanh so luong
+      for product, quantities of productReturnQuantities
+        return console.log('So luong tra qua lon') if productImportQuantities[product] < quantities
+
+
+
+      importUpdateOption = $set:{allowDelete: false}, $inc:{}; productUpdateList = [];
+      for product, quantities of productReturnQuantities
+        takenReturnQuantity = 0
         for importDetail, index in importFound.details
-          if importDetail.productUnit is returnDetail.productUnit
-            findProductUnit = true; currentProductQuantity += importDetail.basicQuantityAvailable
+          break if takenReturnQuantity is quantities
+
+          #tim importDetail
+          if importDetail.product is product
+            availableReturnQuantity = quantities - takenReturnQuantity
+
+            if importDetail.basicQuantityAvailable < availableReturnQuantity
+              takenReturnQuantity += importDetail.basicQuantityAvailable
+            else
+              takenReturnQuantity += availableReturnQuantity
 
             importUpdateOption.$inc["details.#{index}.basicQuantityReturn"]    = returnDetail.basicQuantity
             importUpdateOption.$inc["details.#{index}.basicQuantityAvailable"] = -returnDetail.basicQuantity
 
-        return console.log('ReturnDetail Khong Chinh Xac.') unless findProductUnit
-        return console.log('So luong tra qua lon') if (currentProductQuantity - returnDetail.basicQuantity) < 0
+
+#      for returnDetail in currentReturn.details
+#        currentProductQuantity = 0; findProductUnit = false
+#        productUpdateList.push(updateProductQuery(returnDetail, currentReturn.returnType))
+#
+#        for importDetail, index in importFound.details
+#          if importDetail.productUnit is returnDetail.productUnit
+#            findProductUnit = true; currentProductQuantity += importDetail.basicQuantityAvailable
+#
+#            importUpdateOption.$inc["details.#{index}.basicQuantityReturn"]    = returnDetail.basicQuantity
+#            importUpdateOption.$inc["details.#{index}.basicQuantityAvailable"] = -returnDetail.basicQuantity
+#
+#        return console.log('ReturnDetail Khong Chinh Xac.') unless findProductUnit
+#        return console.log('So luong tra qua lon') if (currentProductQuantity - returnDetail.basicQuantity) < 0
 
       if transactionId = createTransactionByProvider(currentReturn)
-        Schema.products.update(product._id, product.updateOption) for product in productUpdateList
+        for productId, quantities of productReturnQuantities
+          productUpdate =
+            $inc:
+              'merchantQuantities.0.inStockQuantity'      : -quantities
+              'merchantQuantities.0.availableQuantity'    : -quantities
+              'merchantQuantities.0.returnImportQuantity' : quantities
+          Schema.products.update productId, productUpdate
+
+#        Schema.products.update(product._id, product.updateOption) for product in productUpdateList
         Schema.imports.update @parent, importUpdateOption
         Schema.returns.update @_id, $set:{
           returnStatus: Enums.getValue('ReturnStatus', 'success')

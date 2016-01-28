@@ -6,7 +6,7 @@ template(name="productGroupOverviewSection")
       .caption(data-toggle="tooltip" data-container="body" data-placement="right" title="tên nhóm sản phẩm")
         span.editable.dashed(class="{{isEditMode false}}") {{name}}
 
-        input.editable.dashed.productGroupEdit(class="{{isEditMode true}}" maxlength="50" size="20"
+        input.editable.dashed.productGroupEdit(class="{{isEditMode true}}" maxlength="100" size="30"
         name="productGroupName" value="{{name}}" placeholder="tên nhóm sản phẩm" )
         //span.blured-color ({{productCount}} sản phẩm)
 
@@ -16,7 +16,7 @@ template(name="productGroupOverviewSection")
       .sub2(data-toggle="tooltip" data-container="body" data-placement="right" title="ghi chú")
         span.editable.dashed(class="{{isEditMode false}}" style="{{colorIsUndefined description}}") {{getString description 'ghi chú'}}
 
-        input.editable.dashed.productGroupEdit(class="{{isEditMode true}}" maxlength="100" size="25"
+        input.editable.dashed.productGroupEdit(class="{{isEditMode true}}" maxlength="100" size="40"
         name="productGroupDescription" value="{{description}}" placeholder="ghi chú")
 
 

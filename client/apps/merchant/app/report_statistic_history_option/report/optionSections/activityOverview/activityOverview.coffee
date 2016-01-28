@@ -31,9 +31,13 @@ Wings.defineApp 'activityOverview',
       dataLists =
         details : []
         overview:
-          totalCosts  : 0
-          totalSales  : 0
-          totalProfits: 0
+          totalCosts    : 0
+          inventoryCosts: 0
+          importCosts   : 0
+          underCosts    : 0
+          sales         : 0
+          salesCosts    : 0
+          salesProfits  : 0
 
       dateRange      = Session.get('reportOptionsDateRange')
       currentDynamic = Session.get("reportOptionsCurrentDynamics")
@@ -41,15 +45,29 @@ Wings.defineApp 'activityOverview',
 
 
       importLists = Schema.imports.find({
-        merchant    : merchantId ? Merchant.getId()
-        importType  : Enums.getValue('ImportTypes', 'success')
-        successDate : {$gte: dateRange.startDate, $lte: dateRange.endDate}
+        $and: [
+          merchant    : merchantId ? Merchant.getId()
+          finalPrice  : {$gt: 0}
+        ,
+          $or: [
+            importType  : Enums.getValue('ImportTypes', 'success')
+            successDate : {$gte: dateRange.startDate, $lte: dateRange.endDate}
+          ,
+            importType          : Enums.getValue('ImportTypes', 'inventorySuccess')
+            'version.createdAt' : {$gte: dateRange.startDate, $lte: dateRange.endDate}
+          ]
+        ]
       }, {}).map(
         (item) ->
-          item.activity = 'Nhập Kho'
-          item.owner    = Schema.providers.findOne({_id: item.provider})
+          if item.importType is Enums.getValue('ImportTypes', 'success')
+            item.activity = 'Nhập Kho'
+            item.owner    = Schema.providers.findOne({_id: item.provider})
+          else
+            item.activity = 'Đầu Kỳ'
+            item.owner    = Schema.products.findOne({_id: item.details[0].product})
+
           item.code     = item.importCode
-          item.sortDate = item.successDate
+          item.sortDate = item.successDate ? item.version.createdAt
           item
       )
       orderLists  = Schema.orders.find({
@@ -85,14 +103,40 @@ Wings.defineApp 'activityOverview',
       )
 
       dataLists.details = _.sortBy(importLists.concat(orderLists).concat(returnLists), (item) -> -item.sortDate )
+
       for detail, index in dataLists.details
         detail.count = index+1
         if detail.model is 'imports'
-          dataLists.overview.totalCosts   += detail.finalPrice
-          dataLists.overview.totalProfits -= detail.finalPrice
+          dataLists.overview.totalCosts += detail.finalPrice
+          if detail.importType is Enums.getValue('ImportTypes', 'success')
+            dataLists.overview.importCosts += detail.finalPrice
+          else if detail.importType is Enums.getValue('ImportTypes', 'inventorySuccess')
+            dataLists.overview.inventoryCosts += detail.finalPrice
+
         else if detail.model is 'orders'
-          dataLists.overview.totalSales   += detail.finalPrice
-          dataLists.overview.totalProfits += detail.finalPrice
+          dataLists.overview.sales        += detail.finalPrice
+          dataLists.overview.salesProfits += detail.finalPrice
+          for item in detail.details
+            product = Schema.products.findOne({_id: item.product})
+            salesCost = product.getPrice(detail.owner, 'import')
+            dataLists.overview.salesCosts   += salesCost
+            dataLists.overview.salesProfits += -salesCost
+            if !product.inventoryInitial
+              dataLists.overview.underCosts += salesCost
+              dataLists.overview.totalCosts += salesCost
+
+
+#        else if detail.model is 'returns'
+
+
+#totalCosts    : 0
+#inventoryCosts: 0
+#importCosts   : 0
+#underCosts    : 0
+
+#sales         : 0
+#salesCosts    : 0
+#salesProfits  : 0
 
 
       productSearchText = Session.get('reportSectionProductSearchText')

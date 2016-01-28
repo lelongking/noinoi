@@ -41,16 +41,7 @@ Wings.defineApp 'orderReturnProductSearch',
 
 
   rendered: ->
-
-
-
   destroyed: ->
-
-
-
-#  helpers:
-
-
 
   events:
     "keyup input[name='searchFilter']": (event, template) ->

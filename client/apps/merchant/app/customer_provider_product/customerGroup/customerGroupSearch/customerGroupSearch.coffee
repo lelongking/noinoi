@@ -12,7 +12,7 @@ Wings.defineHyper 'customerGroupSearch',
       if @_id is Session.get('mySession')?.currentCustomerGroup then 'active' else ''
 
     listCustomerGroups: ->
-      selector = {}; options  = {sort: {isBase: 1, nameSearch: 1}}
+      selector = {merchant : merchantId ? Merchant.getId()}; options  = {sort: {isBase: 1, nameSearch: 1}}
       searchText = Template.instance().searchFilter.get()
 
       if(searchText)

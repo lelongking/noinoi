@@ -7,21 +7,41 @@ Wings.defineApp 'importReturnProductSearch',
     self.autorun ()->
       if Session.get('mySession')
         #load danh sach san pham cua phieu nhap
-        parent = Schema.imports.findOne(Session.get('currentProviderReturn')?.parent)
-        Session.set 'currentReturnParent', parent?.details
+        if parent = Schema.imports.findOne(Session.get('currentProviderReturn')?.parent)
+          productQuantities = {}
+          for detail in parent.details
+            productQuantities[detail.product] = 0 unless productQuantities[detail.product]
+            productQuantities[detail.product] += detail.basicQuantityAvailable
+
+          for detail in parent.details
+            detail.availableBasicQuantity = productQuantities[detail.product]
+            detail.availableQuantity      = Math.floor(productQuantities[detail.product]/detail.conversion)
+
+          returnParent = []
+          for productId, value of productQuantities
+            if product = Schema.products.findOne(productId)
+              for unit in product.units
+                returnParent.push({
+                  product: productId
+                  productUnit: unit._id
+                  availableBasicQuantity: value
+                  availableQuantity: Math.floor(value / unit.conversion)
+                })
+
+          for detail, index in returnParent
+            found = _.findWhere(parent.details, {productUnit: detail.productUnit})
+            found = _.findWhere(parent.details, {product: detail.product}) if !found
+            if found
+              detail.price = found.price
+              detail._id = found._id
+            else
+              returnParent.splice(index, 1)
+
+          Session.set 'currentReturnParent', returnParent
 
 
   rendered: ->
-
-
-
   destroyed: ->
-
-
-
-  helpers:
-    availableQuantity: -> @basicQuantityAvailable/@conversion
-
 
 
   events:

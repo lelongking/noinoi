@@ -7,11 +7,11 @@ Meteor.publish null, ->
 
   #all
   Counts.publish @, 'products', Schema.products.find({merchant: merchantId})
-  Counts.publish @, 'productGroups', Schema.productGroups.find({merchant: merchantId})
+  Counts.publish @, 'productGroups', Schema.productGroups.find({merchant: merchantId, isBase: false})
 
   Counts.publish @, 'customers', Schema.customers.find({merchant: merchantId})
   Counts.publish @, 'customerReturns', Schema.returns.find({returnType: 0, merchant: merchantId})
-  Counts.publish @, 'customerGroups', Schema.customerGroups.find({merchant: merchantId})
+  Counts.publish @, 'customerGroups', Schema.customerGroups.find({merchant: merchantId, isBase: false})
 
 
   gridOrderQuery =
@@ -33,13 +33,18 @@ Meteor.publish null, ->
   Counts.publish @, 'providers', Schema.providers.find({merchant: merchantId})
   Counts.publish @, 'providerReturns', Schema.returns.find({returnType: 1, merchant: merchantId})
 
-  Counts.publish @, 'imports', Schema.imports.find({importType: Enums.getValue('ImportTypes', 'initialize'),  merchant: merchantId})
+  Counts.publish @, 'imports', Schema.imports.find(
+    creator   : @userId
+    merchant  : merchantId
+    importType: Enums.getValue('ImportTypes', 'initialize')
+  )
   Counts.publish @, 'inventories', Schema.inventories.find({merchant: merchantId})
 
   Counts.publish @, 'staffs', Meteor.users.find({'profile.merchant': merchantId})
   Counts.publish @, 'priceBooks', Schema.priceBooks.find({merchant: merchantId})
 
   orderQuery =
+    creator     : @userId
     merchant    : merchantId
     orderType   : Enums.getValue('OrderTypes', 'initialize')
     orderStatus : Enums.getValue('OrderStatus', 'initialize')
@@ -84,11 +89,13 @@ Meteor.publish null, ->
   Counts.publish @, 'customerGroupOfStaff', Schema.customerGroups.find(customerGroupQuery)
 
   Counts.publish @, 'customerReturnHistories', Schema.returns.find(
+    creator     : @userId
     merchant    : merchantId
     returnType  : Enums.getValue('ReturnTypes', 'customer')
     returnStatus: Enums.getValue('ReturnStatus', 'initialize')
   )
   Counts.publish @, 'providerReturnHistories', Schema.returns.find(
+    creator     : @userId
     merchant    : merchantId
     returnType  : Enums.getValue('ReturnTypes', 'provider')
     returnStatus: Enums.getValue('ReturnStatus', 'initialize')

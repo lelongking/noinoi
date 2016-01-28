@@ -2,7 +2,7 @@ scope = {}
 numericOption = {autoGroup: true, groupSeparator:",", radixPoint: ".", suffix: " VNĐ", integerDigits:10, rightAlign: true}
 numericOptionNotSuffix = {autoGroup: true, groupSeparator:",", radixPoint: ".", integerDigits:3, rightAlign: true}
 
-
+Enums = Apps.Merchant.Enums
 currentDataDefault = {}
 Wings.defineHyper 'productOverviewSection',
   created: ->
@@ -98,6 +98,11 @@ Wings.defineHyper 'productOverviewSection',
       else
         if Session.equals("productManagementIsEditMode", text) then 'hidden' else ''
 
+    isShowConversion: (text)->
+      instance        = Template.instance()
+      currentData     = instance.data
+      productUnitEx   = currentData.units[1]
+      if text is productUnitEx.allowDelete then '' else 'hidden'
 
     productUnitDetail: ->
       instance        = Template.instance()
@@ -362,8 +367,14 @@ Wings.defineHyper 'productOverviewSection',
         importQuality   = Math.abs(Helpers.Number($importQuality.inputmask('unmaskedvalue')))
 
         if event.which is 27
-          $importQuality.val ''
-          productUnit.inventoryQuality = ''
+          if productUnitData.isInventory is 'active'
+            $importQuality.val ''
+            productUnit.inventoryQuality = ''
+          else
+            importQuality = productUnit.rollImportQuality
+            $importQuality.val importQuality
+            productUnit.inventoryQuality = importQuality
+
 
         if productUnit.inventoryQuality isnt importQuality
           productUnit.inventoryQuality = importQuality
@@ -397,6 +408,7 @@ Wings.defineHyper 'productOverviewSection',
           $productDescription.val productData.description
 
       productOverviewCheckAllowUpdate(template)
+      editProduct(template) if event.which is 13 and template.data
 
 
 
@@ -458,6 +470,7 @@ generateProductUnitData = (currentData)->
     rollBackDebtSalePrice     : priceBook.basicSaleDebt
     rollBackImportPrice       : priceBook.basicImport
     rollLowNorms              : quantities.lowNormsQuantity
+    rollImportQuality         : currentData.importInventory ? 0
 
   console.log currentData.inventoryInitial
   if currentData.inventoryInitial
@@ -467,7 +480,7 @@ generateProductUnitData = (currentData)->
   else
     productUnitData.isInventory       = 'active'
     productUnitData.inventoryQuality  = ''
-    productUnitData.importQuality     = 'Chưa tồn kho đầu kỳ'
+    productUnitData.importQuality     = 'Chưa nhập tồn kho đầu kỳ'
 
   productUnitData
 
@@ -510,7 +523,12 @@ productOverviewCheckAllowUpdate = (template) ->
       productDebtSalePrice isnt (priceBook.basicSaleDebt ? '') or
       productImportPrice isnt (priceBook.basicImport ? '') or
       productLowNorms isnt (quantities.lowNormsQuantity ? '') or
-      (if productData.inventoryInitial then false else !isNaN(inventoryQuality)) or
+      (
+        if productData.inventoryInitial
+          inventoryQuality isnt (productData.importInventory ? '')
+        else
+          !isNaN(inventoryQuality)
+      ) or
 
       productOfGroup isnt (productData.productOfGroup ? '') or
       productUnitName isnt (productUnit.name ? '') or
@@ -604,9 +622,27 @@ editProduct = (template) ->
 
       importQuality = parseInt(template.ui.$importQuality.inputmask('unmaskedvalue'))
       if importQuality isnt NaN
-        console.log importQuality
-        importDetail = {quantity: importQuality, product: product._id}
-        Meteor.call 'productInventory', product._id, importDetail, (error, result) -> console.log error, result
+        if productFound.inventoryInitial
+          importFound = Schema.imports.findOne(
+            'details.product': product._id
+            importType       : Enums.getValue('ImportTypes', 'inventorySuccess')
+          )
+          if importFound and importQuality isnt importFound.details[0].basicQuantity
+            importFound.editImportDetail(importFound.details[0]._id, importQuality)
+
+            quantityChange = importQuality - product.importInventory
+            productUpdate =
+              $set:
+                importInventory: importQuality
+              $inc:
+                'merchantQuantities.0.availableQuantity' : quantityChange
+                'merchantQuantities.0.inStockQuantity'   : quantityChange
+                'merchantQuantities.0.importQuantity'    : quantityChange
+            Schema.products.update product._id, productUpdate
+
+        else
+          importDetail = {quantity: importQuality, product: product._id}
+          Meteor.call 'productInventory', product._id, importDetail, (error, result) -> console.log error, result
 
       productUnitData = generateProductUnitData(Schema.products.findOne({_id: product._id}))
       Template.instance().productUnitData.set(productUnitData)

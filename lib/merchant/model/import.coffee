@@ -126,7 +126,7 @@ Schema.add 'imports', "Import", class Import
       return console.log('Price not found..') if price is undefined
 
       return console.log("Price invalid (#{price})") if price < 0
-      return console.log("Quantity invalid (#{quality})") if quality < 1
+      return console.log("Quantity invalid (#{quality})") if quality < 0
 
       detailFindQuery = {product: product._id, productUnit: productUnitId, price: price}
       detailFound = _.findWhere(@details, detailFindQuery)
@@ -254,5 +254,6 @@ recalculationImport = (orderId) ->
 
 typesCantEdit = [
   Enums.getValue('ImportTypes', 'inventory')
+  Enums.getValue('ImportTypes', 'inventorySuccess')
   Enums.getValue('ImportTypes', 'initialize')
 ]

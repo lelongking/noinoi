@@ -1,4 +1,4 @@
-template(name="warehouseSummaryProductLowNorms")
+template(name="warehouseSummaryProductInventory")
   .section.panel.panel-default.printable-area(style="margin-bottom: 0px")
     .panel-heading
       table.lemon-grid
@@ -10,8 +10,9 @@ template(name="warehouseSummaryProductLowNorms")
             else
               | Sản Phẩm
               i.icon-search-8.rotateY180.searchProduct(style="color: #ABD4E3; font-size: 16px; cursor:pointer; padding-left: 10px;")
-          th.number(style="width:110px") Định Mức
-          th.number(style="width:110px") Tồn Kho
+          th.number(style="width:150px") Giá Nhập Đầu Kỳ
+          th.number(style="width:140px") Tồn Kho Đầu Kỳ
+
 
   .nano: .nano-content(style="margin-bottom: 240px;")
     .section(style="margin: 0; border-top-width: 0px;")
@@ -19,27 +20,31 @@ template(name="warehouseSummaryProductLowNorms")
         tr
           th(style="width:50px")
           th(style="width:auto")
-          th(style="width:70px")
-          th(style="width:40px")
-          th(style="width:70px")
-          th(style="width:40px")
+          th(style="width:150px")
+          th(style="width:90px")
+          th(style="width:60px")
+
 
         each details
-          if isRowEdit 'warehouseSummaryProductLowNormsEditId'
-            +warehouseSummaryProductLowNormsRowEdit
-
+          if isRowEdit 'warehouseSummaryProductInventoryEditId'
+            +warehouseSummaryProductInventoryEdit
           else
-            tr.detail-row.editLowNorms
+            tr.detail-row.inventory
               td(style="padding-left: 10px;") {{count}}
               td.first-column.has-commands
                 | {{name}}
-                //.commands
+                .commands
+                  unless inventoryInitial
+                    |(chưa nhập tồn đầu kỳ)
                 //  .lemon.rounded.tiny.btn.blue.animated.bounceIn.deleteOrderDetail: span.icon-pencil
 
-              td.number {{quantity.lowNormsQuantity}}
+              if inventoryInitial
+                td.number {{formatNumber inventoryPrice}} VNĐ
+                td.number {{formatNumber inventoryQuantity}}
+                td.date {{unitName}}
+              else
+                td.number
+                td.number ---
+                td.date {{unitName}}
 
-              td(style="padding-left: 5px;") {{unitName}}
-
-              td.number {{quantity.inStockQuantity}}
-              td(style="padding-left: 5px;") {{unitName}}
 

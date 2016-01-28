@@ -18,9 +18,11 @@ template(name="editInitialInterest")
         tr(style="height:40px; border-bottom: solid 2px #EFEFF4;")
           th(style="width:55px; padding-left: 10px") STT
           th(style="width:auto") Tên khách hàng
-          th(style="width:120px") Ngày tính lãi
-          th.number(style="width:100px") Lãi suất
           th.number(style="width:170px; padding-right: 10px;") Nợ đầu kỳ
+          th.number(style="width:100px") Lãi suất
+          th.number(style="width:120px") Ngày tính lãi
+
+
 
         each details
           if isRowEditing
@@ -32,9 +34,11 @@ template(name="editInitialInterest")
                 | {{name}}
                 .action-commands
                   .lemon.rounded.tiny.btn.blue.animated.bounceIn.editOwner: span.icon-pencil-1
-              td {{momentFormat initialStartDate 'DD/MM/YYYY'}}
-              td.number {{initialInterestRate}}%/tháng
               td.number {{formatNumber initialAmount}} VNĐ
+              td.number {{initialInterestRate}}%/tháng
+              td.number {{momentFormat initialStartDate 'DD/MM/YYYY'}}
+
+
 
     //
     //.panel-footer(style="border-top: solid 4px #EFEFF4;")
@@ -75,10 +79,11 @@ template(name="editInitialInterestRowEditing")
       .commands
         .lemon.rounded.tiny.btn.peter-river.animated.bounceIn.rollbackEditInitialInterest: span.icon-reply-3
         .lemon.rounded.tiny.btn.lime.animated.bounceIn.syncEditInitialInterest(class="{{isEditMode true}}"): span.icon-ok-6
-    td
-      input.input-field.edit-field(name="dateDebit" placeholder="Nhập ngày nợ đầu kỳ" tabindex="1"
-      binding="datePicker" todayHighlight="true" maxlength="20")
+    td.number
+      input.input-field.edit-field(name="initialAmount" placeholder="Nhập nợ đầu kỳ" tabindex="1")
     td
       input.input-field.edit-field(name="initialInterestRate" placeholder="Nhập lãi suất của nợ đầu kỳ" tabindex="2")
     td.number
-      input.input-field.edit-field(name="initialAmount" placeholder="Nhập nợ đầu kỳ" tabindex="3")
+      input.input-field.edit-field(name="dateDebit" placeholder="Nhập ngày nợ đầu kỳ" tabindex="3"
+      binding="datePicker" todayHighlight="true" maxlength="20")
+

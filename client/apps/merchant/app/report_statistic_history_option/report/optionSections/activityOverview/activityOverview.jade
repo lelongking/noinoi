@@ -12,33 +12,73 @@ template(name="activityOverview")
       table.lemon-grid
         tr
           th(style="width:40px")
-          th(style="width:110px")
+          th(style="width:30px")
+          th(style="width:120px")
           th(style="width:5px")
+          th(style="width:90px")
+          th(style="width:5px")
+          th(style="width:40px")
           th(style="width:120px")
           th(style="width:5px")
           th(style="width:auto")
 
         tr
           td
-          td: b Tổng chi phí
+          td(colspan="5"): b Tổng chi phí
           td.number :
           td.number <b>{{formatNumber overview.totalCosts}} </b>
           td
           td VNĐ
 
         tr
-          td
-          td: b Tổng doanh số
+          td(colspan="2")
+          td Tồn kho đầu kỳ
           td.number :
-          td.number <b>{{formatNumber overview.totalSales}}</b>
+          td.number {{formatNumber overview.inventoryCosts}}
+          td
+          td VNĐ
+          td(colspan="4")
+
+        tr
+          td(colspan="2")
+          td Nhập kho
+          td.number :
+          td.number {{formatNumber overview.importCosts}}
+          td
+          td VNĐ
+          td(colspan="4")
+
+        tr
+          td(colspan="2")
+          td Bán âm
+          td.number :
+          td.number {{formatNumber overview.underCosts}}
+          td
+          td VNĐ
+          td(colspan="4")
+
+
+        tr
+          td
+          td(colspan="5"): b Doanh số
+          td.number :
+          td.number <b>{{formatNumber overview.sales}}</b>
           td
           td VNĐ
 
         tr
           td
-          td: b Tổng lợi nhận
+          td(colspan="5"): b Chi phí
           td.number :
-          td.number <b>{{formatNumber overview.totalProfits}}</b>
+          td.number <b>{{formatNumber overview.salesCosts}}</b>
+          td
+          td VNĐ
+
+        tr
+          td
+          td(colspan="5"): b Lợi nhuận
+          td.number :
+          td.number <b>{{formatNumber overview.salesProfits}}</b>
           td
           td VNĐ
 
@@ -48,29 +88,32 @@ template(name="activityOverview")
         table.lemon-grid
           tr
             th(style="width:45px") STT
-            th(style="width:100px") Ngày
+            th.date(style="width:80px") Ngày lập
+            th.date(style="width:130px") Hoạt động
+            th(style="width:60px") Phiếu
+
             th(style="width:auto") Đối tượng
-            th(style="width:100px") Hoạt động
-            th.number(style="width:50px") Phiếu
             th.number(style="width:170px") Giá trị phiếu
 
 
-    .nano: .nano-content(style="margin-bottom: 190px;")
+    .nano: .nano-content(style="margin-bottom: 310px;")
       .section(style="margin: 0")
         table.lemon-grid
           tr
             th(style="width:55px")
-            th(style="width:100px")
+            th(style="width:80px")
+            th(style="width:130px")
+            th(style="width:60px")
+
             th(style="width:auto")
-            th(style="width:100px")
-            th(style="width:50px")
             th(style="width:180px")
 
           each details
             tr.detail-row
               td(style="padding-left: 10px;") {{count}}
-              td {{momentFormat sortDate "DD/MM/YYYY"}}
+              td.date {{momentFormat sortDate "DD/MM/YYYY"}}
+              td.date {{activity}}
+              td {{code}}
+
               td {{owner.name}}
-              td {{activity}}
-              td.number {{code}}
               td.number {{formatNumber finalPrice}} VND

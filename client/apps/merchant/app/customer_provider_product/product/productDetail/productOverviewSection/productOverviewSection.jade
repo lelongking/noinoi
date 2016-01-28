@@ -98,7 +98,8 @@ template(name="productOverviewSection")
             .description.editCash(class="{{isEditMode true}}" style="width: 28%; min-width: 180px"): .input-group
               input.form-control.input-field.full-width(name="unitNameEx" value="{{unitNameEx}}")
               span.input-group-addon(style="width: 15px; padding: 0") =
-              input.form-control.input-field.full-width(name="conversion" value="{{conversion}}")
+              input.form-control.input-field.full-width(class="{{isShowConversion true}}" name="conversion" value="{{conversion}}")
+              span.form-control.input-field.full-width.pull-right.editable.editCash.dashed(class="{{isShowConversion false}}") {{conversion}}
               span.input-group-addon(style="padding: 0px 0px 0px 10px;") {{unitName}}
 
 
@@ -118,9 +119,12 @@ template(name="productOverviewSection")
           .collapsible-row.full-width.pull-right(class="{{isEditMode true}}")
             .description Tồn kho đầu kỳ
             .description.editCash(style="width: 20%; min-width: 200px; height: 40px; padding-left: 15px;"): .input-group
-              input.form-control.input-field.full-width(class="{{isShowInventory false}}" name="importQuality")
-              span.form-control.input-field.full-width.pull-right.editable.editCash.dashed(class="{{isShowInventory true}}") {{inventoryQuality}}
+              //input.form-control.input-field.full-width(class="{{isShowInventory false}}" name="importQuality")
+              input.form-control.input-field.full-width(name="importQuality")
+
+              //span.form-control.input-field.full-width.pull-right.editable.editCash.dashed(class="{{isShowInventory true}}") {{inventoryQuality}}
               span.input-group-addon {{unitName}}
+
             span.editable.pull-right(class="{{isShowInventory false}}") Chưa nhập tồn kho lúc này
             i.icon-ok-6.pull-right.inventory(class="{{isInventory}} {{isShowInventory false}}")
 

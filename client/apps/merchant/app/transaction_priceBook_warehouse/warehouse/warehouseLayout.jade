@@ -19,7 +19,6 @@ template(name="warehouseLayout")
             +Template.dynamic(template=currentSectionDynamic.overview)
 
             if currentSectionDynamic.template
-              .nano: .nano-content
-                +Template.dynamic(template=currentSectionDynamic.template)
+              +Template.dynamic(template=currentSectionDynamic.template)
 
   //#footer.modern

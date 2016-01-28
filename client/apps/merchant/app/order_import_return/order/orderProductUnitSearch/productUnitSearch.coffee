@@ -25,6 +25,7 @@ Wings.defineApp 'orderProductUnitSearch',
 
 
   rendered: ->
+    UnitProductSearch.search('')
     scope.templateInstance = @
     $(document).on "keypress", (e) -> scope.handleGlobalBarcodeInput(e)
 

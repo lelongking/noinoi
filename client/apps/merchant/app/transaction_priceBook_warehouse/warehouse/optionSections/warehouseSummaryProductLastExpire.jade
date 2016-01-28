@@ -1,5 +1,5 @@
 template(name="warehouseSummaryProductLastExpire")
-  .section.panel.panel-default.printable-area
+  .section.panel.panel-default.printable-area(style="margin-bottom: 0px")
     .panel-heading
       table.lemon-grid
         tr
@@ -14,7 +14,8 @@ template(name="warehouseSummaryProductLastExpire")
           th.date(style="width:90px") Còn Lại
           th.number(style="width:110px") Tồn Kho
 
-    .panel-body
+  .nano: .nano-content(style="margin-bottom: 240px;")
+    .section(style="margin: 0; border-top-width: 0px;")
       table.lemon-grid
         tr
           th(style="width:50px")

@@ -105,6 +105,21 @@ metroHome.transactionApp =
   isCanvas     : false
   canvasClass  : ''
 
+metroHome.interestRateApp =
+  appName      : 'interestRate'
+  appColor     : 'concrete'
+  appCount     : ''
+  appSize      : ''
+  appClass     : ''
+  appIcon      : ''
+
+  description  : ''
+  caption      : 'lãi suất'
+  captionClass : 'bottom right'
+
+  isCanvas     : false
+  canvasClass  : ''
+
 metroHome.orderApp =
   appName      : 'order'
   appColor     : 'amethyst'
@@ -370,7 +385,7 @@ setups.metroHome.metroData = [
   ,
     setups.metroHome.customerReturnApp
   ,
-    setups.metroHome.logsApp
+    setups.metroHome.interestRateApp
   ,
     setups.metroHome.providerReturnApp
   ,

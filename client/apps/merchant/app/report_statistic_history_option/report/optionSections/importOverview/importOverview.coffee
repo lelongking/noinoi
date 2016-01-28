@@ -36,15 +36,29 @@ Wings.defineApp 'importOverview',
 
 
       importLists = Schema.imports.find({
-        merchant    : merchantId ? Merchant.getId()
-        importType  : Enums.getValue('ImportTypes', 'success')
-        successDate : {$gte: dateRange.startDate, $lte: dateRange.endDate}
-      }, {sort:{successDate: -1}}).map(
+        $and: [
+          merchant    : merchantId ? Merchant.getId()
+          finalPrice  : {$gt: 0}
+        ,
+          $or: [
+            importType  : Enums.getValue('ImportTypes', 'success')
+            successDate : {$gte: dateRange.startDate, $lte: dateRange.endDate}
+          ,
+            importType          : Enums.getValue('ImportTypes', 'inventorySuccess')
+            'version.createdAt' : {$gte: dateRange.startDate, $lte: dateRange.endDate}
+          ]
+        ]
+      }, {}).map(
         (item) ->
-          item.activity = 'Nhập Kho'
-          item.owner    = Schema.providers.findOne({_id: item.provider})
-          item.code     = item.importCode
-          item.sortDate = item.successDate
+          if item.importType is Enums.getValue('ImportTypes', 'success')
+            item.code     = item.importCode
+            item.activity = 'Nhập Kho'
+            item.owner    = Schema.providers.findOne({_id: item.provider})
+          else
+            item.code     = 'Đầu Kỳ'
+            item.activity = 'Đầu Kỳ'
+            item.owner    = Schema.products.findOne({_id: item.details[0].product})
+          item.sortDate = item.successDate ? item.version.createdAt
           item
       )
 

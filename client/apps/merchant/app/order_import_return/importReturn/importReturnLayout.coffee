@@ -9,13 +9,24 @@ Wings.defineApp 'importReturnLayout',
     self.autorun ()->
       if Session.get('mySession')
         scope.currentProviderReturn = Schema.returns.findOne(Session.get('mySession').currentProviderReturn)
-        Session.set 'currentProviderReturn', scope.currentProviderReturn
-        self.importReturn.set(scope.currentProviderReturn)
+        productQuantities = {}
+        if scope.currentProviderReturn
+          for detail in scope.currentProviderReturn.details
+            productQuantities[detail.product] = 0 unless productQuantities[detail.product]
+            productQuantities[detail.product] += detail.basicQuantity
+
+          for detail in scope.currentProviderReturn.details
+            detail.returnQuantities = productQuantities[detail.product]
 
 
-        parent = Schema.imports.findOne(scope.currentProviderReturn?.parent)
-        Session.set 'currentReturnParent', parent?.details
-        self.returnParent.set(parent)
+
+          self.importReturn.set(scope.currentProviderReturn)
+          Session.set 'currentProviderReturn', scope.currentProviderReturn
+
+
+          parent = Schema.imports.findOne(scope.currentProviderReturn?.parent)
+          Session.set 'currentReturnParent', parent?.details
+          self.returnParent.set(parent)
 
 
       #readonly 2 Select Khach Hang va Phieu Ban
