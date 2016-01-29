@@ -33,7 +33,7 @@ Wings.defineHyper 'interestRateManager',
       if merchant = Session.get('merchant')
         if event.target.name is 'interestRateInitial'
           initial = parseInt(template.ui.$interestRateInitial.inputmask('unmaskedvalue'))
-          if initial isnt (merchant.interestRates.initial ? 0)
+          if !isNaN(initial) and initial isnt (merchant.interestRates.initial ? 0)
             Schema.merchants.update merchant._id, $set:{'interestRates.initial': initial}
 #
 #        else if event.target.name is 'interestRateLoan'
@@ -43,6 +43,6 @@ Wings.defineHyper 'interestRateManager',
 
         else if event.target.name is 'interestRateSale'
           sale = parseInt(template.ui.$interestRateSale.inputmask('unmaskedvalue'))
-          if sale isnt (merchant.interestRates.sale ? 0)
+          if !isNaN(sale) and sale isnt (merchant.interestRates.sale ? 0)
             Schema.merchants.update merchant._id, $set:{'interestRates.sale': sale}
 

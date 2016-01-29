@@ -4,7 +4,7 @@ template(name="editInitialInterest")
       span(style="position: absolute; left: 10px; text-transform: none")
         <b>{{timeHM}}<sup>{{timeS}}</sup></b>, ngày <b>{{timeDMY}}</b> <b>{{fullDay}}</b>
 
-      span: b NỢ ĐẦU KỲ KHÁCH HÀNG
+      span: b NỢ ĐẦU KỲ {{ownerName}}
 
       //.commands
       //  .lemon.btn.rounded.peter-river.icon-reply-3.rollbackEditInitialInterest(class="{{isEditMode true}}"
@@ -17,7 +17,7 @@ template(name="editInitialInterest")
       table.lemon-grid
         tr(style="height:40px; border-bottom: solid 2px #EFEFF4;")
           th(style="width:55px; padding-left: 10px") STT
-          th(style="width:auto") Tên khách hàng
+          th(style="width:auto") Tên {{ownerName}}
           th.number(style="width:170px; padding-right: 10px;") Nợ đầu kỳ
           th.number(style="width:100px") Lãi suất
           th.number(style="width:120px") Ngày tính lãi

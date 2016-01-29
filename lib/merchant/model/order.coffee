@@ -52,6 +52,8 @@ simpleSchema.orders = new SimpleSchema
   'details.$.quality'       : type: Number, min: 0
   'details.$.price'         : type: Number, min: 0
   'details.$.discountCash'  : simpleSchema.DefaultNumber()
+  'details.$.interestRate'  : simpleSchema.DefaultBoolean(false)
+
   'details.$.isExport'      : simpleSchema.DefaultBoolean(false)
   'details.$.importIsValid' : type: Boolean, optional: true
 

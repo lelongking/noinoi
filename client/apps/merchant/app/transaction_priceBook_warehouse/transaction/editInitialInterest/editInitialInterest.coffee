@@ -4,6 +4,14 @@ Wings.defineHyper 'editInitialInterest',
     isEditMode: (text)-> if Session.get("transactionEditInitialInterest")?.isEditMode is text then '' else 'hidden'
     isRowEditing: -> @_id is Session.get('transactionOwner')?._id
 
+    ownerName: ->
+      transaction = Session.get('transactionDetail')
+      if transaction?.isOwner is 'provider'
+        'nhà cung cấp'
+      else if transaction?.isOwner is 'customer'
+        'khách hàng'
+
+
     details: ->
       transaction = Session.get('transactionDetail'); count = 0
       if transaction.isOwner is 'customer'
@@ -164,6 +172,7 @@ Wings.defineHyper 'editInitialInterestRowEditing',
           initialAmount       : transactionEdit.initialAmount
           initialInterestRate : transactionEdit.initialInterestRate
           initialStartDate    : transactionEdit.initialStartDate
+          interestAmount      : parseInt((transactionEdit.initialAmount/100) * (transactionEdit.initialInterestRate/30) * moment().diff(transactionEdit.initialStartDate ? new Date(), 'days'))
         }
         Schema.providers.update transactionOwner._id, ownerUpdate if transactionOwner.model is 'providers'
         Schema.customers.update transactionOwner._id, ownerUpdate if transactionOwner.model is 'customers'

@@ -26,9 +26,9 @@ Wings.defineHyper 'customerGroupDetailSection',
           if order
             item.latestOrderCode        = order.orderCode
             item.latestTradingDay       = order.successDate
-            item.latestTradingTotalCash = accounting.formatNumber(order.finalPrice) + ' VND'
+            item.latestTradingTotalCash = accounting.formatNumber(order.finalPrice) + ' VNĐ'
 
-          item.debtTotalCash = accounting.formatNumber(item.totalCash) + ' VND'
+          item.debtTotalCash = accounting.formatNumber(item.totalCash) + ' VNĐ'
           item
       )
 #      scope.customerList = customerList

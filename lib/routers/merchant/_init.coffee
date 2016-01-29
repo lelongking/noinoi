@@ -107,7 +107,7 @@ metroHome.transactionApp =
 
 metroHome.interestRateApp =
   appName      : 'interestRate'
-  appColor     : 'concrete'
+  appColor     : 'emeral'
   appCount     : ''
   appSize      : ''
   appClass     : ''
@@ -200,7 +200,7 @@ metroHome.priceBookApp =
 
 metroHome.staffManagementApp =
   appName      : 'staff'
-  appColor     : 'emeral'
+  appColor     : 'concrete'
   appCount     : 'staffs'
   appSize      : ''
   appClass     : ''
@@ -379,13 +379,13 @@ setups.metroHome.metroData = [
 ,
   classGroup: 'tile-group-2'
   dataGroup: [
-    setups.metroHome.staffManagementApp
+    setups.metroHome.interestRateApp
   ,
     setups.metroHome.merchantOptionsApp
   ,
     setups.metroHome.customerReturnApp
   ,
-    setups.metroHome.interestRateApp
+    setups.metroHome.staffManagementApp
   ,
     setups.metroHome.providerReturnApp
   ,

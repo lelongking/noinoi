@@ -18,7 +18,7 @@ Meteor.startup ->
     "hideMethod": "fadeOut"
   }
 
-#  Meteor.call('trackingProduct')
+  Meteor.call('checkInterestCash')
 
   Tracker.autorun ->
 #    accountStatus = AccountStatus.findOne({_id: Accounts.connection._lastSessionId})

@@ -15,7 +15,7 @@ template(name="merchantHome")
                     span.text {{orderCode}}
                       .commands {{momentFormat accountingConfirmAt 'DD/MM/YYYY'}}
                     span.left-info {{orderName}}
-                    span.right-info {{formatNumber finalPrice}} VND
+                    span.right-info {{formatNumber finalPrice}} VNĐ
 
               if isShowSearch 'imports'
                 .caption.group Phiếu Nhập
@@ -25,7 +25,7 @@ template(name="merchantHome")
                     span.text {{importCode}}
                       .commands {{momentFormat accountingConfirmAt 'DD/MM/YYYY'}}
                     span.left-info {{importName}}
-                    span.right-info {{formatNumber finalPrice}} VND
+                    span.right-info {{formatNumber finalPrice}} VNĐ
 
               if isShowSearch 'customers'
                 .caption.group Khách Hàng
@@ -35,7 +35,7 @@ template(name="merchantHome")
                     span.text {{name}}
                       //.commands {{momentFormat accountingConfirmAt 'DD/MM/YYYY'}}
                     //span.left-info {{importName}}
-                    //span.right-info {{formatNumber finalPrice}} VND
+                    //span.right-info {{formatNumber finalPrice}} VNĐ
 
               if isShowSearch 'providers'
                 .caption.group Nhà Cung Cấp
@@ -45,7 +45,7 @@ template(name="merchantHome")
                     span.text {{name}}
                       //.commands {{momentFormat accountingConfirmAt 'DD/MM/YYYY'}}
                     //span.left-info {{orderName}}
-                    //span.right-info {{formatNumber finalPrice}} VND
+                    //span.right-info {{formatNumber finalPrice}} VNĐ
 
               if isShowSearch 'products'
                 .caption.group Sản Phẩm
@@ -55,7 +55,7 @@ template(name="merchantHome")
                     span.text {{name}}
                       //.commands {{momentFormat accountingConfirmAt 'DD/MM/YYYY'}}
                     //span.left-info {{orderName}}
-                    //span.right-info {{formatNumber finalPrice}} VND
+                    //span.right-info {{formatNumber finalPrice}} VNĐ
 
 
 

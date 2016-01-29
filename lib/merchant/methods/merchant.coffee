@@ -1,5 +1,43 @@
 Enums = Apps.Merchant.Enums
 Meteor.methods
+  checkInterestCash: ->
+    if Meteor.isServer
+      user     = Meteor.users.findOne({_id: @userId})
+      merchant = Schema.merchants.findOne({_id: user.profile.merchant}) if user?.profile
+      if merchant
+        if merchant.selfCheck is undefined or merchant.selfCheck.latestCheckInterest is undefined
+          checkInterestCash = true
+        else
+          countDate = moment().endOf('days').diff(moment(merchant.selfCheck.latestCheckInterest).startOf('days'), 'days')
+          checkInterestCash = countDate > 0
+
+      if checkInterestCash
+        Schema.customers.find({merchant: merchant._id}).forEach(
+          (customer) ->
+            interestPerDay = (customer.initialAmount ? 0)/100 * (customer.initialInterestRate ? 0)/30
+            interestDays   = moment().diff(customer.initialStartDate ? new Date(), 'days')
+            interestCash   = interestPerDay*interestDays
+
+            Schema.orders.find(
+              buyer                   : customer._id
+              orderType               : Enums.getValue('OrderTypes', 'success')
+              orderStatus             : Enums.getValue('OrderStatus', 'finish')
+              'details.interestRate'  : true
+            ).forEach(
+              (order)->
+                totalCash = 0
+                (totalCash += detail.price * detail.basicQuantity if detail.interestRate) for detail in order.details
+
+                interestPerDay = totalCash/100 * (customer.initialInterestRate ? 0)/30
+                interestDays   = moment().diff(order.successDate ? new Date(), 'days')
+                interestCash  += interestPerDay*interestDays
+            )
+            Schema.customers.update customer._id, $set:{interestAmount: parseInt(interestCash) ? 0}
+        )
+        Schema.merchants.update merchant._id, $set:{'selfCheck.latestCheckInterest': new Date()}
+
+
+
   recalculateOrderBillNo: ->
     Schema.customers.find({merchant: Merchant.getId()}).forEach(
       (customer) -> Schema.customers.update customer._id , $set:{billNo: 0}

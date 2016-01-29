@@ -28,10 +28,10 @@ template(name="orderStaffHistorySection")
             td {{momentFormat accountingConfirmAt 'DD/MM/YYYY'}}
             td.date {{orderCode}}
             td {{getBuyerName buyer}}
-            td.number {{formatNumber finalPrice}} VND
+            td.number {{formatNumber finalPrice}} VNĐ
             td.number {{orderStatus}}
 
     .panel-footer
       .right-float
         span.s5.note <b>Tổng Doanh Số: </b>
-        span.s4 {{formatNumber totalTurnoverCash}} VND
+        span.s4 {{formatNumber totalTurnoverCash}} VNĐ

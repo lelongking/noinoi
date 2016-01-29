@@ -22,8 +22,11 @@ simpleSchema.merchants = new SimpleSchema
 
   interestRates           : type: Object, optional: true
   "interestRates.initial" : type: Number, decimal: true , defaultValue: 0
-  "interestRates.sale"   : type: Number, decimal: true , defaultValue: 0
+  "interestRates.sale"    : type: Number, decimal: true , defaultValue: 0
   "interestRates.loan"    : type: Number, decimal: true , defaultValue: 0
+
+  selfCheck                       : type: Object, optional: true
+  "selfCheck.latestCheckInterest" : type: Date  , optional: true
 
 
   summaries                        : type: Object

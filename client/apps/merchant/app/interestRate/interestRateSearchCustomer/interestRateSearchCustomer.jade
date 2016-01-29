@@ -1,13 +1,12 @@
-template(name="customerSearch")
+template(name="interestRateSearchCustomer")
   .dual-addon
-    .group-nav
-      .caption.inner.active
-        span.avatar.letter {{getPublishedCount 'customers'}}
-        span.text.uppercase KHÁCH HÀNG
-      .caption.inner.toCustomerGroup
-        span.avatar.letter {{getPublishedCount 'customerGroups'}}
-        span.text.uppercase NHÓM KHÁCH HÀNG
-
+    //.group-nav
+    //  .caption.inner.active
+    //    span.avatar.letter {{getPublishedCount 'customers'}}
+    //    span.text.uppercase KHÁCH HÀNG
+    //  .caption.inner.toCustomerGroup
+    //    span.avatar.letter {{getPublishedCount 'customerGroups'}}
+    //    span.text.uppercase NHÀ CUNG CẤP
 
     .search-filter.icon-search-8
       input(name='searchFilter' type="text" placeholder="tìm khách hàng...")
@@ -28,7 +27,6 @@ template(name="customerSearch")
                   .title {{name}}
                   .sub-title {{code}}
 
-                  //if totalCash
                   .price-stamp
-                    b {{formatNumber totalCash}}
+                    b {{formatNumber interestAmount}}
                     span(style="font-size: 11px;"): b VNĐ

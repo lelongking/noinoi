@@ -82,8 +82,7 @@ Wings.defineApp 'warehouseLayout',
     self.autorun ()->
 
 
-#    Session.set "warehouseOptionsCurrentDynamics", warehouseOption[1].optionChild()[0]
-    Session.set "warehouseOptionsCurrentDynamics", warehouseOption[0].optionChild()[3]
+    Session.set "warehouseOptionsCurrentDynamics", warehouseOption[1].optionChild()[0]
 
   rendered: ->
   destroyed: ->

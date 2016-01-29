@@ -1,0 +1,108 @@
+template(name="interestRateCustomerDetail")
+  .section.panel.panel-default
+    .panel-heading(style="padding-bottom: 0px; padding-right: 0px;")
+      table#exportData.lemon-grid.safe
+        tr.hide-on-print
+          th(style="width:auto")
+          th(style="width:150px")
+          th(style="width:10px")
+          th(style="width:200px")
+
+
+        if initialAmount
+          tr.header-row
+            td.has-commands(colspan="4")
+              | &nbsp;
+              .bill-header: b {{momentFormat initialStartDate "DD/MM/YYYY"}}
+          tr(style="{{isColor}}")
+
+          tr.paid-row
+            td.receive NỢ ĐẦU KỲ
+            td
+            td
+            td.receive.number: b {{formatNumber initialAmount}}
+
+          tr.paid-row
+            td
+            td Lãi suất ngày
+            td :
+            td.number: b {{dayInterestRate}}
+
+          tr.paid-row
+            td
+            td Số ngày nợ
+            td :
+            td.number: b {{dayInterestRateCount}}
+
+          tr.paid-row
+            td
+            td: b Số tiền lãi
+            td :
+            td.number.border-top.paid: b {{formatNumber initialRateAmount}}
+
+
+
+          tr: td(colspan="4" style="border-left: solid 2px #7ac5f9; background-color: #EFEFF5; padding-top: 2px !important; padding-bottom: 2px !important;")
+
+        each orderLists
+          tr.header-row
+            td.has-commands(colspan="4" style="border-left: solid 2px #f39c12")
+              | &nbsp;
+              .bill-header(style="background-color: #f39c12;") <b>{{momentFormat successDate "DD/MM/YYYY"}}</b>
+              .bill-header.billNo(style="left: 90px")  <b><i>{{billNo}}</i></b>
+          tr(style="{{isColor}};")
+
+
+          each details
+            with detail
+              tr.paid-row
+                td {{productName}}
+                //td.number (style="padding-right: 70px;")
+                td.number
+                  span
+                    | {{quality}} {{productUnitName}}
+                    //unless isBase
+                    //  span.super.s7.color-lime {{formatNumber basicQuantity}} {{basicUnitName}}
+                td
+                td.number {{formatNumber totalPrice}}
+
+          tr.paid-row
+            td.border-top
+            td.border-top
+            td.border-top
+            td.border-top.number.receive: b {{formatNumber totalPrice}}
+          tr.paid-row
+            td
+            td Lãi suất ngày
+            td :
+            td.number: b {{dayInterestRate}}
+          tr.paid-row
+            td
+            td Số ngày nợ
+            td :
+            td.number: b {{dayInterestRateCount}}
+          tr.paid-row
+            td
+            td: b Số tiền lãi
+            td :
+            td.number.border-top.paid: b {{formatNumber initialRateAmount}}
+
+          tr: td(colspan="6" style="border-left: solid 2px #7ac5f9; background-color: #EFEFF5; padding-top: 2px !important; padding-bottom: 2px !important;")
+
+    .panel-footer
+      table.lemon-grid
+        tr
+          th(style="width:auto")
+          th(style="width:150px")
+          th(style="width:10px")
+          th(style="width:185px")
+        //tr
+        //  td
+        //  td Tổng tiền nợ
+        //  td.number :
+        //  td.number <b>{{formatNumber totalDebitCash}}</b> VNĐ
+        tr
+          td
+          td: b Tổng tiền lãi
+          td :
+          td.number(style="padding-right: 0px"): b {{formatNumber interestCash}} VNĐ

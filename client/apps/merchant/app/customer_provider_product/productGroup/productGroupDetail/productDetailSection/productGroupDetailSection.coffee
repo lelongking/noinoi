@@ -25,9 +25,9 @@ Wings.defineHyper 'productGroupDetailSection',
 #          })
 #          if order
 #            item.latestTradingDay       = order.successDate
-#            item.latestTradingTotalCash = accounting.formatNumber(order.finalPrice) + ' VND'
+#            item.latestTradingTotalCash = accounting.formatNumber(order.finalPrice) + ' VNĐ'
 #
-#          item.debtTotalCash = accounting.formatNumber(item.debtCash + item.loanCash) + ' VND'
+#          item.debtTotalCash = accounting.formatNumber(item.debtCash + item.loanCash) + ' VNĐ'
           item
       )
 #      scope.productList = productList

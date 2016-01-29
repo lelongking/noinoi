@@ -1,0 +1,73 @@
+template(name="interestRateCustomerOverviewSection")
+  .section.top.panel.panel-default
+    input.hidden.avatarFile(type="file")
+    .panel-heading
+      +avatarImageComponent(avatar=avatarUrl alias=name)
+      .caption(data-toggle="tooltip" data-container="body" data-placement="right" title="tên khách hàng")
+        span.editable.dashed(style="{{colorIsUndefined name}}"
+        class="{{isEditMode false}}") {{name}}
+
+        input.editable.dashed.customerEdit(maxlength="50" size="20" placeholder="tên khách hàng"
+        class="{{isEditMode true}}" name="customerName" value="{{name}}")
+
+      .sub1(data-toggle="tooltip" data-container="body" data-placement="right" title="điện thoại")
+        span.editable.dashed(style="{{colorIsUndefined phone}}"
+        class="{{isEditMode false}}") {{getString phone 'điện thoại'}}
+
+        input.editable.dashed.customerEdit(maxlength="15" size="10" placeholder="điện thoại"
+        class="{{isEditMode true}}" name="customerPhone" value="{{phone}}")
+
+      .sub2(data-toggle="tooltip" data-container="body" data-placement="right" title="địa chỉ")
+        span.editable.dashed(style="{{colorIsUndefined address}}"
+        class="{{isEditMode false}}") {{getString address 'địa chỉ'}}
+
+        input.editable.dashed.customerEdit(maxlength="100" size="25" placeholder="địa chỉ"
+        class="{{isEditMode true}}" name="customerAddress" value="{{address}}" )
+
+
+
+      .commands
+        .lemon.btn.rounded.red.icon-minus-4.customerDelete(class="{{showDeleteCustomer}}"
+        data-toggle="tooltip" data-container="body" data-placement="bottom" title="xóa")
+
+        .lemon.btn.rounded.lime.icon-ok-6.syncCustomerEdit(class="{{showSyncCustomer}}"
+        data-toggle="tooltip" data-container="body" data-placement="bottom" title="xác nhận")
+
+        .lemon.btn.rounded.peter-river.icon-reply-3.cancelCustomer(class="{{isEditMode true}}"
+        data-toggle="tooltip" data-container="body" data-placement="bottom" title="quay lại")
+
+        .lemon.btn.rounded.silver.icon-wrench-outline.editCustomer(class="{{isEditMode false}}"
+        data-toggle="tooltip" data-container="body" data-placement="left" title="chỉnh sửa")
+
+    .panel-tab
+      .panel-heading(style="padding-top: 6px; padding-bottom: 6px;")
+        span.icon-up-open-3.hideTab(class="{{isShowTab true}}" style="cursor:pointer;") Thông tin mở rộng
+        span.icon-down-open-3.showTab(class="{{isShowTab false}}" style="cursor:pointer;") Thông tin mở rộng
+
+      .panel-body(class="{{isShowTab true}}")
+        .collapsible-row
+          .description Mã khách hàng
+          span.editable.dashed(class="{{isEditMode false}}") {{getString code}}
+          input.input-field.customerEdit(class="{{isEditMode true}}" value="{{code}}"
+          name="customerCode" placeholder="{{getString code}}")
+
+        .collapsible-row
+          .description Nhóm khách hàng
+          +iSelect(options=customerGroupSelected class="field changeCustomerGroup")
+
+        .collapsible-row
+          .description Giới tính
+          .genderSwitch
+            input.input-field.customerEdit(name="genderSwitch" type="checkbox" checked)
+
+        .collapsible-row
+          .description Sinh nhật
+          span.editable.dashed(class="{{isEditMode false}}") {{momentFormat profiles.dateOfBirth 'DD/MM/YYYY'}}
+          input.input-field.customerEdit(class="{{isEditMode true}}"
+          name="dateOfBirth" binding="datePicker" todayHighlight="true" maxlength="20" tabindex="4")
+
+        .collapsible-row
+          .description Ghi chú
+          span.editable.dashed(class="{{isEditMode false}}") {{getString profiles.description ''}}
+          input.input-field.customerEdit(class="{{isEditMode true}}" value="{{profiles.description}}"
+          name="customerDescription" placeholder="Ghi thêm thông tin")

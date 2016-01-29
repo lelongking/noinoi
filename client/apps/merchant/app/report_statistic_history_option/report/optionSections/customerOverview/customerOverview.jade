@@ -28,6 +28,14 @@ template(name="customerOverview")
 
         tr
           td
+          td: b Tiền lãi
+          td.number :
+          td.number <b>{{formatNumber overview.interestCash}}</b>
+          td
+          td VNĐ
+
+        tr
+          td
           td: b Thanh toán
           td.number :
           td.number <b>{{formatNumber overview.paidCash}}</b>
@@ -46,31 +54,31 @@ template(name="customerOverview")
       .panel-heading
         table.lemon-grid
           tr
-            th(style="width:40px") STT
-            th(style="width:80px") Mã
+            th(style="width:35px") STT
+            th(style="width:70px") Mã
             th(style="width:auto")
               if getSession 'customerOverviewSectionSearchCustomer'
                 input(name='searchCustomerFilter' type="text" placeholder="tìm khách hàng...")
               else
                 | Khách hàng
                 i.icon-search-8.rotateY180.searchCustomer(style="color: #ABD4E3; font-size: 16px; cursor:pointer; padding-left: 10px;")
-            th(style="width:100px") Tiền nợ
-            th(style="width:80px") Tiền lãi
-            th(style="width:100px") Thanh toán
-            th.number(style="width:140px") Tổng nợ
+            th.number(style="width:110px") Tiền nợ
+            th.number(style="width:90px") Tiền lãi
+            th.number(style="width:110px") Thanh toán
+            th.number(style="width:120px") Tổng nợ
 
 
-    .nano: .nano-content(style="margin-bottom: 160px;")
+    .nano: .nano-content(style="margin-bottom: 230px;")
       .section(style="margin: 0")
         table.lemon-grid
           tr
-            th(style="width:50px")
-            th(style="width:80px")
+            th(style="width:45px")
+            th(style="width:70px")
             th(style="width:auto")
-            th(style="width:100px")
-            th(style="width:80px")
-            th(style="width:100px")
-            th(style="width:150px")
+            th(style="width:110px")
+            th(style="width:90px")
+            th(style="width:110px")
+            th(style="width:130px")
 
           //each details
           //  tr.detail-row(style=" background-color: #A7FFEE;")
@@ -82,7 +90,7 @@ template(name="customerOverview")
               td(style="padding-left: 10px;") {{count}}
               td {{code}}
               td {{name}}
-              td {{formatNumber totalDebitCash}}
-              td {{formatNumber interestCash}}
-              td {{formatNumber paidCash}}
-              td.number <b>{{formatNumber totalCash}}</b> VND
+              td.number {{formatNumber totalDebitCash}}
+              td.number {{formatNumber interestCash}}
+              td.number {{formatNumber paidCash}}
+              td.number: b {{formatNumber totalCash}}

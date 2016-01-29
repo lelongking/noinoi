@@ -13,20 +13,22 @@ Wings.defineApp 'customerOverview',
       dataLists =
         details : []
         overview:
-          count     : 0
-          debitCash : 0
-          paidCash  : 0
-          totalCash : 0
+          count        : 0
+          debitCash    : 0
+          interestCash : 0
+          paidCash     : 0
+          totalCash    : 0
 
       currentDynamic = Session.get("reportOptionsCurrentDynamics")
       return dataLists if !currentDynamic
 
       dataLists.details = _.sortBy(Schema.customers.find({merchant: merchantId ? Merchant.getId()}).fetch(),
         (item) ->
-          dataLists.overview.count     += 1
-          dataLists.overview.totalCash += item.totalCash
-          dataLists.overview.paidCash  += item.paidCash
-          dataLists.overview.debitCash += item.debitCash
+          dataLists.overview.count        += 1
+          dataLists.overview.totalCash    += item.totalCash
+          dataLists.overview.paidCash     += item.paidCash
+          dataLists.overview.debitCash    += item.debitCash
+          dataLists.overview.interestCash += item.interestCash
           -item.totalCash
       )
       detail.count = index+1 for detail, index in dataLists.details

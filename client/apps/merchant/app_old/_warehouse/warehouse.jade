@@ -38,8 +38,8 @@ template(name="warehouse")
                     td(style="padding-left: 5px;") {{unitName}}
                     td.number {{allQuantity}}
                     td(style="padding-left: 5px;") {{unitName}}
-                    td.number {{formatNumber costPrice}} VND
-                    td.number {{formatNumber revenue}} VND
+                    td.number {{formatNumber costPrice}} VNĐ
+                    td.number {{formatNumber revenue}} VNĐ
 
                 if getSession 'warehouseShowAll'
                   each listProductsNotTrade
@@ -50,8 +50,8 @@ template(name="warehouse")
                       td(style="padding-left: 5px;") {{unitName}}
                       td.number {{allQuantity}}
                       td(style="padding-left: 5px;") {{unitName}}
-                      td.number {{formatNumber costPrice}} VND
-                      td.number {{formatNumber revenue}} VND
+                      td.number {{formatNumber costPrice}} VNĐ
+                      td.number {{formatNumber revenue}} VNĐ
 
             .panel-footer
               table.lemon-grid.safe
@@ -63,12 +63,12 @@ template(name="warehouse")
                 tr
                   td
                   td Giá Tri Kho Hàng:
-                  td.number <b>{{formatNumber totalCostPrice}}</b> VND
+                  td.number <b>{{formatNumber totalCostPrice}}</b> VNĐ
 
                 tr
                   td
                   td Doanh Số Dự Kiến:
-                  td.number <b>{{formatNumber totalRevenue}}</b> VND
+                  td.number <b>{{formatNumber totalRevenue}}</b> VNĐ
 
       //.dual-addon
       //  //.search-filter.icon-search-8
