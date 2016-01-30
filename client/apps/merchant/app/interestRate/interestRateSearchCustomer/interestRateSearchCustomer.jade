@@ -13,6 +13,12 @@ template(name="interestRateSearchCustomer")
       .icon-user-add-1.create-new-command(data-toggle="tooltip" data-container="body" data-placement="right" title="Tạo mới")
 
     .nano: .nano-content(style="margin-bottom: 35px;")
+      .group-wrapper
+        .caption.option lãi suất
+        .caption.inner.editInterestRate(class="{{activeClass true}}")
+          span.avatar.letter(class="icon-money-2")
+          span.text.uppercase: b mặc định
+
       each customerGroupLists
         if hasCustomerList
           .list

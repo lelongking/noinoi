@@ -1,4 +1,9 @@
 scope = logics.sales
+Wings.defineHyper 'orderProductRowDisplay',
+  helpers:
+    hasSelected: -> if @interestRate then 'color: #2e8bcc;' else 'color: #d8d8d8;'
+
+
 Wings.defineHyper 'orderProductRowEdit',
   rendered: ->
     @ui.$editQuantity.inputmask "integer",
@@ -14,8 +19,10 @@ Wings.defineHyper 'orderProductRowEdit',
 
     @ui.$editQuantity.select()
 
+  helpers:
+    hasSelected: -> if @interestRate then 'color: #2e8bcc;' else 'color: #d8d8d8;'
+
   events:
-    "click .deleteOrderDetail": (event, template) -> scope.currentOrder.removeDetail(@_id)
     "keyup": (event, template) ->
       rowId = Template.currentData()._id
       details = Template.parentData().details

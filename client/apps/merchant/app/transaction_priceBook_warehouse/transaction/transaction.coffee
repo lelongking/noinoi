@@ -183,6 +183,8 @@ Wings.defineApp 'transaction',
         transactionData.interestRate    = Session.get('merchant')?.interestRates?.loan ? 0
         transactionData.transactionType = Enums.getValue('TransactionTypes', 'editInitialInterest')
         Session.set('transactionDetail', transactionData)
+        Session.set("editInitialInterestSearchOwner")
+        Session.set("editInitialInterestOwnerSearchText",'')
 
     "click .toCustomerAddLoanCash":  (event, template) ->
       transactionData = Session.get('transactionDetail')
@@ -222,6 +224,8 @@ Wings.defineApp 'transaction',
         transactionData.description     = undefined
         transactionData.interestRate    = Session.get('merchant')?.interestRates?.loan ? 0
         Session.set('transactionDetail', transactionData)
+        Session.set("editInitialInterestSearchOwner")
+        Session.set("editInitialInterestOwnerSearchText",'')
 
     "click .toProviderAddPaidCash":  (event, template) ->
       transactionData = Session.get('transactionDetail')

@@ -52,3 +52,8 @@ Wings.defineApp 'customerManagementNavigationPartial',
           transactionType : Enums.getValue('TransactionTypes', 'customerPaidAmount')
         )
         FlowRouter.go('transaction')
+
+
+    "click .customerToInterestRate": (event, template) ->
+      FlowRouter.go('interestRate')
+

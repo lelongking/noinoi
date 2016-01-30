@@ -28,11 +28,12 @@ simpleSchema.customers = new SimpleSchema
 
 
 
+  saleInterestRate    : type: Number, optional: true, decimal: true
 
 
   initialAmount       : type: Number, optional: true #no ban dau
   initialInterestRate : type: Number, optional: true, decimal: true
-  initialStartDate    : type: Date, optional: true
+  initialStartDate    : type: Date  , optional: true
 
   saleAmount          : type: Number, optional: true #ban hang
   returnAmount        : type: Number, optional: true #tra hàng(tru va ban hang)

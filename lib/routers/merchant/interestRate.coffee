@@ -4,6 +4,9 @@ merchantRouter.route '/interestRate',
   action: ->
     Session.set "currentAppInfo",
       name: "lãi suất"
+      navigationPartial:
+        template: "interestRateNavigationPartial"
+        data: {}
 
     BlazeLayout.render 'merchantLayout',
       content: 'contentDefaultLayout'

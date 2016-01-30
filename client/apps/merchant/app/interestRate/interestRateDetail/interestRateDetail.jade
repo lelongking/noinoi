@@ -1,6 +1,9 @@
 template(name="interestRateDetail")
   .dual-detail-wrapper: .dual-detail
     .nano.customerDetail: .nano-content
-      if currentCustomer
-        +Template.dynamic(template='interestRateCustomerOverviewSection' data=currentCustomer)
-        +Template.dynamic(template='interestRateCustomerDetail' data=currentCustomer)
+      if getSession 'editInterestRateManager'
+        +Template.dynamic(template='interestRateManager')
+      else
+        if currentCustomer
+          +Template.dynamic(template='interestRateCustomerOverviewSection' data=currentCustomer)
+          +Template.dynamic(template='interestRateCustomerDetail' data=currentCustomer)

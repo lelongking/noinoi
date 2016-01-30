@@ -11,27 +11,60 @@ Wings.defineHyper 'editInitialInterest',
       else if transaction?.isOwner is 'customer'
         'khách hàng'
 
+    hideIsProvider: ->
+      transaction = Session.get('transactionDetail')
+      if transaction?.isOwner is 'provider'
+        'hidden'
+      else if transaction?.isOwner is 'customer'
+        ''
+
 
     details: ->
+      merchantId = Merchant.getId()
       transaction = Session.get('transactionDetail'); count = 0
+      detailLists = []
       if transaction.isOwner is 'customer'
-        Schema.customers.find({}).map(
+        detailLists = Schema.customers.find({merchant: merchantId}, {sort: {nameSearch: 1}}).map(
           (item) ->
             count += 1
             item.count = count
             item
         )
       else if transaction.isOwner is 'provider'
-        Schema.providers.find({}).map(
+        detailLists = Schema.providers.find({merchant: merchantId}, {sort: {nameSearch: 1}}).map(
           (item) ->
             count += 1
             item.count = count
             item
         )
 
+      ownerSearchText = Session.get('editInitialInterestOwnerSearchText')
+      if ownerSearchText?.length > 0 and  detailLists.length > 0
+        detailLists = _.filter detailLists, (owner) ->
+          unsignedTerm = Helpers.RemoveVnSigns ownerSearchText
+          unsignedName = Helpers.RemoveVnSigns owner.name
+          unsignedName.indexOf(unsignedTerm) > -1
+
+      detailLists
+
   events:
     "click .editOwner": (event, template) ->
       Session.set('transactionOwner', @)
+
+    "click .searchOwner": (event, template) ->
+      isSearch = Session.get("editInitialInterestSearchOwner")
+      Session.set("editInitialInterestSearchOwner", !isSearch)
+      Session.set("editInitialInterestOwnerSearchText",'')
+
+    "keyup input[name='searchOwnerFilter']": (event, template) ->
+      Helpers.deferredAction ->
+        searchFilter = $("input[name='searchOwnerFilter']").val()
+        searchFilter = searchFilter.replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,"").replace(/\s+/g," ")
+        Session.set("editInitialInterestOwnerSearchText", searchFilter)
+        Session.set("editInitialInterestSearchOwner", false) if searchFilter.length is 0
+      , "editInitialInterestSearchText"
+      , 200
+
 
 Wings.defineHyper 'editInitialInterestRowEditing',
   rendered: ->
@@ -46,12 +79,12 @@ Wings.defineHyper 'editInitialInterestRowEditing',
 
 
     self = this
-    integerOption  = {autoGroup: true, groupSeparator:",", radixPoint: ".", suffix: " VNĐ", integerDigits: 12}
+    integerOption  = {autoGroup: true, groupSeparator:",", radixPoint: ".", suffix: "", integerDigits: 12}
     $initialAmount = self.ui.$initialAmount
     $initialAmount.inputmask "integer", integerOption
     $initialAmount.val editInitialInterest.initialAmount
 
-    decimalOption        = {autoGroup: true, groupSeparator:",", radixPoint: ".", suffix: "%/tháng", integerDigits:4}
+    decimalOption        = {autoGroup: true, groupSeparator:",", radixPoint: ".", suffix: "", integerDigits:3}
     $initialInterestRate = self.ui.$initialInterestRate
     $initialInterestRate.inputmask "decimal", decimalOption
     $initialInterestRate.val editInitialInterest.initialInterestRate
@@ -89,6 +122,14 @@ Wings.defineHyper 'editInitialInterestRowEditing',
   helpers:
     isEditMode: (text)->
       if Session.get("transactionEditInitialInterest")?.isEditMode is text then '' else 'hidden'
+
+    hideIsProvider: ->
+      transaction = Session.get('transactionDetail')
+      if transaction?.isOwner is 'provider'
+        'hidden'
+      else if transaction?.isOwner is 'customer'
+        ''
+
 
   events:
     "keyup .input-field":  (event, template) ->

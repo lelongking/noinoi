@@ -1,5 +1,6 @@
 template(name="orderProductRowEdit")
   tr.editors.dual-border(class="{{errorClass}}")
+    td.command.icon-ok-6(style="{{hasSelected}}")
     td.bill-name.has-commands
       |{{productName}}
       .commands
@@ -15,6 +16,7 @@ template(name="orderProductRowEdit")
 
 template(name="orderProductRowDisplay")
   tr.detail-row.click-enable(class="{{errorClass}}")
+    td.command.icon-ok-6(style="{{hasSelected}}")
     td.bill-name.has-commands
       |{{productName}}
       .commands

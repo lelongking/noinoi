@@ -17,10 +17,18 @@ template(name="editInitialInterest")
       table.lemon-grid
         tr(style="height:40px; border-bottom: solid 2px #EFEFF4;")
           th(style="width:55px; padding-left: 10px") STT
-          th(style="width:auto") Tên {{ownerName}}
-          th.number(style="width:170px; padding-right: 10px;") Nợ đầu kỳ
-          th.number(style="width:100px") Lãi suất
-          th.number(style="width:120px") Ngày tính lãi
+          th(style="width:auto")
+            if getSession 'editInitialInterestSearchOwner'
+              input(name='searchOwnerFilter' type="text" placeholder="tìm {{ownerName}} ...")
+            else
+              | Tên {{ownerName}}
+              i.icon-search-8.rotateY180.searchOwner(style="color: #ABD4E3; font-size: 16px; cursor:pointer; padding-left: 10px;")
+
+          th.number(style="width:170px; right: -35px;") Nợ đầu kỳ
+          th.number(style="width:35px")
+          th.number(style="width:120px; right: -15px;" class="{{hideIsProvider}}") Lãi suất tháng
+          th.number(style="width:15px" class="{{hideIsProvider}}")
+          th.number(style="width:130px" class="{{hideIsProvider}}") Ngày tính lãi
 
 
 
@@ -34,13 +42,15 @@ template(name="editInitialInterest")
                 | {{name}}
                 .action-commands
                   .lemon.rounded.tiny.btn.blue.animated.bounceIn.editOwner: span.icon-pencil-1
-              td.number {{formatNumber initialAmount}} VNĐ
-              td.number {{initialInterestRate}}%/tháng
-              td.number {{momentFormat initialStartDate 'DD/MM/YYYY'}}
+              td.number {{formatNumber initialAmount}}
+              td.number VNĐ
+              td.number(class="{{hideIsProvider}}") {{initialInterestRate}}
+              td.number(class="{{hideIsProvider}}") %
+              td.number(class="{{hideIsProvider}}") {{momentFormat initialStartDate 'DD/MM/YYYY'}}
 
 
 
-    //
+
     //.panel-footer(style="border-top: solid 4px #EFEFF4;")
     //  table.lemon-grid
     //    tr
@@ -81,9 +91,12 @@ template(name="editInitialInterestRowEditing")
         .lemon.rounded.tiny.btn.lime.animated.bounceIn.syncEditInitialInterest(class="{{isEditMode true}}"): span.icon-ok-6
     td.number
       input.input-field.edit-field(name="initialAmount" placeholder="Nhập nợ đầu kỳ" tabindex="1")
-    td
+    td.number VNĐ
+    td(class="{{hideIsProvider}}")
       input.input-field.edit-field(name="initialInterestRate" placeholder="Nhập lãi suất của nợ đầu kỳ" tabindex="2")
-    td.number
+
+    td.number(class="{{hideIsProvider}}") %
+    td.number(class="{{hideIsProvider}}")
       input.input-field.edit-field(name="dateDebit" placeholder="Nhập ngày nợ đầu kỳ" tabindex="3"
       binding="datePicker" todayHighlight="true" maxlength="20")
 

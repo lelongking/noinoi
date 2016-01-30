@@ -243,9 +243,12 @@ Meteor.methods
     return {valid: false, error: 'user not found!'} unless user
     return {valid: false, error: 'user not permission!'} unless User.hasManagerRoles()
 
+    merchant = Schema.merchants.findOne({_id: user.profile.merchant}) if user.profile
+    return {valid: false, error: 'user not found!'} unless merchant
+
     query =
       buyer       : $exists: true
-      merchant    : user.profile.merchant
+      merchant    : merchant._id
       orderType   : Enums.getValue('OrderTypes', 'success')
       orderStatus : Enums.getValue('OrderStatus', 'finish')
 
@@ -289,6 +292,16 @@ Meteor.methods
             'merchantQuantities.0.inStockQuantity'  : orderDetail.basicQuantity
         Schema.products.update product._id, updateProductQuery
 
+
+      console.log
+      if parseInt(customerFound.saleBillNo) is parseInt(currentOrderFound.billNoOfBuyer)
+        Schema.customers.update customerFound._id, $inc:{saleBillNo: -1}
+
+      if parseInt(merchant.saleBillNo) is parseInt(currentOrderFound.billNoOfMerchant)
+        Schema.merchants.update merchant._id, $inc:{saleBillNo: -1}
+
+
+
       Schema.transactions.find(
         $and: [
           merchant : currentOrderFound.merchant
@@ -301,6 +314,7 @@ Meteor.methods
         (transaction)->
           Meteor.call 'deleteTransaction', transaction._id
       )
+      Meteor.call 'reCalculateCustomerInterestAmount', customerFound._id
 
 
 
@@ -374,8 +388,8 @@ Meteor.methods
       if product = Schema.products.findOne(productId)
         availableQuantity = product.merchantQuantities[0].availableQuantity ? 0
 
+        saleQuantity  = 0
         for orderDetail in details
-          saleQuantity  = 0 unless saleQuantity
           saleQuantity += orderDetail.basicQuantity
 
         if product.inventoryInitial and (availableQuantity - saleQuantity) < 0

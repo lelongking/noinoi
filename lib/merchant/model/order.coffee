@@ -195,6 +195,25 @@ Schema.add 'orders', "Order", class Order
       totalPrice: totalPrice
       finalPrice: totalPrice - @discountCash
 
+    doc.changeInterestRate = (detailId, interestRate = undefined) ->
+      return console.log('Order da xac nhan') unless _.contains(statusCantEdit, doc.orderStatus)
+
+      for instance, i in @details
+        if instance._id is detailId
+          updateIndex = i
+          updateInstance = instance
+          break
+      return console.log 'OrderDetailRow not found..' if !updateInstance
+
+      predicate = $set:{}
+      if interestRate is undefined
+        predicate.$set["details.#{updateIndex}.interestRate"] = !updateInstance.interestRate
+      else if typeof interestRate is "boolean" and updateInstance.interestRate isnt interestRate
+        predicate.$set["details.#{updateIndex}.interestRate"] = interestRate
+
+      if _.keys(predicate.$set).length > 0
+        recalculationOrder(@_id) if Schema.orders.update(@_id, predicate)
+
 
     doc.addDetail = (productUnitId, quality = 1, priceType = 'debit') ->
       return console.log('Order da xac nhan') unless _.contains(statusCantEdit,doc.orderStatus)
@@ -279,10 +298,12 @@ Schema.add 'orders', "Order", class Order
           (console.log('product not Found'); return)
 
         availableQuantity = product.merchantQuantities[0].availableQuantity ? 0
+        saleQuantity      = 0
+
         for orderDetail in details
-          saleQuantity  = 0 unless saleQuantity
           saleQuantity += orderDetail.basicQuantity
 
+        console.log  availableQuantity, saleQuantity
         if product.inventoryInitial and (availableQuantity - saleQuantity) < 0
           console.log('product quality nho'); return
 

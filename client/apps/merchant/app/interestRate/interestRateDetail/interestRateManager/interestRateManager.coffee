@@ -35,6 +35,7 @@ Wings.defineHyper 'interestRateManager',
           initial = parseInt(template.ui.$interestRateInitial.inputmask('unmaskedvalue'))
           if !isNaN(initial) and initial isnt (merchant.interestRates.initial ? 0)
             Schema.merchants.update merchant._id, $set:{'interestRates.initial': initial}
+            Meteor.call 'checkInterestCash', true
 #
 #        else if event.target.name is 'interestRateLoan'
 #          loan = parseInt(template.ui.$interestRateLoan.inputmask('unmaskedvalue'))
@@ -45,4 +46,5 @@ Wings.defineHyper 'interestRateManager',
           sale = parseInt(template.ui.$interestRateSale.inputmask('unmaskedvalue'))
           if !isNaN(sale) and sale isnt (merchant.interestRates.sale ? 0)
             Schema.merchants.update merchant._id, $set:{'interestRates.sale': sale}
+            Meteor.call 'checkInterestCash', true
 

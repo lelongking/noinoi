@@ -92,6 +92,12 @@ Wings.defineHyper 'orderProductDetail',
     "click .deleteOrderDetail": (event, template) ->
       currentOrder = Template.currentData()
       currentOrder.removeDetail(@_id)
+      event.stopPropagation()
+
+    "click .command.icon-ok-6": (event, template) ->
+      currentOrder = Template.currentData()
+      currentOrder.changeInterestRate(@_id)
+      event.stopPropagation()
 
     "input [name='orderDescription']": (event, template) ->
       currentOrder = Template.currentData()

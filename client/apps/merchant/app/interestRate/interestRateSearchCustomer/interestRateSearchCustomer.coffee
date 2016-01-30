@@ -17,8 +17,11 @@ Wings.defineHyper 'interestRateSearchCustomer',
     currentCustomer: ->
       Template.instance().currentCustomer.get()
 
-    activeClass: ->
-      if @_id is Template.instance().currentCustomer.get()?._id then 'active' else ''
+    activeClass: (editInterestRateManager = false)->
+      if Session.get('editInterestRateManager')
+        if editInterestRateManager then 'active' else ''
+      else
+        if @_id is Template.instance().currentCustomer.get()?._id then 'active' else ''
 
 
     customerGroupLists: ->
@@ -61,11 +64,11 @@ Wings.defineHyper 'interestRateSearchCustomer',
       customerGroups
 
   events:
-    "click .create-new-command": (event, template) ->
-      FlowRouter.go('createCustomer')
-
-    "click .caption.inner.toCustomerGroup": (event, template) ->
-      FlowRouter.go('customerGroup')
+    "click .caption.inner.editInterestRate": (event, template) ->
+      Session.set('editInterestRateManager', true)
+      Session.set('customerManagementIsShowCustomerDetail', false)
+      Session.set('customerManagementIsEditMode', false)
+      Session.set("customerManagementShowEditCommand", false)
 
     "click .list .doc-item": (event, template) ->
       selectCustomer(event, template, @)
@@ -99,3 +102,4 @@ selectCustomer = (event, template, customer)->
     Session.set('customerManagementIsShowCustomerDetail', false)
     Session.set('customerManagementIsEditMode', false)
     Session.set("customerManagementShowEditCommand", false)
+    Session.set('editInterestRateManager', false)

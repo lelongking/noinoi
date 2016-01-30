@@ -1,6 +1,5 @@
 scope = logics.customerManagement
 Enums = Apps.Merchant.Enums
-numericOption = {autoGroup: true, groupSeparator:",", radixPoint: ".", suffix: " VNĐ", integerDigits:11}
 
 lemon.defineHyper Template.productDetailSection,
   helpers:

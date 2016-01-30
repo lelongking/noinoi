@@ -112,14 +112,14 @@ Meteor.methods
     currentImportQuery = _.clone(query)
     currentImportQuery._id = importId
 
-    currentImportFound = Schema.imports.findOne(currentImportQuery)
+    currentImportFound = Schema.imports.findOne({_id: currentImportQuery})
     return {valid: false, error: 'import not found!'} unless currentImportFound
     return {valid: false, error: 'import not delete!'} unless currentImportFound.allowDelete
 
-    providerFound = Schema.providers.findOne(currentImportFound.provider)
+    providerFound = Schema.providers.findOne({_id: currentImportFound.provider})
     return {valid: false, error: 'provider not found!'} unless providerFound
 
-    merchantFound = Schema.merchants.findOne(user.profile.merchant)
+    merchantFound = Schema.merchants.findOne({_id: user.profile.merchant})
     return {valid: false, error: 'merchant not found!'} unless merchantFound
 
 
@@ -151,6 +151,12 @@ Meteor.methods
             'merchantQuantities.0.inStockQuantity'   : -orderDetail.basicQuantity
             'merchantQuantities.0.importQuantity'    : -orderDetail.basicQuantity
         Schema.products.update product._id, updateProductQuery
+
+      if parseInt(providerFound.importBillNo) is parseInt(currentImportFound.billNoOfProvider)
+        Schema.providers.update providerFound._id, $inc:{importBillNo: -1}
+
+      if parseInt(merchantFound.importBillNo) is parseInt(currentImportFound.billNoOfMerchant)
+        Schema.merchants.update merchantFound._id, $inc:{importBillNo: -1}
 
       Schema.transactions.find(
         $and: [
