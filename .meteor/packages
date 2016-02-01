@@ -1,0 +1,53 @@
+# Meteor packages used by this project, one per line.
+# Check this file (and the other files in this directory) into your repository.
+#
+# 'meteor add' and 'meteor remove' will edit this file for you,
+# but you can also edit it by hand.
+
+meteor-platform
+reactive-var
+npm-container
+coffeescript
+accounts-password
+email
+
+meteorhacks:kadira
+alanning:roles
+meteorhacks:npm
+momentjs:moment
+rzymek:moment-locale-vi
+anti:i18n
+
+mquandalle:jade
+jnoble:multi-styl
+
+
+kadira:flow-router
+kadira:blaze-layout
+meteorhacks:subs-manager
+meteorhacks:search-source
+
+
+tmeasday:publish-counts
+reywood:publish-composite
+#dburles:collection-helpers
+
+
+aldeed:simple-schema
+aldeed:collection2
+matb33:collection-hooks
+
+
+mizzao:bootstrap-3
+mizzao:user-status
+rajit:bootstrap3-datepicker
+
+
+cfs:gridfs
+cfs:standard-packages
+cfs:graphicsmagick
+
+lemon
+lemon-icon
+select2
+#wings-icon

@@ -18,6 +18,11 @@ Wings.defineHyper 'editInitialInterest',
       else if transaction?.isOwner is 'customer'
         ''
 
+    interestRateInitial: ->
+      if @initialInterestRate is undefined
+        Session.get('merchant')?.interestRates?.initial ? 0
+      else
+        @initialInterestRate
 
     details: ->
       merchantId = Merchant.getId()
@@ -158,8 +163,18 @@ Wings.defineHyper 'editInitialInterestRowEditing',
               initialInterestRate : transactionEdit.initialInterestRate
               initialStartDate    : transactionEdit.initialStartDate
             }
-            Schema.providers.update transactionOwner._id, ownerUpdate if transactionOwner.model is 'providers'
-            Schema.customers.update transactionOwner._id, ownerUpdate if transactionOwner.model is 'customers'
+            if transactionOwner.model is 'providers'
+              Schema.providers.update transactionOwner._id, ownerUpdate
+            else if transactionOwner.model is 'customers'
+              Schema.customers.update transactionOwner._id, ownerUpdate
+              Meteor.call 'reCalculateCustomerInterestAmount', transactionOwner._id
+
+              merchant = Merchant.get()
+              if merchant.interestRates is undefined or merchant.interestRates.initial is undefined
+                unless ownerUpdate.initialInterestRate is undefined
+                  Schema.merchants.update merchant._id, $set:{'interestRates.initial': initial}
+                  Meteor.call 'checkInterestCash', true
+
 
             transactionEdit.isEditMode = false
             Session.set('transactionEditInitialInterest',  transactionEdit)

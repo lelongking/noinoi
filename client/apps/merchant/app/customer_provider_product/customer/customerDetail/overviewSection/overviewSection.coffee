@@ -8,9 +8,6 @@ Wings.defineHyper 'customerManagementOverviewSection',
     Session.set('customerManagementIsShowCustomerDetail', false)
     Session.set("customerManagementShowEditCommand", false)
     Session.set('customerManagementIsEditMode', false)
-    console.log Template.currentData()
-    console.log Template.parentData()
-    console.log Template.instance()
 
     scope.overviewTemplateInstance = @
     @ui.$customerName.autosizeInput({space: 10}) if @ui.$customerName

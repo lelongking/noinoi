@@ -29,7 +29,7 @@ merchantOrderRouter.route '/delivery',
   name: 'orderDelivery'
   action: ->
     Session.set "currentAppInfo",
-      name: "tình trạng phiếu bán"
+      name: "giao hàng"
       navigationPartial:
         template: "orderDeliveryNavigationPartial"
         data: {}

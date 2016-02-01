@@ -49,12 +49,19 @@ template(name="customerManagementSalesHistorySection")
           tr.header-row
             td.has-commands(colspan="5" style="border-left: solid 2px #f39c12")
               | &nbsp;
-              .bill-header(style="background-color: #f39c12;") <b>{{momentFormat successDate "DD/MM/YYYY"}}</b>
-              .bill-header.billNo.hide-on-print(style="left: 90px")  <b><i>{{billNo}}</i></b>
-              .bill-header.billNo.show-on-print(style="left: 120px") <b><i>{{billNo}}</i></b>
+              .bill-header(style="background-color: #f39c12;")
+                b {{momentFormat successDate "DD/MM/YYYY"}}
+              .bill-header.billNo.hide-on-print(style="left: 90px")
+                b
+                  i(style="padding-right: 5px;") {{billNo}}
+                  a.toInterestRate(style="color: #7ac5f9;") {{hasInterestRate}}
+              .bill-header.billNo.show-on-print(style="left: 120px")
+                b
+                  i(style="padding-right: 5px;") {{billNo}}
               .commands
                 if isDelete
                   .lemon.rounded.tiny.btn.red.deleteTransaction: span.icon-minus-4
+
           tr(style="{{isColor}};")
 
 

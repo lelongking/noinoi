@@ -81,17 +81,17 @@ addNewProvider = (event, template, provider = {}) ->
       provider.representative = providerRepresentative if providerRepresentative
 
 
-      initialInterestRate = parseInt(template.ui.$providerInterestRate.inputmask('unmaskedvalue'))
-      provider.initialInterestRate = initialInterestRate if !isNaN(initialInterestRate)
-
-      initialStartDate  = template.datePicker.$providerDebitDate.datepicker().data().datepicker.dates.get()
-      provider.initialStartDate = initialStartDate if initialStartDate isnt undefined
-
-      initialAmount = parseInt(template.ui.$providerDebit.inputmask('unmaskedvalue'))
-      if !isNaN(initialAmount)
-        provider.initialAmount       = initialAmount
-        provider.initialInterestRate = 0 if !provider.initialInterestRate
-        provider.initialStartDate    = new Date() if !provider.initialStartDate
+#      initialInterestRate = parseInt(template.ui.$providerInterestRate.inputmask('unmaskedvalue'))
+#      provider.initialInterestRate = initialInterestRate if !isNaN(initialInterestRate)
+#
+#      initialStartDate  = template.datePicker.$providerDebitDate.datepicker().data().datepicker.dates.get()
+#      provider.initialStartDate = initialStartDate if initialStartDate isnt undefined
+#
+#      initialAmount = parseInt(template.ui.$providerDebit.inputmask('unmaskedvalue'))
+#      if !isNaN(initialAmount)
+#        provider.initialAmount       = initialAmount
+#        provider.initialInterestRate = 0 if !provider.initialInterestRate
+#        provider.initialStartDate    = new Date() if !provider.initialStartDate
 
       newProviderId = Schema.providers.insert provider
       if Match.test(newProviderId, String)

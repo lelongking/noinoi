@@ -147,7 +147,15 @@ addNewCustomer = (event, template, customer = {}) ->
 
         newCustomerId = Schema.customers.insert customer
         if Match.test(newCustomerId, String)
+          Meteor.call 'reCalculateCustomerInterestAmount', newCustomerId
           Meteor.users.update(Meteor.userId(), {$set: {'sessions.currentCustomer': newCustomerId}})
+
+          merchant = Merchant.get()
+          if merchant.interestRates is undefined or merchant.interestRates.initial is undefined
+            unless customer.initialInterestRate is undefined
+              Schema.merchants.update merchant._id, $set:{'interestRates.initial': initial}
+              Meteor.call 'checkInterestCash', true
+
           FlowRouter.go('customer')
           toastr["success"]("Tạo khách hàng thành công.")
 

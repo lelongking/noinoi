@@ -98,5 +98,8 @@ Schema.add 'merchants', "Merchant", class Merchant
     warehouse.merchantId = doc._id for warehouse in doc.branches
 
 
+  @get: ->
+    Schema.merchants.findOne({_id: Meteor.users.findOne(Meteor.userId())?.profile?.merchant})
+
   @getId: ->
     Meteor.users.findOne(Meteor.userId())?.profile?.merchant

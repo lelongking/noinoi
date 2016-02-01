@@ -118,7 +118,7 @@ Wings.defineApp 'activityOverview',
           dataLists.overview.salesProfits += detail.finalPrice
           for item in detail.details
             product = Schema.products.findOne({_id: item.product})
-            salesCost = product.getPrice(detail.owner, 'import')
+            salesCost = product.getPrice(detail.owner, 'import') * item.basicQuantity
             dataLists.overview.salesCosts   += salesCost
             dataLists.overview.salesProfits += -salesCost
             if !product.inventoryInitial

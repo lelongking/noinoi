@@ -72,6 +72,14 @@ Wings.defineHyper 'customerManagementSalesHistorySection',
         detail.productUnitPrice = detail.price * detail.conversion
       detail
 
+    hasInterestRate: ->
+      console.log @
+      details = @parentFound?.details ? []
+      for detail in details
+        (isInterestRate = true if detail.interestRate)
+      if isInterestRate then '(lãi suất)' else ''
+
+
     isColor: -> 'background-color: #fff'
 #    isBase: -> @conversion is 1
     isDelete: ->
@@ -80,7 +88,15 @@ Wings.defineHyper 'customerManagementSalesHistorySection',
       trackingDate and trackingDelete
 
   events:
+    "click a.toInterestRate": (event, template) ->
+      FlowRouter.go('interestRate')
+      Session.set('editInterestRateManager', false)
+      Session.set('customerManagementIsShowCustomerDetail', false)
+      Session.set('customerManagementIsEditMode', false)
+      Session.set("customerManagementShowEditCommand", false)
+
     "click .deleteTransaction": (event, template) ->
+
       if @isRoot
         if @balanceType is Enums.getValue('TransactionTypes', 'returnSaleAmount')
           Meteor.call('deleteReturn', @parent, @owner, Enums.getValue('ReturnTypes', 'customer')) if @parent

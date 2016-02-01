@@ -44,7 +44,7 @@ template(name="editInitialInterest")
                   .lemon.rounded.tiny.btn.blue.animated.bounceIn.editOwner: span.icon-pencil-1
               td.number {{formatNumber initialAmount}}
               td.number VNĐ
-              td.number(class="{{hideIsProvider}}") {{initialInterestRate}}
+              td.number(class="{{hideIsProvider}}") {{interestRateInitial}}
               td.number(class="{{hideIsProvider}}") %
               td.number(class="{{hideIsProvider}}") {{momentFormat initialStartDate 'DD/MM/YYYY'}}
 

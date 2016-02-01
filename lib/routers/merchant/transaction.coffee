@@ -5,7 +5,7 @@ merchantRouter.route '/transaction',
   name: 'transaction'
   action: ->
     Session.set "currentAppInfo",
-      name: "thu chi - tài chính"
+      name: "thu chi"
       navigationPartial:
         template: "transactionNavigationPartial"
         data: {}
