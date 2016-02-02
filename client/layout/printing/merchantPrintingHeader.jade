@@ -1,14 +1,37 @@
 template(name="merchantPrintingHeader")
-   .printing-header
-      .rounded-location: .rounded-wrapper
-         img(src="/images/white-pixel.jpg")
-         .rounded-icon.icon-location-outline
-      .rounded-phone: .rounded-wrapper
-         img(src="/images/white-pixel.jpg")
-         .rounded-icon.icon-phone-circled
-      .branding
-         .company-name {{merchantInfo.companyName}}
-         .company-address {{merchantInfo.contactAddress}}
-      .info
-         .document-time <b>{{timeHM}}<sup>{{timeS}}</sup></b>, ngày <b>{{timeDMY}}</b> <b>{{fullDay}}</b>
-         .company-phone {{merchantInfo.contactPhone}} <br/>
+  .printing-header
+    .rounded-phone: .rounded-wrapper
+      img(src="/images/white-pixel.jpg")
+      .rounded-icon.icon-user-outline
+    .rounded-location: .rounded-wrapper
+      img(src="/images/white-pixel.jpg")
+      .rounded-icon.icon-location-outline
+    .info
+      .document-time <b>{{timeHM}}<sup>{{timeS}}</sup></b>, ngày <b>{{timeDMY}}</b> <b>{{fullDay}}</b>
+      .company-phone
+        if position
+          |{{position}}: {{sellerName}}
+        <br/>
+    .branding
+      .company-name {{merchantInfo.name}}
+      .company-address {{merchantInfo.phone}}
+
+
+  .bill-info
+    .seller-info
+    .bill-no {{merchantInfo.address}}
+
+  .printing-info
+    .document-name
+      if billNo
+        span.uppercase.s4 {{title}} - {{billNo}} <br />
+      else
+        span.uppercase.s4 {{title}} <br />
+      span.uppercase {{owner.name}}
+    .document-info
+      if owner.phone
+        span.icon-phone-circled
+        span {{owner.phone}} <br/>
+      if owner.address
+        span.icon-location-1
+        span {{owner.address}}

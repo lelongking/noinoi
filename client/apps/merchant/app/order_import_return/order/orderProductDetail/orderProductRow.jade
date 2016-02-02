@@ -1,28 +1,28 @@
 template(name="orderProductRowEdit")
   tr.editors.dual-border(class="{{errorClass}}")
-    td.command.icon-ok-6(style="{{hasSelected}}")
+    td.command.icon-ok-6.hide-on-print(style="{{hasSelected}}")
     td.bill-name.has-commands
       |{{productName}}
       .commands
         .lemon.rounded.tiny.btn.blue.animated.bounceIn.deleteOrderDetail: span.icon-minus-4
-    td.quality: input.error-field(name="editQuantity" min="0" style="text-align: center;")
+    td.quality: input.error-field(name="editQuantity" min="0")
     td: span
       |{{unitName}}
       unless isBase
-        span.super.s7.color-lime {{formatNumber basicQuantity}} {{basicName}}
+        span.super.s7.color-lime {{formatNumber basicQuantity}}
     td.price: input(name="editPrice" min="0" max="30")
     td.bill-discount: input(name="editDiscountCash" min="0" max="30")
     td.number.final-price <b>{{formatNumber finalPrice}}</b>
 
 template(name="orderProductRowDisplay")
   tr.detail-row.click-enable(class="{{errorClass}}")
-    td.command.icon-ok-6(style="{{hasSelected}}")
+    td.command.icon-ok-6.hide-on-print(style="{{hasSelected}}")
     td.bill-name.has-commands
       |{{productName}}
       .commands
         .lemon.rounded.tiny.btn.blue.deleteOrderDetail: span.icon-minus-4
 
-    td.date.quality.editable-field.error-field
+    td.quality.editable-field.error-field
       span
         |{{formatNumber quality}}
         if invalid
@@ -31,7 +31,7 @@ template(name="orderProductRowDisplay")
     td: span
           |{{unitName}}
           unless isBase
-            span.super.s7.color-lime {{formatNumber basicQuantity}} {{basicName}}
+            span.super.s7.color-lime {{formatNumber basicQuantity}}
 
     td.number.price.editable-field {{formatNumber price}}
 

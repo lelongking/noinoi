@@ -1,17 +1,7 @@
 template(name="providerDetailSection")
   .section.panel.panel-default.printable-area
-    .panel-heading
-      .show-on-print
-        +merchantPrintingHeader
-        .printing-info
-          .document-name {{name}}
-
-      table.lemon-grid: tr
-        th(style="width:auto") SẢN PHẨM
-        th(style="width:50px") SL
-        th(style="width:100px") ĐƠN VỊ TÍNH
-        th.number(style="width:120px") ĐƠN GIÁ
-        th.number(style="width:140px") THÀNH TIỀN
+    .panel-heading.show-on-print
+      +merchantPrintingHeader(owner=this title='sổ nhập hàng' position='Người in')
 
     .panel-body.debt-details
       table.lemon-grid.safe
@@ -33,6 +23,7 @@ template(name="providerDetailSection")
             td.number: span.s5: b {{formatNumber initialAmount}}
           tr.detail-row(style="background-color: #EFEFF4;")
             td(colspan="5" style="padding-top: 2px !important; padding-bottom: 2px !important;")
+          tr.show-on-print(style="height: 10px;")
 
         each transactions
           tr.header-row
@@ -101,13 +92,13 @@ template(name="providerDetailSection")
           tr.detail-row(style="background-color: #EFEFF4;")
             td(colspan="5" style="padding-top: 2px !important; padding-bottom: 2px !important;")
 
-    .panel-footer
+    .panel-footer(style="border-color: #fff;")
       table.lemon-grid
         tr
           th(style="width:auto")
-          th(style="width:80px")
-          th(style="width:5px")
-          th(style="width:155px")
+          th(style="width:150px")
+          th(style="width:10px")
+          th(style="width:190px")
 
         tr
           td

@@ -5,30 +5,15 @@ template(name="importProductDetail")
         .hide-on-print
           span <b>{{timeHM}}<sup>{{timeS}}</sup></b>, ngày <b>{{timeDMY}}</b> <b>{{fullDay}}</b><br/>
         .show-on-print
-          +merchantPrintingHeader
-          .bill-info
-            .seller-info Nhân viên: {{sellerName}}
-            .bill-no {{billNo}}
-          .printing-info
-            .document-name
-              span.s4 PHIẾU NHẬP KHO <br />
-              span.uppercase {{provider.name}}
-            .document-info
-              .right-info
-                if provider.phone
-                  span {{provider.phone}}
-                  span.icon-phone-circled <br/>
-                if provider.address
-                  span {{provider.address}}
-                  span.icon-location-outline
+          +merchantPrintingHeader(owner=provider billNo=billNo title='phiếu nhập kho' position='Người nhập')
 
       .panel-body
         table.lemon-grid
           tr.table-header
             th(style="width:auto") SẢN PHẨM
-            th(style="width:90px; text-align:center") HẾT HẠN
-            th.number(style="width:50px") SL
-            th(style="width:90px; text-align:center") ĐƠN VỊ
+            th(style="width:120px") HẾT HẠN
+            th(style="width:50px") SL
+            th(style="width:90px") ĐƠN VỊ
             th.number(style="width:90px") ĐƠN GIÁ
             th.number(style="width:120px") THÀNH TIỀN
 
@@ -43,7 +28,7 @@ template(name="importProductDetail")
             td(colspan="6" style="height: 25px")
               input.editable.dashed.note(name='importDescription' value="{{profiles.description}}" placeholder="ghi chú đơn hàng" size="40" maxlength="120")
           tr
-            td(align="center"): span NGƯỜI GIAO
+            td(align="center"): span.uppercase người giao
             td
             td.number(colspan="2"): span.s5 TỔNG CỘNG:
             td.number(colspan="2"): span.s4 <b>{{formatNumber totalPrice}}</b> VNĐ
@@ -73,5 +58,5 @@ template(name="importProductDetail")
         .grea-print-message
           .rounded-gera-logo: .rounded-wrapper
             img(src="/images/white-pixel.jpg")
-            img.rounded-img(src="/images/gera-small.png")
-          i In từ hệ thống EDS - công ty Công Nghệ Thiên Ban (0838 111 766) - Hạn nợ {{dueDate}} ({{dueDay}} ngày)
+            img(style="width: 40px; position: absolute; top: 3px; left: 3px; " src="/images/noinoi.png")
+          i(style="font-size: 16px;") In từ hệ thống www.noinoi.vn - công ty Công Nghệ Thiên Ban (0978 188 119)

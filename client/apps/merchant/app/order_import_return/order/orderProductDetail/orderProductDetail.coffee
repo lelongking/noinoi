@@ -6,8 +6,8 @@ Wings.defineHyper 'orderProductDetail',
     buyer: -> Session.get('currentBuyer')
     billNo: ->
       customerBillNo = Helpers.orderCodeCreate(Session.get('currentBuyer')?.saleBillNo ? '00')
-      merchantBillNo = Helpers.orderCodeCreate(Session.get('merchant')?.saleBillNo ? '00')
-      customerBillNo + '/' + merchantBillNo
+#      merchantBillNo = Helpers.orderCodeCreate(Session.get('merchant')?.saleBillNo ? '00')
+      customerBillNo
 
     customerOldDebt: ->
       if customer = Session.get('currentBuyer')
@@ -15,6 +15,9 @@ Wings.defineHyper 'orderProductDetail',
         paidCash  = (customer.returnAmount ? 0) + (customer.paidAmount ? 0)
         console.log customer.interestAmount
         debitCash + paidCash
+
+    isCustomer: ->
+      console.log @
 
     dueDate: ->
       if order = Session.get("currentOrder")

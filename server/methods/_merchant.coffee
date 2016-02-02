@@ -58,7 +58,7 @@ Meteor.methods
       description : 'Bảng giá mặc định của sản phẩm.'
       isBase      : true
 
-    Roles.addUsersToRoles(userId, 'merchant-admin', branch._id) for branch in merchant.branches
+#    Roles.addUsersToRoles(userId, 'merchant-admin', branch._id) for branch in merchant.branches
     Meteor.users.update userId, $set: {'profile.merchant': merchantId}
 
     return user

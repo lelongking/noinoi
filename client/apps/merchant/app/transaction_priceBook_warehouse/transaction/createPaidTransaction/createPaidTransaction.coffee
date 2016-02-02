@@ -11,6 +11,9 @@ Wings.defineHyper 'createPaidTransaction',
   helpers:
     currentOwner: -> Session.get('transactionOwner')
     transaction: -> Session.get('transactionDetail')
+    title: -> 'phiếu '+ Session.get('transactionOwner').transactionName
+    isCustomer: -> Session.get('transactionDetail').isOwner is "customer"
+
 
   events:
     "keyup .transaction-field":  (event, template) ->

@@ -1,29 +1,11 @@
 template(name="customerManagementSalesHistorySection")
-  .section.panel.panel-default.printable-area
-    .panel-heading
-      .show-on-print
-        +merchantPrintingHeader
-        .printing-info: .document-name {{name}}
-
-      .show-on-print
-        table.lemon-grid: tr
-          th(style="width:auto") SẢN PHẨM
-          th(style="width:50px") SL
-          th.date(style="width:150px") ĐƠN VỊ TÍNH
-          th.number(style="width:150px") ĐƠN GIÁ
-          th.number(style="width:150px") THÀNH TIỀN
-
-      .hide-on-print
-        table.lemon-grid: tr
-          th(style="width:auto") SẢN PHẨM
-          th(style="width:50px") SL
-          th(style="width:100px") ĐƠN VỊ
-          th.number(style="width:120px") ĐƠN GIÁ
-          th.number(style="width:140px") THÀNH TIỀN
+  .section.top.panel.panel-default.printable-area
+    .panel-heading.show-on-print
+      +merchantPrintingHeader(owner=this title='sổ mua hàng' position='Người in')
 
     .panel-body.debt-details
       table#exportData.lemon-grid.safe
-        tr.hide-on-print
+        tr
           th(style="width:auto")
           th(style="width:50px")
           th(style="width:100px")
@@ -37,13 +19,12 @@ template(name="customerManagementSalesHistorySection")
               | &nbsp;
               .bill-header: b {{momentFormat initialStartDate "DD/MM/YYYY"}}
           tr(style="background-color: {{isColor}};")
-
           tr.paid-row.top.receive(style="border-bottom: none;")
             td.has-commands(colspan="4"): .bill-header NỢ ĐẦU KỲ
             td.number: span.s5: b {{formatNumber initialAmount}}
-
           tr.detail-row(style="background-color: #EFEFF4;")
             td(colspan="5" style="padding-top: 2px !important; padding-bottom: 2px !important;")
+          tr.show-on-print(style="height: 10px;")
 
         each transactions
           tr.header-row
@@ -131,13 +112,13 @@ template(name="customerManagementSalesHistorySection")
           tr.detail-row(style="background-color: #EFEFF4;")
             td(colspan="5" style="padding-top: 2px !important; padding-bottom: 2px !important;")
 
-    .panel-footer
+    .panel-footer(style="border-color: #fff;")
       table.lemon-grid
         tr
           th(style="width:auto")
-          th(style="width:80px")
-          th(style="width:5px")
-          th(style="width:155px")
+          th(style="width:150px")
+          th(style="width:10px")
+          th(style="width:190px")
         tr
           td
           td Tiền nợ

@@ -134,6 +134,8 @@ Wings.defineApp 'transaction',
 
 
   events:
+    "click .print-command": (event, template) -> window.print()
+
     "click .createTransaction":  (event, template) ->
       transaction = Session.get('transactionDetail')
       if transaction.transactionType isnt undefined and transaction.owner and transaction.amount > 0
@@ -198,6 +200,8 @@ Wings.defineApp 'transaction',
         transactionData.interestRate    = Session.get('merchant')?.interestRates?.loan ? 0
         transactionData.transactionType = Enums.getValue('TransactionTypes', 'customerLoanAmount')
         Session.set('transactionDetail', transactionData)
+        $("[name='transactionAmount']").val('')
+        $("[name='transactionDescription']").val('')
 
     "click .toCustomerAddPaidCash":  (event, template) ->
       transactionData = Session.get('transactionDetail')
@@ -211,6 +215,8 @@ Wings.defineApp 'transaction',
         transactionData.interestRate    = Session.get('merchant')?.interestRates?.loan ? 0
         transactionData.transactionType = Enums.getValue('TransactionTypes', 'customerPaidAmount')
         Session.set('transactionDetail', transactionData)
+        $("[name='transactionAmount']").val('')
+        $("[name='transactionDescription']").val('')
 
     "click .toProviderEditInitialInterest":  (event, template) ->
       transactionData = Session.get('transactionDetail')
@@ -239,3 +245,5 @@ Wings.defineApp 'transaction',
         transactionData.interestRate    = Session.get('merchant')?.interestRates?.loan ? 0
         transactionData.transactionType = Enums.getValue('TransactionTypes', 'providerPaidAmount')
         Session.set('transactionDetail', transactionData)
+        $("[name='transactionAmount']").val('')
+        $("[name='transactionDescription']").val('')

@@ -60,3 +60,4 @@ Wings.defineHyper 'importProductRowEdit',
 Wings.defineHyper 'importProductRowDisplay',
   helpers:
     detailFinalPrice: -> @quality * @conversion * (@price - @discountCash)
+    isBase: -> @conversion is 1
