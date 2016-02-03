@@ -45,7 +45,7 @@ Meteor.methods
 
         ownerUpdate = $set: {allowDelete : false}
         if isCustomer
-          debitCash = (owner.interestAmount ? 0) + (owner.saleAmount ? 0) + (owner.loanAmount ? 0) + (owner.returnPaidAmount ? 0)
+          debitCash = (owner.saleAmount ? 0) + (owner.loanAmount ? 0) + (owner.returnPaidAmount ? 0)
           paidCash  = (owner.returnAmount ? 0) + (owner.paidAmount ? 0)
           transactionInsert.balanceBefore = debitCash - paidCash
           transactionInsert.balanceLatest = transactionInsert.balanceBefore
@@ -77,7 +77,7 @@ Meteor.methods
             transactionInsert.description    = (merchant.noteOptions.customerReturn ? '') if !transactionInsert.description
 
         else if isProvider
-          debitCash = (owner.interestAmount ? 0) + (owner.importAmount ? 0) + (owner.loanAmount ? 0) + (owner.returnPaidAmount ? 0)
+          debitCash = (owner.importAmount ? 0) + (owner.loanAmount ? 0) + (owner.returnPaidAmount ? 0)
           paidCash  = (owner.returnAmount ? 0) + (owner.paidAmount ? 0)
           transactionInsert.balanceBefore = debitCash - paidCash
           transactionInsert.balanceLatest = transactionInsert.balanceBefore

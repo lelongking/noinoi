@@ -15,11 +15,11 @@ publicRouter = Wings.Routers.publicRouter =
 publicRouter.route '/',
   name: 'home'
   action: ->
-    BlazeLayout.render 'about'
+    BlazeLayout.render 'homeLayout'
     return
   triggersEnter: [ (context, redirect) ->
-    unless Meteor.userId()
-      redirect '/register'
+    if Meteor.userId()
+      redirect '/merchant'
       stop()
 
     return

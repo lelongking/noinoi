@@ -99,10 +99,20 @@ Wings.defineHyper 'customerManagementSalesHistorySection',
 
       if @isRoot
         if @balanceType is Enums.getValue('TransactionTypes', 'returnSaleAmount')
-          Meteor.call('deleteReturn', @parent, @owner, Enums.getValue('ReturnTypes', 'customer')) if @parent
+          if @parent
+            Meteor.call 'deleteReturn', @parent, @owner, Enums.getValue('ReturnTypes', 'customer'), (error, result) ->
+              if error
+                console.log error
+
 
         else if @balanceType is Enums.getValue('TransactionTypes', 'saleAmount')
-          Meteor.call('deleteOrder', @parent) if @parent
+          if @parent
+            Meteor.call 'deleteOrder', @parent, (error, result) ->
+              if error
+                console.log error
       else
-        Meteor.call('deleteTransaction', @_id)
+        Meteor.call 'deleteTransaction', @_id, (error, result) ->
+          if error
+            console.log error
+
       event.stopPropagation()

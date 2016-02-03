@@ -38,6 +38,7 @@ Wings.defineWidget 'home',
 
 #  created: -> Router.go('/merchant') unless Meteor.userId() is null or (Session.get('autoNatigateDashboardOff'))
   created: ->
+
     FlowRouter.go('/merchant') if Meteor.userId()
 
   rendered: ->
@@ -46,6 +47,7 @@ Wings.defineWidget 'home',
       animateBackgroundColor()
       self.bgInterval = Meteor.setInterval(animateBackgroundColor, 15000)
     , 5000
+    Session.set('topPanelMinimize', true)
   destroyed: -> Meteor.clearInterval(@bgInterval)
 
   events:

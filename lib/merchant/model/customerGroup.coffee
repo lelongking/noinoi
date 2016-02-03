@@ -5,9 +5,11 @@ simpleSchema.customerGroups = new SimpleSchema
   description : simpleSchema.OptionalString
   staff       : simpleSchema.OptionalString
   priceBook   : simpleSchema.OptionalString
+
   totalCash   : type: Number, defaultValue: 0
   paidCash    : type: Number, defaultValue: 0
   debitCash   : type: Number, defaultValue: 0
+
   customerLists : type: [String], defaultValue: []
 
 
@@ -42,9 +44,9 @@ Schema.add 'customerGroups', "CustomerGroup", class CustomerGroup
       totalCash = 0; paidCash = 0; debitCash = 0
       Schema.customers.find({customerOfGroup: doc._id}).forEach(
         (customer) ->
-          debitCash += customer.totalDebitCash
           paidCash  += customer.paidCash
           totalCash += customer.totalCash
+          debitCash += customer.totalCash - customer.paidCash
       )
       Schema.customerGroups.update(doc._id, $set:{totalCash: totalCash, paidCash: paidCash, debitCash: debitCash})
 

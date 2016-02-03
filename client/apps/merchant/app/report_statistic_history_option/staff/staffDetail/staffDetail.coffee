@@ -7,4 +7,7 @@ Wings.defineApp 'staffDetail',
   helpers:
     currentStaff: ->
       staffId = Session.get('mySession')?.currentStaff
-      Meteor.users.findOne({_id:staffId})
+      if staffId
+        Meteor.users.findOne({_id:staffId})
+      else
+        Meteor.users.findOne({_id:Meteor.userId()})

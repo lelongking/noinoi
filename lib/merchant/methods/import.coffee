@@ -112,7 +112,7 @@ Meteor.methods
     currentImportQuery = _.clone(query)
     currentImportQuery._id = importId
 
-    currentImportFound = Schema.imports.findOne({_id: currentImportQuery})
+    currentImportFound = Schema.imports.findOne(currentImportQuery)
     return {valid: false, error: 'import not found!'} unless currentImportFound
     return {valid: false, error: 'import not delete!'} unless currentImportFound.allowDelete
 

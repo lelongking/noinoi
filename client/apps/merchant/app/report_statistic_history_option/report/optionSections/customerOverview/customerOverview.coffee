@@ -27,7 +27,7 @@ Wings.defineApp 'customerOverview',
           dataLists.overview.count        += 1
           dataLists.overview.totalCash    += item.totalCash
           dataLists.overview.paidCash     += item.paidCash
-          dataLists.overview.debitCash    += item.debitCash
+          dataLists.overview.debitCash    += item.totalDebitCash
           dataLists.overview.interestCash += item.interestCash
           -item.totalCash
       )

@@ -205,7 +205,9 @@ Meteor.methods
       if distributor and distributor.customImportModeEnabled is true and paidDate <= toDate
         latestCustomImport = Schema.customImports.findOne({seller: distributor._id}, {sort: {debtDate: -1, 'version.createdAt': -1}})
         if latestCustomImport is undefined
-          Meteor.call('createNewCustomImport', createImportOption(profile, distributor, paidDate))
+          Meteor.call('createNewCustomImport', createImportOption(profile, distributor, paidDate), (error, result) ->
+            if error
+              console.log error)
           latestCustomImport = Schema.customImports.findOne({seller: distributor._id}, {sort: {debtDate: -1, 'version.createdAt': -1}})
 
         if latestCustomImport and paidDate >= latestCustomImport.debtDate

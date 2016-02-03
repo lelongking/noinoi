@@ -139,9 +139,9 @@ Schema.add 'customers', "Customer", class Customer
         if orderCursor.count() > 0 or returnCursor.count() > 0
           Schema.customers.update(doc._id, $set:{allowDelete: false}) if doc.allowDelete
         else
-          Schema.customers.remove(@_id)
-          randomGetCustomerId = Schema.customers.findOne({merchant: doc.merchant})?._id
-          Customer.setCustomerSession(randomGetCustomerId ? '')
+          if Schema.customers.remove(@_id)
+            randomGetCustomerId = Schema.customers.findOne({merchant: doc.merchant})?._id
+            Customer.setCustomerSession(randomGetCustomerId ? '')
 
 
 

@@ -81,10 +81,18 @@ Wings.defineHyper 'providerDetailSection',
       console.log @
       if @isRoot
         if @balanceType is Enums.getValue('TransactionTypes', 'returnImportAmount')
-          Meteor.call('deleteReturn', @parent, @owner, Enums.getValue('ReturnTypes', 'provider')) if @parent
+          if @parent
+            Meteor.call 'deleteReturn', @parent, @owner, Enums.getValue('ReturnTypes', 'provider'), (error, result) ->
+              if error
+                console.log error
 
         else if @balanceType is Enums.getValue('TransactionTypes', 'importAmount')
-          Meteor.call('deleteImport', @parent) if @parent
+          if @parent
+            Meteor.call 'deleteImport', @parent, (error, result) ->
+              if error
+                console.log error
       else
-        Meteor.call('deleteTransaction', @_id)
+        Meteor.call 'deleteTransaction', @_id, (error, result) ->
+          if error
+            console.log error
       event.stopPropagation()

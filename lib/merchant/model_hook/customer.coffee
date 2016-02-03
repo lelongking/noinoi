@@ -231,9 +231,10 @@ removeCashOfCustomerCash = (userId, customer)->
         totalCash: -customer.totalCash
     Schema.customerGroups.direct.update(customer.customerOfGroup, customerGroupUpdate)
 
-removeOrderAndReturn = (userId, customer)->
+removeOrderAndReturnAndTransaction = (userId, customer)->
   Schema.orders.direct.remove({buyer: customer._id})
   Schema.returns.direct.remove({owner: customer._id})
+  Schema.transactions.direct.remove({owner: customer._id})
 
 
 removeCustomerCodeAndPhoneInMerchantSummary = (userId, customer)->
@@ -247,5 +248,5 @@ Schema.customers.after.remove (userId, customer)->
     customer = customerCalculateTotalCash(customer)
 
     removeCashOfCustomerCash(userId, customer)
-    removeOrderAndReturn(userId, customer)
+    removeOrderAndReturnAndTransaction(userId, customer)
     removeCustomerCodeAndPhoneInMerchantSummary(userId, customer)

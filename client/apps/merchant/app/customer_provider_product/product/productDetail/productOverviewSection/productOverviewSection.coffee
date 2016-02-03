@@ -82,7 +82,13 @@ Wings.defineHyper 'productOverviewSection',
 
     showDeleteProduct: ->
       editMode = Session.get("productManagementIsEditMode")
-      if editMode and @allowDelete then '' else 'hidden'
+      productQuantity = @merchantQuantities[0]
+      isDelete =
+        productQuantity.availableQuantity is 0 and productQuantity.orderQuantity is 0 and
+          productQuantity.inOderQuantity is 0 and productQuantity.inStockQuantity is 0 and
+          productQuantity.saleQuantity is 0 and productQuantity.returnSaleQuantity is 0 and
+          productQuantity.importQuantity is 0 and productQuantity.returnImportQuantity is 0
+      if editMode and isDelete then '' else 'hidden'
 
     name: ->
       Meteor.setTimeout ->
@@ -134,9 +140,8 @@ Wings.defineHyper 'productOverviewSection',
       @getPrice(undefined, 'debit')
 
   events:
-    "click .productDelete": (event, template) ->
-      console.log 'is delete'
-      #TODO: xoa khach hang
+    "click .productDelete": (event, template) -> @remove()
+
 
     "click .editProduct": (event, template) ->
       Session.set('productManagementIsShowProductDetail', true)

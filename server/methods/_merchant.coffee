@@ -462,7 +462,9 @@ Meteor.methods
       Schema.metroSummaries.update {merchant: "fd3n2DxNZKbbs5gkE"}, $set: {geraProductList: geraProductList}
       Schema.merchantProfiles.update {merchant: "fd3n2DxNZKbbs5gkE"}, $set: {geraProductList: geraProductList}
 
-      Meteor.call('reUpdateOrderCode')
+      Meteor.call('reUpdateOrderCode', (error, result) ->
+        if error
+          console.log error)
 
   checkProduct: ->
     merchantList = []

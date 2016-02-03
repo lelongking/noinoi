@@ -17,7 +17,9 @@ Wings.defineAppContainer 'interestRateDetail',
           Session.set('customerManagementIsShowCustomerDetail', false)
           Session.set('customerManagementIsEditMode', false)
           Session.set("customerManagementShowEditCommand", false)
-      customer
+        customer
+      else
+        Session.set('editInterestRateManager', true)
 
 #  events:
 

@@ -120,9 +120,10 @@ Schema.providers.after.update (userId, newProvider, fieldNames, modifier, option
 
 
 #----------After-Remove-------------------------------------------------------------------------------------------------
-removeImportAndReturn = (userId, provider)->
+removeImportAndReturnAndTransaction = (userId, provider)->
   Schema.imports.direct.remove({provider: provider._id})
   Schema.returns.direct.remove({owner: provider._id})
+  Schema.transactions.direct.remove({owner: customer._id})
 
 
 removeProviderCodeInMerchantSummary = (userId, provider)->
@@ -133,5 +134,5 @@ Schema.providers.after.remove (userId, provider)->
   if Meteor.isServer
     provider = providerCalculateTotalCash(provider)
 
-    removeImportAndReturn(userId, provider)
+    removeImportAndReturnAndTransaction(userId, provider)
     removeProviderCodeInMerchantSummary(userId, provider)

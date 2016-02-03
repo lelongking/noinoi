@@ -177,7 +177,9 @@ Meteor.methods
             updateBuiltInOfDistributor(distributor._id, importDetails)
             updateImportAndDistributor(currentImport, distributor)
             if currentImport.deposit > 0
-              Meteor.call('createNewReceiptCashOfImport', distributor._id, currentImport.deposit)
+              Meteor.call('createNewReceiptCashOfImport', distributor._id, currentImport.deposit, (error, result) ->
+                if error
+                  console.log error)
 
 #          warehouseImport = Schema.imports.findOne(importId)
 #          transaction = Transaction.newByImport(warehouseImport)

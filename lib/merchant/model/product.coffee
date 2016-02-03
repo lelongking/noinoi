@@ -226,11 +226,16 @@ Schema.add 'products', "Product", class Product
         if Schema.products.update(@_id, removeUnitQuery, callback) is 1
           PriceBook.reUpdateByRemoveProductUnit(removeInstance._id)
 
-    doc.remove = (callback)->
-      if @allowDelete
-        if Schema.products.remove @_id, callback
-          PriceBook.reUpdateByRemoveProduct(@_id)
-          Schema.productGroups.update @group, $pull: {products: @_id }
+    doc.remove = ()->
+      merchantQuantity = doc.merchantQuantities[0]
+      if merchantQuantity
+        if merchantQuantity.availableQuantity is 0 and merchantQuantity.orderQuantity is 0 and merchantQuantity.inOderQuantity is 0 and merchantQuantity.inStockQuantity is 0 and
+          merchantQuantity.saleQuantity is 0 and merchantQuantity.returnSaleQuantity is 0 and merchantQuantity.importQuantity is 0 and merchantQuantity.returnImportQuantity is 0
+            if Schema.products.remove @_id
+              randomGetProductId = Schema.products.findOne({merchant: doc.merchant})?._id
+              Product.setSession(randomGetProductId ? '')
+        else
+          Schema.products.update(doc._id, $set:{allowDelete: false}) if doc.allowDelete
 
 
     doc.productConfirm = ->

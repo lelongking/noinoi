@@ -143,17 +143,15 @@ removeCashOfProductCash = (userId, product)->
     productGroupUpdate =
       $pull:
         products: product._id
-#      $inc:
-#        debtRequiredCash: -product.debtRequiredCash
-#        paidRequiredCash: -product.paidRequiredCash
-#        debtBeginCash   : -product.debtBeginCash
-#        paidBeginCash   : -product.paidBeginCash
-#        debtIncurredCash: -product.debtIncurredCash
-#        paidIncurredCash: -product.paidIncurredCash
-#        debtSaleCash    : -product.debtSaleCash
-#        paidSaleCash    : -product.paidSaleCash
-#        returnSaleCash  : -product.returnSaleCash
     Schema.productGroups.direct.update(product.productOfGroup, productGroupUpdate)
 
-Schema.products.after.remove (userId, doc)->
-  removeCashOfProductCash(userId, doc)
+removeImportAndOrderAndReturn = (userId, product)->
+  Schema.imports.direct.remove({'details.product': product._id})
+  Schema.orders.direct.remove({'details.product': product._id})
+  Schema.returns.direct.remove({'details.product': product._id})
+
+Schema.products.after.remove (userId, product)->
+  if Meteor.isServer
+    removeCashOfProductCash(userId, product)
+    removeImportAndOrderAndReturn(userId, product)
+    Schema.priceBooks.direct.update({products: product._id}, {$pull: {products: product._id}})

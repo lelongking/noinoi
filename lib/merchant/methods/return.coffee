@@ -49,20 +49,41 @@ Meteor.methods
 
 
     if Schema.returns.remove(currentReturnFound._id)
-      for orderDetail in currentReturnFound.details
+      basicQuantity = 0
+      for returnDetail in currentReturnFound.details
+        basicQuantity += returnDetail.basicQuantity
         if currentReturnFound.returnType is Enums.getValue('ReturnTypes', 'customer')
           productUpdate =
             $inc:
-              'merchantQuantities.0.inStockQuantity'    : -orderDetail.basicQuantity
-              'merchantQuantities.0.returnSaleQuantity' : -orderDetail.basicQuantity
-              'merchantQuantities.0.availableQuantity'  : -orderDetail.basicQuantity
+              'merchantQuantities.0.inStockQuantity'    : -returnDetail.basicQuantity
+              'merchantQuantities.0.availableQuantity'  : -returnDetail.basicQuantity
+              'merchantQuantities.0.returnSaleQuantity' : -returnDetail.basicQuantity
         else if currentReturnFound.returnType is Enums.getValue('ReturnTypes', 'provider')
           productUpdate =
             $inc:
-              'merchantQuantities.0.inStockQuantity'    : orderDetail.basicQuantity
-              'merchantQuantities.0.returnSaleQuantity' : orderDetail.basicQuantity
-              'merchantQuantities.0.availableQuantity'  : orderDetail.basicQuantity
-        Schema.products.update orderDetail.product, productUpdate
+              'merchantQuantities.0.inStockQuantity'      : returnDetail.basicQuantity
+              'merchantQuantities.0.availableQuantity'    : returnDetail.basicQuantity
+              'merchantQuantities.0.returnImportQuantity' : -returnDetail.basicQuantity
+        Schema.products.update returnDetail.product, productUpdate
+
+      if basicQuantity > 0
+        parentUpdate = $inc:{}
+
+        for detail, index in parent.details
+          if detail.basicQuantityReturn > 0 and basicQuantity > 0
+            if basicQuantity > detail.basicQuantityReturn
+              parentUpdate.$inc["details.#{index}.basicQuantityReturn"]    = -detail.basicQuantityReturn
+              parentUpdate.$inc["details.#{index}.basicQuantityAvailable"] = detail.basicQuantityReturn
+              basicQuantity += -detail.basicQuantityReturn
+            else
+              parentUpdate.$inc["details.#{index}.basicQuantityReturn"]    = -basicQuantity
+              parentUpdate.$inc["details.#{index}.basicQuantityAvailable"] = basicQuantity
+              basicQuantity = 0
+
+        if currentReturnFound.returnType is Enums.getValue('ReturnTypes', 'customer')
+          Schema.orders.update(parent._id, parentUpdate) if _.keys(parentUpdate.$inc).length > 0
+        else if currentReturnFound.returnType is Enums.getValue('ReturnTypes', 'provider')
+          Schema.imports.update(parent._id, parentUpdate) if _.keys(parentUpdate.$inc).length > 0
 
 
       Schema.transactions.find(
