@@ -124,7 +124,7 @@ Schema.add 'customers', "Customer", class Customer
     doc.totalCash      = doc.totalDebitCash + doc.interestCash - doc.paidCash
 
     doc.remove = ->
-      if doc.saleAmount > 0 and doc.returnAmount > 0 and doc.loanAmount > 0 and doc.returnPaidAmount > 0 and doc.paidAmount > 0 and doc.interestAmount > 0
+      if doc.saleAmount > 0 or doc.returnAmount > 0 or doc.loanAmount > 0 or doc.returnPaidAmount > 0 or doc.paidAmount > 0 or doc.interestAmount > 0 or @initialAmount > 0
         Schema.customers.update(doc._id, $set:{allowDelete: false}) if doc.allowDelete
       else
         orderCursor  = Schema.orders.find(
@@ -141,7 +141,7 @@ Schema.add 'customers', "Customer", class Customer
         else
           Schema.customers.remove(@_id)
           randomGetCustomerId = Schema.customers.findOne({merchant: doc.merchant})?._id
-          @setCustomerSession(randomGetCustomerId ? '')
+          Customer.setCustomerSession(randomGetCustomerId ? '')
 
 
 

@@ -1,3 +1,4 @@
+Enums = Apps.Merchant.Enums
 simpleSchema.providers = new SimpleSchema
   name  : type: String, index: 1
   code  : type: String, index: 1, optional: true
@@ -61,7 +62,7 @@ Schema.add 'providers', "Provider", class Provider
     doc.avatarUrl = -> if doc.avatar then AvatarImages.findOne(doc.avatar)?.url() else undefined
 
     doc.remove    = ->
-      if doc.importAmount > 0 and doc.returnAmount > 0 and doc.loanAmount > 0 and doc.returnPaidAmount > 0 and doc.paidAmount > 0 and doc.interestAmount > 0
+      if doc.importAmount > 0 or doc.returnAmount > 0 or doc.loanAmount > 0 or doc.returnPaidAmount > 0 or doc.paidAmount > 0 or doc.interestAmount > 0 or @initialAmount > 0
         Schema.providers.update(doc._id, $set:{allowDelete: false}) if doc.allowDelete
       else
         importCursor  = Schema.imports.find(
@@ -78,7 +79,7 @@ Schema.add 'providers', "Provider", class Provider
         else
           Schema.providers.remove(@_id)
           randomGetProviderId = Schema.providers.findOne({merchant: doc.merchant})?._id
-          @setCustomerSession(randomGetProviderId ? '')
+          Provider.selectProviders(randomGetProviderId ? '')
 
 
 

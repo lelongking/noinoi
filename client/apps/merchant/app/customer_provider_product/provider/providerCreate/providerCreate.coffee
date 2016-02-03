@@ -1,16 +1,16 @@
 Wings.defineHyper 'providerCreate',
   created: ->
   rendered: ->
-    self = this
-    integerOption  = {autoGroup: true, groupSeparator:",", radixPoint: ".", rightAlign: false, suffix: " VNĐ", integerDigits: 11}
-    $providerDebit = self.ui.$providerDebit
-    $providerDebit.inputmask "integer", integerOption
-
-    decimalOption  = {autoGroup: true, groupSeparator:",", radixPoint: ".", rightAlign: false, suffix: " %/tháng", integerDigits:4}
-    $providerInterestRate = self.ui.$providerInterestRate
-    $providerInterestRate.inputmask "decimal", decimalOption
-
-    self.ui.$providerName.select()
+#    self = this
+#    integerOption  = {autoGroup: true, groupSeparator:",", radixPoint: ".", rightAlign: false, suffix: " VNĐ", integerDigits: 11}
+#    $providerDebit = self.ui.$providerDebit
+#    $providerDebit.inputmask "integer", integerOption
+#
+#    decimalOption  = {autoGroup: true, groupSeparator:",", radixPoint: ".", rightAlign: false, suffix: " %/tháng", integerDigits:4}
+#    $providerInterestRate = self.ui.$providerInterestRate
+#    $providerInterestRate.inputmask "decimal", decimalOption
+#
+#    self.ui.$providerName.select()
 
 
   helpers:

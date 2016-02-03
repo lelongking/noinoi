@@ -1,4 +1,5 @@
 scope = {}
+Enums = Apps.Merchant.Enums
 Wings.defineApp 'providerOverviewSection',
   created: ->
     self = this
@@ -30,7 +31,23 @@ Wings.defineApp 'providerOverviewSection',
       if Template.instance().isShowEditCommand.get() and Template.instance().isEditMode.get() then '' else 'hidden'
 
     showDeleteProvider: ->
-      if Template.instance().isEditMode.get() and @allowDelete then '' else 'hidden'
+      isDelete =
+        if @importAmount > 0 or @returnAmount > 0 or @loanAmount > 0 or @returnPaidAmount > 0 or @paidAmount > 0 or @interestAmount > 0 or @initialAmount > 0
+          false
+        else
+          importCursor  = Schema.imports.find(
+            provider    : @_id
+            importType  : { $ne: Enums.getValue('ImportTypes', 'initialize') }
+          )
+          returnCursor = Schema.returns.find(
+            owner       : @_id
+            returnType  : Enums.getValue('ReturnTypes', 'provider')
+            returnStatus: Enums.getValue('ReturnStatus', 'success')
+          )
+          console.log importCursor.count(), returnCursor.count()
+          if importCursor.count() > 0 or returnCursor.count() > 0 then false else true
+
+      if Template.instance().isEditMode.get() and isDelete then '' else 'hidden'
 
     name: ->
       Meteor.setTimeout ->

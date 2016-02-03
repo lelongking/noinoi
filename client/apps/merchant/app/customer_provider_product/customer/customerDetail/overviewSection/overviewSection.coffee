@@ -1,4 +1,5 @@
 scope = {}
+Enums = Apps.Merchant.Enums
 Wings.defineHyper 'customerManagementOverviewSection',
   created: ->
     self = this
@@ -38,7 +39,22 @@ Wings.defineHyper 'customerManagementOverviewSection',
 
     showDeleteCustomer: ->
       editMode = Session.get("customerManagementIsEditMode")
-      if editMode and @allowDelete then '' else 'hidden'
+      isDelete =
+        if @saleAmount > 0 or @returnAmount > 0 or @loanAmount > 0 or @returnPaidAmount > 0 or @paidAmount > 0 or @interestAmount > 0 or @initialAmount > 0
+          false
+        else
+          orderCursor  = Schema.orders.find(
+            buyer       : @_id
+            orderStatus : { $ne: Enums.getValue('OrderStatus', 'initialize') }
+          )
+          returnCursor = Schema.returns.find(
+            owner       : @_id
+            returnType  : Enums.getValue('ReturnTypes', 'customer')
+            returnStatus: Enums.getValue('ReturnStatus', 'success')
+          )
+          if orderCursor.count() > 0 or returnCursor.count() > 0 then false else true
+
+      if editMode and isDelete then '' else 'hidden'
 
     name: ->
       Meteor.setTimeout ->
