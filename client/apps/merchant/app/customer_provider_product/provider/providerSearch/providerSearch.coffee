@@ -9,7 +9,7 @@ Wings.defineHyper 'providerSearch',
       if @_id is Session.get('mySession')?.currentProvider then 'active' else ''
 
     providerLists: ->
-      selector = {}; options  = {sort: {nameSearch: 1}}
+      selector = {merchant: merchantId ? Merchant.getId()}; options  = {sort: {nameSearch: 1}}
       searchText = Template.instance().searchFilter.get()
 
       if(searchText)

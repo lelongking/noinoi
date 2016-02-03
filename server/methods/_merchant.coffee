@@ -42,6 +42,7 @@ Meteor.methods
       name        : 'Cơ Bản'
       description : 'Danh sách khách hàng mới tạo.'
       isBase      : true
+    console.log customerGroupId
 
     productGroupId = Schema.productGroups.insert
       merchant    : merchantId
@@ -49,17 +50,23 @@ Meteor.methods
       name        : 'Cơ Bản'
       description : 'Danh sách sản phẩm mới tạo.'
       isBase      : true
+    console.log productGroupId
 
 
     priceBookId = Schema.priceBooks.insert
-      merchant    : merchantId
-      creator     : userId
-      name        : 'Cơ Bản'
-      description : 'Bảng giá mặc định của sản phẩm.'
-      isBase      : true
+      merchant      : merchantId
+      creator       : userId
+      name          : 'Cơ Bản'
+      description   : 'Bảng giá mặc định của sản phẩm.'
+      isBase        : true
+      priceBookType : Enums.getValue('PriceBookTypes', 'all')
+    console.log priceBookId
 
-#    Roles.addUsersToRoles(userId, 'merchant-admin', branch._id) for branch in merchant.branches
-    Meteor.users.update userId, $set: {'profile.merchant': merchantId}
+    #    Roles.addUsersToRoles(userId, 'merchant-admin', branch._id) for branch in merchant.branches
+    console.log Meteor.users.update(userId, $set: {
+      'profile.merchant': merchantId
+      'profile.name'    : email
+    })
 
     return user
 

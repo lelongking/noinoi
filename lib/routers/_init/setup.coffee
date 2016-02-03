@@ -18,8 +18,10 @@ publicRouter.route '/',
     BlazeLayout.render 'about'
     return
   triggersEnter: [ (context, redirect) ->
-    console.log Meteor.user()
-    console.log 'running /admin trigger'
+    unless Meteor.userId()
+      redirect '/register'
+      stop()
+
     return
   ]
 

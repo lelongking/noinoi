@@ -30,7 +30,7 @@
 #          customerGroup
 #      )
 #
-#      selector = {};
+#      selector = {merchant: merchantId ? Merchant.getId()};
 #      if searchText = Template.instance().searchFilter.get()
 #        regExp = Helpers.BuildRegExp(searchText);
 #        selector = {$or: [{customerCode: regExp, merchant: merchantId}, {nameSearch: regExp, merchant: merchantId}]}

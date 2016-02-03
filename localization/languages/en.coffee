@@ -30,7 +30,7 @@ i18n.map 'en',
     comment: "Customer's commment"
     award: 'Awards'
     address: '109 Cong Hoa, Tan Binh Dist, HCMC.'
-    copyWriting: 'Enterprise Dual Strategy System 2013 - 2014, All rights reserved by Thien Ban Technology Company Limited.'
+    copyWriting: 'NoiNoi System 2014 - 2015, All rights reserved by Thien Ban Technology Company Limited.'
     term: 'Term of use'
 
   menu:

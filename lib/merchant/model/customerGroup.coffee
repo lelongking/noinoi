@@ -1,5 +1,5 @@
 simpleSchema.customerGroups = new SimpleSchema
-  name        : simpleSchema.StringUniqueIndex
+  name        : type: String, index: 1
   nameSearch  : simpleSchema.searchSource('name')
 
   description : simpleSchema.OptionalString
@@ -26,14 +26,7 @@ simpleSchema.customerGroups = new SimpleSchema
   allowDelete : simpleSchema.DefaultBoolean()
   creator     : simpleSchema.DefaultCreator('creator')
   version     : { type: simpleSchema.Version }
-  isBase      :
-    type: Boolean
-    autoValue: ->
-      if @isInsert
-        return false
-      else if @isUpsert
-        return { $setOnInsert: false }
-      return
+  isBase      : type: Boolean, defaultValue: false
 
 Schema.add 'customerGroups', "CustomerGroup", class CustomerGroup
   @transform: (doc) ->

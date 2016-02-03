@@ -22,6 +22,7 @@
 
   // Application name (No spaces)
   "appName": "noinoi",
+//  "appName": "noinoiTest",
 
 
   // Location of app (local directory)
@@ -30,11 +31,13 @@
   // Configure environment
   "env": {
 //    "METEOR_ENV": "development",
-    "PORT": 3003,
+//    "PORT": 3003,
+    "PORT": 3005,
     "UPSTART_UID": "meteoruser",
-//    "ROOT_URL": "http://gera.vn:3003",
-    "ROOT_URL": "http://gera.vn",
-    "MONGO_URL": "mongodb://localhost:27017/noinoiTest",
+//    "ROOT_URL": "http://gera.vn",
+    "ROOT_URL": "http://noinoi.vn",
+//    "MONGO_URL": "mongodb://localhost:27017/noinoiTest",
+    "MONGO_URL": "mongodb://localhost:27017/noinoi",
     "MAIL_URL": "smtp://thienbantech@gmail.com:thienban2014@stmp.gmail.com:465/"
   },
 

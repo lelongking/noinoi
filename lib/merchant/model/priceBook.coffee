@@ -1,20 +1,20 @@
 Enums = Apps.Merchant.Enums
 simpleSchema.priceBooks = new SimpleSchema
-  name            : type: String , index: 1
-  owner           : type: String ,optional: true
-  description     : type: String ,optional: true
-  avatar          : type: String ,optional: true
-  priceBookType   : type: Number ,defaultValue: Enums.getValue('PriceBookTypes', 'customer')
-  products        : type: [String] ,optional: true
+  name            : type: String  , index: 1
+  owner           : type: String  ,optional: true
+  description     : type: String  ,optional: true
+  avatar          : type: String  ,optional: true
+  priceBookType   : type: Number  ,defaultValue: Enums.getValue('PriceBookTypes', 'customer')
+  products        : type: [String],defaultValue: []
 
-  childPriceBooks : type: [String] , optional: true
-  parentPriceBook : type: String   ,optional: true
+  childPriceBooks : type: [String], optional: true
+  parentPriceBook : type: String  ,optional: true
 
   merchant    : simpleSchema.DefaultMerchant
   allowDelete : simpleSchema.DefaultBoolean(false)
   creator     : simpleSchema.DefaultCreator('creator')
   version     : type: simpleSchema.Version
-  isBase      : simpleSchema.BooleanNotUpdate(false)
+  isBase      : type: Boolean, defaultValue: false
 
 Schema.add 'priceBooks', "PriceBook", class PriceBook
   @transform: (doc) ->

@@ -78,6 +78,8 @@ Wings.defineWidget 'home',
           console.log error
         else
           Meteor.loginWithPassword $account.val(), $secret.val(), (error, result) ->
+            FlowRouter.go('/merchant') if Meteor.userId()
+
 
     "blur #account": (event, template) ->
       $account = $(template.find("#account"))

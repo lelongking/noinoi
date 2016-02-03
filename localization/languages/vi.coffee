@@ -34,7 +34,7 @@ i18n.map 'vi',
     comment: 'Khách hàng nhận xét'
     award: 'Giải thưởng'
     address: '109 Cộng Hòa, Tân Bình, Tp.HCM.'
-    copyWriting: 'Enterprise Dual Strategy System 2013 - 2014, Bản quyền thuộc về công ty TNHH Công Nghệ Thiên Ban.'
+    copyWriting: 'NoiNoi System 2014 - 2015, Bản quyền thuộc về công ty TNHH Công Nghệ Thiên Ban.'
     term: 'Điều khoản dịch vụ'
 
   menu:

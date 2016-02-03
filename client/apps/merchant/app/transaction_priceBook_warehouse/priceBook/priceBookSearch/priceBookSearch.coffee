@@ -38,12 +38,12 @@ Wings.defineHyper 'priceBookSearch',
 
     priceBookLists: ->
       console.log 'reactive....'
-      selector = {}; options  = {sort: {priceBookType: 1, name: 1}}
+      selector = {merchant: merchantId ? Merchant.getId()}; options  = {sort: {priceBookType: 1, name: 1}}
       searchText = Template.instance().searchFilter.get()
       if(searchText)
         regExp = Helpers.BuildRegExp(searchText);
         selector = {$or: [
-          {name: regExp}
+          {name: regExp, merchant: merchantId ? Merchant.getId()}
         ]}
       priceBookFounds = Schema.priceBooks.find(selector, options).fetch()
       getPriceBook(priceBookFounds)

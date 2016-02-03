@@ -6,20 +6,20 @@ Meteor.publish null, ->
   merchantId = myProfile.merchant if myProfile
   return collections if !merchantId
 
-  collections.push Schema.notifications.find()
+  collections.push Schema.notifications.find({merchant: merchantId})
   collections.push Schema.messages.find({receiver: @userId}, {sort: {'version.createdAt': -1}, limit: 10})
   collections.push Schema.merchants.find({_id: merchantId})
-  collections.push AvatarImages.find({})
-  collections.push Schema.products.find()
-  collections.push Schema.productGroups.find()
-  collections.push Schema.customers.find()
-  collections.push Schema.customerGroups.find()
-  collections.push Schema.providers.find()
-  collections.push Schema.returns.find()
-  collections.push Schema.orders.find()
-  collections.push Schema.imports.find()
-  collections.push Schema.priceBooks.find()
-  collections.push Schema.transactions.find()
+  collections.push AvatarImages.find()
+  collections.push Schema.products.find({merchant: merchantId})
+  collections.push Schema.productGroups.find({merchant: merchantId})
+  collections.push Schema.customers.find({merchant: merchantId})
+  collections.push Schema.customerGroups.find({merchant: merchantId})
+  collections.push Schema.providers.find({merchant: merchantId})
+  collections.push Schema.returns.find({merchant: merchantId})
+  collections.push Schema.orders.find({merchant: merchantId})
+  collections.push Schema.imports.find({merchant: merchantId})
+  collections.push Schema.priceBooks.find({merchant: merchantId})
+  collections.push Schema.transactions.find({merchant: merchantId})
   collections.push Meteor.users.find({'profile.merchant': merchantId}, {fields: {
     emails:1, profile: 1, sessions: 1, creator: 1, status: 1, allowDelete : 1
   } })

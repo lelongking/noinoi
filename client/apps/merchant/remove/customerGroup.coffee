@@ -19,11 +19,11 @@ Wings.defineApp 'customerGroup',
   helpers:
     customerGroupLists: ->
       console.log 'reactive....'
-      selector = {}; options  = {sort: {isBase: 1, nameSearch: 1}}; searchText = Session.get("customerGroupSearchFilter")
+      selector = {merchant: merchantId ? Merchant.getId()}; options  = {sort: {isBase: 1, nameSearch: 1}}; searchText = Session.get("customerGroupSearchFilter")
       if(searchText)
         regExp = Helpers.BuildRegExp(searchText);
         selector = {$or: [
-          {nameSearch: regExp}
+          {nameSearch: regExp, merchant: merchantId ? Merchant.getId()}
         ]}
 
       unless User.hasManagerRoles()

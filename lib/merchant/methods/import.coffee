@@ -2,7 +2,7 @@ Enums = Apps.Merchant.Enums
 
 
 createTransaction = (provider, importData)->
-  debitCash = (provider.interestAmount ? 0) + (provider.importAmount ? 0) + (provider.loanAmount ? 0) + (provider.returnPaidAmount ? 0)
+  debitCash = (provider.importAmount ? 0) + (provider.loanAmount ? 0) + (provider.returnPaidAmount ? 0)
   paidCash  = (provider.returnAmount ? 0) + (provider.paidAmount ? 0)
 
   createTransactionOfImport =

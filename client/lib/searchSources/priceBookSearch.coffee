@@ -7,7 +7,7 @@
   if(searchText)
     regExp = Helpers.BuildRegExp(searchText);
     selector = {$or: [
-      {name: regExp}
+      {name: regExp, merchant: merchantId ? Merchant.getId()}
     ]}
 
   priceBookFounds = Schema.priceBooks.find(selector, options).fetch()

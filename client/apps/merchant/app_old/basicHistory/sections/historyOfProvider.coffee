@@ -31,7 +31,7 @@ Wings.defineApp 'historyOfProvider',
         sumPaidCash     : 0
 
 
-      selector = {}; merchantId = Merchant.getId(); scope.providerLists = []
+      selector = {merchant: merchantId ? Merchant.getId()}; merchantId = Merchant.getId(); scope.providerLists = []
       if searchText = Session.get('basicHistoryProviderSearchText')
         regExp = Helpers.BuildRegExp(searchText);
         selector = {$or: [{customerCode: regExp, merchant: merchantId}, {nameSearch: regExp, merchant: merchantId}]}

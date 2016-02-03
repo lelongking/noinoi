@@ -37,7 +37,7 @@ subtractQuantityOnSales = (importDetails, saleDetail) ->
   return transactionQuantity == saleDetail.basicQuantity
 
 createTransaction = (customer, order)->
-  debitCash = (customer.interestAmount ? 0) + (customer.saleAmount ? 0) + (customer.loanAmount ? 0) + (customer.returnPaidAmount ? 0)
+  debitCash = (customer.saleAmount ? 0) + (customer.loanAmount ? 0) + (customer.returnPaidAmount ? 0)
   paidCash  = (customer.returnAmount ? 0) + (customer.paidAmount ? 0)
 
   createTransactionOfSale =

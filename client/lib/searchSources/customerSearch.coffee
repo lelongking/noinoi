@@ -3,11 +3,11 @@
   localSearch: true
 
 @CustomerSearch.fetchData =(searchText, options, callback) ->
-  selector = {}; options = {sort: {nameSearch: 1}, limit: 20}
+  selector = {merchant: merchantId ? Merchant.getId()}; options = {sort: {nameSearch: 1}, limit: 20}
   if(searchText)
     regExp = Helpers.BuildRegExp(searchText);
     selector = {$or: [
-      {nameSearch: regExp}
+      {nameSearch: regExp, merchant: merchantId ? Merchant.getId()}
     ]}
   unless User.hasManagerRoles()
     if searchText

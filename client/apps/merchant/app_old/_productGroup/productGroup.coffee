@@ -18,11 +18,11 @@ Wings.defineApp 'productGroups',
   helpers:
     productGroupLists: ->
       console.log 'reactive....'
-      selector = {}; options  = {sort: {isBase: 1, nameSearch: 1}}; searchText = Session.get("productGroupSearchFilter")
+      selector = {merchant: merchantId ? Merchant.getId()}; options  = {sort: {isBase: 1, nameSearch: 1}}; searchText = Session.get("productGroupSearchFilter")
       if(searchText)
         regExp = Helpers.BuildRegExp(searchText);
         selector = {$or: [
-          {name: regExp}
+          {name: regExp, merchant: merchantId ? Merchant.getId()}
         ]}
       scope.productGroupLists = Schema.productGroups.find(selector, options).fetch()
       scope.productGroupLists

@@ -3,11 +3,11 @@
   localSearch: true
 
 @ProviderSearch.fetchData =(searchText, options, callback) ->
-  selector = {}; options = {sort: {name: 1}, limit: 20}
+  selector = {merchant: merchantId ? Merchant.getId()}; options = {sort: {name: 1}, limit: 20}
   if(searchText)
     regExp = Helpers.BuildRegExp(searchText);
     selector = {$or: [
-      {name: regExp}
+      {name: regExp, merchant: merchantId ? Merchant.getId()}
     ]}
   callback(false, Schema.providers.find(selector, options).fetch())
 

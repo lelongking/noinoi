@@ -35,6 +35,7 @@ reywood:publish-composite
 
 aldeed:simple-schema
 aldeed:collection2
+aldeed:schema-index
 matb33:collection-hooks
 
 

@@ -3,11 +3,11 @@
   localSearch: true
 
 @StaffSearch.fetchData =(searchText, options, callback) ->
-  selector = {}; options = {sort: {name: 1}, limit: 20}
+  selector = {merchant: merchantId ? Merchant.getId()}; options = {sort: {name: 1}, limit: 20}
   if(searchText)
     regExp = Helpers.BuildRegExp(searchText);
     selector = {$or: [
-      {'profile.name': regExp}
+      {'profile.name': regExp, merchant: merchantId ? Merchant.getId()}
     ]}
   callback(false, Meteor.users.find(selector, options).fetch())
 

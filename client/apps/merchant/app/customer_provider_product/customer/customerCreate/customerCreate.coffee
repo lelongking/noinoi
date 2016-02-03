@@ -139,10 +139,12 @@ addNewCustomer = (event, template, customer = {}) ->
 
         initialAmount = parseInt(template.ui.$customerInitialDebit.inputmask('unmaskedvalue'))
 
+        merchant = Merchant.get()
         if !isNaN(initialAmount)
-          customer.initialAmount       = initialAmount
-          customer.initialInterestRate = 0 if !customer.initialInterestRate
-          customer.initialStartDate    = new Date() if !customer.initialStartDate
+          customer.initialAmount    = initialAmount
+          customer.initialStartDate = new Date() if !customer.initialStartDate
+          if customer.initialInterestRate is undefined
+            customer.initialInterestRate = merchant.interestRates.initial ? 0
 
 
         newCustomerId = Schema.customers.insert customer
@@ -150,10 +152,9 @@ addNewCustomer = (event, template, customer = {}) ->
           Meteor.call 'reCalculateCustomerInterestAmount', newCustomerId
           Meteor.users.update(Meteor.userId(), {$set: {'sessions.currentCustomer': newCustomerId}})
 
-          merchant = Merchant.get()
           if merchant.interestRates is undefined or merchant.interestRates.initial is undefined
-            unless customer.initialInterestRate is undefined
-              Schema.merchants.update merchant._id, $set:{'interestRates.initial': initial}
+            if customer.initialInterestRate isnt undefined
+              Schema.merchants.update merchant._id, $set:{'interestRates.initial': customer.initialInterestRate}
               Meteor.call 'checkInterestCash', true
 
           FlowRouter.go('customer')

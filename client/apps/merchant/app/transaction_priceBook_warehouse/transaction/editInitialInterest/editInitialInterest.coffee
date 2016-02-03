@@ -73,11 +73,12 @@ Wings.defineHyper 'editInitialInterest',
 
 Wings.defineHyper 'editInitialInterestRowEditing',
   rendered: ->
+    interestRates = Session.get('merchant')?.interestRates
     owner = Session.get('transactionOwner')
     editInitialInterest =
       ownerId             : owner._id
       initialAmount       : owner.initialAmount ? 0
-      initialInterestRate : owner.initialInterestRate ? 0
+      initialInterestRate : owner.initialInterestRate ? (interestRates.initial ? 0)
       initialStartDate    : owner.initialStartDate ? new Date()
       isEditMode          : false
     Session.set('transactionEditInitialInterest',  editInitialInterest)
@@ -94,6 +95,8 @@ Wings.defineHyper 'editInitialInterestRowEditing',
     $initialInterestRate.inputmask "decimal", decimalOption
     $initialInterestRate.val editInitialInterest.initialInterestRate
 
+    $initialAmount.select()
+
 
     self.autorun ()->
       owner    = Session.get('transactionOwner')
@@ -103,7 +106,7 @@ Wings.defineHyper 'editInitialInterestRowEditing',
           editData =
             ownerId             : owner._id
             initialAmount       : owner.initialAmount ? 0
-            initialInterestRate : owner.initialInterestRate ? 0
+            initialInterestRate : owner.initialInterestRate ? (interestRates.initial ? 0)
             initialStartDate    : owner.initialStartDate ? new Date()
             isEditMode          : false
           Session.set('transactionEditInitialInterest',  editData)
@@ -154,34 +157,7 @@ Wings.defineHyper 'editInitialInterestRowEditing',
           Session.set('transactionEditInitialInterest',  edit)
 
         if event.which is 13
-          transactionOwner  = Session.get('transactionOwner')
-          transactionEdit   = Session.get('transactionEditInitialInterest')
-          transactionDetail = Session.get('transactionDetail')
-          if transactionDetail and transactionOwner and transactionEdit
-            ownerUpdate = $set: {
-              initialAmount       : transactionEdit.initialAmount
-              initialInterestRate : transactionEdit.initialInterestRate
-              initialStartDate    : transactionEdit.initialStartDate
-            }
-            if transactionOwner.model is 'providers'
-              Schema.providers.update transactionOwner._id, ownerUpdate
-            else if transactionOwner.model is 'customers'
-              Schema.customers.update transactionOwner._id, ownerUpdate
-              Meteor.call 'reCalculateCustomerInterestAmount', transactionOwner._id
-
-              merchant = Merchant.get()
-              if merchant.interestRates is undefined or merchant.interestRates.initial is undefined
-                unless ownerUpdate.initialInterestRate is undefined
-                  Schema.merchants.update merchant._id, $set:{'interestRates.initial': initial}
-                  Meteor.call 'checkInterestCash', true
-
-
-            transactionEdit.isEditMode = false
-            Session.set('transactionEditInitialInterest',  transactionEdit)
-
-            transactionDetail.owner = ''
-            Session.set('transactionDetail',  transactionDetail)
-            Session.set('transactionOwner')
+          updateInitialInterest()
 
 
 
@@ -219,24 +195,36 @@ Wings.defineHyper 'editInitialInterestRowEditing',
         Session.set('transactionDetail',  transactionDetail)
         Session.set('transactionOwner')
 
-    "click .syncEditInitialInterest": (event, template) ->
-      transactionOwner  = Session.get('transactionOwner')
-      transactionEdit   = Session.get('transactionEditInitialInterest')
-      transactionDetail = Session.get('transactionDetail')
-      if transactionDetail and transactionOwner and transactionEdit
-        ownerUpdate = $set: {
-          initialAmount       : transactionEdit.initialAmount
-          initialInterestRate : transactionEdit.initialInterestRate
-          initialStartDate    : transactionEdit.initialStartDate
-          interestAmount      : parseInt((transactionEdit.initialAmount/100) * (transactionEdit.initialInterestRate/30) * moment().diff(transactionEdit.initialStartDate ? new Date(), 'days'))
-        }
-        Schema.providers.update transactionOwner._id, ownerUpdate if transactionOwner.model is 'providers'
-        Schema.customers.update transactionOwner._id, ownerUpdate if transactionOwner.model is 'customers'
+    "click .syncEditInitialInterest": (event, template) -> updateInitialInterest()
 
-        transactionEdit.isEditMode = false
-        Session.set('transactionEditInitialInterest',  transactionEdit)
 
-        transactionDetail.owner = ''
-        Session.set('transactionDetail',  transactionDetail)
-        Session.set('transactionOwner')
 
+updateInitialInterest = ->
+  transactionOwner  = Session.get('transactionOwner')
+  transactionEdit   = Session.get('transactionEditInitialInterest')
+  transactionDetail = Session.get('transactionDetail')
+  if transactionDetail and transactionOwner and transactionEdit
+    ownerUpdate = $set: {
+      initialAmount       : transactionEdit.initialAmount
+      initialInterestRate : transactionEdit.initialInterestRate
+      initialStartDate    : transactionEdit.initialStartDate
+    }
+    if transactionOwner.model is 'providers'
+      Schema.providers.update transactionOwner._id, ownerUpdate
+    else if transactionOwner.model is 'customers'
+      Schema.customers.update transactionOwner._id, ownerUpdate
+      Meteor.call 'reCalculateCustomerInterestAmount', transactionOwner._id
+
+      merchant = Merchant.get()
+      if merchant.interestRates is undefined or merchant.interestRates.initial is undefined
+        if ownerUpdate.initialInterestRate isnt undefined
+          Schema.merchants.update merchant._id, $set:{'interestRates.initial': ownerUpdate.initialInterestRate}
+          Meteor.call 'checkInterestCash', true
+
+
+    transactionEdit.isEditMode = false
+    Session.set('transactionEditInitialInterest',  transactionEdit)
+
+    transactionDetail.owner = ''
+    Session.set('transactionDetail',  transactionDetail)
+    Session.set('transactionOwner')

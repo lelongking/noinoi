@@ -22,7 +22,7 @@ Wings.defineHyper 'productSearch',
           productGroup
       )
 
-      selector = {};
+      selector = {merchant: merchantId ? Merchant.getId()};
       if searchText = Template.instance().searchFilter.get()
         regExp = Helpers.BuildRegExp(searchText);
         selector =

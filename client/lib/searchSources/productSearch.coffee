@@ -5,11 +5,11 @@ Enums = Apps.Merchant.Enums
   localSearch: true
 
 @ProductSearch.fetchData =(searchText, options, callback) ->
-  selector = {}; options = {sort: {nameSearch: 1}}
+  selector = {merchant: merchantId ? Merchant.getId()}; options = {sort: {nameSearch: 1}}
 
   if(searchText)
     regExp = Helpers.BuildRegExp(searchText)
-    selector = {$or: [{nameSearch: regExp}]}
+    selector = {$or: [{nameSearch: regExp merchant: merchantId ? Merchant.getId()}]}
 
   unless User.hasManagerRoles()
     if(searchText)

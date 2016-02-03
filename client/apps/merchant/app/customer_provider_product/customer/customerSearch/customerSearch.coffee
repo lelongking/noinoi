@@ -30,7 +30,7 @@ Wings.defineHyper 'customerSearch',
           customerGroup
       )
 
-      selector = {};
+      selector = {merchant: merchantId};
       if searchText = Template.instance().searchFilter.get()
         regExp = Helpers.BuildRegExp(searchText);
         selector =

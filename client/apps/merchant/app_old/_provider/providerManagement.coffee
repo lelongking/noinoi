@@ -17,11 +17,11 @@ Wings.defineApp 'providerManagement',
 
   helpers:
     providerLists: ->
-      selector = {}; options  = {sort: {nameSearch: 1}}; searchText = Session.get("providerManagementSearchFilter")
+      selector = {merchant: merchantId ? Merchant.getId()}; options  = {sort: {nameSearch: 1}}; searchText = Session.get("providerManagementSearchFilter")
       if(searchText)
         regExp = Helpers.BuildRegExp(searchText);
         selector = {$or: [
-          {nameSearch: regExp}
+          {nameSearch: regExp, merchant: merchantId ? Merchant.getId()}
         ]}
       scope.providerLists = Schema.providers.find(selector, options).fetch()
       scope.providerLists

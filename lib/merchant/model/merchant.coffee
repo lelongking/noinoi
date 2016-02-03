@@ -13,19 +13,19 @@ simpleSchema.merchants = new SimpleSchema
 
   branches                 : type: [Object]
   "branches.$._id"         : simpleSchema.UniqueId
-  "branches.$.isRoot"      : simpleSchema.DefaultBoolean(false)
+  "branches.$.isRoot"      : type: Boolean, defaultValue: false
   "branches.$.name"        : type: String
   "branches.$.address"     : type: String, optional: true
   "branches.$.phone"       : type: String, optional: true
   "branches.$.createdAt"   : simpleSchema.DefaultCreatedAt
 
 
-  interestRates           : type: Object, optional: true
-  "interestRates.initial" : type: Number, decimal: true , defaultValue: 0
-  "interestRates.sale"    : type: Number, decimal: true , defaultValue: 0
-  "interestRates.loan"    : type: Number, decimal: true , defaultValue: 0
+  interestRates           : type: Object, defaultValue: {}
+  "interestRates.initial" : type: Number, optional: true, decimal: true
+  "interestRates.sale"    : type: Number, optional: true, decimal: true, defaultValue: 0
+  "interestRates.loan"    : type: Number, optional: true, decimal: true, defaultValue: 0
 
-  selfCheck                       : type: Object, optional: true
+  selfCheck                       : type: Object, defaultValue: {}
   "selfCheck.latestCheckInterest" : type: Date  , optional: true
 
 
@@ -58,13 +58,13 @@ simpleSchema.merchants = new SimpleSchema
   "summaries.listTransactionCodes" : type: [String] , defaultValue: []
 
 
-  seasons               : type: Object  , optional: true
-  "seasons._id"         : type: String  , optional: true
-  "seasons.isUsed"      : type: Boolean , defaultValue: false
-  "seasons.name"        : type: String  , optional: true
-  "seasons.description" : type: String  , optional: true
-  "seasons.startDate"   : type: Date    , optional: true
-  "seasons.endDate"     : type: Date    , optional: true
+  seasons                 : type: [Object], defaultValue: []
+  "seasons.$._id"         : type: String  , optional: true
+  "seasons.$.isUsed"      : type: Boolean , defaultValue: false
+  "seasons.$.name"        : type: String  , optional: true
+  "seasons.$.description" : type: String  , optional: true
+  "seasons.$.startDate"   : type: Date    , optional: true
+  "seasons.$.endDate"     : type: Date    , optional: true
 
 #-------------------------------------------------------------------------------------------------------
   saleBillNo        : type: Number, defaultValue: 0 #số phiếu bán
@@ -72,7 +72,7 @@ simpleSchema.merchants = new SimpleSchema
   returnBillNo      : type: Number, defaultValue: 0 #số phiếu tra hang
   transactionBillNo : type: Number, defaultValue: 0 #số phiếu thu chi
 
-  options                         : type: Object, optional: true
+  options                         : type: Object, defaultValue: {}
   'options.deliveryLateDay'       : type: Number, optional: true
   'options.orderDeleteInDay'      : type: Number, optional: true
   'options.transactionDeleteInDay': type: Number, optional: true

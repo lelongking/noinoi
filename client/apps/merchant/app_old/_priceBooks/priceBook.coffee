@@ -10,11 +10,11 @@ Wings.defineApp 'priceBook',
 
     priceBookLists: ->
       console.log 'reactive....'
-      selector = {}; options  = {sort: {priceBookType: 1, name: 1}}; searchText = Session.get("priceBookSearchFilter")
+      selector = {merchant: merchantId ? Merchant.getId()}; options  = {sort: {priceBookType: 1, name: 1}}; searchText = Session.get("priceBookSearchFilter")
       if(searchText)
         regExp = Helpers.BuildRegExp(searchText);
         selector = {$or: [
-          {name: regExp}
+          {name: regExp, merchant: merchantId ? Merchant.getId()}
         ]}
       priceBookFounds = Schema.priceBooks.find(selector, options).fetch()
       scope.priceBookLists = getPriceBook(priceBookFounds)
