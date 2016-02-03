@@ -31,7 +31,7 @@ Wings.defineHyper 'customerGroupSearch',
 #        else
 #          selector.customerLists = {$in: Session.get('myProfile').customers}
 
-      Schema.customerGroups.find(selector, options).fetch()
+      Schema.customerGroups.find(selector, options).map((customerGroup)-> customerGroup.reCalculateTotalCash())
 
 
   events:

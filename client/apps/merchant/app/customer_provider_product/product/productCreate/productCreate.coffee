@@ -16,7 +16,7 @@ Wings.defineHyper 'productCreate',
       unitNameEx: 'Thùng'
       barcode: Wings.Helper.GenerateBarcode()
       barcodeEx: Wings.Helper.GenerateBarcode()
-      conversion: 24
+      conversion: 20
       directSalePriceEx: 0
       debtSalePriceEx: 0
       importPriceEx: 0

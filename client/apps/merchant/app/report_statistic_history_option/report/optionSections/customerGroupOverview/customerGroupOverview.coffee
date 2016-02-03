@@ -22,7 +22,7 @@ Wings.defineApp 'customerGroupOverview',
       return dataLists if !currentDynamic
 
 
-      dataLists.details = _.sortBy(Schema.customerGroups.find({merchant: merchantId ? Merchant.getId()}).fetch(),
+      dataLists.details = _.sortBy(Schema.customerGroups.find({merchant: merchantId ? Merchant.getId()}).map((customerGroup)-> customerGroup.reCalculateTotalCash()),
         (item) ->
           dataLists.overview.count     += 1
           dataLists.overview.totalCash += item.totalCash

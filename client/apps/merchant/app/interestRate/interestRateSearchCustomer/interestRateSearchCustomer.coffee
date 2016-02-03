@@ -35,31 +35,28 @@ Wings.defineHyper 'interestRateSearchCustomer',
 
       selector =
         merchant      : merchantId
-        interestAmount: {$gt: 0}
 
       if searchText = Template.instance().searchFilter.get()
         regExp = Helpers.BuildRegExp(searchText);
         selector =
           $and: [
-            merchant : merchantId
-            interestAmount: {$gt: 0}
+            merchant     : merchantId
           ,
             $or: [{customerCode: regExp}, {name: regExp}, {nameSearch: regExp}]
           ]
-
-      if Session.get('myProfile')?.roles is 'seller'
-        addCustomerIds = {$in: Session.get('myProfile').customers}
-        if(searchText)
-          selector.$or[0]._id = addCustomerIds
-          selector.$or[1]._id = addCustomerIds
-        else
-          selector._id = addCustomerIds
       scope.customerLists = []
       Schema.customers.find(selector, {sort: {nameSearch: 1}}).forEach(
         (customer) ->
           if customerGroup = _.findWhere(customerGroups, {_id: customer.customerOfGroup ? customer.group})
-            customerGroup.customerListSearched.push(customer)
-            scope.customerLists.push(customer)
+            findOrder = Schema.orders.findOne
+              buyer                 : customer._id
+              orderType             : Enums.getValue('OrderTypes', 'success')
+              orderStatus           : Enums.getValue('OrderStatus', 'finish')
+              'details.interestRate': true
+
+            if findOrder or customer.initialInterestRate > 0
+              customerGroup.customerListSearched.push(customer)
+              scope.customerLists.push(customer)
       )
       customerGroups
 

@@ -94,8 +94,8 @@ checkAllowUpdateOverview = (template) ->
   saleInterest    = template.ui.$saleInterest.inputmask('unmaskedvalue')
 
   Session.set "customerManagementShowEditCommand",
-    saleInterest isnt (customerData.saleInterestRate.toString() ? '')
-      initialInterest isnt (customerData.initialInterestRate.toString() ? '')
+    saleInterest isnt (customerData.saleInterestRate?.toString() ? '')
+      initialInterest isnt (customerData.initialInterestRate?.toString() ? '')
 
 
 

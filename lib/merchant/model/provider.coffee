@@ -79,7 +79,7 @@ Schema.add 'providers', "Provider", class Provider
         else
           Schema.providers.remove(@_id)
           randomGetProviderId = Schema.providers.findOne({merchant: doc.merchant})?._id
-          Provider.selectProviders(randomGetProviderId ? '')
+          Provider.selectProvider(randomGetProviderId ? '')
 
 
 

@@ -44,6 +44,7 @@ Schema.add 'customerGroups', "CustomerGroup", class CustomerGroup
       totalCash = 0; paidCash = 0; debitCash = 0
       Schema.customers.find({customerOfGroup: doc._id}).forEach(
         (customer) ->
+
           paidCash  += customer.paidCash
           totalCash += customer.totalCash
           debitCash += customer.totalCash - customer.paidCash
@@ -132,5 +133,17 @@ Schema.add 'customerGroups', "CustomerGroup", class CustomerGroup
             customerListIds.push(customer._id)
             Schema.customers.update customer._id, $set:{customerOfGroup: customerGroup._id}
         )
+        customerGroup.reCalculateTotalCash()
         Schema.customerGroups.update customerGroup._id, $set: {customerLists: customerListIds}
     )
+
+  @calculateTotalCash: (customerGroupId)->
+    totalCash = 0; paidCash = 0; debitCash = 0
+    Schema.customers.find({customerOfGroup: customerGroupId}).forEach(
+      (customer) ->
+
+        paidCash  += customer.paidCash
+        totalCash += customer.totalCash
+        debitCash += customer.totalCash - customer.paidCash
+    )
+    Schema.customerGroups.update(customerGroupId, $set:{totalCash: totalCash, paidCash: paidCash, debitCash: debitCash})

@@ -56,8 +56,7 @@ Wings.defineApp 'providerOverviewSection',
       @name
 
   events:
-    "click .providerDelete": (event, template) ->
-      console.log 'is delete'
+    "click .providerDelete": (event, template) -> @remove()
 
     "click .editProvider": (event, template) ->
       Template.instance().isEditMode.set(true)

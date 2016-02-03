@@ -12,7 +12,13 @@ Wings.defineAppContainer 'interestRateDetail',
       if customerId
         customer = Schema.customers.findOne({_id: customerId})
 
-        if customer.interestAmount is 0
+        findOrder = Schema.orders.findOne
+          buyer                 : customer._id
+          orderType             : Enums.getValue('OrderTypes', 'success')
+          orderStatus           : Enums.getValue('OrderStatus', 'finish')
+          'details.interestRate': true
+
+        if !findOrder and !(customer.initialInterestRate > 0)
           Session.set('editInterestRateManager', true)
           Session.set('customerManagementIsShowCustomerDetail', false)
           Session.set('customerManagementIsEditMode', false)
