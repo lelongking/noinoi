@@ -50,16 +50,37 @@ simpleSchema.providers = new SimpleSchema
 
 Schema.add 'providers', "Provider", class Provider
   @transform: (doc) ->
-    doc.hasAvatar = -> if doc.avatar then '' else 'missing'
-    doc.avatarUrl = -> if doc.avatar then AvatarImages.findOne(doc.avatar)?.url() else undefined
-    doc.remove    = -> Schema.providers.remove(@_id) if @allowDelete
-
     importCash         = (doc.importAmount ? 0) + (doc.returnPaidAmount ? 0) - (doc.returnAmount ? 0)
     doc.debitCash      = importCash + (doc.loanAmount ? 0)
     doc.interestCash   = (doc.interestAmount ? 0)
     doc.paidCash       = (doc.paidAmount ? 0)
     doc.totalDebitCash = (doc.initialAmount ? 0) + doc.debitCash
     doc.totalCash      = doc.totalDebitCash + doc.interestCash - doc.paidCash
+
+    doc.hasAvatar = -> if doc.avatar then '' else 'missing'
+    doc.avatarUrl = -> if doc.avatar then AvatarImages.findOne(doc.avatar)?.url() else undefined
+
+    doc.remove    = ->
+      if doc.importAmount > 0 and doc.returnAmount > 0 and doc.loanAmount > 0 and doc.returnPaidAmount > 0 and doc.paidAmount > 0 and doc.interestAmount > 0
+        Schema.providers.update(doc._id, $set:{allowDelete: false}) if doc.allowDelete
+      else
+        importCursor  = Schema.imports.find(
+          provider   : doc._id
+          importType : { $ne: Enums.getValue('ImportTypes', 'initialize') }
+        )
+        returnCursor = Schema.returns.find(
+          owner       : doc._id
+          returnType  : Enums.getValue('ReturnTypes', 'provider')
+          returnStatus: Enums.getValue('ReturnStatus', 'success')
+        )
+        if importCursor.count() > 0 or returnCursor.count() > 0
+          Schema.providers.update(doc._id, $set:{allowDelete: false}) if doc.allowDelete
+        else
+          Schema.providers.remove(@_id)
+          randomGetProviderId = Schema.providers.findOne({merchant: doc.merchant})?._id
+          @setCustomerSession(randomGetProviderId ? '')
+
+
 
 
   @insert: (name, description, callback) ->

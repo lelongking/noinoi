@@ -15,7 +15,10 @@ Schema.add 'productGroups', "ProductGroup", class ProductGroup
   @transform: (doc) ->
     doc.productCount = -> if @products then @products.length else 0
     doc.remove = ->
-      if @allowDelete
+      productCursor = Schema.products.find({productOfGroup: doc._id})
+      if productCursor.count() > 0
+        Schema.productGroups.update(doc._id, $set:{allowDelete: false}) if doc.allowDelete
+      else
         Schema.productGroups.remove(@_id)
         findProductGroup = Schema.productGroups.findOne({isBase: true, merchant: Merchant.getId()})
         ProductGroup.setSessionProductGroup(findProductGroup._id) if findProductGroup

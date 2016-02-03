@@ -35,12 +35,12 @@ simpleSchema.customers = new SimpleSchema
   initialInterestRate : type: Number, optional: true, decimal: true
   initialStartDate    : type: Date  , optional: true
 
-  saleAmount          : type: Number, optional: true #ban hang
-  returnAmount        : type: Number, optional: true #tra hàng(tru va ban hang)
-  loanAmount          : type: Number, optional: true #no cho vay(muon)
-  returnPaidAmount    : type: Number, optional: true #no trả hàng(tra hang lay tien mat)
-  paidAmount          : type: Number, optional: true #no đã trả(khách hàng tra tien)
-  interestAmount      : type: Number, optional: true #no cho vay(tien lai)
+  saleAmount          : type: Number, defaultValue: 0 #ban hang
+  returnAmount        : type: Number, defaultValue: 0 #tra hàng(tru va ban hang)
+  loanAmount          : type: Number, defaultValue: 0 #no cho vay(muon)
+  returnPaidAmount    : type: Number, defaultValue: 0 #no trả hàng(tra hang lay tien mat)
+  paidAmount          : type: Number, defaultValue: 0 #no đã trả(khách hàng tra tien)
+  interestAmount      : type: Number, defaultValue: 0 #no cho vay(tien lai)
 
 
 
@@ -124,57 +124,26 @@ Schema.add 'customers', "Customer", class Customer
     doc.totalCash      = doc.totalDebitCash + doc.interestCash - doc.paidCash
 
     doc.remove = ->
-      if @allowDelete and Schema.customers.remove(@_id)
-        randomGetCustomerId = Schema.customers.findOne({merchant: Merchant.getId()})?._id ? ''
-        @setCustomerSession(randomGetCustomerId)
+      if doc.saleAmount > 0 and doc.returnAmount > 0 and doc.loanAmount > 0 and doc.returnPaidAmount > 0 and doc.paidAmount > 0 and doc.interestAmount > 0
+        Schema.customers.update(doc._id, $set:{allowDelete: false}) if doc.allowDelete
+      else
+        orderCursor  = Schema.orders.find(
+          buyer       : doc._id
+          orderStatus : { $ne: Enums.getValue('OrderStatus', 'initialize') }
+        )
+        returnCursor = Schema.returns.find(
+          owner       : doc._id
+          returnType  : Enums.getValue('ReturnTypes', 'customer')
+          returnStatus: Enums.getValue('ReturnStatus', 'success')
+        )
+        if orderCursor.count() > 0 or returnCursor.count() > 0
+          Schema.customers.update(doc._id, $set:{allowDelete: false}) if doc.allowDelete
+        else
+          Schema.customers.remove(@_id)
+          randomGetCustomerId = Schema.customers.findOne({merchant: doc.merchant})?._id
+          @setCustomerSession(randomGetCustomerId ? '')
 
 
-#    doc.calculateBalance = ->
-#      customerUpdate = {paidCash: 0, returnCash: 0, totalCash: 0, loanCash: 0, beginCash: 0, debtCash: 0}
-#      Schema.transactions.find({owner: @_id}).forEach(
-#        (transaction) ->
-#          console.log transaction
-#          if transaction.transactionType is Enums.getValue('TransactionTypes', 'customer')
-#            if transaction.parent
-#              customerUpdate.beginCash  += 0
-#              customerUpdate.debtCash   += transaction.debtBalanceChange
-#              customerUpdate.loanCash   += 0
-#              customerUpdate.paidCash   += transaction.paidBalanceChange
-#              customerUpdate.returnCash += 0
-#
-#            else
-#              customerUpdate.beginCash  += transaction.debtBalanceChange - transaction.paidBalanceChange
-#              customerUpdate.debtCash   += 0
-#              customerUpdate.loanCash   += 0
-#              customerUpdate.paidCash   += 0
-#              customerUpdate.returnCash += 0
-#
-#          if transaction.transactionType is Enums.getValue('TransactionTypes', 'return')
-#            customerUpdate.beginCash  += 0
-#            customerUpdate.debtCash   += 0
-#            customerUpdate.loanCash   += 0
-#            customerUpdate.paidCash   += 0
-#            customerUpdate.returnCash += transaction.paidBalanceChange
-#      )
-#      customerUpdate.totalCash = customerUpdate.beginCash + customerUpdate.debtCash + customerUpdate.loanCash - customerUpdate.paidCash - customerUpdate.returnCash
-#      console.log customerUpdate
-#      Schema.customers.update @_id, $set: customerUpdate
-
-#  @calculate: ->
-#    Schema.customers.find({}).forEach(
-#      (customer) ->
-#        Schema.customers.update customer._id,
-#          $set:
-#            debtRequiredCash: 0
-#            paidRequiredCash: 0
-#            debtBeginCash   : 0
-#            paidBeginCash   : 0
-#            debtIncurredCash: 0
-#            paidIncurredCash: 0
-#            debtSaleCash    : 0
-#            paidSaleCash    : 0
-#            returnSaleCash  : 0
-#    )
 
   @insert: (name, description) ->
     insertOption = {name: name}

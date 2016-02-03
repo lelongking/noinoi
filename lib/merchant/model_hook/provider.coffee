@@ -1,3 +1,15 @@
+providerCalculateTotalCash = (provider) ->
+  importCash               = (provider.importAmount ? 0) + (provider.returnPaidAmount ? 0) - (provider.returnAmount ? 0)
+  provider.debitCash       = importCash + (provider.loanAmount ? 0)
+  provider.interestCash    = (provider.interestAmount ? 0)
+  provider.paidCash        = (provider.paidAmount ? 0)
+  provider.totalDebitCash  = (provider.initialAmount ? 0) + provider.debitCash
+  provider.totalCash       = provider.totalDebitCash + provider.interestCash - provider.paidCash
+  provider
+
+
+  
+
 #----------Before-Insert------------------------------------------------------------------------------------------------
 generateProviderCode = (user, provider, summaries)->
   lastProviderCode  = summaries.lastProviderCode ? 0
@@ -95,9 +107,31 @@ Schema.providers.before.update (userId, provider, fieldNames, modifier, options)
 #----------After-Update-------------------------------------------------------------------------------------------------
 updateProviderCodeInMerchantSummary = (userId, oldProvider, newProvider) ->
   if oldProvider.code isnt newProvider.code
-    Schema.merchants.direct.update provider.merchant, $pull: {'summaries.listProviderCodes': oldProvider.code}
-    Schema.merchants.direct.update provider.merchant, $addToSet: {'summaries.listProviderCodes': newProvider.code}
+    if oldProvider.code
+      Schema.merchants.direct.update oldProvider.merchant, $pull: {'summaries.listProviderCodes': oldProvider.code}
+    if newProvider.code
+      Schema.merchants.direct.update oldProvider.merchant, $addToSet: {'summaries.listProviderCodes': newProvider.code}
 
 Schema.providers.after.update (userId, newProvider, fieldNames, modifier, options) ->
   oldProvider = @previous
   updateProviderCodeInMerchantSummary(userId, oldProvider, newProvider)
+
+
+
+
+#----------After-Remove-------------------------------------------------------------------------------------------------
+removeImportAndReturn = (userId, provider)->
+  Schema.imports.direct.remove({provider: provider._id})
+  Schema.returns.direct.remove({owner: provider._id})
+
+
+removeProviderCodeInMerchantSummary = (userId, provider)->
+  if provider.code
+    Schema.merchants.direct.update provider.merchant, $pull: {'summaries.listProviderCodes': provider.code}
+
+Schema.providers.after.remove (userId, provider)->
+  if Meteor.isServer
+    provider = providerCalculateTotalCash(provider)
+
+    removeImportAndReturn(userId, provider)
+    removeProviderCodeInMerchantSummary(userId, provider)

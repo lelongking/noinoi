@@ -39,8 +39,8 @@ Wings.defineApp 'productGroupOverviewSection',
       productGroupSelects
 
   events:
-    "click .deleteProductGroup": (event, template) ->
-      console.log 'is delete'
+    "click .deleteProductGroup": (event, template) -> @remove()
+
 
     "click .unLockEditProduct": (event, template) ->
       clickShowProductGroupDetailTab(event, template)

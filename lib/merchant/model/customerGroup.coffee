@@ -49,7 +49,10 @@ Schema.add 'customerGroups', "CustomerGroup", class CustomerGroup
       Schema.customerGroups.update(doc._id, $set:{totalCash: totalCash, paidCash: paidCash, debitCash: debitCash})
 
     doc.remove = ->
-      if @allowDelete
+      customerCursor = Schema.customers.find({customerOfGroup: doc._id})
+      if customerCursor.count() > 0
+        Schema.customerGroups.update(doc._id, $set:{allowDelete: false}) if doc.allowDelete
+      else
         Schema.customerGroups.remove(@_id)
         findCustomerGroup = Schema.customerGroups.findOne({isBase: true, merchant: Merchant.getId()})
         CustomerGroup.setSessionCustomerGroup(findCustomerGroup._id) if findCustomerGroup

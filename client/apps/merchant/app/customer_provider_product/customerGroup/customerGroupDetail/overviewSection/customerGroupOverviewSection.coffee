@@ -38,8 +38,7 @@ Wings.defineApp 'customerGroupOverviewSection',
       customerGroupSelects
 
   events:
-    "click .deleteCustomerGroup": (event, template) ->
-      console.log 'is delete'
+    "click .deleteCustomerGroup": (event, template) -> @remove()
 
     "click .unLockEditCustomer": (event, template) ->
       clickShowCustomerGroupDetailTab(event, template)

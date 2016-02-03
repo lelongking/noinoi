@@ -49,9 +49,7 @@ Wings.defineHyper 'customerManagementOverviewSection',
     customerGroupSelected: -> customerGroupSelects
 
   events:
-    "click .customerDelete": (event, template) ->
-      console.log 'is delete'
-      #TODO: xoa khach hang
+    "click .customerDelete": (event, template) -> @remove()
 
     "click .editCustomer": (event, template) ->
       console.log template.data

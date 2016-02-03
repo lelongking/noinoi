@@ -146,17 +146,12 @@ Schema.customers.before.update (userId, customer, fieldNames, modifier, options)
 
 #----------After-Update-------------------------------------------------------------------------------------------------
 updateCustomerGroup = (userId, oldCustomer, newCustomer, fieldNames, modifier, options) ->
-
   updateOption =
     $inc:
       totalCash: newCustomer.totalCash - oldCustomer.totalCash
 
-  console.log 'caculator update', updateOption.$inc.totalCash is 0
-  console.log updateOption, newCustomer.totalCash, oldCustomer.totalCash
-
   if updateOption.$inc.totalCash isnt 0
-    console.log oldCustomer.customerOfGroup
-    console.log Schema.customerGroups.direct.update(oldCustomer.customerOfGroup, updateOption)
+    Schema.customerGroups.direct.update(oldCustomer.customerOfGroup, updateOption)
 
 updateCashOfCustomerGroup = (userId, oldCustomer, newCustomer, fieldNames, modifier, options) ->
   updateOldCustomerGroup =
@@ -178,8 +173,16 @@ updateCashOfCustomerGroup = (userId, oldCustomer, newCustomer, fieldNames, modif
 
 updateCustomerCodeInMerchantSummary = (userId, oldCustomer, newCustomer) ->
   if oldCustomer.code isnt newCustomer.code
-    Schema.merchants.direct.update customer.merchant, $pull: {'summaries.listCustomerCodes': oldCustomer.code}
-    Schema.merchants.direct.update customer.merchant, $addToSet: {'summaries.listCustomerCodes': newCustomer.code}
+    if oldCustomer.code
+      Schema.merchants.direct.update oldCustomer.merchant, $pull: {'summaries.listCustomerCodes': oldCustomer.code}
+    if newCustomer.code
+      Schema.merchants.direct.update oldCustomer.merchant, $addToSet: {'summaries.listCustomerCodes': newCustomer.code}
+
+  if oldCustomer.phone isnt newCustomer.phone
+    if oldCustomer.phone
+      Schema.merchants.direct.update oldCustomer.merchant, $pull: {'summaries.listCustomerPhones': oldCustomer.phone}
+    if newCustomer.phone
+      Schema.merchants.direct.update oldCustomer.merchant, $addToSet: {'summaries.listCustomerPhones': newCustomer.phone}
 
 
 
@@ -228,6 +231,11 @@ removeCashOfCustomerCash = (userId, customer)->
         totalCash: -customer.totalCash
     Schema.customerGroups.direct.update(customer.customerOfGroup, customerGroupUpdate)
 
+removeOrderAndReturn = (userId, customer)->
+  Schema.orders.direct.remove({buyer: customer._id})
+  Schema.returns.direct.remove({owner: customer._id})
+
+
 removeCustomerCodeAndPhoneInMerchantSummary = (userId, customer)->
   if customer.code
     Schema.merchants.direct.update customer.merchant, $pull: {'summaries.listCustomerCodes': customer.code}
@@ -235,5 +243,9 @@ removeCustomerCodeAndPhoneInMerchantSummary = (userId, customer)->
     Schema.merchants.direct.update customer.merchant, $pull: {'summaries.listCustomerPhones': customer.phone}
 
 Schema.customers.after.remove (userId, customer)->
-  removeCashOfCustomerCash(userId, customer)
-  removeCustomerCodeAndPhoneInMerchantSummary(userId, customer)
+  if Meteor.isServer
+    customer = customerCalculateTotalCash(customer)
+
+    removeCashOfCustomerCash(userId, customer)
+    removeOrderAndReturn(userId, customer)
+    removeCustomerCodeAndPhoneInMerchantSummary(userId, customer)
