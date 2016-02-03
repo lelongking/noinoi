@@ -77,7 +77,7 @@ Wings.defineHyper 'customerManagementSalesHistorySection',
       details = @parentFound?.details ? []
       for detail in details
         (isInterestRate = true if detail.interestRate)
-      if isInterestRate then '(lãi suất)' else ''
+      if isInterestRate then 'LS' else ''
 
 
     isColor: -> 'background-color: #fff'
@@ -88,7 +88,7 @@ Wings.defineHyper 'customerManagementSalesHistorySection',
       trackingDate and trackingDelete
 
   events:
-    "click a.toInterestRate": (event, template) ->
+    "click .toInterestRate": (event, template) ->
       FlowRouter.go('interestRate')
       Session.set('editInterestRateManager', false)
       Session.set('customerManagementIsShowCustomerDetail', false)

@@ -34,8 +34,7 @@ template(name="customerManagementSalesHistorySection")
                 b {{momentFormat successDate "DD/MM/YYYY"}}
               .bill-header.billNo.hide-on-print(style="left: 90px")
                 b
-                  i(style="padding-right: 5px;") {{billNo}}
-                  a.toInterestRate(style="color: #7ac5f9;") {{hasInterestRate}}
+                  i.toInterestRate(style="color: #7ac5f9;cursor: pointer;") {{billNo}} {{hasInterestRate}}
               .bill-header.billNo.show-on-print(style="left: 120px")
                 b
                   i(style="padding-right: 5px;") {{billNo}}
