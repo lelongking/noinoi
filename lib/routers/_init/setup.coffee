@@ -6,57 +6,60 @@ publicRouter = Wings.Routers.publicRouter =
   FlowRouter.group
     name: "public"
     triggersEnter: [ (context, redirect, stop) ->
-      if Meteor.userId()
-        redirect '/merchant'
-        stop()
+      console.log context.path, context.queryParams
+      if context.path is '/'
+        location.reload()
+      else
+        if Meteor.userId()
+          redirect '/merchant'
+        else
+          redirect '/merchant/login'
+      stop()
       return
     ]
 
 publicRouter.route '/',
   name: 'home'
   action: ->
-    BlazeLayout.render 'homeLayout'
+    location.reload()
+#    BlazeLayout.render 'homeLayout'
     return
   triggersEnter: [ (context, redirect) ->
-    if Meteor.userId()
-      redirect '/merchant'
-      stop()
-
+#    location.reload()
+#    if Meteor.userId()
+#      redirect '/merchant'
+#    else
+#      redirect '/merchant/login'
+#    stop()
     return
   ]
 
-publicRouter.route '/register',
-  name: 'register'
-  action: ->
-    BlazeLayout.render 'homeLayout'
-
-publicRouter.route '/login',
-  name: 'login'
-  action: (params, queryParams)->
-    if queryParams.version is 'login_v01'
-      BlazeLayout.render 'login_v01'
-    else
-      BlazeLayout.render 'notFound'
-  triggersEnter: [ (context, redirect, stop) ->
-    unless context.queryParams.version
-      BlazeLayout.render 'login_v01'
-      stop()
-  ]
+#publicRouter.route '/merchant/login',
+#  name: 'login'
+#  action: (params, queryParams) ->
+#    BlazeLayout.render 'login_v01'
+##    if queryParams.version is 'login_v01'
+##      BlazeLayout.render 'login_v01'
+##    else
+##      BlazeLayout.render 'notFound'
+#  triggersEnter: [ (context, redirect, stop) ->
+#    console.log context
+##    unless context.queryParams.version
+##      BlazeLayout.render 'login_v01'
+##      stop()
+#  ]
 
 #----------------------------------------------------------------------------------------------
 Routers.loggedInRouter =
   FlowRouter.group
     name: "loggedIn"
     triggersEnter: [ (context, redirect, stop) ->
-      $(".tooltip").remove()
-      Helpers.arrangeAppLayout()
-
-      unless Meteor.loggingIn() or Meteor.userId()
-        route = FlowRouter.current()
-        unless route.route.name is 'login'
-          Session.set 'redirectAfterLogin', route.path
-        redirect '/login'
-        stop()
+#      unless Meteor.loggingIn() or Meteor.userId()
+#        route = FlowRouter.current()
+#        unless route.route.name is 'login'
+#          Session.set 'redirectAfterLogin', route.path
+#        redirect 'login'
+#        stop()
       return
     ]
 

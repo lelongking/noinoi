@@ -42,8 +42,8 @@ Wings.defineWidget 'messenger',
       $(".conversation-wrapper").slimScroll({scrollTo: '99999px'})
 
   destroyed: ->
-    scope.initTracker.stop()
-    scope.incomingObserver.stop()
+    scope.initTracker?.stop()
+    scope.incomingObserver?.stop()
     $("body").off("DOMNodeInserted")
 
   events:

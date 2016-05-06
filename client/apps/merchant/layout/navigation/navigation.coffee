@@ -11,7 +11,7 @@ Wings.defineApp 'navigation',
 
 
   helpers:
-    isntMerchantHome: -> !Template.instance().isMerchantHome.get()
+    isMerchantHome: -> Template.instance().isMerchantHome.get()
 
     unreadMessageCount: -> logics.merchantNotification.unreadMessages.count()
     unreadNotifiesCount: -> logics.merchantNotification.unreadNotifies.count()
@@ -28,6 +28,7 @@ Wings.defineApp 'navigation',
 
   events:
     "click .home": -> FlowRouter.go('/merchant')
-    "click #logoutButton": (event, template) -> Wings.logout()
+    "click #logoutButton": (event, template) -> Wings.logout('login')
+    "click #goHomeButton": (event, template) -> FlowRouter.go('/')
 #    "click a.branding": -> Session.set('autoNatigateDashboardOff', true); FlowRouter.go('/')
 #    "click .tour-toggle": -> Apps.currentTour?.restart()

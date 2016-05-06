@@ -38,8 +38,7 @@ Wings.defineWidget 'home',
 
 #  created: -> Router.go('/merchant') unless Meteor.userId() is null or (Session.get('autoNatigateDashboardOff'))
   created: ->
-
-    FlowRouter.go('/merchant') if Meteor.userId()
+#    FlowRouter.go('/merchant') if Meteor.userId()
 
   rendered: ->
     self = @

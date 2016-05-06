@@ -3,6 +3,8 @@ merchantRouter = Wings.Routers.merchantRouter =
     prefix: '/merchant'
     name: "merchant"
     triggersEnter: [ (context, redirect, stop) ->
+      $(".tooltip").remove()
+      Helpers.arrangeAppLayout()
 #      unless Roles.userIsInRole Meteor.user(), [ 'admin' ]
 #        FlowRouter.go FlowRouter.path('dashboard')
 #        stop()
@@ -21,6 +23,38 @@ merchantRouter.route '/',
   triggersEnter: [ (context, redirect) ->
     console.log 'running /metro trigger'
     return
+  ]
+
+merchantRouter.route '/login',
+  name: 'login'
+  action: (params, queryParams)->
+    BlazeLayout.render 'login_v01'
+
+  triggersEnter: [ (context, redirect, stop) ->
+  #    unless context.queryParams.version
+  #      BlazeLayout.render 'lockScreen_v1'
+
+    if Meteor.userId()
+      redirect '/merchant'
+      console.log 'login'
+      stop()
+  ]
+
+merchantRouter.route '/register',
+  name: 'register'
+  action: ->
+    Session.set "currentAppInfo",
+      name: "đăng ký"
+
+    BlazeLayout.render 'homeLayout'
+    return
+
+  triggersEnter: [ (context, redirect) ->
+    console.log 'running /register trigger'
+    unless Meteor.userId()
+      redirect '/merchant/login'
+      console.log 'login'
+      stop()
   ]
 
 merchantRouter.route '/lockScreen',

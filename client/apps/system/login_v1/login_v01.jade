@@ -4,7 +4,7 @@ template(name="login_v01")
       .loginColumns.animated.fadeInDown
         .row
           .col-md-6
-            h2.font-bold Welcome to EDS Free
+            h2.font-bold Welcome to NOI NOI
             p
               | Perfectly designed and precisely prepared admin theme with over 50 pages with extra new web app views.
             p
@@ -21,17 +21,17 @@ template(name="login_v01")
                   input.form-control.login-field#authAlias(type='text' placeholder="{{i18n 'form.userAccount'}}" maxlength="50" tabindex="1")
                 .form-group
                   input.form-control.login-field#authSecret(type='password' placeholder="{{i18n 'form.password'}}" maxlength="30" tabindex="2")
-                .btn.btn-primary.block.full-width.m-b#authButton(class="{{sessionGet 'loginValid'}}" tabindex="3") Login
-                a(href='#')
-                  small Forgot password?
+                .btn.btn-primary.block.full-width.m-b#authButton(class="{{sessionGet 'loginValid'}}" tabindex="3") Đăng Nhập
+                //a(href='#')
+                //  small Quên mật khẩu ?
                 p.text-muted.text-center
-                  small Do not have an account?
-                a.btn.btn-sm.btn-white.btn-block(href='/register') Create an account
+                  small Bạn chưa có tài khoản ?
+                a.btn.btn-sm.btn-white.btn-block(href='/') Quay về trang chủ
               p.m-t
-                small EDS Free - Beta v0.5
+                small NoiNoi - Beta v1.0
         hr
         .row
           .col-md-6
             | Copyright Thien Ban Company
           .col-md-6.text-right
-            small © 2015-2016
+            small © 2014-2016

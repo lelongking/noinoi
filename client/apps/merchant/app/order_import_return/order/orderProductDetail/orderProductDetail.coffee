@@ -14,7 +14,7 @@ Wings.defineHyper 'orderProductDetail',
         debitCash = (customer.initialAmount ? 0) + (customer.interestAmount ? 0) + (customer.saleAmount ? 0) + (customer.loanAmount ? 0) + (customer.returnPaidAmount ? 0)
         paidCash  = (customer.returnAmount ? 0) + (customer.paidAmount ? 0)
         console.log customer.interestAmount
-        debitCash + paidCash
+        debitCash - paidCash
 
     isCustomer: ->
       console.log @
@@ -28,7 +28,7 @@ Wings.defineHyper 'orderProductDetail',
         if customer = Session.get('currentBuyer')
           debitCash = (customer.initialAmount ? 0) + (customer.interestAmount ? 0) + (customer.saleAmount ? 0) + (customer.loanAmount ? 0) + (customer.returnPaidAmount ? 0)
           paidCash  = (customer.returnAmount ? 0) + (customer.paidAmount ? 0)
-          debitCash + paidCash + order.finalPrice - order.depositCash
+          debitCash - paidCash + (order.finalPrice - order.depositCash)
         else
           order.finalPrice - order.depositCash
       else 0

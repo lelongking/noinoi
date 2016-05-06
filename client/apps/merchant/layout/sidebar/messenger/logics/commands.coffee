@@ -2,7 +2,7 @@ sentByMe = {sender: Meteor.userId()}
 sentToMe = {receiver: Meteor.userId()}
 
 Apps.Merchant.messengerInit.push (scope) ->
-  createjs.Sound.registerSound({src:"/sounds/incoming.mp3", id: "sound"})
+  createjs.Sound.registerSound({src:"/merchant/sounds/incoming.mp3", id: "sound"})
 
   scope.allMessages = Schema.messages.find({$or: [sentByMe, sentToMe]})
   scope.playSoundIfNecessary = (instance, timeHook) ->

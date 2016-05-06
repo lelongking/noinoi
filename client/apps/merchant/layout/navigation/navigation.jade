@@ -9,6 +9,7 @@ template(name="navigation")
       ul.nav.navbar-nav
         li.app-name
           | {{currentAppInfo.name}}
+          span.click-enable.icon-home-6#goHomeButton
           span.click-enable.icon-off-1#logoutButton
         //li.inav.icon-chat-6
         //  +messageNotifications
@@ -19,7 +20,7 @@ template(name="navigation")
         //  .notification-counts(class="{{activeClassByCount unreadNotifiesCount}}") {{unreadNotifiesCount}}
         //  span.dropdown-toggle(data-toggle="dropdown")
 
-        if isntMerchantHome
+        unless isMerchantHome
           li.blue.inav.home.icon-left-open-big.animated.fadeInRight trở về
 
         if navigationPartial
