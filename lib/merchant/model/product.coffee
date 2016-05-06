@@ -223,8 +223,8 @@ Schema.add 'products', "Product", class Product
 
       if removeInstance and removeInstance.allowDelete and !removeInstance.isBase
         removeUnitQuery = { $pull:{ units: @units[removeIndex] } }
-        if Schema.products.update(@_id, removeUnitQuery, callback) is 1
-          PriceBook.reUpdateByRemoveProductUnit(removeInstance._id)
+        Schema.products.update(@_id, removeUnitQuery, callback)
+#          PriceBook.reUpdateByRemoveProductUnit(removeInstance._id)
 
     doc.remove = ()->
       merchantQuantity = doc.merchantQuantities[0]

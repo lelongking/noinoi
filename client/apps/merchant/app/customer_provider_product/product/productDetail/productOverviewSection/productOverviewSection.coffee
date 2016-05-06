@@ -107,7 +107,7 @@ Wings.defineHyper 'productOverviewSection',
     isShowConversion: (text)->
       instance        = Template.instance()
       currentData     = instance.data
-      productUnitEx   = currentData.units[1]
+      productUnitEx   = currentData.units[1] ? currentData.units[0]
       if text is productUnitEx.allowDelete then '' else 'hidden'
 
     productUnitDetail: ->
@@ -138,6 +138,12 @@ Wings.defineHyper 'productOverviewSection',
     getPriceDebit: ->
       console.log @
       @getPrice(undefined, 'debit')
+
+    showDeleteUnitEx: ->
+      instance        = Template.instance()
+      currentData     = instance.data
+      productUnitEx   = currentData.units[1]
+      if productUnitEx and productUnitEx.allowDelete then true else false
 
   events:
     "click .productDelete": (event, template) -> @remove()
@@ -200,6 +206,7 @@ Wings.defineHyper 'productOverviewSection',
       else
         template.ui.$importQuality.val ''
         template.ui.$importQuality.blur()
+
 
 #-------------------------------------------------------------------------------------------------
     'input input.productEdit': (event, template) ->
@@ -415,6 +422,42 @@ Wings.defineHyper 'productOverviewSection',
       productOverviewCheckAllowUpdate(template)
       editProduct(template) if event.which is 13 and template.data
 
+    "click span.removeUnitEx": (event, template) ->
+      product       = template.data
+      productUnitEx = template?.data?.units[1]
+      if productUnitEx and productUnitEx.allowDelete
+        product.unitRemove(productUnitEx._id)
+        if product = Schema.products.findOne(_id: product._id)
+          instance        = Template.instance()
+          productUnitData = generateProductUnitData(product)
+          instance.productUnitData.set(productUnitData)
+          $(".tooltip").remove()
+
+
+
+    "click i.addUnitEx": (event, template) ->
+      product       = template.data
+      productUnit   = Template.instance().productUnitData.get()
+      if productUnit.addUnitEx and productUnit.unitId is productUnit.unitExId
+        unitNameEx = 'Thùng'
+        barcodeEx  = Wings.Helper.GenerateBarcode()
+        conversionEx = 20
+
+        productUnitEx =
+          _id             : Random.id()
+          name            : unitNameEx
+          barcode         : barcodeEx
+          conversion      : conversionEx
+          isBase          : false
+          allowDelete     : true
+
+        if Schema.products.update(product._id, {$push: { units: productUnitEx}})
+          if product = Schema.products.findOne(_id: product._id)
+            instance        = Template.instance()
+            productUnitData = generateProductUnitData(product)
+            instance.productUnitData.set(productUnitData)
+            $(".tooltip").remove()
+
 
 
 productGroupSelects =
@@ -476,6 +519,13 @@ generateProductUnitData = (currentData)->
     rollBackImportPrice       : priceBook.basicImport
     rollLowNorms              : quantities.lowNormsQuantity
     rollImportQuality         : currentData.importInventory ? 0
+
+  if productUnit._id is productUnitEx._id
+    productUnitData.showLockUnitEX = 'hide'
+    productUnitData.addUnitEx = true
+  else
+    productUnitData.addUnitEx = false
+    productUnitData.showLockUnitEX = ''
 
   console.log currentData.inventoryInitial
   if currentData.inventoryInitial
