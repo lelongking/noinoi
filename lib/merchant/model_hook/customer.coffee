@@ -99,9 +99,10 @@ addCustomerCodeInMerchantSummary = (userId, customer) ->
 
 
 Schema.customers.after.insert (userId, customer) ->
-  customer = customerCalculateTotalCash(customer)
-  addCustomerInCustomerGroup(userId, customer)
-  addCustomerCodeInMerchantSummary(userId, customer)
+  if Meteor.isServer
+    customer = customerCalculateTotalCash(customer)
+    addCustomerInCustomerGroup(userId, customer)
+    addCustomerCodeInMerchantSummary(userId, customer)
 
 
 

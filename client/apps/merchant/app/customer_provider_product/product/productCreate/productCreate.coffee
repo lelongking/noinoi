@@ -7,6 +7,8 @@ Wings.defineHyper 'productCreate',
     self = this
     self.productUnitData = new ReactiveVar({
       isInventory: 'active'
+      showLockUnitEX: ''
+      unlockUnitEX: 'active'
       importQuality: 0
       unitName: 'Chai'
       directSalePrice: 0
@@ -21,7 +23,6 @@ Wings.defineHyper 'productCreate',
       debtSalePriceEx: 0
       importPriceEx: 0
       lowNorms: 0
-
     })
 
   rendered: ->
@@ -63,6 +64,7 @@ Wings.defineHyper 'productCreate',
 
     productUnit: ->
       Template.instance().productUnitData.get()
+
 
     productGroupSelected: -> productGroupSelect
 
@@ -230,6 +232,18 @@ Wings.defineHyper 'productCreate',
         productUnit.isInventory = ''
       Template.instance().productUnitData.set(productUnit)
 
+    "click i.unlockUnitEX": (event, template) ->
+      productUnit = Template.instance().productUnitData.get()
+      if productUnit.unlockUnitEX is 'active'
+        productUnit.unlockUnitEX = ''
+        productUnit.showLockUnitEX = 'hide'
+      else
+        productUnit.unlockUnitEX = 'active'
+        productUnit.showLockUnitEX = ''
+      Template.instance().productUnitData.set(productUnit)
+
+
+
     "click i.inventory": (event, template) ->
       productUnit   = Template.instance().productUnitData.get()
       if productUnit.isInventory is 'active'
@@ -335,7 +349,7 @@ addNewProduct = (event, template, product = {}) ->
         isBase     : true
       product.units.push productUnitBasic
 
-      if productUnitData.conversion > 0
+      if productUnitData.conversion > 0 and productUnitData.unlockUnitEX is 'active'
         unitNameEx = if productUnitData.unitNameEx.length > 0 then productUnitData.unitNameEx else 'Thùng'
         barcodeEx  = if productUnitData.barcodeEx.length > 0 then productUnitData.barcodeEx else Wings.Helper.GenerateBarcode()
 

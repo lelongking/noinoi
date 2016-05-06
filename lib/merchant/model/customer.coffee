@@ -62,7 +62,7 @@ simpleSchema.customers = new SimpleSchema
   deliveryAddress        : type: String, optional: true
 
   profiles               : type: Object, optional: true
-  'profiles.gender'      : simpleSchema.DefaultBoolean()
+  'profiles.gender'      : type: Boolean, defaultValue: true
   'profiles.description' : type: String, optional: true
   'profiles.phone'       : type: String, optional: true
   'profiles.address'     : type: String, optional: true

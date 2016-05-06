@@ -65,16 +65,19 @@ template(name="productCreate")
               .description.pull-right(style="width: 15%; margin: 0px 0px 0px 15px; padding-right: 0px;") Giá bán nợ
               .description.pull-right(style="width: 15%; margin: 0px 0px 0px 15px; padding-right: 0px;") Giá nhập
               .description.pull-right(style="width: 15%; margin: 0px 0px 0px 15px; padding-right: 0px;") Mã vạch
+              .description(style="text-align: left; padding-left: 15px;")
+                i.icon-ok-6.unlockUnitEX(class='{{unlockUnitEX}}' style="border: none;")
+                span Thêm đơn vị
 
 
-            .collapsible-row.full-width.pull-right
+            .collapsible-row.full-width.pull-right(style="margin-bottom: 10px;")
               input.input-field.pull-right.editCash(name="directSalePrice")
               input.input-field.pull-right.editCash(name="debtSalePrice")
               input.input-field.pull-right.editCash(name="importPrice")
               input.input-field.pull-right.editCash(name="barcode" style="text-align: right;")
               input.edit-field.input-field.editCash(name="unitName" style="width: 28%" value="{{unitName}}")
 
-            .collapsible-row.full-width.pull-right
+            .collapsible-row.full-width.pull-right(class="{{showLockUnitEX}}")
               input.input-field.pull-right.editCash(name="directSalePriceEx")
               input.input-field.pull-right.editCash(name="debtSalePriceEx")
               input.input-field.pull-right.editCash(name="importPriceEx")
@@ -91,6 +94,9 @@ template(name="productCreate")
                   style="height: 40px; width: 40px;padding: 0;text-align: center; border: none; border-bottom: 1px solid #e0e0e0; box-shadow: none;")
 
                   span.input-group-addon(style="height: 40px; border: none; background-color: #fff; padding: 0px 0px 0px 10px;") {{unitName}}
+
+
+
 
 
 

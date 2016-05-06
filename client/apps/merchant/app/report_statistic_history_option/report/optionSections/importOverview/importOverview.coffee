@@ -48,7 +48,7 @@ Wings.defineApp 'importOverview',
             'version.createdAt' : {$gte: dateRange.startDate, $lte: dateRange.endDate}
           ]
         ]
-      }, {}).map(
+      }, {sort:{successDate: -1}}).map(
         (item) ->
           if item.importType is Enums.getValue('ImportTypes', 'success')
             item.code     = item.importCode

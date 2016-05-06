@@ -55,7 +55,7 @@ Wings.defineHyper 'customerManagementSalesHistorySection',
             else
               item.version.createdAt
 
-          item.successDate
+          item.version.createdAt
 
       transactions
 

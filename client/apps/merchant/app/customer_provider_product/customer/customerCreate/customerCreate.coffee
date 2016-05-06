@@ -147,6 +147,7 @@ addNewCustomer = (event, template, customer = {}) ->
             customer.initialInterestRate = merchant.interestRates.initial ? 0
 
 
+        console.log customer
         newCustomerId = Schema.customers.insert customer
         if Match.test(newCustomerId, String)
           Meteor.call 'reCalculateCustomerInterestAmount', newCustomerId
